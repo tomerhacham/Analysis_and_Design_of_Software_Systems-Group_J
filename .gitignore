@@ -2,13 +2,15 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff
-dev/iml
-dev/.vscode
-dev/.idea/workspace.xml
-dev/.idea/**/tasks.xml
-dev/.idea/**/usage.statistics.xml
-dev/.idea/**/dictionaries
-dev/.idea/**/shelf
+.idea/
+dev/.idea
+dev/*.iml
+dev/vscode
+dev/idea/workspace.xml
+dev/idea/**/tasks.xml
+dev/idea/**/usage.statistics.xml
+dev/idea/**/dictionaries
+dev/idea/**/shelf
 
 .vscode
 .idea/**/workspace.xml
