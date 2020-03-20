@@ -2,6 +2,14 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff
+dev/iml
+dev/.vscode
+dev/.idea/**/workspace.xml
+dev/.idea/**/tasks.xml
+dev/.idea/**/usage.statistics.xml
+dev/.idea/**/dictionaries
+dev/.idea/**/shelf
+
 .vscode
 .idea/**/workspace.xml
 .idea/**/tasks.xml
@@ -10,9 +18,18 @@
 .idea/**/shelf
 
 # Generated files
+dev/.idea/**/contentModel.xml
 .idea/**/contentModel.xml
 
 # Sensitive or high-churn files
+dev/.idea/**/dataSources/
+dev/.idea/**/dataSources.ids
+dev/.idea/**/dataSources.local.xml
+dev/.idea/**/sqlDataSources.xml
+dev/.idea/**/dynamic.xml
+dev/.idea/**/uiDesigner.xml
+dev/.idea/**/dbnavigator.xml
+
 .idea/**/dataSources/
 .idea/**/dataSources.ids
 .idea/**/dataSources.local.xml
@@ -22,6 +39,9 @@
 .idea/**/dbnavigator.xml
 
 # Gradle
+dev/.idea/**/gradle.xml
+dev/.idea/**/libraries
+
 .idea/**/gradle.xml
 .idea/**/libraries
 
@@ -29,34 +49,48 @@
 # When using Gradle or Maven with auto-import, you should exclude module files,
 # since they will be recreated, and may cause churn.  Uncomment if using
 # auto-import.
-# .idea/artifacts
-# .idea/compiler.xml
-# .idea/jarRepositories.xml
-# .idea/modules.xml
-# .idea/*.iml
-# .idea/modules
-# *.iml
-# *.ipr
+ dev/.idea/artifacts
+ dev/.idea/compiler.xml
+ dev/.idea/jarRepositories.xml
+ dev/.idea/modules.xml
+ dev/.idea/*.iml
+ dev/.idea/modules
+ dev/*.iml
+ dev/*.ipr
+
+ .idea/artifacts
+ .idea/compiler.xml
+ .idea/jarRepositories.xml
+ .idea/modules.xml
+ .idea/*.iml
+ .idea/modules
+ *.iml
+ *.ipr
 
 # CMake
 cmake-build-*/
 
 # Mongo Explorer plugin
-.idea/**/mongoSettings.xml
+dev.idea/**/mongoSettings.xml
 
 # File-based project format
+dev/*.iws
 *.iws
 
 # IntelliJ
+dev/out/
 out/
 
 # mpeltonen/sbt-idea plugin
+dev.idea_modules/
 .idea_modules/
 
 # JIRA plugin
 atlassian-ide-plugin.xml
+dev/atlassian-ide-plugin.xml
 
 # Cursive Clojure plugin
+dev.idea/replstate.xml
 .idea/replstate.xml
 
 # Crashlytics plugin (for Android Studio and IntelliJ)
@@ -64,9 +98,16 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+dev/com_crashlytics_export_strings.xml
+dev/crashlytics.properties
+dev/crashlytics-build.properties
+dev/fabric.properties
 
 # Editor-based Rest Client
+dev.idea/httpRequests
 .idea/httpRequests
 
 # Android studio 3.1+ serialized cache file
+dev.idea/caches/build_file_checksums.ser
 .idea/caches/build_file_checksums.ser
+
