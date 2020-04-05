@@ -11,6 +11,7 @@ public class Category {
     private final Integer level;
     private List<GeneralProduct> generalProducts;
 
+    //Constructor
     public Category(String name, Integer id,Integer level) {
         this.name = name;
         this.id = id;
@@ -18,11 +19,13 @@ public class Category {
         this.sub_categories = new LinkedList<>();
         if(level==3){this.generalProducts =new LinkedList<>();}
     }
+
     //region Setters - Getters
     public String getName() {
         return name;
     }
 
+    public Integer getLevel() {return level;}
     public void setName(String name) {
         this.name = name;
     }
@@ -45,7 +48,6 @@ public class Category {
     //endregion
 
     //region Methods
-    //TODO: add remove function and not allow deletion if there is any SpecificProduct associate with this category
     public Result addSubCategory(String name,Integer  id){
         Category  new_category = new Category(name,id,level+1);
         boolean res=false;
@@ -75,6 +77,19 @@ public class Category {
         }
         return toReturn;
     }
+    public Category searchCategorybyId(Integer id) {
+        Category requestedCategory;
+        for (Category category:sub_categories){
+            if(category.getId()==id){return category;}
+            else{
+                requestedCategory=category.searchCategorybyId(id);
+                if(requestedCategory!=null){
+                    return requestedCategory;
+                }
+            }
+        }
+        return null;
+    }
     public Result addGeneralProduct(GeneralProduct generalProduct){
         boolean res=false;
         Result<GeneralProduct> result;
@@ -97,6 +112,50 @@ public class Category {
             }
             return allProducts;
         }
+    }
+    public Integer getNumberOfProducts(){
+        Integer total_quantity=0;
+        if(level==3){
+            total_quantity= generalProducts.size();
+        }
+        else{
+            for(Category category:sub_categories){
+                total_quantity=total_quantity+category.getNumberOfProducts();
+            }
+        }
+        return total_quantity;
+    }
+    public Result deleteCategoryRecursive(Category toRemove){
+        Result<Category> result=null;
+        boolean res=false;
+        if (sub_categories.contains(toRemove)){
+            res=sub_categories.remove(toRemove);
+            if(res){result=new Result<>(res,toRemove,"Category has been deleted");}
+            else{result=new Result<>(res,toRemove,"There was a problem deleting the category");}
+        }
+        else{
+            for (Category category :sub_categories) {
+                result=category.deleteCategoryRecursive(toRemove);
+            }
+        }
+        return result;
+    }
+    public Result removeGeneralProduct(GeneralProduct toRemove){
+        Result<GeneralProduct> result;
+        boolean res=false;
+        if(generalProducts.contains(toRemove)){
+            res=generalProducts.remove(toRemove);
+            if(res){
+                result = new Result<>(res,toRemove,"General product has been removed from the category");
+            }
+            else{
+                result = new Result<>(res,toRemove,"There was a problem removing the product from the category");
+            }
+        }
+        else{
+            result=new Result<>(res,toRemove,"Could not find the general product in the category");
+        }
+        return result;
     }
     @Override
     public String toString() {
