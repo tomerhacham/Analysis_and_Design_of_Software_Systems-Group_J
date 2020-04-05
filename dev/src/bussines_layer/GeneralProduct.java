@@ -6,8 +6,8 @@ import java.util.List;
 
 public class GeneralProduct {
     //fields
-    private String manufacture;
-    private String catalogID;
+    private final String manufacture;
+    private final String catalogID;
     private String name;
     private Float supplier_price;
     private Float retail_price;
@@ -34,17 +34,17 @@ public class GeneralProduct {
         return manufacture;
     }
 
-    public void setManufacture(String manufacture) {
+    /*public void setManufacture(String manufacture) {
         this.manufacture = manufacture;
-    }
+    }*/
 
     public String getCatalogID() {
         return catalogID;
     }
 
-    public void setCatalogID(String catalogID) {
+    /*public void setCatalogID(String catalogID) {
         this.catalogID = catalogID;
-    }
+    }*/
 
     public String getName() {
         return name;
@@ -94,6 +94,7 @@ public class GeneralProduct {
         boolean res= products.add(product);
         Result<SpecificProduct> result;
         if(res){
+            this.quantity++;
             result = new Result(res, product, "Product added successfully");
         }
         else{
@@ -107,6 +108,7 @@ public class GeneralProduct {
         Result<SpecificProduct> result;
         if (toRemove!=null){
            products.remove(toRemove);
+           this.quantity--;
            String msg="Product has been removed from inventory";
            if(lowBoundCheck()){msg="Product has been removed from inventory\n ALERT: low quantity has been reached";}
            result = new Result(true,toRemove,msg);

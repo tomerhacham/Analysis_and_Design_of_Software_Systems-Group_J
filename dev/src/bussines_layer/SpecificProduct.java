@@ -47,4 +47,14 @@ public class SpecificProduct {
         this.flaw_flag = flaw_flag;
     }
     //endregion
+
+    @Override
+    public String toString() {
+        return "SpecificProduct{" +
+                "id=" + id +
+                ", location=" + location +
+                ", expiration_date=" + expiration_date +
+                ", flaw_flag=" + flaw_flag +
+                '}';
+    }
 }
