@@ -14,10 +14,9 @@ public class GeneralProduct {
     private Integer quantity;
     private Integer min_quantity;
     private List<SpecificProduct> products;
-    private final IDAllocator id_allocator;
 
     //Constructor
-    public GeneralProduct(String manufacture, String catalogID, String name, Float supplier_price, Float retail_price, Integer quantity, Integer min_quantity, IDAllocator id_allocator)
+    public GeneralProduct(String manufacture, String catalogID, String name, Float supplier_price, Float retail_price, Integer quantity, Integer min_quantity)
     {
         this.manufacture = manufacture;
         this.catalogID = catalogID;
@@ -26,7 +25,6 @@ public class GeneralProduct {
         this.retail_price = retail_price;
         this.quantity = quantity;
         this.min_quantity = min_quantity;
-        this.id_allocator=id_allocator;
         this.products = new LinkedList<>();
     }
 
@@ -91,8 +89,8 @@ public class GeneralProduct {
     //endregion
 
     //region Methods
-    public Result addProduct(Date expiration_date){
-        SpecificProduct product = new SpecificProduct(id_allocator.getNext_id(),Location.warehouse,expiration_date);
+    public Result addProduct(Integer product_id,Date expiration_date){
+        SpecificProduct product = new SpecificProduct(product_id,Location.warehouse,expiration_date);
         boolean res= products.add(product);
         Result<SpecificProduct> result;
         if(res){

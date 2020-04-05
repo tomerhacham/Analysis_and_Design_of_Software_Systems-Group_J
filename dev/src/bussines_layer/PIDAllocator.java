@@ -1,9 +1,9 @@
 package bussines_layer;
 
-public class IDAllocator {
+public class PIDAllocator {
     private Integer next_id;
 
-    public IDAllocator() {
+    public PIDAllocator() {
         this.next_id = 1 ;
     }
 
