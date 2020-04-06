@@ -2,17 +2,21 @@ package bussines_layer;
 
 import com.sun.org.apache.regexp.internal.REUtil;
 
+import java.util.Date;
+
 public class Inventory {
     //fields
     CategoryController categoryController;
     ProductController productController;
     ReportController reportController;
+    SaleController saleController;
 
     //Constructors
     public Inventory() {
         this.categoryController=new CategoryController();
         this.productController = new ProductController();
         this.reportController = new ReportController();
+        this.saleController=new SaleController();
     }
 
     //region Methods
@@ -79,17 +83,17 @@ public class Inventory {
     //endregion
 
     //region Specific Products Management
-    public Result addSpecificProduct(){
-        //TODO:implemets
+    public Result addSpecificProduct(String catalogID, Date expiration_date,Integer quantity){
+        return productController.addSpecificProduct(catalogID, expiration_date, quantity);
     }
-    public Result removeSpecificProduct(){
-        //TODO:implemets
+    public Result removeSpecificProduct(Integer specific_product_id){
+        return productController.removeSpecificProduct(specific_product_id);
     }
-    public Result markAsFlaw(){
-        //TODO:implemets
+    public Result markAsFlaw(Integer specific_product_id){
+        return productController.markAsFlaw(specific_product_id);
     }
-    public Result moveLocation(){
-        //TODO:implemets
+    public Result moveLocation(Integer specific_product_id){
+        return productController.moveLocation(specific_product_id);
     }
     //endregion
 
@@ -100,19 +104,32 @@ public class Inventory {
     //endregion
 
     //region Sales Management
-    public Result addSale(GeneralProduct generalProduct){
-        //TODO:implemets
+    public Result addSale(String catalogID,discountType type,Float amount){
+        GeneralProduct generalProduct = productController.searchGeneralProductbyCatalogID(catalogID);
+        return saleController.addSale(generalProduct,type,amount);
     }
-    public Result addSale(Category category){
-        //TODO:implemets
+    public Result addSale(String catalogID,discountType type,Float amount, Date start, Date end){
+        GeneralProduct generalProduct = productController.searchGeneralProductbyCatalogID(catalogID);
+        return saleController.addSale(generalProduct,type,amount,start,end);
     }
-    public Result removeSale(GeneralProduct generalProduct){
-        //TODO:implement
+    public Result addSale(Integer category_id,discountType type,Float amount){
+        Category _category = categoryController.searchCategorybyId(category_id);
+        return saleController.addSale(_category,type,amount);
     }
-    public Result removeSale(Category category){
-        //TODO:implement
+    public Result addSale(Integer category_id,discountType type,Float amount,Date start, Date end){
+        Category _category = categoryController.searchCategorybyId(category_id);
+        return saleController.addSale(_category,type,amount,start,end);
     }
 
+    public Result removeSale(Integer sale_id){
+        return saleController.removeSale(sale_id);
+    }
+    public Result removeSale(Category category){
+        return saleController.removeSale(sale_id);
+    }
+    public Result removeSale(GeneralProduct generalProduct){
+        return saleController.removeSale(sale_id);
+    }
     //endregion
 
     //endregion

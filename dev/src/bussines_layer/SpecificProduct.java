@@ -46,6 +46,15 @@ public class SpecificProduct {
     public void setFlaw_flag(Boolean flaw_flag) {
         this.flaw_flag = flaw_flag;
     }
+
+    public void shiftLocation(){
+        if (location.equals(Location.store)){
+            location=Location.warehouse;
+        }
+        else{
+            location=Location.store;
+        }
+    }
     //endregion
 
     @Override
