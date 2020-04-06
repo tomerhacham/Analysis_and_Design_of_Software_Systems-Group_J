@@ -1,0 +1,151 @@
+package BusinessLayer;
+
+import java.util.LinkedList;
+
+public class SupplierCard {
+
+    private String SupplierName;
+    private String Address;
+    private String Email;
+    private String PhoneNumber;
+    private int id;
+    private int BankAccountNum;
+    private String Payment;
+    private LinkedList<String> ContactsName;
+    private Contract contract;
+    private CostEngineering costEngineering;
+
+    public SupplierCard(String SupplierName , String Address , String Email , String PhoneNumber ,
+                        int id , int BankAccountNum , String Payment , LinkedList<String> ContactsName){
+
+        this.SupplierName = SupplierName;
+        this.Address = Address;
+        this.Email = Email;
+        this.PhoneNumber = PhoneNumber;
+        this.id = id;
+        this.BankAccountNum = BankAccountNum;
+        this.Payment = Payment;
+        this.ContactsName = ContactsName;
+
+        contract = new Contract(id , this);
+        costEngineering = null;
+    }
+
+    public String getSupplierName() {
+        return SupplierName;
+    }
+
+    public void setSupplierName(String supplierName) {
+        SupplierName = supplierName;
+    }
+
+    public String getAddress() {
+        return Address;
+    }
+
+    public void setAddress(String address) {
+        Address = address;
+    }
+
+    public String getEmail() {
+        return Email;
+    }
+
+    public void setEmail(String email) {
+        Email = email;
+    }
+
+    public String getPhoneNumber() {
+        return PhoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        PhoneNumber = phoneNumber;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getBankAccountNum() {
+        return BankAccountNum;
+    }
+
+    public void setBankAccountNum(int bankAccountNum) {
+        BankAccountNum = bankAccountNum;
+    }
+
+    public String getPayment() {
+        return Payment;
+    }
+
+    public void setPayment(String payment) {
+        Payment = payment;
+    }
+
+    public Contract getContract() {
+        return contract;
+    }
+
+    public void setContract(Contract contract) {
+        this.contract = contract;
+    }
+
+    public LinkedList<String> getContactsName() {
+        return ContactsName;
+    }
+
+    public void setContactsName(LinkedList<String> contactsName) {
+        ContactsName = contactsName;
+    }
+
+    public void deleteContactName(String contactName){
+
+        int i = 0;
+        boolean foundName = false;
+        for (String cn:ContactsName) {
+            if (cn.equals(contactName)){
+                foundName = true;
+                break;
+            }
+            else {
+                i++;
+            }
+        }
+        if(foundName){
+            ContactsName.remove(i);
+        }
+        else{
+            System.out.println("The Name Is Not In The Contact List");
+        }
+    }
+
+    public void addContactName (String contactName){
+        ContactsName.add(contactName);
+    }
+
+    public CostEngineering getCostEngineering() {
+        return costEngineering;
+    }
+
+    public void createCostEngineering() {
+        this.costEngineering = new CostEngineering();
+    }
+
+    public void removeSupplierCard(){
+        contract.removeSupplier();
+    }
+
+    public void addProduct(Product product){
+        contract.addProduct(product);
+    }
+
+    public void removeProduct(Integer prodCatalogid){
+        contract.removeProduct(prodCatalogid);
+    }
+
+    public boolean checkCategory(String c){
+        return contract.checkCategory(c);
+    }
+}
+
