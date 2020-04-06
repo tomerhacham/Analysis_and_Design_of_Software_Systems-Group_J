@@ -6,7 +6,6 @@ import java.util.Set;
 
 public class Order {
 
-
     public enum statusOption {inProccess , Done , Exception};
     private Integer orderID;
     private HashMap<Integer , LinkedList<Product>> supplierAndProduct; //<supplierid, product>
