@@ -14,7 +14,6 @@ public class CategoryController {
         this.main_categories=new LinkedList<>();
     }
 
-    //region Methods
 
     /**
      * adding new category to the MAIN category only
@@ -137,6 +136,10 @@ public class CategoryController {
         return result;
     }
 
+    public Category superCategory(){
+        return new Category("super",this.main_categories);
+    }
+
     /**
      * allocate the next free ID
      * @return
@@ -154,5 +157,4 @@ public class CategoryController {
         }
         return toReturn;
     }
-    //endregion
 }

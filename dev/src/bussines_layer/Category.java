@@ -19,6 +19,12 @@ public class Category {
         this.sub_categories = new LinkedList<>();
         if(level==3){this.generalProducts =new LinkedList<>();}
     }
+    public Category(String name,List<Category> sub_categories){
+        this.name=name;
+        this.sub_categories=sub_categories;
+        this.id=0;
+        this.level=0;
+    }
 
     //region Setters - Getters
     public String getName() {

@@ -1,8 +1,12 @@
 package bussines_layer;
 
 import com.sun.org.apache.regexp.internal.REUtil;
+import com.sun.org.apache.xml.internal.resolver.Catalog;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Inventory {
     //fields
@@ -62,7 +66,6 @@ public class Inventory {
             result=new Result<Integer>(false,category_id,"Could not find category");
         }
         return result;    }
-
     public Result editGeneralProduct_name(String catalogID,String new_name){
         return productController.editGeneralProduct_name(catalogID, new_name);
     }
@@ -98,8 +101,21 @@ public class Inventory {
     //endregion
 
     //region Report Management
-    public Result makeReport(){
-        //TODO:implement
+    public Result makeReport(String catalogID,ReportType type){
+        GeneralProduct generalProduct=productController.searchGeneralProductbyCatalogID(catalogID);
+        List<GeneralProduct> dummy_list = new LinkedList<>();
+        dummy_list.add(generalProduct);
+        return reportController.makeReport(dummy_list, type);
+    }
+    public Result makeReport(Integer category_id,ReportType type){
+        Category category = categoryController.searchCategorybyId(category_id);
+        List general_products = category.getAllGeneralProduct();
+        return reportController.makeReport(general_products,type);
+    }
+    public Result makeReport(ReportType type){
+        Category superCategory = categoryController.superCategory();
+        List all_general_products = superCategory.getAllGeneralProduct();
+        return reportController.makeReport(all_general_products,type);
     }
     //endregion
 
@@ -120,14 +136,7 @@ public class Inventory {
         Category _category = categoryController.searchCategorybyId(category_id);
         return saleController.addSale(_category,type,amount,start,end);
     }
-
     public Result removeSale(Integer sale_id){
-        return saleController.removeSale(sale_id);
-    }
-    public Result removeSale(Category category){
-        return saleController.removeSale(sale_id);
-    }
-    public Result removeSale(GeneralProduct generalProduct){
         return saleController.removeSale(sale_id);
     }
     //endregion

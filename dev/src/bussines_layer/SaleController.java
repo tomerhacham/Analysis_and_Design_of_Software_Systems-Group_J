@@ -94,6 +94,11 @@ public class SaleController {
         }
     }
 
+    /**
+     * deactivate the sale and return the retail prices
+     * @param sale_id - id of the sale (allocated by the controller)
+     * @return
+     */
     public Result removeSale(Integer sale_id){
         Sale sale = searchSellbyId(sale_id);
         if (sale!=null){

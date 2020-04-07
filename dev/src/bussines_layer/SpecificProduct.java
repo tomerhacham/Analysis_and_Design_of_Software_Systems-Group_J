@@ -7,12 +7,12 @@ enum Location
 public class SpecificProduct {
     //fields:
     private final Integer id;
-    private Enum<Location> location;
+    private Location location;
     private Date expiration_date;
     private Boolean flaw_flag;
 
     //Constructors
-    public SpecificProduct(Integer id, Enum<Location> location, Date expiration_date) {
+    public SpecificProduct(Integer id, Location location, Date expiration_date) {
         this.id = id;
         this.location = location;
         this.expiration_date = expiration_date;
@@ -27,7 +27,7 @@ public class SpecificProduct {
         return location;
     }
 
-    public void setLocation(Enum<Location> location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 
@@ -55,15 +55,19 @@ public class SpecificProduct {
             location=Location.store;
         }
     }
+
+    public boolean isExpired(){
+        return expiration_date.before(new Date());
+    }
+    public boolean isFlaw(){
+        return getFlaw_flag();
+    }
     //endregion
 
     @Override
     public String toString() {
-        return "SpecificProduct{" +
-                "id=" + id +
+        return  "product_id=" + id +
                 ", location=" + location +
-                ", expiration_date=" + expiration_date +
-                ", flaw_flag=" + flaw_flag +
-                '}';
+                ", expiration_date=" + expiration_date;
     }
 }

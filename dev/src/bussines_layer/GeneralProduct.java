@@ -160,6 +160,48 @@ public class GeneralProduct {
         return new Result<GeneralProduct>(true,this,"general product: "+name+"return to retail price: "+retail_price);
     }
 
+    public String report(ReportType type){
+        String selfReport="";
+        switch(type){
+            case InStock:
+                Integer store=0;
+                Integer warehouse=0;
+                for(SpecificProduct product:products){
+                    if(product.getLocation().equals(Location.store)){
+                        store++;
+                    }
+                    else{
+                        warehouse++;
+                    }
+                }
+                selfReport =toString().concat("\n\tstatus:\n\t\t store:"+store+", warehouse:"+warehouse+"\n\n");
+                break;
+
+            case OutOfStock:
+                if(quantity<min_quantity){
+                    selfReport=toString().concat("\n").concat("missing "+(min_quantity-quantity)+" to minimum quantity\n\n");
+                }
+                break;
+
+            case ExpiredDamaged:
+                selfReport=this.name.concat("\n");
+                String damaged="\t-Damaged items:\n";
+                String expired="\t-Expired items:\n";
+                for(SpecificProduct product:products){
+                    if (product.isFlaw()){
+                        damaged.concat("\t\t").concat(product.toString()).concat("\n");
+                    }
+                    if (product.isExpired()){
+                        expired.concat("\t\t").concat(product.toString()).concat("\n");
+                    }
+                }
+                selfReport.concat(damaged).concat(expired);
+
+
+        }
+        return selfReport;
+    }
+
     /**
      * search if the specific product is type of this general product
      * @param product_id - id of the specific product (allocated by the product controller)
@@ -185,5 +227,20 @@ public class GeneralProduct {
     private boolean lowBoundCheck(){
         return products.size()==min_quantity;
     }
+
+    @Override
+    public String toString() {
+        return "" +
+                "name='" + name + '\'' +
+                ", manufacture='" + manufacture + '\'' +
+                ", catalogID='" + catalogID + '\'' +
+                ", supplier_price=" + supplier_price +
+                ", retail_price=" + retail_price +
+                ", sale_price=" + sale_price +
+                ", quantity=" + quantity +
+                ", min_quantity=" + min_quantity +
+                " ";
+    }
+
     //endregion
 }
