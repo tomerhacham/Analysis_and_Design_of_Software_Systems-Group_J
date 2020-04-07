@@ -36,12 +36,12 @@ public class FacadeController {
         return transportController.getAllTransportsDetails();
     }
 
-    public String getAvailbleTrucks(Date date) {
+    public String getAvailableTrucks(Date date) {
         return truckController.getAvailbleTrucks(date);
     }
 
-    public String getAvailbleDrivers(Date date, int truckID) {
-        String truckLicense = truckController.getDriverslicense(truckID);
+    public String getAvailableDrivers(Date date, int truckID) {
+        String truckLicense = truckController.getDriversLicense(truckID);
         return driverController.getAvailbleDrivers(date, truckLicense);
     }
 
@@ -71,5 +71,11 @@ public class FacadeController {
 
     public void deleteTransport(int transportToDelete) {
         transportController.DeleteTransport(transportToDelete);
+    }
+
+    //TODO:: figure out what to do ???
+    public void createTransport(Date date, int truckID, int driverID, int sourceID) {
+        String truckNumber = truckController.getTruckNumber(truckID);
+        //transportController.CreateTransport(date, truckNumber);
     }
 }

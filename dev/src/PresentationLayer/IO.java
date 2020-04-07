@@ -30,61 +30,57 @@ public class IO {
         while (!terminated) {
             System.out.println(
                     "1. Book new transport.\n" +
-                    "2. Edit existing transport.\n" +
-                    "3. Delete transport.\n" +
-                    "4. Display all trucks.\n" +
-                    "5. Display all drivers.\n" +
-                    "6. Display all sites.\n" +
-                    "7. Display all transports.\n" +
-                    "8. Add truck.\n" +
-                    "9. Add driver.\n" +
-                    "10. Add site.\n" +
-                    "11. Remove truck.\n" +
-                    "12. Remove driver.\n" +
-                    "13. Remove site.\n" +
-                    "14. Exit system.\n");
+                    "2. Delete transport.\n" +
+                    "3. Display all trucks.\n" +
+                    "4. Display all drivers.\n" +
+                    "5. Display all sites.\n" +
+                    "6. Display all transports.\n" +
+                    "7. Add truck.\n" +
+                    "8. Add driver.\n" +
+                    "9. Add site.\n" +
+                    "10. Remove truck.\n" +
+                    "11. Remove driver.\n" +
+                    "12. Remove site.\n" +
+                    "13. Exit system.\n");
             int operation = scanner.nextInt();
             switch (operation) {
                 case 1 :
                     newTransport();
                     break;
                 case 2:
-                    editTransport();
-                    break;
-                case 3:
                     deleteTransport();
                     break;
-                case 4:
+                case 3:
                     System.out.println(facadeController.getAllTrucksDetails());
                     break;
-                case 5:
+                case 4:
                     System.out.println(facadeController.getAllDriversDetails());
                     break;
-                case 6:
+                case 5:
                     System.out.println(facadeController.getAllSitesDetails());
                     break;
-                case 7:
+                case 6:
                     System.out.println(facadeController.getAllTransportsDetails());
                     break;
-                case 8:
+                case 7:
                     addTruck();
                     break;
-                case 9:
+                case 8:
                     addDriver();
                     break;
-                case 10:
+                case 9:
                     addSite();
                     break;
-                case 11:
+                case 10:
                     deleteTruck();
                     break;
-                case 12:
+                case 11:
                     deleteDriver();
                     break;
-                case 13:
+                case 12:
                     deleteSite();
                     break;
-                case 14:
+                case 13:
                     System.out.println("Thank you, good bye!");
                     terminated = true;
                     break;
@@ -157,10 +153,6 @@ public class IO {
         facadeController.deleteTransport(transportToDelete);
     }
 
-    private void editTransport() {
-        // TODO:: implement
-    }
-
     private void newTransport() {
         System.out.println("Please enter a date in the format dd-mm-yyyy\n");
         DateFormat formatter = new SimpleDateFormat("dd-mm-yyyy");
@@ -173,15 +165,16 @@ public class IO {
                 System.out.println("Format is incorrect. Try again.");
             }
         }
-        System.out.println(facadeController.getAvailbleTrucks(date));
+        System.out.println(facadeController.getAvailableTrucks(date));
         System.out.println("Please choose a truck ID from the above");
         int truckID = scanner.nextInt();
-        System.out.println(facadeController.getAvailbleDrivers(date, truckID));
+        System.out.println(facadeController.getAvailableDrivers(date, truckID));
         System.out.println("Please choose a driver ID from the above");
         int driverID = scanner.nextInt();
         System.out.println(facadeController.getAllSitesDetails());
         System.out.println("Please choose source site ID from the above");
         int sourceID = scanner.nextInt();
         // TODO:: destinations? files with products?
+        facadeController.createTransport(date, truckID, driverID, sourceID);
     }
 }

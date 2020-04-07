@@ -22,9 +22,9 @@ public class TransportController {
     }
 
     public void CreateTransport( Date date, int truckNumber, Driver driver, Site source,
-                                 ArrayList<Site> destinations, int weight)
+                                 ArrayList<Site> destinations)
     {
-        Transport t = new Transport(Id_Counter, date, truckNumber, driver, source, destinations,  weight );
+        Transport t = new Transport(Id_Counter, date, truckNumber, driver, source, destinations, 0);
         Id_Counter++;
         transports.put(t.getID(),t);
     }

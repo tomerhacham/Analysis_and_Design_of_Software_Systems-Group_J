@@ -7,7 +7,7 @@ import java.util.HashMap;
 public class Transport {
 
     private int ID;
-    private java.util.Date Date;
+    private Date Date;
     private int TruckNumber;
     private Driver Driver;
     private Site Source;
@@ -115,19 +115,19 @@ public class Transport {
 
     @Override
     public String toString() {
-        String s="id: "+ID+" Date: "+Date.toString()+" TruckNumber: "+TruckNumber+" Driver: "+Driver.getName()
+        String s = "id: " + ID + " Date: " + Date.toString() + " TruckNumber: " + TruckNumber + " Driver: " + Driver.getName()
                 +"\nSource: "+Source.toString();
         if(destinations.size()>0)
         {
-            s=s+" destinations: \n";
+            s = s + " destinations: \n";
             for (int i = 0; i < destinations.size(); i++) {
                 s = s + i + ". " + destinations.get(i).toString();
             }
         }
         else {
-            s=s+" destinations: none\n";
+            s = s + " destinations: none\n";
         }
-        s=s+"TotalWeight: "+ TotalWeight+ " Status: "+Status;
+        s = s + "TotalWeight: " + TotalWeight + " Status: " + Status;
         return s;
     }
 }

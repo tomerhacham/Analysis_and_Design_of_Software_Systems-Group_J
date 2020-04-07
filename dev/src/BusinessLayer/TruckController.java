@@ -75,9 +75,13 @@ public class TruckController {
         trucks.get(id).AddTransport(t);
     }
 
-    public String getDriverslicense(Integer id)
+    public String getDriversLicense(Integer id)
     {
         return trucks.get(id).getDrivers_license();
     }
 
+    public String getTruckNumber(int id)
+    {
+        return trucks.get(id).getLicense_plate();
+    }
 }
