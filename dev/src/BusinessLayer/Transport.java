@@ -1,49 +1,44 @@
 package BusinessLayer;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 public class Transport {
 
     private int ID;
-    private String Date;
-    private String Time;
+    private java.util.Date Date;
     private int TruckNumber;
     private Driver Driver;
     private Site Source;
-    private HashMap<Site, Integer> DestFiles;
+    //private HashMap<Site, Integer> DestFiles;
+    private ArrayList<Site> destinations;
     private int TotalWeight;
     private int Status;
 
-    public Transport(int id, String date, String time, int truckNumber, Driver driver, Site source,
-                     HashMap<Site, Integer> destFiles, int weight){
+    public Transport(int id, Date date, int truckNumber, Driver driver, Site source,
+                     ArrayList<Site> destinations, int weight){
         ID = id;
         Date = date;
-        Time = time;
         TruckNumber = truckNumber;
         Driver = driver;
         Source = source;
-        DestFiles = destFiles;
+       // DestFiles = destFiles;
+        this.destinations=destinations;
         TotalWeight = weight;
+        Status=0;
     }
 
     public int getID() {
         return ID;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return Date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         Date = date;
-    }
-
-    public String getTime() {
-        return Time;
-    }
-
-    public void setTime(String time) {
-        Time = time;
     }
 
     public int getTruckNumber() {
@@ -69,14 +64,14 @@ public class Transport {
     public void setSource(Site source) {
         Source = source;
     }
-
-    public HashMap<Site, Integer> getDestFiles() {
-        return DestFiles;
-    }
-
-    public void setDestFiles(HashMap<Site, Integer> destFiles) {
-        DestFiles = destFiles;
-    }
+//
+//    public HashMap<Site, Integer> getDestFiles() {
+//        return DestFiles;
+//    }
+//
+//    public void setDestFiles(HashMap<Site, Integer> destFiles) {
+//        DestFiles = destFiles;
+//    }
 
     public int getWeight() {
         return TotalWeight;
@@ -100,5 +95,39 @@ public class Transport {
 
     public void setStatus(int status) {
         Status = status;
+    }
+
+    public void addDestination(Site s)
+    {
+        destinations.add(s);
+    }
+
+    public void removeDestination(int siteId)
+    {
+        for (int i=0; i<destinations.size();i++)
+        {
+            if (destinations.get(i).getId()==siteId)
+            {
+                destinations.remove(i);
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        String s="id: "+ID+" Date: "+Date.toString()+" TruckNumber: "+TruckNumber+" Driver: "+Driver.getName()
+                +"\nSource: "+Source.toString();
+        if(destinations.size()>0)
+        {
+            s=s+" destinations: \n";
+            for (int i = 0; i < destinations.size(); i++) {
+                s = s + i + ". " + destinations.get(i).toString();
+            }
+        }
+        else {
+            s=s+" destinations: none\n";
+        }
+        s=s+"TotalWeight: "+ TotalWeight+ " Status: "+Status;
+        return s;
     }
 }

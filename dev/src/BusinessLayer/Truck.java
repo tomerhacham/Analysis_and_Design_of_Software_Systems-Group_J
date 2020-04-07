@@ -1,5 +1,6 @@
 package BusinessLayer;
 
+import java.util.Date;
 import java.util.LinkedList;
 
 public class Truck {
@@ -8,9 +9,9 @@ public class Truck {
     private Integer weight;
     private String drivers_license;
     private LinkedList<Transport> transports;
-    private int id;
+    private Integer id;
 
-    public Truck(int id, String license_plate, String model, Integer weight, String drivers_license)
+    public Truck(Integer id, String license_plate, String model, Integer weight, String drivers_license)
     {
         this.id=id;
         this.license_plate=license_plate;
@@ -40,10 +41,37 @@ public class Truck {
         return drivers_license;
     }
 
-    public void addTransport(Transport t)
+    public Boolean checkIfAvailable(Date d)
     {
-        //need to check that the time isn't overlapping another transport
+        //that the time isn't overlapping another transport
+        for(int i=0; i<transports.size(); i++)
+        {
+            if(transports.get(i).getDate().equals(d))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void AddTransport(Transport t)
+    {
         transports.add(t);
+    }
+
+    public String toString()
+    {
+        String s = "id: "+id+ " license plate: "+license_plate+" model: "+model+" weight: "+weight+" drivers license: "+drivers_license+"\n";
+        if(transports.size()>0) {
+            s = s + "transports:\n";
+            for (int i = 0; i < transports.size(); i++) {
+                s = s + i + ". " + transports.get(i).toString();
+            }
+        }
+        else {
+            s=s + "transports: none\n";
+        }
+        return s;
     }
 
 

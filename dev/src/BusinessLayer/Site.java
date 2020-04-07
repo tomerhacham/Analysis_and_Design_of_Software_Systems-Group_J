@@ -1,5 +1,7 @@
 package BusinessLayer;
 
+import java.util.Date;
+
 public class Site {
     private String address;
     private String phone_number;
@@ -50,6 +52,17 @@ public class Site {
 
     public void setShipping_area(Integer shipping_area) {
         this.shipping_area = shipping_area;
+    }
+
+    @Override
+    public String toString() {
+       String s="id: "+id+" address: "+address+" phone number: "+phone_number+" contact: "+contact+" shipping area"+shipping_area+"\n";
+       return s;
+    }
+
+    public Boolean checkIfAvailable(int shipping_area)
+    {
+        return this.shipping_area==shipping_area;
     }
 }
 
