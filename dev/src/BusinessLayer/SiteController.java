@@ -1,5 +1,6 @@
 package BusinessLayer;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
@@ -43,11 +44,11 @@ public class SiteController {
         return sites.get(id).toString();
     }
 
-    public ArrayList<String> getAllSitesDetails()
+    public String getAllSitesDetails()
     {
-        ArrayList<String> details=new ArrayList<>();
+        String details="";
         for (Integer i:sites.keySet()) {
-            details.add(getSiteDetails(i));
+            details=details+getSiteDetails(i)+"\n";
         }
         return details;
     }
@@ -57,13 +58,13 @@ public class SiteController {
         return sites.get(my_id).checkIfAvailable(sites.get(other_id).getShipping_area());
     }
 
-    public ArrayList<String> getAvailbleSites(Integer other_id)
+    public String getAvailbleSites(Integer other_id)
     {
-        ArrayList<String> available = new ArrayList<>();
+        String available = "";
         for (Integer i:sites.keySet()) {
             if(checkIfAvailable(i,other_id))
             {
-                available.add(getSiteDetails(i));
+                available=available+getSiteDetails(i)+"\n";
             }
         }
         return available;

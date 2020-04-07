@@ -39,11 +39,11 @@ public class TransportController {
         return transports.get(id).toString();
     }
 
-    public ArrayList<String> getAllTransportsDetails()
+    public String getAllTransportsDetails()
     {
-        ArrayList<String> details=new ArrayList<>();
+        String details="";
         for (Integer i:transports.keySet()) {
-            details.add(getTransportDetails(i));
+            details = details+getTransportDetails(i)+"\n";
         }
         return details;
     }

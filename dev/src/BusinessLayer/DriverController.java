@@ -39,11 +39,11 @@ public class DriverController {
         return drivers.get(id).toString();
     }
     
-    public ArrayList<String> getAllDriversDetails()
+    public String getAllDriversDetails()
     {
-        ArrayList<String> details=new ArrayList<>();
+        String details="";
         for (Integer i:drivers.keySet()) {
-           details.add(getDriverDetails(i));
+           details=details+getDriverDetails(i)+"\n";
         }
         return details;
     }
@@ -53,13 +53,13 @@ public class DriverController {
         return drivers.get(id).checkIfAvailable(date, licence);
     }
 
-    public ArrayList<String> getAvailbleDrivers(Date date, String licence)
+    public String getAvailbleDrivers(Date date, String licence)
     {
-        ArrayList<String> available = new ArrayList<>();
+        String available = "";
         for (Integer i:drivers.keySet()) {
             if(checkIfAvailable(date, i, licence))
             {
-                available.add(getDriverDetails(i));
+                available=available+getDriverDetails(i)+"\n";
             }
         }
         return available;

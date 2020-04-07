@@ -44,11 +44,11 @@ public class TruckController {
         return trucks.get(id).toString();
     }
 
-    public ArrayList<String> getAllTrucksDetails()
+    public String getAllTrucksDetails()
     {
-        ArrayList<String> details=new ArrayList<>();
+        String details="";
         for (Integer i:trucks.keySet()) {
-            details.add(getTruckDetails(i));
+            details=details+getTruckDetails(i);
         }
         return details;
     }
@@ -58,13 +58,13 @@ public class TruckController {
         return trucks.get(id).checkIfAvailable(date);
     }
 
-    public ArrayList<String> getAvailbleTrucks(Date date)
+    public String getAvailbleTrucks(Date date)
     {
-        ArrayList<String> available = new ArrayList<>();
+        String available = "";
         for (Integer i:trucks.keySet()) {
             if(checkIfAvailable(date, i))
             {
-                available.add(getTruckDetails(i));
+                available=available+getTruckDetails(i);
             }
         }
         return available;
