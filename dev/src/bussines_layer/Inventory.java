@@ -29,10 +29,7 @@ public class Inventory {
     public Result addMainCategory(String name){
         return categoryController.addNewCategory(name);
     }
-
-    public Result addSubCategory(Integer predecessor_cat_id, String name){
-        return categoryController.addNewCategory(predecessor_cat_id, name);
-    }
+    public Result addSubCategory(Integer predecessor_cat_id, String name){return categoryController.addNewCategory(predecessor_cat_id, name);}
     public Result removeCategory(Integer category_id){
         return categoryController.removeCategory(category_id);
     }
