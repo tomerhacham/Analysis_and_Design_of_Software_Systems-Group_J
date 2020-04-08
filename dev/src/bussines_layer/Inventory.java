@@ -98,21 +98,34 @@ public class Inventory {
     //endregion
 
     //region Report Management
-    public Result makeReport(String catalogID,ReportType type){
+    public Result makeReport(String catalogID,String stype){
+
         GeneralProduct generalProduct=productController.searchGeneralProductbyCatalogID(catalogID);
         List<GeneralProduct> dummy_list = new LinkedList<>();
         dummy_list.add(generalProduct);
-        return reportController.makeReport(dummy_list, type);
+        return reportController.makeReport(dummy_list, convertstringtoEnum(stype));
     }
-    public Result makeReport(Integer category_id,ReportType type){
+    public Result makeReport(Integer category_id,String stype){
         Category category = categoryController.searchCategorybyId(category_id);
         List general_products = category.getAllGeneralProduct();
-        return reportController.makeReport(general_products,type);
+        return reportController.makeReport(general_products,convertstringtoEnum(stype));
     }
-    public Result makeReport(ReportType type){
+    public Result makeReport(String stype){
         Category superCategory = categoryController.superCategory();
         List all_general_products = superCategory.getAllGeneralProduct();
-        return reportController.makeReport(all_general_products,type);
+        return reportController.makeReport(all_general_products,convertstringtoEnum(stype));
+    }
+    private ReportType convertstringtoEnum(String stype){
+        switch(stype){
+            case ("outofstock"):
+                return ReportType.OutOfStock;
+            case ("instock"):
+                return ReportType.InStock;
+            case ("dne"):
+                return ReportType.ExpiredDamaged;
+            default:
+                return null;
+        }
     }
     //endregion
 

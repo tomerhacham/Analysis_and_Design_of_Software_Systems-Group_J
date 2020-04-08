@@ -6,6 +6,7 @@ import java.util.List;
 enum ReportType
 {OutOfStock,InStock,ExpiredDamaged;}
 
+
 public class Report {
     //fields:
     private ReportType type;
