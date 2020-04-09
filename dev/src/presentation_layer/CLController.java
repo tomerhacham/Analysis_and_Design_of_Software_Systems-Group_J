@@ -1,5 +1,6 @@
 package presentation_layer;
 
+import bussines_layer.Category;
 import bussines_layer.Inventory;
 import bussines_layer.Result;
 
@@ -15,6 +16,7 @@ public class CLController {
         Boolean exit=false;
         Scanner sc = new Scanner(System.in);    //System.in is a standard input stream
         printLogo();
+        exit = printInitializeMenu(sc, exit, inventory);
         while(!exit) {
             printMainMenu();
             Integer option = getNextInt(sc);
@@ -53,6 +55,37 @@ public class CLController {
                 "            | |                      \n" +
                 "            |_|     \n";
         System.out.println(logo);
+    }
+
+    static private Boolean printInitializeMenu(Scanner sc, Boolean exit, Inventory inventory) {
+        String menu = "";
+        menu = menu.concat("Choose one of the options:\n");
+        menu = menu.concat("1) Run system with initial data\n");
+        menu = menu.concat("2) Run system blank\n");
+        menu = menu.concat("3) Exit\n\n");
+        System.out.println(menu);
+        Integer option = getNextInt(sc);
+        while (true) {
+            switch (option) {
+                case 1:
+                    initializeData(inventory);
+                    return false;
+                case 2:
+                    return false;
+                case 3:
+                    return true;
+                default:
+                    System.out.println("Option not valid, please retype");
+            }
+        }
+    }
+
+    static private void initializeData(Inventory inventory){
+        Result res_cat_hygiene = inventory.addMainCategory("Hygiene");
+        Result res_cat_tp = inventory.addSubCategory(((Category)res_cat_hygiene.getData()).getId(), "Toilet paper");
+        Result res_cat_30 = inventory.addSubCategory(((Category)res_cat_tp.getData()).getId(), "30 units");
+        inventory.addGeneralProduct(((Category)res_cat_30.getData()).getId(), "Niguvim", "174", "Toilet paper double layer 30u", 18.5f, 31.5f, 1, 1);
+        inventory.addSpecificProduct("174", convertStringToDate("13/07/2025"), 1);
     }
 
     static private void printMainMenu() {

@@ -5,7 +5,7 @@ import javafx.util.Pair;
 import java.util.LinkedList;
 import java.util.List;
 
-public class initializer {
+public class Initializer {
     //fields:
     Inventory inv;
     /*String[] crema_500 = {"Crema", "Crema1", "Crema shampoo 500ml", "20.0", "30.0", "10", "1"};
@@ -22,7 +22,9 @@ public class initializer {
 
      */
 
-    public initializer(Inventory inv) {
+
+
+    public Initializer(Inventory inv) {
         this.inv = inv;
         /*
         shampoo_sizes.add(_500ml_products);
