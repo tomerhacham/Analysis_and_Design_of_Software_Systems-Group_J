@@ -13,6 +13,7 @@ public class Sale {
     private Date start;
     private Date end;
     private discountType type;
+    private Boolean active;
 
     //Constructor
     public Sale(Integer sale_id, List<GeneralProduct> products_on_sale,discountType type) {
@@ -21,6 +22,7 @@ public class Sale {
         this.type=type;
         this.start=null;
         this.end=null;
+        active = true;
     }
     public Sale(Integer sale_id, List<GeneralProduct> products_on_sale, discountType type,Date start, Date end) {
         if(start.before(end)) {
@@ -29,6 +31,7 @@ public class Sale {
             this.products_on_sale = products_on_sale;
             this.start = start;
             this.end = end;
+            active = true;
         }
     }
 
@@ -58,20 +61,22 @@ public class Sale {
             result = product.cancelSale();
             msg=msg.concat(result.getMessage().concat("\n"));
         }
+        active = false;
         return result;
     }
     public boolean isActive() {
         if (end != null) {
             Date current = new Date();
-            return current.before(end);
+            active = current.before(end);
         }
-        return true;
+        return active;
     }
 
     @Override
     public String toString() {
         return "Sale{" +
                 "sale_id=" + sale_id +
+                ", active=" + active +
                 ", start=" + start +
                 ", end=" + end +
                 ", type=" + type.name() +

@@ -3,38 +3,42 @@ package presentation_layer;
 import bussines_layer.Category;
 import bussines_layer.Inventory;
 import bussines_layer.Result;
+import Initializer.Initializer;
+import com.sun.org.apache.xml.internal.security.Init;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
+import static java.lang.System.exit;
+
 public class CLController {
 
     public static void main(String[] args) {
         Inventory inventory=new Inventory();
-        Boolean exit=false;
+        Boolean exit= false;
         Scanner sc = new Scanner(System.in);    //System.in is a standard input stream
         printLogo();
-        exit = printInitializeMenu(sc, exit, inventory);
+        printInitializeMenu(sc, inventory);
         while(!exit) {
             printMainMenu();
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
-                    printProductMenu(sc,exit,inventory);
+                    printProductMenu(sc, inventory);
                     break;
                 case (2):
-                    printCategoryMenu(sc,exit,inventory);
+                    printCategoryMenu(sc, inventory);
                     break;
                 case (3):
-                    printReportMenu(sc,exit,inventory);
+                    printReportMenu(sc, inventory);
                     break;
                 case (4):
-                    printSaleMenu(sc,exit,inventory);
+                    printSaleMenu(sc, inventory);
                     break;
                 case (5):
-                    printDataMapperMenu(sc,exit,inventory);
+                    printDataMapperMenu(sc, inventory);
                     break;
                 case (6):
                     exit=true;
@@ -57,7 +61,7 @@ public class CLController {
         System.out.println(logo);
     }
 
-    static private Boolean printInitializeMenu(Scanner sc, Boolean exit, Inventory inventory) {
+    static private void printInitializeMenu(Scanner sc, Inventory inventory) {
         String menu = "";
         menu = menu.concat("Choose one of the options:\n");
         menu = menu.concat("1) Run system with initial data\n");
@@ -68,24 +72,16 @@ public class CLController {
         while (true) {
             switch (option) {
                 case 1:
-                    initializeData(inventory);
-                    return false;
+                    Initializer.initialize(inventory);
+                    return;
                 case 2:
-                    return false;
+                    return;
                 case 3:
-                    return true;
+                    Exit();
                 default:
                     System.out.println("Option not valid, please retype");
             }
         }
-    }
-
-    static private void initializeData(Inventory inventory){
-        Result res_cat_hygiene = inventory.addMainCategory("Hygiene");
-        Result res_cat_tp = inventory.addSubCategory(((Category)res_cat_hygiene.getData()).getId(), "Toilet paper");
-        Result res_cat_30 = inventory.addSubCategory(((Category)res_cat_tp.getData()).getId(), "30 units");
-        inventory.addGeneralProduct(((Category)res_cat_30.getData()).getId(), "Niguvim", "174", "Toilet paper double layer 30u", 18.5f, 31.5f, 1, 1);
-        inventory.addSpecificProduct("174", convertStringToDate("13/07/2025"), 1);
     }
 
     static private void printMainMenu() {
@@ -101,7 +97,7 @@ public class CLController {
     }
 
     //region Products Management
-    static private void printProductMenu(Scanner sc,Boolean exit,Inventory inv) {
+    static private void printProductMenu(Scanner sc, Inventory inv) {
         String menu = "Products management\n";
         menu=menu.concat("1) Add new general product\n");
         menu=menu.concat("2) Edit general product\n");
@@ -112,54 +108,52 @@ public class CLController {
         menu=menu.concat("7) Change location of specific product\n");
         menu=menu.concat("8) Return\n");
         menu=menu.concat("9) exit\n\n");
-        while(!exit) {
+        while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
-                    printAddGeneralProductMenu(sc,exit,inv);
+                    printAddGeneralProductMenu(sc, inv);
                     break;
                 case (2):
-                    printEditGeneralProductMenu(sc,exit,inv);
+                    printEditGeneralProductMenu(sc, inv);
                     break;
                 case (3):
-                    printRemoveGeneralProductMenu(sc,exit,inv);
+                    printRemoveGeneralProductMenu(sc,inv);
                     break;
                 case (4):
-                    printAddSpecificProductMenu(sc,exit,inv);
+                    printAddSpecificProductMenu(sc,inv);
                     break;
                 case (5):
-                    printRemoveSpecificProductMenu(sc,exit,inv);
+                    printRemoveSpecificProductMenu(sc,inv);
                     break;
                 case (6):
-                    printMarkAsFlawtMenu(sc,exit,inv);
+                    printMarkAsFlawtMenu(sc,inv);
                     break;
                 case (7):
-                    printMoveLocationtMenu(sc,exit,inv);
+                    printMoveLocationtMenu(sc,inv);
                     break;
                 case (8):
                     return;
                 case (9):
-                    exit=true;
-                    break;
+                    Exit();
                 default:
                     System.out.println("Option not valid, please retype");
             }
         }
-
     }
 
     //region General Product
-    static private void printAddGeneralProductMenu(Scanner sc,Boolean exit,Inventory inv) {
+    static private void printAddGeneralProductMenu(Scanner sc,Inventory inv) {
         Result result;
         String menu = "Please enter the following details\n";
-        menu=menu.concat("[CategoryID],[Manufacture],[CatalogID],[Name],[Supplier price],[Retail price],[initial quantity],[Minimum quantity]");
+        menu=menu.concat("[CategoryID],[Manufacture],[CatalogID],[Name],[Supplier price],[Retail price],[Minimum quantity]");
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
-        if (param.length==8){
-            result=inv.addGeneralProduct(Integer.parseInt(param[0]) ,param[1],param[2],param[3],
-                                        Float.parseFloat(param[4]),Float.parseFloat(param[5]),
-                                        Integer.parseInt(param[6]),Integer.parseInt(param[7]));
+        if (param.length==7){
+            result=inv.addGeneralProduct(Integer.parseInt(param[0]),param[1],param[2],param[3],
+                                        Float.parseFloat(param[4]),Float.parseFloat(param[5]), 0,
+                                        Integer.parseInt(param[6]));
             System.out.println(result.getMessage());
         }
         else{
@@ -167,7 +161,7 @@ public class CLController {
         }
     }
 
-    static private void printRemoveGeneralProductMenu(Scanner sc,Boolean exit,Inventory inv) {
+    static private void printRemoveGeneralProductMenu(Scanner sc,Inventory inv) {
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[CategoryID],[CatalogID]");
@@ -182,7 +176,7 @@ public class CLController {
         }
     }
 
-    static private void printEditGeneralProductMenu(Scanner sc,Boolean exit,Inventory inv) {
+    static private void printEditGeneralProductMenu(Scanner sc,Inventory inv) {
         Result result;
         String[] param;
         String menu = "editing general product\n";
@@ -194,7 +188,7 @@ public class CLController {
         menu=menu.concat("6) Return\n");
         menu=menu.concat("7) Exit\n\n");
 
-        while(!exit) {
+        while(true) {
             System.out.println(menu);
             String details = "Please enter the following details\n";
             Integer option = getNextInt(sc);
@@ -262,8 +256,7 @@ public class CLController {
                 case (6):
                     return;
                 case (7):
-                    exit=true;
-                    break;
+                    Exit();
                 default:
                     System.out.println("Option not valid, please retype");
             }
@@ -272,7 +265,7 @@ public class CLController {
 
     //endregion
     //region Specific Product
-    static private void printAddSpecificProductMenu(Scanner sc,Boolean exit,Inventory inv) {
+    static private void printAddSpecificProductMenu(Scanner sc, Inventory inv) {
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[CatalogID],[Expiration date (dd/mm/YYYY)],[Quantity]");
@@ -292,7 +285,7 @@ public class CLController {
         }
     }
 
-    static private void printRemoveSpecificProductMenu(Scanner sc,Boolean exit,Inventory inv) {
+    static private void printRemoveSpecificProductMenu(Scanner sc,Inventory inv) {
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[Specific productID]");
@@ -307,7 +300,7 @@ public class CLController {
         }
     }
 
-    static private void printMarkAsFlawtMenu(Scanner sc,Boolean exit,Inventory inv) {
+    static private void printMarkAsFlawtMenu(Scanner sc,Inventory inv) {
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[Specific productID]");
@@ -322,7 +315,7 @@ public class CLController {
         }
     }
 
-    static private void printMoveLocationtMenu(Scanner sc,Boolean exit,Inventory inv) {
+    static private void printMoveLocationtMenu(Scanner sc,Inventory inv) {
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[Specific productID]");
@@ -341,7 +334,7 @@ public class CLController {
     //endregion
 
     //region Category Management
-    static private void printCategoryMenu(Scanner sc,Boolean exit,Inventory inv) {
+    static private void printCategoryMenu(Scanner sc, Inventory inv) {
         String menu = "Category management\n";
         menu=menu.concat("1) Add new main category\n");
         menu=menu.concat("2) Add new sub category\n");
@@ -350,34 +343,33 @@ public class CLController {
         menu=menu.concat("5) Return\n");
         menu=menu.concat("6) Exit\n");
 
-        while(!exit) {
+        while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
-                    printAddMainCategoryMenu(sc,exit,inv);
+                    printAddMainCategoryMenu(sc, inv);
                     break;
                 case (2):
-                    printAddSubCategory(sc,exit,inv);
+                    printAddSubCategory(sc,inv);
                     break;
                 case (3):
-                    printRemoveCategory(sc,exit,inv);
+                    printRemoveCategory(sc,inv);
                     break;
                 case (4):
-                    printEditCategoryNameMenu(sc,exit,inv);
+                    printEditCategoryNameMenu(sc,inv);
                     break;
                 case (5):
                     return;
                 case (6):
-                    exit=true;
-                    break;
+                    Exit();
                 default:
                     System.out.println("Option not valid, please retype");
             }
         }
     }
 
-    static private void printAddMainCategoryMenu(Scanner sc,Boolean exit,Inventory inv) {
+    static private void printAddMainCategoryMenu(Scanner sc, Inventory inv) {
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[Name]");
@@ -392,7 +384,7 @@ public class CLController {
         }
     }
 
-    static private void printAddSubCategory(Scanner sc,Boolean exit,Inventory inv) {
+    static private void printAddSubCategory(Scanner sc, Inventory inv) {
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[Super categoryID],[Name]\n");
@@ -408,7 +400,7 @@ public class CLController {
         }
     }
 
-    static private void printRemoveCategory(Scanner sc,Boolean exit,Inventory inv) {
+    static private void printRemoveCategory(Scanner sc, Inventory inv) {
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[CategoryID]");
@@ -423,7 +415,7 @@ public class CLController {
         }
     }
 
-    static private void printEditCategoryNameMenu(Scanner sc,Boolean exit,Inventory inv) {
+    static private void printEditCategoryNameMenu(Scanner sc, Inventory inv) {
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[CategoryID],[Name]");
@@ -440,65 +432,63 @@ public class CLController {
     //endregion
 
     //region Report Management
-    static private void printReportMenu(Scanner sc,Boolean exit,Inventory inv) {
+    static private void printReportMenu(Scanner sc, Inventory inv) {
         String menu = "Report management\n";
         menu=menu.concat("1) Issue out of stock report\n");
         menu=menu.concat("2) Issue in-stock report\n");
         menu=menu.concat("3) Issue damaged&expired report\n");
         menu=menu.concat("4) Return\n");
         menu=menu.concat("5) Exit\n\n");
-        while(!exit) {
+        while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
-                    printOutOfStockReportMenu(sc,exit,inv);
+                    printOutOfStockReportMenu(sc,inv);
                     break;
                 case (2):
-                    printInStockReportMenu(sc,exit,inv);
+                    printInStockReportMenu(sc,inv);
                     break;
                 case (3):
-                    printDNEReportMenu(sc,exit,inv);
+                    printDNEReportMenu(sc,inv);
                     break;
                 case (4):
                     return;
                 case (5):
-                    exit=true;
-                    break;
+                    Exit();
                 default:
                     System.out.println("Option not valid, please retype");
             }
         }
     }
     //region Out of Stock Report
-    static private void printOutOfStockReportMenu(Scanner sc,Boolean exit,Inventory inv) {
+    static private void printOutOfStockReportMenu(Scanner sc, Inventory inv) {
         String menu = "Choose one of the options\n";
         menu=menu.concat("1) By category\n");
         menu=menu.concat("2) By general product\n");
         menu=menu.concat("3) Return\n");
         menu=menu.concat("4) Exit\n\n");
-        while(!exit) {
+        while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
-                    printOutOfStockReportByCategoryMenu(sc,exit,inv);
+                    printOutOfStockReportByCategoryMenu(sc,inv);
                     break;
                 case (2):
-                    printOutOfStockReportByGeneralProductMenu(sc,exit,inv);
+                    printOutOfStockReportByGeneralProductMenu(sc,inv);
                     break;
                 case (3):
                     return;
                 case (4):
-                    exit=true;
-                    break;
+                    Exit();
                 default:
                     System.out.println("Option not valid, please retype");
             }
         }
     }
 
-    static private void printOutOfStockReportByCategoryMenu(Scanner sc,Boolean exit,Inventory inv) {
+    static private void printOutOfStockReportByCategoryMenu(Scanner sc, Inventory inv) {
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[CategoryID]");
@@ -514,7 +504,7 @@ public class CLController {
         }
     }
 
-    static private void printOutOfStockReportByGeneralProductMenu(Scanner sc,Boolean exit,Inventory inv){
+    static private void printOutOfStockReportByGeneralProductMenu(Scanner sc, Inventory inv){
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[CatalogID]");
@@ -531,34 +521,33 @@ public class CLController {
     //endregion
 
     //region In-Stock Report
-    static private void printInStockReportMenu(Scanner sc,Boolean exit,Inventory inv) {
+    static private void printInStockReportMenu(Scanner sc,Inventory inv) {
         String menu = "Choose one of the options\n";
         menu=menu.concat("1) By category\n");
         menu=menu.concat("2) By general product\n");
         menu=menu.concat("3) Return\n");
         menu=menu.concat("4) Exit\n\n");
-        while(!exit) {
+        while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
-                    printInStocReportByCategoryMenu(sc,exit,inv);
+                    printInStocReportByCategoryMenu(sc,inv);
                     break;
                 case (2):
-                    printInStocReportByGeneralProductMenu(sc,exit,inv);
+                    printInStocReportByGeneralProductMenu(sc,inv);
                     break;
                 case (3):
                     return;
                 case (4):
-                    exit=true;
-                    break;
+                    Exit();
                 default:
                     System.out.println("Option not valid, please retype");
             }
         }
     }
 
-    static private void printInStocReportByCategoryMenu(Scanner sc,Boolean exit,Inventory inv) {
+    static private void printInStocReportByCategoryMenu(Scanner sc,Inventory inv) {
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[CategoryID]\n");
@@ -574,7 +563,7 @@ public class CLController {
         }
     }
 
-    static private void printInStocReportByGeneralProductMenu(Scanner sc,Boolean exit,Inventory inv){
+    static private void printInStocReportByGeneralProductMenu(Scanner sc,Inventory inv){
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[CatalogID]");
@@ -591,34 +580,33 @@ public class CLController {
     //endregion
 
     //region Damaged and Expired Report
-    static private void printDNEReportMenu(Scanner sc,Boolean exit,Inventory inv) {
+    static private void printDNEReportMenu(Scanner sc,Inventory inv) {
         String menu = "Choose one of the options\n";
         menu=menu.concat("1) By category\n");
         menu=menu.concat("2) By general product\n");
         menu=menu.concat("3) Return\n");
         menu=menu.concat("4) Exit\n\n");
-        while(!exit) {
+        while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
-                    printDNEReportByCategoryMenu(sc,exit,inv);
+                    printDNEReportByCategoryMenu(sc,inv);
                     break;
                 case (2):
-                    printDNEReportByGeneralProductMenu(sc,exit,inv);
+                    printDNEReportByGeneralProductMenu(sc,inv);
                     break;
                 case (3):
                     return;
                 case (4):
-                    exit=true;
-                    break;
+                    Exit();
                 default:
                     System.out.println("Option not valid, please retype");
             }
         }
     }
 
-    static private void printDNEReportByCategoryMenu(Scanner sc,Boolean exit,Inventory inv) {
+    static private void printDNEReportByCategoryMenu(Scanner sc, Inventory inv) {
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[CategoryID]\n");
@@ -634,7 +622,7 @@ public class CLController {
         }
     }
 
-    static private void printDNEReportByGeneralProductMenu(Scanner sc,Boolean exit,Inventory inv){
+    static private void printDNEReportByGeneralProductMenu(Scanner sc,Inventory inv){
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[CatalogID]");
@@ -653,27 +641,26 @@ public class CLController {
     //endregion
 
     //region Sale Management
-    static private void printSaleMenu(Scanner sc,Boolean exit,Inventory inv) {
+    static private void printSaleMenu(Scanner sc,Inventory inv) {
         String menu = "Sales management\n";
         menu=menu.concat("1) Add new sale\n");
         menu=menu.concat("2) Cancel sale\n");
         menu=menu.concat("3) Return\n");
         menu=menu.concat("4) Exit\n\n");
-        while(!exit) {
+        while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
-                    printAddSaleMenu(sc,exit,inv);
+                    printAddSaleMenu(sc, inv);
                     break;
                 case (2):
-                    printRemoveSaleMenu(sc,exit,inv);
+                    printRemoveSaleMenu(sc, inv);
                     break;
                 case (3):
                     return;
                 case (4):
-                    exit=true;
-                    break;
+                    Exit();
                 default:
                     System.out.println("Option not valid, please retype");
             }
@@ -681,33 +668,32 @@ public class CLController {
     }
 
     //region Add Sale
-    static private void printAddSaleMenu(Scanner sc,Boolean exit,Inventory inv) {
+    static private void printAddSaleMenu(Scanner sc,Inventory inv) {
         String menu = "Choose one of the options\n";
         menu=menu.concat("1) By category\n");
         menu=menu.concat("2) By general product\n");
         menu=menu.concat("3) Return\n");
         menu=menu.concat("4) Exit\n\n");
-        while(!exit) {
+        while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
-                    printAddNewSaleByCategoryMenu(sc,exit,inv);
+                    printAddNewSaleByCategoryMenu(sc,inv);
                     break;
                 case (2):
-                    printAddNewSaleByGeneralProductMenu(sc,exit,inv);
+                    printAddNewSaleByGeneralProductMenu(sc,inv);
                     break;
                 case (3):
                     return;
                 case (4):
-                    exit=true;
-                    break;
+                    Exit();
                 default:
                     System.out.println("Option not valid, please retype");
             }
         }     }
 
-    static private void printAddNewSaleByCategoryMenu(Scanner sc,Boolean exit,Inventory inv){
+    static private void printAddNewSaleByCategoryMenu(Scanner sc,Inventory inv){
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[CategoryID],[Discount percentage\\Fixed price],[Optional: %],[Optional: Start date (dd/mm/YYYY)],[Must if apply 'Start date': End date (dd/mm/YYYY)]\n");
@@ -748,7 +734,7 @@ public class CLController {
             System.out.println("Invalid number of parameters");
         }
     }
-    static private void printAddNewSaleByGeneralProductMenu(Scanner sc,Boolean exit,Inventory inv){
+    static private void printAddNewSaleByGeneralProductMenu(Scanner sc,Inventory inv){
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[CatalogID],[Discount percentage\\Fixed price],[Optional: %],[Optional: Start date (dd/mm/YYYY)],[Must if apply 'Start date': End date (dd/mm/YYYY)]\n");
@@ -791,7 +777,7 @@ public class CLController {
     }
     //endregion
     //region Remove Sale
-    static private void printRemoveSaleMenu(Scanner sc,Boolean exit,Inventory inv){
+    static private void printRemoveSaleMenu(Scanner sc,Inventory inv){
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[SaleID]");
@@ -810,14 +796,14 @@ public class CLController {
     //endregion
 
     //region Data mapping
-    private static void printDataMapperMenu(Scanner sc,Boolean exit,Inventory inv){
+    private static void printDataMapperMenu(Scanner sc,Inventory inv){
         String menu = "Data:\n";
         menu=menu.concat("1) Print all categories\n");
         menu=menu.concat("2) Print all general products\n");
-        menu=menu.concat("3) Print all active sales\n");
+        menu=menu.concat("3) Print all sales\n");
         menu=menu.concat("4) Return\n");
         menu=menu.concat("5) exit\n\n");
-        while(!exit) {
+        while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
             switch (option) {
@@ -833,8 +819,7 @@ public class CLController {
                 case (4):
                     return;
                 case (5):
-                    exit=true;
-                    break;
+                    Exit();
                 default:
                     System.out.println("Option not valid, please retype");
             }
@@ -860,7 +845,7 @@ public class CLController {
         String[] toreturn =user_input.split(",");
         return toreturn;
     }
-    static private Date convertStringToDate(String sdate){
+    static public Date convertStringToDate(String sdate){
         try {
             Date date=new SimpleDateFormat("dd/MM/yyyy").parse(sdate);
             return date;
@@ -876,6 +861,10 @@ public class CLController {
     private static String getNextLine(Scanner sc){
         while(!sc.hasNext()){}
         return sc.nextLine();
+    }
+    static private void Exit(){
+        System.out.println("Bye!");
+        exit(0);
     }
 
 
