@@ -189,10 +189,10 @@ public class GeneralProduct {
                 String expired="\t-Expired items:\n";
                 for(SpecificProduct product:products){
                     if (product.isFlaw()){
-                        damaged.concat("\t\t").concat(product.toString()).concat("\n");
+                        damaged=damaged.concat("\t\t").concat(product.toString()).concat("\n");
                     }
                     if (product.isExpired()){
-                        expired.concat("\t\t").concat(product.toString()).concat("\n");
+                        expired=expired.concat("\t\t").concat(product.toString()).concat("\n");
                     }
                 }
                 selfReport.concat(damaged).concat(expired);

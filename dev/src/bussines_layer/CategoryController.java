@@ -25,10 +25,10 @@ public class CategoryController {
         boolean res=main_categories.add(new_category);
         Result<Category> result;
         if (res){
-            result=new Result(res,new_category,"New category has been added");
+            result=new Result(res,new_category,"New category "+name+" has been added");
         }
         else{
-            result=new Result(res,new_category,"There was a problem with adding new category");
+            result=new Result(res,new_category,"There was a problem with adding new category: "+name);
         }
         return result;
     }
@@ -46,7 +46,7 @@ public class CategoryController {
             result = pre_cat.addSubCategory(name,getNext_id());
         }
         else{
-            result = new Result<>(false,pre_cat,"Could not add sub-category");
+            result = new Result<>(false,pre_cat,"Could not add sub-category: "+name);
         }
         return  result;
     }
@@ -65,9 +65,9 @@ public class CategoryController {
             if (toRemove.getLevel()==1){
                 res = main_categories.remove(toRemove);
                 if (res) {
-                    result = new Result<>(res, toRemove, "Category has been deleted");
+                    result = new Result<>(res, toRemove, "Category "+toRemove.getName()+" has been deleted");
                 } else {
-                    result = new Result<>(res, toRemove, "There was a problem deleting the category");
+                    result = new Result<>(res, toRemove, "There was a problem deleting the category: "+toRemove.getName());
                 }
             }
             else{
@@ -77,7 +77,7 @@ public class CategoryController {
             }
         }
         else {
-            result = new Result<>(res, toRemove, "Could not delete category with product still available in it");
+            result = new Result<>(res, toRemove, "Could not delete category "+ toRemove.getName()+" with product still available in it");
         }
         return result;
     }
@@ -128,10 +128,10 @@ public class CategoryController {
         Result<Category> result;
         if(category!=null){
             category.setName(name);
-            result = new Result<>(true,category,"Successful edit category");
+            result = new Result<>(true,category,"Successful edit category: "+category.getName());
         }
         else{
-            result = new Result<>(false,category,"THere was a problem editing the category");
+            result = new Result<>(false,category,"THere was a problem editing the category: "+category.getName());
         }
         return result;
     }

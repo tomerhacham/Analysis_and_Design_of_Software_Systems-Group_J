@@ -1,9 +1,5 @@
 package bussines_layer;
 
-import com.sun.org.apache.regexp.internal.REUtil;
-import com.sun.org.apache.xml.internal.resolver.Catalog;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -103,19 +99,19 @@ public class Inventory {
         GeneralProduct generalProduct=productController.searchGeneralProductbyCatalogID(catalogID);
         List<GeneralProduct> dummy_list = new LinkedList<>();
         dummy_list.add(generalProduct);
-        return reportController.makeReport(dummy_list, convertstringtoEnum(stype));
+        return reportController.makeReport(dummy_list, convertStringToReportType(stype));
     }
     public Result makeReport(Integer category_id,String stype){
         Category category = categoryController.searchCategorybyId(category_id);
         List general_products = category.getAllGeneralProduct();
-        return reportController.makeReport(general_products,convertstringtoEnum(stype));
+        return reportController.makeReport(general_products, convertStringToReportType(stype));
     }
     public Result makeReport(String stype){
         Category superCategory = categoryController.superCategory();
         List all_general_products = superCategory.getAllGeneralProduct();
-        return reportController.makeReport(all_general_products,convertstringtoEnum(stype));
+        return reportController.makeReport(all_general_products, convertStringToReportType(stype));
     }
-    private ReportType convertstringtoEnum(String stype){
+    private ReportType convertStringToReportType(String stype){
         switch(stype){
             case ("outofstock"):
                 return ReportType.OutOfStock;
@@ -130,24 +126,35 @@ public class Inventory {
     //endregion
 
     //region Sales Management
-    public Result addSale(String catalogID,discountType type,Float amount){
+    public Result addSale(String catalogID,String stype,Float amount){
         GeneralProduct generalProduct = productController.searchGeneralProductbyCatalogID(catalogID);
-        return saleController.addSale(generalProduct,type,amount);
+        return saleController.addSale(generalProduct,convertStringToDiscountType(stype),amount);
     }
-    public Result addSale(String catalogID,discountType type,Float amount, Date start, Date end){
+    public Result addSale(String catalogID,String stype,Float amount, Date start, Date end){
         GeneralProduct generalProduct = productController.searchGeneralProductbyCatalogID(catalogID);
-        return saleController.addSale(generalProduct,type,amount,start,end);
+        return saleController.addSale(generalProduct,convertStringToDiscountType(stype),amount,start,end);
     }
-    public Result addSale(Integer category_id,discountType type,Float amount){
+    public Result addSale(Integer category_id,String stype,Float amount){
         Category _category = categoryController.searchCategorybyId(category_id);
-        return saleController.addSale(_category,type,amount);
+        return saleController.addSale(_category,convertStringToDiscountType(stype),amount);
     }
-    public Result addSale(Integer category_id,discountType type,Float amount,Date start, Date end){
+    public Result addSale(Integer category_id,String stype,Float amount,Date start, Date end){
         Category _category = categoryController.searchCategorybyId(category_id);
-        return saleController.addSale(_category,type,amount,start,end);
+        return saleController.addSale(_category,convertStringToDiscountType(stype),amount,start,end);
     }
     public Result removeSale(Integer sale_id){
         return saleController.removeSale(sale_id);
+    }
+
+    private discountType convertStringToDiscountType(String stype){
+        switch(stype){
+            case ("fix"):
+                return discountType.fix;
+            case ("percentage"):
+                return discountType.precentage;
+            default:
+                return null;
+        }
     }
     //endregion
 

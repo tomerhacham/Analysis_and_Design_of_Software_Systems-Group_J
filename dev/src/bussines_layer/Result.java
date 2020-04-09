@@ -18,7 +18,7 @@ public class Result<T> {
     }
 
     public String getMessage() {
-        return message;
+        return message.concat("\n");
     }
 
     public void setMessage(String message) {

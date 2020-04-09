@@ -48,7 +48,7 @@ public class CLController {
                 "/\\__/ / |_| | |_) |  __/ |  | |___| |\n" +
                 "\\____/ \\__,_| .__/ \\___|_|  \\_____/_|\n" +
                 "            | |                      \n" +
-                "            |_|     ";
+                "            |_|     \n";
         System.out.println(logo);
     }
 
@@ -75,8 +75,8 @@ public class CLController {
         menu=menu.concat("7) Change location of specific product\n");
         menu=menu.concat("8) Return\n");
         menu=menu.concat("9) exit\n\n");
-        System.out.println(menu);
         while(!exit) {
+            System.out.println(menu);
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
@@ -156,10 +156,10 @@ public class CLController {
         menu=menu.concat("5) Edit minimum quantity\n");
         menu=menu.concat("6) Return\n");
         menu=menu.concat("7) Exit\n\n");
-        System.out.println(menu);
 
-        String details = "Please enter the following details\n";
         while(!exit) {
+            System.out.println(menu);
+            String details = "Please enter the following details\n";
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
@@ -310,11 +310,11 @@ public class CLController {
         menu=menu.concat("2) Add new sub category\n");
         menu=menu.concat("3) remove category\n");
         menu=menu.concat("4) Edit category name\n");
-        menu=menu.concat("5) Return");
+        menu=menu.concat("5) Return\n");
         menu=menu.concat("6) Exit\n\n");
-        System.out.println(menu);
 
         while(!exit) {
+            System.out.println(menu);
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
@@ -409,8 +409,8 @@ public class CLController {
         menu=menu.concat("3) Issue damaged&expired report\n");
         menu=menu.concat("4) Return\n");
         menu=menu.concat("5) Exit\n\n");
-        System.out.println(menu);
         while(!exit) {
+            System.out.println(menu);
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
@@ -439,8 +439,8 @@ public class CLController {
         menu=menu.concat("2) By general product\n");
         menu=menu.concat("3) Return\n");
         menu=menu.concat("4) Exit\n\n");
-        System.out.println(menu);
         while(!exit) {
+            System.out.println(menu);
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
@@ -499,8 +499,8 @@ public class CLController {
         menu=menu.concat("2) By general product\n");
         menu=menu.concat("3) Return\n");
         menu=menu.concat("4) Exit\n\n");
-        System.out.println(menu);
         while(!exit) {
+            System.out.println(menu);
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
@@ -559,8 +559,8 @@ public class CLController {
         menu=menu.concat("2) By general product\n");
         menu=menu.concat("3) Return\n");
         menu=menu.concat("4) Exit\n\n");
-        System.out.println(menu);
         while(!exit) {
+            System.out.println(menu);
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
@@ -621,8 +621,8 @@ public class CLController {
         menu=menu.concat("2) Cancel sale\n");
         menu=menu.concat("3) Return\n");
         menu=menu.concat("4) Exit\n\n");
-        System.out.println(menu);
         while(!exit) {
+            System.out.println(menu);
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
@@ -649,8 +649,8 @@ public class CLController {
         menu=menu.concat("2) By general product\n");
         menu=menu.concat("3) Return\n");
         menu=menu.concat("4) Exit\n\n");
-        System.out.println(menu);
         while(!exit) {
+            System.out.println(menu);
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
@@ -775,7 +775,8 @@ public class CLController {
     static private String[] getInputParserbyComma(Scanner sc){
         String user_input = getNextLine(sc);
         System.out.println(user_input);
-        return user_input.split(",");
+        String[] toreturn =user_input.split(",");
+        return toreturn;
     }
     static private Date convertStringToDate(String sdate){
         try {
@@ -787,16 +788,12 @@ public class CLController {
         }
     }
     private static Integer getNextInt(Scanner sc){
-        while(!sc.hasNext()){
-            return sc.nextInt();
-        }
-        return null;
+        while(!sc.hasNext()){}
+        return Integer.parseInt(sc.nextLine());
     }
     private static String getNextLine(Scanner sc){
-        while(!sc.hasNext()){
-            return sc.nextLine();
-        }
-        return null;
+        while(!sc.hasNext()){}
+        return sc.nextLine();
     }
 
 
