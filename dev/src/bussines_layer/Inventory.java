@@ -158,5 +158,18 @@ public class Inventory {
     }
     //endregion
 
+    //region Debug tools
+    public String mapAllCategories(){
+        return categoryController.toString();
+    }
+    public String mapAllGeneralProducts(){
+        return productController.toString();
+    }
+    public String mapAllSales(){
+        return saleController.toString();
+    }
+
+    //endregion
+
     //endregion
 }

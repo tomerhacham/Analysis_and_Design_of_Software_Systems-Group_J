@@ -25,7 +25,7 @@ public class CategoryController {
         boolean res=main_categories.add(new_category);
         Result<Category> result;
         if (res){
-            result=new Result(res,new_category,"New category "+name+" has been added");
+            result=new Result(res,new_category,"New category "+name+"("+new_category.getId()+")"+" has been added");
         }
         else{
             result=new Result(res,new_category,"There was a problem with adding new category: "+name);
@@ -151,10 +151,12 @@ public class CategoryController {
     }
     @Override
     public String toString() {
-        String toReturn="Main Categories:\n";
+        String toReturn="Categories:\n";
         for (Category category:main_categories) {
-            toReturn=toReturn.concat("\t-").concat(category.getName()).concat("\n");
+            //toReturn=toReturn.concat("\t-").concat(category.getName()).concat("\n");
+            toReturn=toReturn.concat(category.toString());
         }
         return toReturn;
     }
+
 }

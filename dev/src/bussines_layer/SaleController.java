@@ -121,4 +121,13 @@ public class SaleController {
         }
         return null;
     }
+
+    @Override
+    public String toString(){
+        String toReturn = "Sales:\n";
+        for (Sale sale:active_sales){
+            toReturn=toReturn.concat("\t"+sale.toString()+"\n");
+        }
+        return toReturn;
+    }
 }

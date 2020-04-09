@@ -100,7 +100,7 @@ public class GeneralProduct {
         Result<SpecificProduct> result;
         if(res){
             this.quantity++;
-            result = new Result(res, product, "Product:"+product_id+" added successfully");
+            result = new Result(res, product, "Product:"+this.name+"("+product_id+")"+" added successfully");
         }
         else{
             result = new Result(res,product,"There was a problem in adding the product:"+product_id );
@@ -114,7 +114,7 @@ public class GeneralProduct {
         if (toRemove!=null){
            products.remove(toRemove);
            this.quantity--;
-           String msg="Product has been removed from inventory";
+           String msg="Product " +this.name+"("+product_id+")"+" has been removed from inventory";
            if(lowBoundCheck()){msg="Product has been removed from inventory\n ALERT: low quantity has been reached";}
            result = new Result(true,toRemove,msg);
         }
@@ -129,7 +129,7 @@ public class GeneralProduct {
         Result<SpecificProduct> result;
         if (product!=null){
             product.setFlaw_flag(true);
-            result=new Result<>(true,product,"product:"+product_id+" marked as flaw");
+            result=new Result<>(true,product,"product:"+this.name+"("+product_id+")"+" marked as flaw");
         }
         else{
             result = new Result(false,product,"There was a problem marking the product");
@@ -142,7 +142,7 @@ public class GeneralProduct {
         Result<SpecificProduct> result;
         if (product!=null){
             product.shiftLocation();
-            result=new Result<>(true,product,"product:"+product_id+" moved to the "+product.getLocation().name());
+            result=new Result<>(true,product,"product:"+this.name+"("+product_id+")"+" moved to the "+product.getLocation().name());
         }
         else{
             result = new Result(false,product,"There was a problem moving the product");
@@ -240,6 +240,13 @@ public class GeneralProduct {
                 ", quantity=" + quantity +
                 ", min_quantity=" + min_quantity +
                 " ";
+    }
+    public String print(){
+        String toReturn="\t-"+this.name+" catalogID:"+this.getCatalogID()+"("+products.size()+")\n";
+        for(SpecificProduct product:products){
+            toReturn=toReturn.concat("\t\t"+product.toString()+"\n");
+        }
+        return toReturn;
     }
 
     //endregion

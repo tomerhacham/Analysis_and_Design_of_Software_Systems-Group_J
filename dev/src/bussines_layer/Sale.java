@@ -67,4 +67,14 @@ public class Sale {
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Sale{" +
+                "sale_id=" + sale_id +
+                ", start=" + start +
+                ", end=" + end +
+                ", type=" + type.name() +
+                '}';
+    }
 }

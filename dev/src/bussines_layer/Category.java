@@ -67,7 +67,7 @@ public class Category {
             msg = "You have reached hierarchy level";
         }
         if(res){
-            result=new Result(res,new_category,"New category has been added");
+            result=new Result(res,new_category,"New category "+name+"("+id+")"+" has been added");
         }
         else{
             result=new Result(res,new_category,msg);
@@ -136,8 +136,8 @@ public class Category {
         boolean res=false;
         if (sub_categories.contains(toRemove)){
             res=sub_categories.remove(toRemove);
-            if(res){result=new Result<>(res,toRemove,"Category has been deleted");}
-            else{result=new Result<>(res,toRemove,"There was a problem deleting the category");}
+            if(res){result=new Result<>(res,toRemove,"Category "+this.name+"("+id+")"+" has been deleted");}
+            else{result=new Result<>(res,toRemove,"There was a problem deleting the category"+this.name+"("+id+")");}
         }
         else{
             for (Category category :sub_categories) {
@@ -152,10 +152,10 @@ public class Category {
         if(generalProducts.contains(toRemove)){
             res=generalProducts.remove(toRemove);
             if(res){
-                result = new Result<>(res,toRemove,"General product has been removed from the category");
+                result = new Result<>(res,toRemove,"General product "+toRemove.getName()+"("+toRemove.getCatalogID()+")"+ "has been removed from the category");
             }
             else{
-                result = new Result<>(res,toRemove,"There was a problem removing the product from the category");
+                result = new Result<>(res,toRemove,"There was a problem removing the product "+toRemove.getName()+"("+toRemove.getCatalogID()+")"+"from the category");
             }
         }
         else{
@@ -165,11 +165,20 @@ public class Category {
     }
     @Override
     public String toString() {
-        String toReturn="-".concat(name).concat("\n");
+        String toReturn=tabs()+"-".concat(name).concat("("+id+")").concat("\n");
         for (Category category:sub_categories) {
-            toReturn=toReturn.concat("\t-").concat(category.name).concat("\n");
+            //toReturn=toReturn.concat("\t-").concat(category.name).concat("\n");
+            toReturn=toReturn.concat(category.toString());
         }
         return toReturn;
     }
+    private String tabs(){
+        String tabs="";
+        for(int i=1;i<level;i++){
+            tabs=tabs.concat("\t");
+        }
+        return tabs;
+    }
+
     //endregion
 }

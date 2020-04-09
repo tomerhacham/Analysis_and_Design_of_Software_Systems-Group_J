@@ -236,4 +236,13 @@ public class ProductController {
     }
     //endregion
 
+    @Override
+    public String toString(){
+        String toReturn = "General Product:\n";
+        for (GeneralProduct product:generalProducts){
+            toReturn=toReturn.concat("\t"+product.print());
+        }
+        return toReturn;
+    }
+
 }
