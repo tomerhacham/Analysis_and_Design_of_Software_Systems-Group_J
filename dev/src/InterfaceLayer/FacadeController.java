@@ -12,6 +12,7 @@ public class FacadeController {
     private static SiteController siteController = SiteController.getInstance();
     private static TransportController transportController = TransportController.getInstance();
     private static TruckController truckController = TruckController.getInstance();
+    private static ProductsController productsController = ProductsController.getInstance();
 
     private FacadeController(){}
 
@@ -82,5 +83,17 @@ public class FacadeController {
 
     public String getAvailableSites(int sourceID) {
         return siteController.getAvailableSites(sourceID);
+    }
+
+    public int createProductsFile() {
+        return productsController.CreateFile();
+    }
+
+    public void createProduct(String productName, int productWeight, int fileID, int quantity) {
+        productsController.CreateProduct(productName, productWeight, fileID, quantity);
+    }
+
+    public int getTotalWeight(HashMap<Integer, Integer> destFiles) {
+        return productsController.getTotalWeight(destFiles);
     }
 }

@@ -6,6 +6,12 @@ public class Product {
     private String name;
     private int weight;
 
+    public Product(int id, String productName, int productWeight) {
+        ID = id;
+        name = productName;
+        weight = productWeight;
+    }
+
     public int getID() {
         return ID;
     }

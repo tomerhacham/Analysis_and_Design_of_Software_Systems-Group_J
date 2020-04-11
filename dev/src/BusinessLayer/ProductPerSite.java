@@ -19,4 +19,13 @@ public class ProductPerSite {
     public HashMap<Product, Integer> getProducts() {
         return products;
     }
+
+    public ProductPerSite(int ID){
+        fileID = ID;
+    }
+
+    public void addProduct(Product p, int quantity) {
+        products.put(p, quantity);
+        totalWeight += p.getWeight()*quantity;
+    }
 }

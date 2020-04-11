@@ -186,7 +186,9 @@ public class IO {
                 String productName = scanner.nextLine();
                 System.out.println("Please enter weight of a product: ");
                 int productWeight = scanner.nextInt();
-                facadeController.createProduct(productName, productWeight, fileID);
+                System.out.println("How many items form this product? ");
+                int quantity = scanner.nextInt();
+                facadeController.createProduct(productName, productWeight, fileID, quantity);
             }
             DestFiles.put(destID, fileID);
         }
