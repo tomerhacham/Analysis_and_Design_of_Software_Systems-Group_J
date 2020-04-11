@@ -22,6 +22,11 @@ public class DriverController {
         return instance;
     }
 
+    public Driver getById(int id)
+    {
+        return drivers.get(id);
+    }
+
     public void CreateDriver(String license, String name)
     {
         Driver d = new Driver(Id_Counter, license, name);

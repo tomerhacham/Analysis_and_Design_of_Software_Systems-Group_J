@@ -39,7 +39,7 @@ public class FacadeController {
     }
 
     public String getAvailableTrucks(Date date, int totalWeight) {
-        return truckController.getAvailbleTrucks(date, int totalWeight);
+        return truckController.getAvailbleTrucks(date,  totalWeight);
     }
 
     public String getAvailableDrivers(Date date, int truckID) {

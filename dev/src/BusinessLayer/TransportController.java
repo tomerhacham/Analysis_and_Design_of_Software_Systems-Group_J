@@ -4,6 +4,10 @@ import java.util.*;
 
 public class TransportController {
     private static  TransportController instance = null;
+    private static SiteController siteController=SiteController.getInstance();
+    private static DriverController driverController=DriverController.getInstance();
+    private static ProductsController productsController=ProductsController.getInstance();
+
 
     private Hashtable<Integer,Transport> transports;
     private int Id_Counter;
@@ -21,10 +25,13 @@ public class TransportController {
         return instance;
     }
 
-    public void CreateTransport( Date date, int truckNumber, Driver driver, Site source,
-                                 ArrayList<Site> destinations)
+    public void CreateTransport(Date date, int truckNumber, int driver, int source, HashMap<Integer, Integer> destFiles, int weight)
     {
-        Transport t = new Transport(Id_Counter, date, truckNumber, driver, source, destinations, 0);
+        HashMap<Site,ProductPerSite> D_F=new HashMap<>();
+        for (int i:destFiles.keySet()) {
+            D_F.put(siteController.getById(i),productsController.getFileByID(destFiles.get(i)));
+        }
+        Transport t = new Transport(Id_Counter, date, truckNumber, driverController.getById(driver),siteController.getById(source), D_F, weight);
         Id_Counter++;
         transports.put(t.getID(),t);
     }
@@ -63,9 +70,9 @@ public class TransportController {
     public void setTransportWeight(int weight, int id){transports.get(id).setWeight(weight); }
 
 
-    public void addDestinationToTransport(int id, Site s){transports.get(id).addDestination(s);}
+    public void addDestinationToTransport(int id, Site s, ProductPerSite productPerSite){transports.get(id).addDestFiles(s,productPerSite);}
 
-    public void removeDestinationFromTransport(int site_id, int t_id){transports.get(t_id).removeDestination(site_id);}
+    public void removeDestinationFromTransport(int site_id, int t_id){transports.get(t_id).removeDestFiles(siteController.getById(site_id));}
 
     public void addToLog(String s, Integer id)
     {

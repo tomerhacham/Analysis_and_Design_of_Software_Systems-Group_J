@@ -34,6 +34,10 @@ public class SiteController {
         sites.put(s.getId(),s);
     }
 
+    public Site getById(int id)
+    {
+        return sites.get(id);
+    }
     public void DeleteSite(Integer id)
     {
         sites.remove(id);

@@ -1,5 +1,4 @@
 package BusinessLayer;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,20 +10,18 @@ public class Transport {
     private int TruckNumber;
     private Driver Driver;
     private Site Source;
-    //private HashMap<Site, Integer> DestFiles;
-    private ArrayList<Site> destinations;
+    private HashMap<Site, ProductPerSite> DestFiles;
     private int TotalWeight;
     private ArrayList<String> log;
 
     public Transport(int id, Date date, int truckNumber, Driver driver, Site source,
-                     ArrayList<Site> destinations, int weight){
+                     HashMap<Site, ProductPerSite> destFiles, int weight){
         ID = id;
         Date = date;
         TruckNumber = truckNumber;
         Driver = driver;
         Source = source;
-       // DestFiles = destFiles;
-        this.destinations=destinations;
+        DestFiles=destFiles;
         TotalWeight = weight;
         log =new ArrayList<>();
     }
@@ -64,14 +61,6 @@ public class Transport {
     public void setSource(Site source) {
         Source = source;
     }
-//
-//    public HashMap<Site, Integer> getDestFiles() {
-//        return DestFiles;
-//    }
-//
-//    public void setDestFiles(HashMap<Site, Integer> destFiles) {
-//        DestFiles = destFiles;
-//    }
 
     public int getWeight() {
         return TotalWeight;
@@ -81,44 +70,37 @@ public class Transport {
         TotalWeight = weight;
     }
 
-/*    public List<Product> getProducts() {
-        return products;
+
+    public void addDestFiles(Site s, ProductPerSite productPerSite)
+    {
+        DestFiles.put(s, productPerSite);
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }*/
-
-
-    public void addDestination(Site s)
+    public void removeDestFiles(Site site)
     {
-        destinations.add(s);
+       DestFiles.remove(site);
+
     }
-
-    public void removeDestination(int siteId)
+    public void editDestFiles(Site s, ProductPerSite newProductPerSite)
     {
-        for (int i=0; i<destinations.size();i++)
-        {
-            if (destinations.get(i).getId()==siteId)
-            {
-                destinations.remove(i);
-            }
-        }
+        DestFiles.remove(s);
+        DestFiles.put(s, newProductPerSite);
     }
 
     @Override
     public String toString() {
         String s = "id: " + ID + " Date: " + Date.toString() + " TruckNumber: " + TruckNumber + " Driver: " + Driver.getName()
                 +" Source: "+Source.toString() +"\n";
-        if(destinations.size()>0)
+        if(DestFiles.size()>0)
         {
-            s = s + " destinations: \n";
-            for (int i = 0; i < destinations.size(); i++) {
-                s = s + i + ". " + destinations.get(i).toString();
+            s = s + " destinations and products: \n";
+            for (Site site:DestFiles.keySet()) {
+                s=s+"site: "+site.toString()+"\n";
+                s=s+"products: "+DestFiles.get(site).toString();
             }
         }
         else {
-            s = s + " destinations: none\n";
+            s = s + " destinations and products: none\n";
         }
         s = s + "TotalWeight: " + TotalWeight +"\n";
         if(log.size()>0) {
