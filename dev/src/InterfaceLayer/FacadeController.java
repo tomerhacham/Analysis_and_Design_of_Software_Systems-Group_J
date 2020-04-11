@@ -75,9 +75,8 @@ public class FacadeController {
         transportController.DeleteTransport(transportToDelete);
     }
 
-    public void createTransport(Date date, int truckID, int driverID, int sourceID, HashMap<Integer, Integer> DestFiles, int totalWeight) {
-        String truckNumber = truckController.getTruckNumber(truckID);
-        transportController.CreateTransport(date, truckNumber, driverID, sourceID, DestFiles,totalWeight);
+    public int createTransport() {
+        return transportController.createTransport();
     }
 
     public String getAvailableSites(int sourceID) {
@@ -102,5 +101,29 @@ public class FacadeController {
 
     public void removeProducts(String[] productsToRemove, Integer fileToEdit) {
         productsController.removeProducts(productsToRemove, fileToEdit);
+    }
+
+    public void setTransportDate(int transportID, Date date) {
+        transportController.setTransportDate(date, transportID);
+    }
+
+    public void setTransportSource(int transportID, int sourceID) {
+        transportController.setTransportSource(sourceID, transportID);
+    }
+
+    public void setTransportDestFiles(int transportID, HashMap<Integer, Integer> destFiles) {
+        transportController.setTransportDestFiles(destFiles, transportID);
+    }
+
+    public void setTransportTruck(int transportID, int truckID) {
+        transportController.setTransportTruckNumber(truckID, transportID);
+    }
+
+    public void setTransportWeight(int transportID, int totalWeight) {
+        transportController.setTransportWeight(totalWeight, transportID);
+    }
+
+    public void setTransportDriver(int transportID, int driverID) {
+        transportController.setTransportDriver(driverID, transportID);
     }
 }

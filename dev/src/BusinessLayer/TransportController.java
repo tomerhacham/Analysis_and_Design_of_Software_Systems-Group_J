@@ -72,7 +72,7 @@ public class TransportController {
         transports.get(id).setTruckNumber(truckController.getTruckNumber(truck_id));
     }
 
-    public void setTransportDriverName(int driver, int id) { transports.get(id).setDriver(driverController.getById(driver));    }
+    public void setTransportDriver(int driver, int id) { transports.get(id).setDriver(driverController.getById(driver));    }
 
     public void setTransportSource(int source, int t_id) {
 

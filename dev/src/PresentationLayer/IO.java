@@ -185,10 +185,12 @@ public class IO {
             return;
         facadeController.setTransportTruck(transportID, truckID);
         int totalWeight = facadeController.getTotalWeight(DestFiles);
+        facadeController.setTransportWeight(transportID, totalWeight);
         int driverID = chooseDriver(transportID);
+        facadeController.setTransportDriver(transportID, driverID);
     }
 
-    private int chooseDriver(transportID) {
+    private int chooseDriver(int transportID) {
         while (true) {
             String drivers = facadeController.getAvailableDrivers(facadeController.getTransportDate(transportID),
                     facadeController.getTransportTruck(transportID));
