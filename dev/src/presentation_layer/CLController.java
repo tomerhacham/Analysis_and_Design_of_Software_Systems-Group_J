@@ -4,11 +4,14 @@ import bussines_layer.Category;
 import bussines_layer.Inventory;
 import bussines_layer.Result;
 import Initializer.Initializer;
+import bussines_layer.Sale;
 import com.sun.org.apache.xml.internal.security.Init;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner;
 
 import static java.lang.System.exit;
@@ -645,8 +648,9 @@ public class CLController {
         String menu = "Sales management\n";
         menu=menu.concat("1) Add new sale\n");
         menu=menu.concat("2) Cancel sale\n");
-        menu=menu.concat("3) Return\n");
-        menu=menu.concat("4) Exit\n\n");
+        menu=menu.concat("3) Check sales status\n");
+        menu=menu.concat("4) Return\n");
+        menu=menu.concat("5) Exit\n\n");
         while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -658,8 +662,11 @@ public class CLController {
                     printRemoveSaleMenu(sc, inv);
                     break;
                 case (3):
-                    return;
+                    checkSaleSatus(inv);
+                    break;
                 case (4):
+                    return;
+                case (5):
                     Exit();
                 default:
                     System.out.println("Option not valid, please retype");
@@ -791,6 +798,18 @@ public class CLController {
             System.out.println("Invalid number of parameters");
         }
     }
+    //endregion
+    //region Check Sales Status
+    static private void checkSaleSatus(Inventory inv){
+        Result result = inv.CheckSalesStatus();
+        System.out.println(result.getMessage());
+        System.out.println("Active sales:");
+        List<Sale> active_sales = (LinkedList)result.getData();
+        for(Sale sale:active_sales){
+            System.out.println(sale.toString());
+        }
+    }
+
     //endregion
 
     //endregion

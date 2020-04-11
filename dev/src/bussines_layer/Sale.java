@@ -74,12 +74,17 @@ public class Sale {
 
     @Override
     public String toString() {
-        return "Sale{" +
-                "sale_id=" + sale_id +
-                ", active=" + active +
-                ", start=" + start +
-                ", end=" + end +
-                ", type=" + type.name() +
-                '}';
+        String toReturn= ""+
+                "sale_id:" + sale_id +
+                ", active:" + active +
+                ", start:" + start +
+                ", end:" + end +
+                ", type:" + type.name() +
+                "products:{";
+        for(GeneralProduct product:products_on_sale){
+            toReturn=toReturn.concat(product.getName()+",");
+        }
+        toReturn=toReturn.concat(")");
+        return toReturn;
     }
 }

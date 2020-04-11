@@ -240,7 +240,7 @@ public class ProductController {
     public String toString(){
         String toReturn = "General Product:\n";
         for (GeneralProduct product:generalProducts){
-            toReturn=toReturn.concat("\t"+product.print());
+            toReturn=toReturn.concat(product.print());
         }
         return toReturn;
     }

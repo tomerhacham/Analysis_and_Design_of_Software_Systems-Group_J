@@ -7,12 +7,12 @@ import java.util.List;
 public class SaleController {
     //fields
     private Integer next_id;
-    private List<Sale> active_sales;
+    private List<Sale> sales;
 
     //Constructor
     public SaleController() {
         this.next_id=1;
-        this.active_sales=new LinkedList<>();
+        this.sales =new LinkedList<>();
     }
 
     /**
@@ -26,7 +26,7 @@ public class SaleController {
         if(category!=null){
         List list = category.getAllGeneralProduct();
         Sale new_sale = new Sale(getNext_id(),list, type);
-        active_sales.add(new_sale);
+        sales.add(new_sale);
         return new_sale.setDiscount(amount);
         }
         else{
@@ -45,7 +45,7 @@ public class SaleController {
             List<GeneralProduct> dummy_list = new LinkedList<>();
             dummy_list.add(generalProduct);
             Sale new_sale = new Sale(getNext_id(), dummy_list, type);
-            active_sales.add(new_sale);
+            sales.add(new_sale);
             return new_sale.setDiscount(amount);
         }
         else{
@@ -65,7 +65,7 @@ public class SaleController {
         if(category!=null) {
             List list = category.getAllGeneralProduct();
             Sale new_sale = new Sale(getNext_id(), list, type, start, end);
-            active_sales.add(new_sale);
+            sales.add(new_sale);
             return new_sale.setDiscount(amount);
         }
         else{
@@ -86,21 +86,20 @@ public class SaleController {
             List<GeneralProduct> dummy_list = new LinkedList<>();
             dummy_list.add(generalProduct);
             Sale new_sale = new Sale(getNext_id(), dummy_list, type, start, end);
-            active_sales.add(new_sale);
+            sales.add(new_sale);
             return new_sale.setDiscount(amount);
         }
         else{
             return new Result<Boolean>(false,false,"general product could not be found");
         }
     }
-
     /**
      * deactivate the sale and return the retail prices
      * @param sale_id - id of the sale (allocated by the controller)
      * @return
      */
     public Result removeSale(Integer sale_id){
-        Sale sale = searchSellbyId(sale_id);
+        Sale sale = searchSalebyId(sale_id);
         if (sale!=null){
             return sale.removeSale();
         }
@@ -108,13 +107,35 @@ public class SaleController {
             return new Result<Integer>(false,sale_id,"Could not find sale ID:"+sale_id);
         }
     }
+    /**
+     * iterate on each sale and modify the activity flag in condition of the date
+     * @return
+     */
+    public Result CheckSalesStatus(){
+        List<Sale> active_sales= new LinkedList<>();
+        for(Sale sale:sales){
+            if (sale.isActive()){
+                active_sales.add(sale);
+            }
+        }
+        return new Result<List<Sale>>(true,active_sales,"Checked sales activation status");
+    }
+    /**
+     * allocate the free next id available
+     * @return
+     */
     private Integer getNext_id() {
         Integer ret = next_id;
         this.next_id++;
         return ret;
     }
-    private Sale searchSellbyId(Integer sale_id){
-        for (Sale sale:active_sales) {
+    /**
+     * searching a sale by its ID
+     * @param sale_id - id of the sale (allocated by the Sale Controller)
+     * @return
+     */
+    private Sale searchSalebyId(Integer sale_id){
+        for (Sale sale: sales) {
             if(sale.getSale_id()==sale_id){
                 return sale;
             }
@@ -122,10 +143,11 @@ public class SaleController {
         return null;
     }
 
+
     @Override
     public String toString(){
         String toReturn = "Sales:\n";
-        for (Sale sale:active_sales){
+        for (Sale sale: sales){
             toReturn=toReturn.concat("\t"+sale.toString()+"\n");
         }
         return toReturn;

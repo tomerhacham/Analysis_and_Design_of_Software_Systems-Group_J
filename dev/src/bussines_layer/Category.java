@@ -167,7 +167,6 @@ public class Category {
     public String toString() {
         String toReturn=tabs()+"-".concat(name).concat("("+id+")").concat("\n");
         for (Category category:sub_categories) {
-            //toReturn=toReturn.concat("\t-").concat(category.name).concat("\n");
             toReturn=toReturn.concat(category.toString());
         }
         return toReturn;

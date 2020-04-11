@@ -6,10 +6,10 @@ import java.util.List;
 
 public class Inventory {
     //fields
-    CategoryController categoryController;
-    ProductController productController;
-    ReportController reportController;
-    SaleController saleController;
+    private CategoryController categoryController;
+    private ProductController productController;
+    private ReportController reportController;
+    private SaleController saleController;
 
     //Constructors
     public Inventory() {
@@ -145,7 +145,9 @@ public class Inventory {
     public Result removeSale(Integer sale_id){
         return saleController.removeSale(sale_id);
     }
-
+    public Result CheckSalesStatus(){
+        return saleController.CheckSalesStatus();
+    }
     private discountType convertStringToDiscountType(String stype){
         switch(stype){
             case ("fix"):
