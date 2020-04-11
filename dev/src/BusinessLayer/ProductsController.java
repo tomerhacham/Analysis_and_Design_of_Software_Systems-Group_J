@@ -6,7 +6,7 @@ import java.util.Hashtable;
 
 public class ProductsController {
     private static  ProductsController instance = null;
-    private SiteController siteController=SiteController.getInstance();
+    private SiteController siteController = SiteController.getInstance();
 
     private int productID_Counter;
     private int fileID_Counter;

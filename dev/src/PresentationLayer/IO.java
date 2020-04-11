@@ -203,7 +203,7 @@ public class IO {
                     return -1;
                 }
                 else if (opt == 1){
-                    facadeController.setTransportTruck(chooseTruck(date, destFiles));
+                    facadeController.setTransportTruck(transportID, chooseTruck(transportID));
                 }
                 else {
                     System.out.println("The input is invalid, transport aborted.");
@@ -252,7 +252,7 @@ public class IO {
                 "1. Remove destination from transport.\n" +
                 "2. Remove products from destination.\n");
         int opt = scanner.nextInt();
-        System.out.println(facadeController.getProductByDest(transportID));
+        System.out.println(facadeController.getProductsByDest(transportID));
         if (opt == 1) {
             System.out.println("Please choose destination site ID to remove\n");
             int destToRemove = scanner.nextInt();
@@ -261,9 +261,10 @@ public class IO {
         else if (opt == 2){
             System.out.println("Please choose destination site ID to edit\n");
             int destToEdit = scanner.nextInt();
+            int fileToEdit = facadeController.getDestFileID(transportID, destToEdit);
             System.out.println("Please insert products ID to remove with spaces between\n");
             String[] productsToRemove = (scanner.nextLine()).split(" ");
-            facadeController.removeProducts(transportID, destToEdit, productsToRemove);
+            facadeController.removeProducts(productsToRemove, fileToEdit);
         }
     }
 

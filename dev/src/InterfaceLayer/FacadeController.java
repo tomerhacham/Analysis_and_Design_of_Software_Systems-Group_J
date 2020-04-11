@@ -95,7 +95,8 @@ public class FacadeController {
         return productsController.getTotalWeight(destFiles);
     }
 
-    public String getProductByDest(HashMap<Integer, Integer> destFiles) {
+    public String getProductsByDest(int transportID) {
+        HashMap<Integer, Integer> destFiles = getTransportDestFiles(transportID);
         return productsController.getProductByDest(destFiles);
     }
 
@@ -116,7 +117,7 @@ public class FacadeController {
     }
 
     public void setTransportTruck(int transportID, int truckID) {
-        transportController.setTransportTruckNumber(truckID, transportID);
+        transportController.setTransportTruck(truckID, transportID);
     }
 
     public void setTransportWeight(int transportID, int totalWeight) {
@@ -125,5 +126,25 @@ public class FacadeController {
 
     public void setTransportDriver(int transportID, int driverID) {
         transportController.setTransportDriver(driverID, transportID);
+    }
+
+    public Date getTransportDate(int transportID) {
+        return transportController.getTransportDate(transportID);
+    }
+
+    public int getTransportTruck(int transportID) {
+        return transportController.getTransportTruck(transportID);
+    }
+
+    public HashMap<Integer, Integer> getTransportDestFiles(int transportID) {
+        return transportController.getTransportDestFiles(transportID);
+    }
+
+    public int getDestFileID(int transportID, int destToEdit) {
+        return transportController.getFileID(transportID, destToEdit);
+    }
+
+    public void removeDestFromTransport(int transportID, int destToRemove) {
+        transportController.removeDestinationFromTransport(destToRemove, transportID);
     }
 }
