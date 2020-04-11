@@ -27,9 +27,9 @@ public class Initializer {
         inventory.addSpecificProduct("111", convertStringToDate("11/04/2019"), 15);
 
 
-        Result res_cat_7500ml = inventory.addSubCategory(((Category)res_cat_shampoo.getData()).getId(), "750ml");
-        inventory.addGeneralProduct(((Category)res_cat_7500ml.getData()).getId(), "Crema", "189", "Crema shampoo for men 750ml", 22.0f, 32.99f,  4);
-        inventory.addGeneralProduct(((Category)res_cat_7500ml.getData()).getId(), "Dove", "112", "Dove shampoo for women 750ml", 22.0f, 32.99f,  4);
+        Result res_cat_750ml = inventory.addSubCategory(((Category)res_cat_shampoo.getData()).getId(), "750ml");
+        inventory.addGeneralProduct(((Category)res_cat_750ml.getData()).getId(), "Crema", "189", "Crema shampoo for men 750ml", 22.0f, 32.99f,  4);
+        inventory.addGeneralProduct(((Category)res_cat_750ml.getData()).getId(), "Dove", "112", "Dove shampoo for women 750ml", 22.0f, 32.99f,  4);
         inventory.addSpecificProduct("189", convertStringToDate("11/04/2025"), 5);
         inventory.addSpecificProduct("112", convertStringToDate("11/04/2025"), 5);
 
