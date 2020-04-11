@@ -27,9 +27,9 @@ public class TruckController {
     }
 
 
-    public void CreateTruck(String license_plate, String model, Integer weight, String drivers_license)
+    public void CreateTruck(String license_plate, String model, Integer net_weight, Integer max_weight, String drivers_license)
     {
-        Truck t = new Truck(Id_Counter, license_plate, model, weight, drivers_license);
+        Truck t = new Truck(Id_Counter, license_plate, model, net_weight, max_weight, drivers_license);
         Id_Counter++;
         trucks.put(t.getId(),t);
     }
@@ -53,16 +53,16 @@ public class TruckController {
         return details;
     }
 
-    public boolean checkIfAvailable(Date date, Integer id)
+    public boolean checkIfAvailable(Date date,Integer total_weight, Integer id)
     {
-        return trucks.get(id).checkIfAvailable(date);
+        return trucks.get(id).checkIfAvailable(date, total_weight);
     }
 
-    public String getAvailbleTrucks(Date date)
+    public String getAvailbleTrucks(Date date, Integer total_weight)
     {
         String available = "";
         for (Integer i:trucks.keySet()) {
-            if(checkIfAvailable(date, i))
+            if(checkIfAvailable(date,total_weight, i))
             {
                 available=available+getTruckDetails(i);
             }

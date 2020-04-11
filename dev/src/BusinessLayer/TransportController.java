@@ -62,13 +62,15 @@ public class TransportController {
 
     public void setTransportWeight(int weight, int id){transports.get(id).setWeight(weight); }
 
-    public void setTransportStatus(int status,int id){transports.get(id).setStatus(status); }
 
     public void addDestinationToTransport(int id, Site s){transports.get(id).addDestination(s);}
 
     public void removeDestinationFromTransport(int site_id, int t_id){transports.get(t_id).removeDestination(site_id);}
 
+    public void addToLog(String s, Integer id)
+    {
+        transports.get(id).addToLog(s);
+    }
 
-
-
+    public String getLogMessages(int id){return transports.get(id).getLogMessages();}
 }

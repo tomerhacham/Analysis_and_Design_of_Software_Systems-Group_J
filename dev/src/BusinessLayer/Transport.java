@@ -14,7 +14,7 @@ public class Transport {
     //private HashMap<Site, Integer> DestFiles;
     private ArrayList<Site> destinations;
     private int TotalWeight;
-    private int Status;
+    private ArrayList<String> log;
 
     public Transport(int id, Date date, int truckNumber, Driver driver, Site source,
                      ArrayList<Site> destinations, int weight){
@@ -26,7 +26,7 @@ public class Transport {
        // DestFiles = destFiles;
         this.destinations=destinations;
         TotalWeight = weight;
-        Status=0;
+        log =new ArrayList<>();
     }
 
     public int getID() {
@@ -89,13 +89,6 @@ public class Transport {
         this.products = products;
     }*/
 
-    public int getStatus() {
-        return Status;
-    }
-
-    public void setStatus(int status) {
-        Status = status;
-    }
 
     public void addDestination(Site s)
     {
@@ -116,7 +109,7 @@ public class Transport {
     @Override
     public String toString() {
         String s = "id: " + ID + " Date: " + Date.toString() + " TruckNumber: " + TruckNumber + " Driver: " + Driver.getName()
-                +"\nSource: "+Source.toString();
+                +" Source: "+Source.toString() +"\n";
         if(destinations.size()>0)
         {
             s = s + " destinations: \n";
@@ -127,7 +120,28 @@ public class Transport {
         else {
             s = s + " destinations: none\n";
         }
-        s = s + "TotalWeight: " + TotalWeight + " Status: " + Status;
+        s = s + "TotalWeight: " + TotalWeight +"\n";
+        if(log.size()>0) {
+            s = s + "log messages: " + getLogMessages();
+        }
+        else {
+            s = s + "log messages: none";
+        }
+        return s;
+    }
+
+    public void addToLog (String s)
+    {
+        log.add(s);
+    }
+
+    public String getLogMessages()
+    {
+        String s = "";
+        for (int i=0; i<log.size();i++)
+        {
+            s=s+i+". "+log.get(i)+"\n";
+        }
         return s;
     }
 }

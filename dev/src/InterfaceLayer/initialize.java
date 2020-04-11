@@ -14,8 +14,8 @@ public class initialize {
         facadeController.createSite("herzelia","052-8912345","Shachaf",3);
         facadeController.createSite("Tel-Aviv","050-8912345","Mai",3);
         facadeController.createSite("Jerisalem","050-8912345","Eden",4);
-        facadeController.createTruck("12-L8","XXX",1000,"C1");
-        facadeController.createTruck("17-LD","X23",1050,"C1");
-        facadeController.createTruck("J0-38","1X6",700,"c");
+        facadeController.createTruck("12-L8","XXX",1000,1500,"C1");
+        facadeController.createTruck("17-LD","X23",1050,1260,"C1");
+        facadeController.createTruck("J0-38","1X6",700,1000,"c");
     }
 }
