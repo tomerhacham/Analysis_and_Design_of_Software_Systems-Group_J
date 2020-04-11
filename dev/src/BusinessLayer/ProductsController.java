@@ -6,6 +6,7 @@ import java.util.Hashtable;
 
 public class ProductsController {
     private static  ProductsController instance = null;
+    private SiteController siteController=SiteController.getInstance();
 
     private int productID_Counter;
     private int fileID_Counter;
@@ -51,5 +52,14 @@ public class ProductsController {
             total += files.get(destFiles.get(id)).getTotalWeight();
         }
         return total;
+    }
+
+    public String getProductByDest(HashMap<Integer,Integer> destFiles)
+    {
+        String s="";
+        for (Integer i:destFiles.keySet()) {
+            s=s+"destination id: "+i+" products:\n"+destFiles.get(i).toString()+"\n";
+        }
+        return s;
     }
 }

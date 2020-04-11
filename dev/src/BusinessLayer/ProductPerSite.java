@@ -8,6 +8,11 @@ public class ProductPerSite {
     private int totalWeight;
     private HashMap<Product, Integer> products;
 
+    public ProductPerSite(int ID){
+        fileID = ID;
+        products = new HashMap<>();
+    }
+
     public int getFileID() {
         return fileID;
     }
@@ -20,12 +25,18 @@ public class ProductPerSite {
         return products;
     }
 
-    public ProductPerSite(int ID){
-        fileID = ID;
-    }
 
     public void addProduct(Product p, int quantity) {
         products.put(p, quantity);
         totalWeight += p.getWeight()*quantity;
+    }
+
+    @Override
+    public String toString() {
+        String s= "file id: "+fileID+" total weight: " + totalWeight +"products:\n";
+        for (Product p :products.keySet()) {
+            s=s+p.toString()+" quantity: " +products.get(p);
+        }
+        return s;
     }
 }
