@@ -7,6 +7,11 @@ import Initializer.Initializer;
 import bussines_layer.Sale;
 import com.sun.org.apache.xml.internal.security.Init;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import java.io.File;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -882,6 +887,7 @@ public class CLController {
     }
     private static Integer getNextInt(Scanner sc){
         while(!sc.hasNext()){}
+        //PlayBeep();
         return Integer.parseInt(sc.nextLine());
     }
     private static String getNextLine(Scanner sc){
@@ -891,6 +897,18 @@ public class CLController {
     static private void Exit(){
         System.out.println("Bye!");
         exit(0);
+    }
+    private static void PlayBeep(){
+        //String filePath = new File(System.getProperty("user.dir")).getParent()+"//resources//beep.wav";
+        String filePath = new File(System.getProperty("user.dir"))+"//src//resources//beep.wav";
+        File beep = new File(filePath);
+        try (Clip clip = AudioSystem.getClip()) {
+            clip.open(AudioSystem.getAudioInputStream(beep));
+            clip.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 
