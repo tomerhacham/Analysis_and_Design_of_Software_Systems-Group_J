@@ -26,7 +26,10 @@ public class TruckController {
         return instance;
     }
 
-
+    public Truck getById(int id)
+    {
+        return trucks.get(id);
+    }
     public void CreateTruck(String license_plate, String model, Integer net_weight, Integer max_weight, String drivers_license)
     {
         Truck t = new Truck(Id_Counter, license_plate, model, net_weight, max_weight, drivers_license);

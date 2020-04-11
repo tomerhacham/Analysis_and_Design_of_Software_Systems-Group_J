@@ -7,7 +7,7 @@ public class Transport {
 
     private int ID;
     private Date Date;
-    private String TruckNumber;
+    private Truck Truck;
     private Driver Driver;
     private Site Source;
     private HashMap<Site, ProductPerSite> DestFiles;
@@ -19,11 +19,11 @@ public class Transport {
         DestFiles = new HashMap<>();
         log =new ArrayList<>();
     }
-    public Transport(int id, Date date, String truckNumber, Driver driver, Site source,
+    public Transport(int id, Date date, Truck truck, Driver driver, Site source,
                      HashMap<Site, ProductPerSite> destFiles, int weight){
         ID = id;
         Date = date;
-        TruckNumber = truckNumber;
+        Truck = truck;
         Driver = driver;
         Source = source;
         DestFiles=destFiles;
@@ -43,12 +43,12 @@ public class Transport {
         Date = date;
     }
 
-    public String getTruckNumber() {
-        return TruckNumber;
+    public Truck getTruck() {
+        return Truck;
     }
 
-    public void setTruckNumber(String truckNumber) {
-        TruckNumber = truckNumber;
+    public void setTruck(Truck truck) {
+        Truck = truck;
     }
 
     public Driver getDriverName() {
@@ -95,10 +95,17 @@ public class Transport {
         DestFiles.put(s, newProductPerSite);
     }
 
+    public HashMap<Site, ProductPerSite> getDestFiles() {
+        return DestFiles;
+    }
 
+    public ProductPerSite getFileByDest(Site dest)
+    {
+        return DestFiles.get(dest);
+    }
     @Override
     public String toString() {
-        String s = "id: " + ID + " Date: " + Date.toString() + " TruckNumber: " + TruckNumber + " Driver: " + Driver.getName()
+        String s = "id: " + ID + " Date: " + Date.toString() + " TruckNumber: " + Truck.getLicense_plate() + " Driver: " + Driver.getName()
                 +" Source: "+Source.toString() +"\n";
         if(DestFiles.size()>0)
         {

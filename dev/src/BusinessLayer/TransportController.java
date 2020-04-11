@@ -67,10 +67,13 @@ public class TransportController {
         transports.get(id).setDate(date);
     }
 
-    public void setTransportTruckNumber(int truck_id, int id) {
+    public Date getTransportDate(int id){return transports.get(id).getDate();}
 
-        transports.get(id).setTruckNumber(truckController.getTruckNumber(truck_id));
+    public void setTransportTruck(int truck_id, int id) {
+        transports.get(id).setTruck(truckController.getById(truck_id));
     }
+
+    public int getTransportTruck(int id){return transports.get(id).getTruck().getId();}
 
     public void setTransportDriver(int driver, int id) { transports.get(id).setDriver(driverController.getById(driver));    }
 
@@ -88,6 +91,22 @@ public class TransportController {
             D_F.put(siteController.getById(i),productsController.getFileByID(destFiles.get(i)));
         }
         transports.get(id).setDestFiles(D_F);
+    }
+
+    public HashMap<Integer,Integer> getTransportDestFiles(int id)
+    {
+        HashMap<Integer,Integer> convertedDestFiles=new HashMap<>();
+        HashMap<Site,ProductPerSite> DestFile = transports.get(id).getDestFiles();
+
+        for (Site s :DestFile.keySet()) {
+            convertedDestFiles.put(s.getId(),DestFile.get(s).getFileID());
+        }
+        return convertedDestFiles;
+    }
+
+    public int getFileID(int transport_id, int dest_id)
+    {
+        return transports.get(transport_id).getFileByDest(siteController.getById(dest_id)).getFileID();
     }
     public void addDestinationToTransport(int id, Site s, ProductPerSite productPerSite){transports.get(id).addDestFiles(s,productPerSite);}
 
