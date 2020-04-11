@@ -14,6 +14,11 @@ public class Transport {
     private int TotalWeight;
     private ArrayList<String> log;
 
+    public Transport(int id){
+        ID = id;
+        DestFiles = new HashMap<>();
+        log =new ArrayList<>();
+    }
     public Transport(int id, Date date, String truckNumber, Driver driver, Site source,
                      HashMap<Site, ProductPerSite> destFiles, int weight){
         ID = id;
@@ -50,7 +55,7 @@ public class Transport {
         return Driver;
     }
 
-    public void setDriverName(Driver driver) {
+    public void setDriver(Driver driver) {
         Driver = driver;
     }
 
@@ -70,6 +75,9 @@ public class Transport {
         TotalWeight = weight;
     }
 
+    public void setDestFiles(HashMap<Site, ProductPerSite> destFiles) {
+        DestFiles = destFiles;
+    }
 
     public void addDestFiles(Site s, ProductPerSite productPerSite)
     {
@@ -86,6 +94,7 @@ public class Transport {
         DestFiles.remove(s);
         DestFiles.put(s, newProductPerSite);
     }
+
 
     @Override
     public String toString() {
