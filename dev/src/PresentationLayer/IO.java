@@ -172,8 +172,10 @@ public class IO {
             }
         }
         int sourceID = chooseSource();
-        if (sourceID == -1)
+        if (sourceID == -1){
+            facadeController.deleteTransport(transportID);
             return;
+        }
         facadeController.setTransportSource(transportID, sourceID);
         System.out.println("Destinations:\n" + facadeController.getAvailableSites(sourceID));
         System.out.println("How many destinations would you like? ");
@@ -181,12 +183,18 @@ public class IO {
         HashMap<Integer, Integer> DestFiles = chooseProductsPerSite(numDest);
         facadeController.setTransportDestFiles(transportID, DestFiles);
         int truckID = chooseTruck(transportID);
-        if (truckID == -1)
+        if (truckID == -1) {
+            facadeController.deleteTransport(transportID);
             return;
+        }
         facadeController.setTransportTruck(transportID, truckID);
         int totalWeight = facadeController.getTotalWeight(DestFiles);
         facadeController.setTransportWeight(transportID, totalWeight);
         int driverID = chooseDriver(transportID);
+        if (driverID == -1) {
+            facadeController.deleteTransport(transportID);
+            return;
+        }
         facadeController.setTransportDriver(transportID, driverID);
     }
 
