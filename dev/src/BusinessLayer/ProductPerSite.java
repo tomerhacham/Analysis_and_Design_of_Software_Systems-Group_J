@@ -39,4 +39,9 @@ public class ProductPerSite {
         }
         return s;
     }
+
+    public void removeProduct(Product p )
+    {
+        products.remove(p);
+    }
 }
