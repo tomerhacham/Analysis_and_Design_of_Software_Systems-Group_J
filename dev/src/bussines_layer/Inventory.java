@@ -35,12 +35,12 @@ public class Inventory {
     //endregion
 
     //region General Product Management
-    public Result addGeneralProduct(Integer category_id, String manufacture, String catalogID, String name, Float supplier_price, Float retail_price, Integer quantity, Integer min_quantity)
+    public Result addGeneralProduct(Integer category_id, String manufacture, String catalogID, String name, Float supplier_price, Float retail_price, Integer min_quantity)
     {
     Category category = categoryController.searchCategorybyId(category_id);
     Result result;
         if (category!=null){
-            result= productController.addGeneralProduct(category,manufacture, catalogID, name, supplier_price, retail_price, quantity, min_quantity);
+            result= productController.addGeneralProduct(category,manufacture, catalogID, name, supplier_price, retail_price, min_quantity);
         }
         else{
             result=new Result<Integer>(false,category_id,"Could not find category");
@@ -102,14 +102,15 @@ public class Inventory {
         return reportController.makeReport(dummy_list, convertStringToReportType(stype));
     }
     public Result makeReport(Integer category_id,String stype){
-        Category category = categoryController.searchCategorybyId(category_id);
+        Category category;
+        if(category_id==0){
+            category=categoryController.superCategory();
+        }
+        else{
+            category = categoryController.searchCategorybyId(category_id);
+        }
         List general_products = category.getAllGeneralProduct();
         return reportController.makeReport(general_products, convertStringToReportType(stype));
-    }
-    public Result makeReport(String stype){
-        Category superCategory = categoryController.superCategory();
-        List all_general_products = superCategory.getAllGeneralProduct();
-        return reportController.makeReport(all_general_products, convertStringToReportType(stype));
     }
     private ReportType convertStringToReportType(String stype){
         switch(stype){

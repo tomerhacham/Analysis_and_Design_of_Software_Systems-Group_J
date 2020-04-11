@@ -12,12 +12,13 @@ public class Report {
     private ReportType type;
     final private Date creation_date;
     private List<GeneralProduct> products;
-    String report;
+    String report="";
 
     public Report(List<GeneralProduct> products,ReportType type) {
         this.type = type;
         this.products = products;
         creation_date = new Date();
+        this.report="\n"+type.name().concat("\n");
         arrangeReport();
     }
 
@@ -26,7 +27,10 @@ public class Report {
             report=report.concat(generalProduct.report(type));
         }
     }
-
+    @Override
+    public String toString(){
+        return report;
+    }
     public String getReport() {
         return report;
     }

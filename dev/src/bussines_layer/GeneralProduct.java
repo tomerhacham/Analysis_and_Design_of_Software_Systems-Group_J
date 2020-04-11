@@ -17,7 +17,7 @@ public class GeneralProduct {
     private List<SpecificProduct> products;
 
     //Constructor
-    public GeneralProduct(String manufacture, String catalogID, String name, Float supplier_price, Float retail_price, Integer quantity, Integer min_quantity)
+    public GeneralProduct(String manufacture, String catalogID, String name, Float supplier_price, Float retail_price, Integer min_quantity)
     {
         this.manufacture = manufacture;
         this.catalogID = catalogID;
@@ -25,7 +25,7 @@ public class GeneralProduct {
         this.supplier_price = supplier_price;
         this.retail_price = retail_price;
         this.sale_price=new Float(-1);
-        this.quantity = quantity;
+        this.quantity = 0;
         this.min_quantity = min_quantity;
         this.products = new LinkedList<>();
     }
@@ -174,12 +174,12 @@ public class GeneralProduct {
                         warehouse++;
                     }
                 }
-                selfReport =toString().concat("\n\tstatus:\n\t\t store:"+store+", warehouse:"+warehouse+"\n\n");
+                selfReport =toString().concat("\n\t\t\t\t store:"+store+", warehouse:"+warehouse+"\n\n");
                 break;
 
             case OutOfStock:
                 if(quantity<min_quantity){
-                    selfReport=toString().concat("\n").concat("missing "+(min_quantity-quantity)+" to minimum quantity\n\n");
+                    selfReport=toString().concat("\n\t").concat("missing "+(min_quantity-quantity)+" to minimum quantity\n\n");
                 }
                 break;
 
@@ -187,17 +187,23 @@ public class GeneralProduct {
                 selfReport=this.name.concat("\n");
                 String damaged="\t-Damaged items:\n";
                 String expired="\t-Expired items:\n";
+                Boolean at_least_one=false;
                 for(SpecificProduct product:products){
                     if (product.isFlaw()){
+                        at_least_one=true;
                         damaged=damaged.concat("\t\t").concat(product.toString()).concat("\n");
                     }
                     if (product.isExpired()){
+                        at_least_one=true;
                         expired=expired.concat("\t\t").concat(product.toString()).concat("\n");
                     }
                 }
-                selfReport.concat(damaged).concat(expired);
-
-
+                if(at_least_one) {
+                    selfReport = selfReport.concat(damaged).concat(expired);
+                }
+                else{
+                    selfReport="";
+                }
         }
         return selfReport;
     }
@@ -231,15 +237,15 @@ public class GeneralProduct {
     @Override
     public String toString() {
         return "" +
-                "name='" + name + '\'' +
-                ", manufacture='" + manufacture + '\'' +
-                ", catalogID='" + catalogID + '\'' +
-                ", supplier_price=" + supplier_price +
-                ", retail_price=" + retail_price +
-                ", sale_price=" + sale_price +
-                ", quantity=" + quantity +
-                ", min_quantity=" + min_quantity +
-                " ";
+                "name:'" + name + '\'' +
+                ", manufacture:'" + manufacture + '\'' +
+                ", catalogID:'" + catalogID + '\'' +
+                ", supplier price:" + supplier_price +
+                ", retail price:" + retail_price +
+                ", sale price:" + sale_price +
+                ", quantity:" + quantity +
+                ", min quantity:" + min_quantity +
+                "";
     }
     public String print(){
         String toReturn="\t-"+this.name+" catalogID:"+this.getCatalogID()+"("+products.size()+")\n";

@@ -1,4 +1,5 @@
 package bussines_layer;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 enum Location
@@ -66,8 +67,9 @@ public class SpecificProduct {
 
     @Override
     public String toString() {
-        return  "product_id=" + id +
-                ", location=" + location +
-                ", expiration_date=" + expiration_date;
+        SimpleDateFormat date_formater = new SimpleDateFormat("dd/MM/yyyy");
+        return  "product id:" + id +
+                ", location:" + location +
+                ", expiration date:" + date_formater.format(expiration_date).toString();
     }
 }

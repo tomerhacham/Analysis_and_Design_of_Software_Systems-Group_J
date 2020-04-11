@@ -20,11 +20,10 @@ public class CLController {
 
     public static void main(String[] args) {
         Inventory inventory=new Inventory();
-        Boolean exit= false;
         Scanner sc = new Scanner(System.in);    //System.in is a standard input stream
         printLogo();
         printInitializeMenu(sc, inventory);
-        while(!exit) {
+        while(true) {
             printMainMenu();
             Integer option = getNextInt(sc);
             switch (option) {
@@ -44,7 +43,7 @@ public class CLController {
                     printDataMapperMenu(sc, inventory);
                     break;
                 case (6):
-                    exit=true;
+                    Exit();
                     break;
                 default:
                     System.out.println("Option not valid, please retype");
@@ -155,8 +154,7 @@ public class CLController {
         String[] param = getInputParserbyComma(sc);
         if (param.length==7){
             result=inv.addGeneralProduct(Integer.parseInt(param[0]),param[1],param[2],param[3],
-                                        Float.parseFloat(param[4]),Float.parseFloat(param[5]), 0,
-                                        Integer.parseInt(param[6]));
+                                        Float.parseFloat(param[4]),Float.parseFloat(param[5]),Integer.parseInt(param[6]));
             System.out.println(result.getMessage());
         }
         else{
@@ -494,12 +492,17 @@ public class CLController {
     static private void printOutOfStockReportByCategoryMenu(Scanner sc, Inventory inv) {
         Result result;
         String menu = "Please enter the following details\n";
-        menu=menu.concat("[CategoryID]");
-        menu=menu.concat("for all categories type 'all'\n");
+        menu=menu.concat("[CategoryID]\n");
+        menu=menu.concat("for all categories type 'all'");
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length==1) {
-            result = inv.makeReport(Integer.parseInt(param[0]), "outofstock");
+            if(param[0].equals("all")){
+                result = inv.makeReport(0, "outofstock");
+            }
+            else{
+                result = inv.makeReport(Integer.parseInt(param[0]), "outofstock");
+            }
             System.out.println(result.getMessage());
         }
         else{
@@ -557,12 +560,14 @@ public class CLController {
         menu=menu.concat("for all categories type 'all'");
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
-        if(param.length==1) {
-            result = inv.makeReport(Integer.parseInt(param[0]), "instock");
+        if (param.length==1) {
+            if(param[0].equals("all")){
+                result = inv.makeReport(0, "instock");
+            }
+            else{
+                result = inv.makeReport(Integer.parseInt(param[0]), "instock");
+            }
             System.out.println(result.getMessage());
-        }
-        else{
-            System.out.println("Invalid number of parameters");
         }
     }
 
@@ -617,11 +622,13 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length==1) {
-            result = inv.makeReport(Integer.parseInt(param[0]), "dne");
+            if(param[0].equals("all")){
+                result = inv.makeReport(0, "dne");
+            }
+            else{
+                result = inv.makeReport(Integer.parseInt(param[0]), "dne");
+            }
             System.out.println(result.getMessage());
-        }
-        else{
-            System.out.println("Invalid number of parameters");
         }
     }
 

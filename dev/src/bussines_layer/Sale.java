@@ -75,7 +75,7 @@ public class Sale {
     @Override
     public String toString() {
         String toReturn= ""+
-                "sale_id:" + sale_id +
+                "sale id:" + sale_id +
                 ", active:" + active +
                 ", start:" + start +
                 ", end:" + end +

@@ -21,7 +21,7 @@ public class ReportController {
                 }
             }
             Report report = new Report(generalProducts,type);
-            return new Result<Report>(true, report,"report has been made");
+            return new Result<Report>(true, report,report.getReport());
         }
         else{
             return new Result<Boolean>(false,false,"No general product has been provided to the report");
