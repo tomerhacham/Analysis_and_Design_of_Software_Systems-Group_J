@@ -1,6 +1,7 @@
 package PresentationLayer;
 
 import InterfaceLayer.FacadeController;
+import sun.security.krb5.internal.crypto.Des;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -157,24 +158,115 @@ public class IO {
     }
 
     private void newTransport() {
+        int transportID = facadeController.createTransport();
         System.out.println("Please enter a date in the format dd-mm-yyyy\n");
         DateFormat formatter = new SimpleDateFormat("dd-mm-yyyy");
         Date date;
         while (true){
             try {
                 date = formatter.parse(scanner.nextLine());
+                facadeController.setTransportDate(transportID, date);
                 break;
             } catch (Exception e) {
                 System.out.println("Format is incorrect. Try again.\n");
             }
         }
-        System.out.println(facadeController.getAllSitesDetails());
-        System.out.println("Please choose source site ID from the above\n");
-        int sourceID = scanner.nextInt();
+        int sourceID = chooseSource();
+        if (sourceID == -1)
+            return;
+        facadeController.setTransportSource(transportID, sourceID);
+        System.out.println("Destinations:\n" + facadeController.getAvailableSites(sourceID));
         System.out.println("How many destinations would you like? ");
         int numDest = scanner.nextInt();
-        System.out.println(facadeController.getAvailableSites(sourceID));
-        HashMap<Integer, Integer> DestFiles = new HashMap<>();
+        HashMap<Integer, Integer> DestFiles = chooseProductsPerSite(numDest);
+        facadeController.setTransportDestFiles(transportID, DestFiles);
+        int truckID = chooseTruck(transportID);
+        if (truckID == -1)
+            return;
+        facadeController.setTransportTruck(transportID, truckID);
+        int totalWeight = facadeController.getTotalWeight(DestFiles);
+        int driverID = chooseDriver(transportID);
+    }
+
+    private int chooseDriver(transportID) {
+        while (true) {
+            String drivers = facadeController.getAvailableDrivers(facadeController.getTransportDate(transportID),
+                    facadeController.getTransportTruck(transportID));
+            if (drivers.equals("")) {
+                System.out.println("There is no driver with compatible license to the selected truck in the system.\n" +
+                        "choose 1 to change truck.\n" +
+                        "choose 2 to abort transport.\n");
+                int opt = scanner.nextInt();
+                if (opt == 2) {
+                    return -1;
+                }
+                else if (opt == 1){
+                    facadeController.setTransportTruck(chooseTruck(date, destFiles));
+                }
+                else {
+                    System.out.println("The input is invalid, transport aborted.");
+                    return -1;
+                }
+            }
+            else {
+                System.out.println("Drivers:\n" + drivers);
+                System.out.println("Please choose a driver ID from the above");
+                return scanner.nextInt();
+            }
+        }
+    }
+
+    private int chooseTruck(int transportID) {
+        int totalWeight = facadeController.getTotalWeight(facadeController.getTransportDestFiles(transportID));
+        while (true) {
+            String trucks = facadeController.getAvailableTrucks(facadeController.getTransportDate(transportID), totalWeight); //TODO:: separate date and weight
+            if (trucks.equals("")) {
+                System.out.println("There is no truck that can carry such weight in the system.\n" +
+                        "choose 1 to edit destination.\n" +
+                        "choose 2 to abort transport.\n");
+                int opt = scanner.nextInt();
+                if (opt == 2) {
+                    return -1;
+                }
+                else if (opt == 1){
+                    editDestinations(transportID);
+                    totalWeight = facadeController.getTotalWeight(facadeController.getTransportDestFiles(transportID));
+                }
+                else {
+                    System.out.println("The input is invalid, transport aborted.");
+                    return -1;
+                }
+            }
+            else {
+                System.out.println("Trucks:\n" + trucks);
+                System.out.println("Please choose a truck ID from the above");
+                return scanner.nextInt();
+            }
+        }
+    }
+
+    private void editDestinations(int transportID) {
+        System.out.println("Please choose the option you would like to edit:\n" +
+                "1. Remove destination from transport.\n" +
+                "2. Remove products from destination.\n");
+        int opt = scanner.nextInt();
+        System.out.println(facadeController.getProductByDest(transportID));
+        if (opt == 1) {
+            System.out.println("Please choose destination site ID to remove\n");
+            int destToRemove = scanner.nextInt();
+            facadeController.removeDestFromTransport(transportID, destToRemove);
+        }
+        else if (opt == 2){
+            System.out.println("Please choose destination site ID to edit\n");
+            int destToEdit = scanner.nextInt();
+            System.out.println("Please insert products ID to remove with spaces between\n");
+            String[] productsToRemove = (scanner.nextLine()).split(" ");
+            facadeController.removeProducts(transportID, destToEdit, productsToRemove);
+        }
+    }
+
+    private HashMap<Integer, Integer> chooseProductsPerSite(int numDest) {
+        HashMap<Integer, Integer> destFiles = new HashMap<>();
         for (int i = 0; i < numDest; i++){
             System.out.println("Please choose dest ID\n");
             int destID = scanner.nextInt();
@@ -190,15 +282,31 @@ public class IO {
                 int quantity = scanner.nextInt();
                 facadeController.createProduct(productName, productWeight, fileID, quantity);
             }
-            DestFiles.put(destID, fileID);
+            destFiles.put(destID, fileID);
         }
-        int totalWeight = facadeController.getTotalWeight(DestFiles);
-        System.out.println(facadeController.getAvailableTrucks(date, totalWeight));
-        System.out.println("Please choose a truck ID from the above");
-        int truckID = scanner.nextInt();
-        System.out.println(facadeController.getAvailableDrivers(date, truckID));
-        System.out.println("Please choose a driver ID from the above");
-        int driverID = scanner.nextInt();
-        facadeController.createTransport(date, truckID, driverID, sourceID, DestFiles, totalWeight);
+        return destFiles;
+    }
+
+    private int chooseSource() {
+        int sourceID;
+        while (true) {
+            System.out.println("Sources:\n" + facadeController.getAllSitesDetails());
+            System.out.println("Please choose source site ID from the above\n");
+            sourceID = scanner.nextInt();
+            String destinations = facadeController.getAvailableSites(sourceID);
+            if (destinations.equals("")) {
+                System.out.println("No destination sites in this shipping area.\n " +
+                        "choose 1 to insert new source site\n" +
+                        "choose 2 to abort transport\n");
+                int opt = scanner.nextInt();
+                if (opt == 2){
+                    sourceID = -1;
+                    break;
+                }
+            }
+            else
+                break;
+        }
+        return sourceID;
     }
 }

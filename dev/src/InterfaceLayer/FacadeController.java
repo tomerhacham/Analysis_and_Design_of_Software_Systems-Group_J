@@ -39,7 +39,7 @@ public class FacadeController {
     }
 
     public String getAvailableTrucks(Date date, int totalWeight) {
-        return truckController.getAvailbleTrucks(date,  totalWeight);
+        return truckController.getAvailbleTrucks(date, totalWeight);
     }
 
     public String getAvailableDrivers(Date date, int truckID) {
@@ -75,10 +75,9 @@ public class FacadeController {
         transportController.DeleteTransport(transportToDelete);
     }
 
-    //TODO:: figure out what to do ???
     public void createTransport(Date date, int truckID, int driverID, int sourceID, HashMap<Integer, Integer> DestFiles, int totalWeight) {
         String truckNumber = truckController.getTruckNumber(truckID);
-        //transportController.CreateTransport(date, truckNumber);
+        transportController.CreateTransport(date, truckNumber, driverID, sourceID, DestFiles,totalWeight);
     }
 
     public String getAvailableSites(int sourceID) {
@@ -95,5 +94,13 @@ public class FacadeController {
 
     public int getTotalWeight(HashMap<Integer, Integer> destFiles) {
         return productsController.getTotalWeight(destFiles);
+    }
+
+    public String getProductByDest(HashMap<Integer, Integer> destFiles) {
+        return productsController.getProductByDest(destFiles);
+    }
+
+    public void removeProducts(String[] productsToRemove, Integer fileToEdit) {
+        productsController.removeProducts(productsToRemove, fileToEdit);
     }
 }

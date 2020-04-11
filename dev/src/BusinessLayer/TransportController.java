@@ -25,7 +25,7 @@ public class TransportController {
         return instance;
     }
 
-    public void CreateTransport(Date date, int truckNumber, int driver, int source, HashMap<Integer, Integer> destFiles, int weight)
+    public void CreateTransport(Date date, String truckNumber, int driver, int source, HashMap<Integer, Integer> destFiles, int weight)
     {
         HashMap<Site,ProductPerSite> D_F=new HashMap<>();
         for (int i:destFiles.keySet()) {

@@ -7,14 +7,14 @@ public class Transport {
 
     private int ID;
     private Date Date;
-    private int TruckNumber;
+    private String TruckNumber;
     private Driver Driver;
     private Site Source;
     private HashMap<Site, ProductPerSite> DestFiles;
     private int TotalWeight;
     private ArrayList<String> log;
 
-    public Transport(int id, Date date, int truckNumber, Driver driver, Site source,
+    public Transport(int id, Date date, String truckNumber, Driver driver, Site source,
                      HashMap<Site, ProductPerSite> destFiles, int weight){
         ID = id;
         Date = date;
@@ -38,11 +38,11 @@ public class Transport {
         Date = date;
     }
 
-    public int getTruckNumber() {
+    public String getTruckNumber() {
         return TruckNumber;
     }
 
-    public void setTruckNumber(int truckNumber) {
+    public void setTruckNumber(String truckNumber) {
         TruckNumber = truckNumber;
     }
 

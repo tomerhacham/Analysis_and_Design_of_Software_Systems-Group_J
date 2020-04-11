@@ -63,7 +63,7 @@ public class ProductsController {
         return s;
     }
 
-    public void removeProduct(String[] product_id, int file_id){
+    public void removeProducts(String[] product_id, int file_id){
         ProductPerSite file = files.get(file_id);
         for(int i=0;i<product_id.length;i++)
         {
