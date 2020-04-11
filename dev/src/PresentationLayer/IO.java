@@ -5,6 +5,7 @@ import InterfaceLayer.FacadeController;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class IO {
@@ -139,11 +140,13 @@ public class IO {
         String license_plate = scanner.nextLine();
         System.out.println("Model:");
         String model = scanner.nextLine();
-        System.out.println("Weight:");
-        int weight = Integer.parseInt(scanner.nextLine());
+        System.out.println("Net weight of the truck:");
+        int netWeight = Integer.parseInt(scanner.nextLine());
+        System.out.println("Max weight the truck can curry:");
+        int maxWeight = Integer.parseInt(scanner.nextLine());
         System.out.println("Drivers license:");
         String drivers_license = scanner.nextLine();
-        facadeController.createTruck(license_plate, model, weight, drivers_license);
+        facadeController.createTruck(license_plate, model, netWeight, maxWeight, drivers_license);
     }
 
     private void deleteTransport() {
@@ -162,19 +165,38 @@ public class IO {
                 date = formatter.parse(scanner.nextLine());
                 break;
             } catch (Exception e) {
-                System.out.println("Format is incorrect. Try again.");
+                System.out.println("Format is incorrect. Try again.\n");
             }
         }
-        System.out.println(facadeController.getAvailableTrucks(date));
+        System.out.println(facadeController.getAllSitesDetails());
+        System.out.println("Please choose source site ID from the above\n");
+        int sourceID = scanner.nextInt();
+        System.out.println("How many destinations would you like? ");
+        int numDest = scanner.nextInt();
+        System.out.println(facadeController.getAvailableSites(sourceID));
+        HashMap<Integer, Integer> DestFiles = new HashMap<>();
+        for (int i = 0; i < numDest; i++){
+            System.out.println("Please choose dest ID\n");
+            int destID = scanner.nextInt();
+            int fileID = facadeController.createProductsFile();
+            System.out.println("How many products would you like for this destination? ");
+            int numProducts = scanner.nextInt();
+            for (int j = 0; j < numProducts; j++){
+                System.out.println("Please enter name of a product: ");
+                String productName = scanner.nextLine();
+                System.out.println("Please enter weight of a product: ");
+                int productWeight = scanner.nextInt();
+                facadeController.createProduct(productName, productWeight, fileID);
+            }
+            DestFiles.put(destID, fileID);
+        }
+        int totalWeight = facadeController.getTotalWeight(DestFiles);
+        System.out.println(facadeController.getAvailableTrucks(date, totalWeight));
         System.out.println("Please choose a truck ID from the above");
         int truckID = scanner.nextInt();
         System.out.println(facadeController.getAvailableDrivers(date, truckID));
         System.out.println("Please choose a driver ID from the above");
         int driverID = scanner.nextInt();
-        System.out.println(facadeController.getAllSitesDetails());
-        System.out.println("Please choose source site ID from the above");
-        int sourceID = scanner.nextInt();
-        // TODO:: destinations? files with products?
-        facadeController.createTransport(date, truckID, driverID, sourceID);
+        facadeController.createTransport(date, truckID, driverID, sourceID, DestFiles, totalWeight);
     }
 }

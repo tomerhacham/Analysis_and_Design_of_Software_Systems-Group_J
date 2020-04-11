@@ -3,6 +3,7 @@ package InterfaceLayer;
 import BusinessLayer.*;
 
 import java.util.Date;
+import java.util.HashMap;
 
 public class FacadeController {
 
@@ -36,8 +37,8 @@ public class FacadeController {
         return transportController.getAllTransportsDetails();
     }
 
-    public String getAvailableTrucks(Date date) {
-        return truckController.getAvailbleTrucks(date);
+    public String getAvailableTrucks(Date date, int totalWeight) {
+        return truckController.getAvailbleTrucks(date, int totalWeight);
     }
 
     public String getAvailableDrivers(Date date, int truckID) {
@@ -45,8 +46,8 @@ public class FacadeController {
         return driverController.getAvailbleDrivers(date, truckLicense);
     }
 
-    public void createTruck(String license_plate, String model, int weight, String drivers_license) {
-        truckController.CreateTruck(license_plate, model, weight, drivers_license);
+    public void createTruck(String license_plate, String model, int netWeight, int maxWeight, String drivers_license) {
+        truckController.CreateTruck(license_plate, model, netWeight, maxWeight, drivers_license);
     }
 
     public void createDriver(String name, String license) {
@@ -74,8 +75,12 @@ public class FacadeController {
     }
 
     //TODO:: figure out what to do ???
-    public void createTransport(Date date, int truckID, int driverID, int sourceID) {
+    public void createTransport(Date date, int truckID, int driverID, int sourceID, HashMap<Integer, Integer> DestFiles, int totalWeight) {
         String truckNumber = truckController.getTruckNumber(truckID);
         //transportController.CreateTransport(date, truckNumber);
+    }
+
+    public String getAvailableSites(int sourceID) {
+        return siteController.getAvailableSites(sourceID);
     }
 }

@@ -58,7 +58,7 @@ public class SiteController {
         return sites.get(my_id).checkIfAvailable(sites.get(other_id).getShipping_area());
     }
 
-    public String getAvailbleSites(Integer other_id)
+    public String getAvailableSites(int other_id)
     {
         String available = "";
         for (Integer i:sites.keySet()) {
