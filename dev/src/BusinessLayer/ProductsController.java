@@ -9,7 +9,7 @@ public class ProductsController {
 
     private int productID_Counter;
     private int fileID_Counter;
-    private Hashtable<Integer,ProductPerSite> files;
+    private Hashtable<Integer, ProductFile> files;
     private Hashtable<Integer,Product> products;
 
 
@@ -28,7 +28,7 @@ public class ProductsController {
 
 
     public int CreateFile() {
-        ProductPerSite file = new ProductPerSite(fileID_Counter);
+        ProductFile file = new ProductFile(fileID_Counter);
         fileID_Counter++;
         files.put(file.getFileID(), file);
         return file.getFileID();
@@ -41,7 +41,7 @@ public class ProductsController {
         files.get(fileID).addProduct(p, quantity);
     }
 
-    public ProductPerSite getFileByID(int fileID){
+    public ProductFile getFileByID(int fileID){
         return files.get(fileID);
     }
 
@@ -63,7 +63,7 @@ public class ProductsController {
     }
 
     public void removeProducts(String[] product_id, int file_id){
-        ProductPerSite file = files.get(file_id);
+        ProductFile file = files.get(file_id);
         for(int i=0;i<product_id.length;i++)
         {
             file.removeProduct(products.get(Integer.parseInt(product_id[i])));

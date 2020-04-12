@@ -2,13 +2,13 @@ package BusinessLayer;
 
 import java.util.HashMap;
 
-public class ProductPerSite {
+public class ProductFile {
 
     private int fileID;
     private int totalWeight;
     private HashMap<Product, Integer> products;
 
-    public ProductPerSite(int ID){
+    public ProductFile(int ID){
         fileID = ID;
         products = new HashMap<>();
     }

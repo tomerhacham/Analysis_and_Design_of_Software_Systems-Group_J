@@ -35,7 +35,7 @@ public class TransportController {
     }
 //    public void CreateTransport(Date date, String truckNumber, int driver, int source, HashMap<Integer, Integer> destFiles, int weight)
 //    {
-//        HashMap<Site,ProductPerSite> D_F=new HashMap<>();
+//        HashMap<Site,ProductFile> D_F=new HashMap<>();
 //        for (int i:destFiles.keySet()) {
 //            D_F.put(siteController.getById(i),productsController.getFileByID(destFiles.get(i)));
 //        }
@@ -86,7 +86,7 @@ public class TransportController {
 
     public void setTransportDestFiles(HashMap<Integer,Integer> destFiles, int id)
     {
-        HashMap<Site,ProductPerSite> D_F=new HashMap<>();
+        HashMap<Site, ProductFile> D_F=new HashMap<>();
         for (int i:destFiles.keySet()) {
             D_F.put(siteController.getById(i),productsController.getFileByID(destFiles.get(i)));
         }
@@ -96,7 +96,7 @@ public class TransportController {
     public HashMap<Integer,Integer> getTransportDestFiles(int id)
     {
         HashMap<Integer,Integer> convertedDestFiles=new HashMap<>();
-        HashMap<Site,ProductPerSite> DestFile = transports.get(id).getDestFiles();
+        HashMap<Site, ProductFile> DestFile = transports.get(id).getDestFiles();
 
         for (Site s :DestFile.keySet()) {
             convertedDestFiles.put(s.getId(),DestFile.get(s).getFileID());
@@ -108,7 +108,7 @@ public class TransportController {
     {
         return transports.get(transport_id).getFileByDest(siteController.getById(dest_id)).getFileID();
     }
-    public void addDestinationToTransport(int id, Site s, ProductPerSite productPerSite){transports.get(id).addDestFiles(s,productPerSite);}
+    public void addDestinationToTransport(int id, Site s, ProductFile productPerSite){transports.get(id).addDestFiles(s,productPerSite);}
 
     public void removeDestinationFromTransport(int site_id, int t_id){transports.get(t_id).removeDestFiles(siteController.getById(site_id));}
 

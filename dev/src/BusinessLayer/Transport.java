@@ -10,7 +10,7 @@ public class Transport {
     private Truck Truck;
     private Driver Driver;
     private Site Source;
-    private HashMap<Site, ProductPerSite> DestFiles;
+    private HashMap<Site, ProductFile> DestFiles;
     private int TotalWeight;
     private ArrayList<String> log;
 
@@ -20,7 +20,7 @@ public class Transport {
         log =new ArrayList<>();
     }
     public Transport(int id, Date date, Truck truck, Driver driver, Site source,
-                     HashMap<Site, ProductPerSite> destFiles, int weight){
+                     HashMap<Site, ProductFile> destFiles, int weight){
         ID = id;
         Date = date;
         Truck = truck;
@@ -75,11 +75,11 @@ public class Transport {
         TotalWeight = weight;
     }
 
-    public void setDestFiles(HashMap<Site, ProductPerSite> destFiles) {
+    public void setDestFiles(HashMap<Site, ProductFile> destFiles) {
         DestFiles = destFiles;
     }
 
-    public void addDestFiles(Site s, ProductPerSite productPerSite)
+    public void addDestFiles(Site s, ProductFile productPerSite)
     {
         DestFiles.put(s, productPerSite);
     }
@@ -89,17 +89,17 @@ public class Transport {
        DestFiles.remove(site);
 
     }
-    public void editDestFiles(Site s, ProductPerSite newProductPerSite)
+    public void editDestFiles(Site s, ProductFile newProductPerSite)
     {
         DestFiles.remove(s);
         DestFiles.put(s, newProductPerSite);
     }
 
-    public HashMap<Site, ProductPerSite> getDestFiles() {
+    public HashMap<Site, ProductFile> getDestFiles() {
         return DestFiles;
     }
 
-    public ProductPerSite getFileByDest(Site dest)
+    public ProductFile getFileByDest(Site dest)
     {
         return DestFiles.get(dest);
     }
