@@ -69,4 +69,12 @@ public class ProductsController {
             file.removeProduct(products.get(Integer.parseInt(product_id[i])));
         }
     }
+
+    public String getProductsDetails(String[] productsID){
+        String s = "";
+        for (int i = 0; i < productsID.length; i++){
+            s += products.get(productsID[i]).toString() + "\n";
+        }
+        return s;
+    }
 }

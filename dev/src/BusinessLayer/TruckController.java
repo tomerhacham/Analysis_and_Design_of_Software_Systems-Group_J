@@ -30,6 +30,7 @@ public class TruckController {
     {
         return trucks.get(id);
     }
+
     public void CreateTruck(String license_plate, String model, Integer net_weight, Integer max_weight, String drivers_license)
     {
         Truck t = new Truck(Id_Counter, license_plate, model, net_weight, max_weight, drivers_license);
@@ -61,7 +62,7 @@ public class TruckController {
         return trucks.get(id).checkIfAvailable(date, total_weight);
     }
 
-    public String getAvailbleTrucks(Date date, Integer total_weight)
+    public String getAvailableTrucks(Date date, Integer total_weight)
     {
         String available = "";
         for (Integer i:trucks.keySet()) {

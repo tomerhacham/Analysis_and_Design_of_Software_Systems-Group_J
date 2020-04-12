@@ -1,6 +1,5 @@
 package BusinessLayer;
 
-import java.util.Date;
 
 public class Site {
     private String address;

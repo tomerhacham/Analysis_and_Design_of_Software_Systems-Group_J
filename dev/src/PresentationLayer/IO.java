@@ -1,7 +1,6 @@
 package PresentationLayer;
 
 import InterfaceLayer.FacadeController;
-import sun.security.krb5.internal.crypto.Des;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -211,6 +210,9 @@ public class IO {
                     return -1;
                 }
                 else if (opt == 1){
+                    int truckID = facadeController.getTransportTruck(transportID);
+                    facadeController.addTransportLog("The truck: " + facadeController.getTruckDetails(truckID) + "\n" +
+                            "was changed.", transportID);
                     facadeController.setTransportTruck(transportID, chooseTruck(transportID));
                 }
                 else {
@@ -264,6 +266,8 @@ public class IO {
         if (opt == 1) {
             System.out.println("Please choose destination site ID to remove\n");
             int destToRemove = scanner.nextInt();
+            facadeController.addTransportLog("The destination: " + facadeController.getSiteDetails(destToRemove) + "\n" +
+                            "was removed from transport.", transportID);
             facadeController.removeDestFromTransport(transportID, destToRemove);
         }
         else if (opt == 2){
@@ -272,6 +276,8 @@ public class IO {
             int fileToEdit = facadeController.getDestFileID(transportID, destToEdit);
             System.out.println("Please insert products ID to remove with spaces between\n");
             String[] productsToRemove = (scanner.nextLine()).split(" ");
+            facadeController.addTransportLog("The products:\n" + facadeController.getProductsDetails(productsToRemove) + "\n" +
+                    "was removed from destination: " + facadeController.getSiteDetails(destToEdit), transportID);
             facadeController.removeProducts(productsToRemove, fileToEdit);
         }
     }

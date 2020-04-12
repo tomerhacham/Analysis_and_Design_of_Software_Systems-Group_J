@@ -2,7 +2,6 @@ package BusinessLayer;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 
 public class Driver {
     private String name;
@@ -40,7 +39,7 @@ public class Driver {
 
     public Boolean checkIfAvailable(Date d, String needed_licence)
     {
-        if(license!=needed_licence)
+        if(license != needed_licence)
         {
             return false;
         }

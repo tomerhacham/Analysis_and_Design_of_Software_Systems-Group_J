@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.LinkedList;
 
 public class Truck {
+
     private String license_plate;
     private String model;
     private Integer net_weight;

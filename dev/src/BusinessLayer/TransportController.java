@@ -3,6 +3,7 @@ package BusinessLayer;
 import java.util.*;
 
 public class TransportController {
+
     private static  TransportController instance = null;
     private static SiteController siteController=SiteController.getInstance();
     private static DriverController driverController=DriverController.getInstance();
@@ -108,6 +109,7 @@ public class TransportController {
     {
         return transports.get(transport_id).getFileByDest(siteController.getById(dest_id)).getFileID();
     }
+
     public void addDestinationToTransport(int id, Site s, ProductFile productPerSite){transports.get(id).addDestFiles(s,productPerSite);}
 
     public void removeDestinationFromTransport(int site_id, int t_id){transports.get(t_id).removeDestFiles(siteController.getById(site_id));}

@@ -1,10 +1,6 @@
 package BusinessLayer;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.Hashtable;
-import java.util.LinkedList;
 
 //singleton
 public class SiteController {
@@ -38,6 +34,7 @@ public class SiteController {
     {
         return sites.get(id);
     }
+
     public void DeleteSite(Integer id)
     {
         sites.remove(id);

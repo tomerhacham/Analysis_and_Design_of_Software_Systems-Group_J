@@ -39,12 +39,20 @@ public class FacadeController {
     }
 
     public String getAvailableTrucks(Date date, int totalWeight) {
-        return truckController.getAvailbleTrucks(date, totalWeight);
+        return truckController.getAvailableTrucks(date, totalWeight);
     }
 
     public String getAvailableDrivers(Date date, int truckID) {
         String truckLicense = truckController.getDriversLicense(truckID);
         return driverController.getAvailbleDrivers(date, truckLicense);
+    }
+
+    public String getAvailableSites(int sourceID) {
+        return siteController.getAvailableSites(sourceID);
+    }
+
+    public String getSiteDetails(int siteID) {
+        return siteController.getSiteDetails(siteID);
     }
 
     public void createTruck(String license_plate, String model, int netWeight, int maxWeight, String drivers_license) {
@@ -77,10 +85,6 @@ public class FacadeController {
 
     public int createTransport() {
         return transportController.createTransport();
-    }
-
-    public String getAvailableSites(int sourceID) {
-        return siteController.getAvailableSites(sourceID);
     }
 
     public int createProductsFile() {
@@ -146,5 +150,17 @@ public class FacadeController {
 
     public void removeDestFromTransport(int transportID, int destToRemove) {
         transportController.removeDestinationFromTransport(destToRemove, transportID);
+    }
+
+    public void addTransportLog(String message, int transportID) {
+        transportController.addToLog(message, transportID);
+    }
+
+    public String getProductsDetails(String[] productsToRemove) {
+        return productsController.getProductsDetails(productsToRemove);
+    }
+
+    public String getTruckDetails(int truckID) {
+        return truckController.getTruckDetails(truckID);
     }
 }

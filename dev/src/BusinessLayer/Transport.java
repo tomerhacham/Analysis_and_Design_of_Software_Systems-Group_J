@@ -19,6 +19,7 @@ public class Transport {
         DestFiles = new HashMap<>();
         log =new ArrayList<>();
     }
+
     public Transport(int id, Date date, Truck truck, Driver driver, Site source,
                      HashMap<Site, ProductFile> destFiles, int weight){
         ID = id;
@@ -51,7 +52,7 @@ public class Transport {
         Truck = truck;
     }
 
-    public Driver getDriverName() {
+    public Driver getDriver() {
         return Driver;
     }
 
@@ -103,6 +104,7 @@ public class Transport {
     {
         return DestFiles.get(dest);
     }
+
     @Override
     public String toString() {
         String s = "id: " + ID + " Date: " + Date.toString() + " TruckNumber: " + Truck.getLicense_plate() + " Driver: " + Driver.getName()
