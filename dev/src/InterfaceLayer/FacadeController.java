@@ -108,7 +108,7 @@ public class FacadeController {
         productsController.removeProducts(productsToRemove, fileToEdit);
     }
 
-    public void setTransportDate(int transportID, Date date) {
+    public void setTransportDate(int transportID, String date) throws Exception {
         transportController.setTransportDate(date, transportID);
     }
 
@@ -162,5 +162,13 @@ public class FacadeController {
 
     public String getTruckDetails(int truckID) {
         return truckController.getTruckDetails(truckID);
+    }
+
+    public void addInlayDate(Date transportDate, int transportID) {
+        transportController.addInlayDate(transportDate, transportID);
+    }
+
+    public void removeInlayDate(Date transportDate, int transportID) {
+        transportController.removeInlayDate(transportDate, transportID);
     }
 }

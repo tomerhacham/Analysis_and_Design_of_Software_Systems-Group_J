@@ -92,7 +92,7 @@ public class DriverController {
         else
         {
             for (int i=0; i<available.size(); i++) {
-                ret=ret+available.get(i).toString();
+                ret=ret+drivers.get(i).toString();
             }
         }
         return ret;

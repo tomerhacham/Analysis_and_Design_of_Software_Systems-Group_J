@@ -79,7 +79,7 @@ public class TruckController {
         }
         if(available.size()==0)
         {
-            return "there are no available trucks in this date";
+            return "there are no available trucks in this date.";
         }
         else{
             for (int i=0; i<available.size(); i++) {
@@ -96,7 +96,7 @@ public class TruckController {
         else
         {
             for (int i=0; i<available.size(); i++) {
-                ret=ret+available.get(i).toString();
+                ret=ret+trucks.get(i).toString();
             }
         }
         return ret;

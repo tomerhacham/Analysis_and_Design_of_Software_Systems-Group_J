@@ -1,5 +1,7 @@
 package BusinessLayer;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class TransportController {
@@ -14,21 +16,19 @@ public class TransportController {
     private Hashtable<Integer,Transport> transports;
     private int Id_Counter;
 
-    private TransportController(){
+    private TransportController() {
         transports=new Hashtable<>();
         Id_Counter=0;
     }
 
-    public static TransportController getInstance()
-    {
+    public static TransportController getInstance() {
         if(instance==null){
             instance=new TransportController();
         }
         return instance;
     }
 
-    public int createTransport()
-    {
+    public int createTransport() {
         Transport t = new Transport(Id_Counter);
         Id_Counter++;
         transports.put(t.getID(),t);
@@ -55,8 +55,7 @@ public class TransportController {
         return transports.get(id).toString();
     }
 
-    public String getAllTransportsDetails()
-    {
+    public String getAllTransportsDetails() {
         String details="";
         for (Integer i:transports.keySet()) {
             details = details+getTransportDetails(i)+"\n";
@@ -64,8 +63,10 @@ public class TransportController {
         return details;
     }
 
-    public void setTransportDate(Date date, int id) {
-        transports.get(id).setDate(date);
+    public void setTransportDate(String date, int id) throws Exception {
+        DateFormat formatter = new SimpleDateFormat("dd/mm/yyyy");
+        Date transportDate = formatter.parse(date);
+        transports.get(id).setDate(transportDate);
     }
 
     public Date getTransportDate(int id){return transports.get(id).getDate();}
@@ -120,4 +121,14 @@ public class TransportController {
     }
 
     public String getLogMessages(int id){return transports.get(id).getLogMessages();}
+
+    public void addInlayDate(Date transportDate, int transportID) {
+        driverController.addDate(transportDate, transports.get(transportID).getDriver().getId());
+        truckController.addDate(transportDate, transports.get(transportID).getTruck().getId());
+    }
+
+    public void removeInlayDate(Date transportDate, int transportID) {
+        driverController.removeDate(transportDate, transports.get(transportID).getDriver().getId());
+        truckController.removeDate(transportDate, transports.get(transportID).getTruck().getId());
+    }
 }

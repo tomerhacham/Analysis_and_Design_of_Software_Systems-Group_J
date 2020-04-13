@@ -158,12 +158,11 @@ public class IO {
 
     private void newTransport() {
         int transportID = facadeController.createTransport();
-        System.out.println("Please enter a date in the format dd-mm-yyyy\n");
-        DateFormat formatter = new SimpleDateFormat("dd-mm-yyyy");
-        Date date;
+        System.out.println("Please enter a date in the format dd/mm/yyyy\n");
+        String date;
         while (true){
             try {
-                date = formatter.parse(scanner.nextLine());
+                date = scanner.nextLine();
                 facadeController.setTransportDate(transportID, date);
                 break;
             } catch (Exception e) {
@@ -172,6 +171,7 @@ public class IO {
         }
         int sourceID = chooseSource();
         if (sourceID == -1){
+            facadeController.removeInlayDate(facadeController.getTransportDate(transportID), transportID);
             facadeController.deleteTransport(transportID);
             return;
         }
@@ -183,6 +183,7 @@ public class IO {
         facadeController.setTransportDestFiles(transportID, DestFiles);
         int truckID = chooseTruck(transportID);
         if (truckID == -1) {
+            facadeController.removeInlayDate(facadeController.getTransportDate(transportID), transportID);
             facadeController.deleteTransport(transportID);
             return;
         }
@@ -191,10 +192,12 @@ public class IO {
         facadeController.setTransportWeight(transportID, totalWeight);
         int driverID = chooseDriver(transportID);
         if (driverID == -1) {
+            facadeController.removeInlayDate(facadeController.getTransportDate(transportID), transportID);
             facadeController.deleteTransport(transportID);
             return;
         }
         facadeController.setTransportDriver(transportID, driverID);
+        facadeController.addInlayDate(facadeController.getTransportDate(transportID), transportID);
     }
 
     private int chooseDriver(int transportID) {
@@ -280,6 +283,9 @@ public class IO {
                     "was removed from destination: " + facadeController.getSiteDetails(destToEdit), transportID);
             facadeController.removeProducts(productsToRemove, fileToEdit);
         }
+        else {
+            System.out.println("The input is invalid, transport did not changed.");
+        }
     }
 
     private HashMap<Integer, Integer> chooseProductsPerSite(int numDest) {
@@ -319,6 +325,12 @@ public class IO {
                 if (opt == 2){
                     sourceID = -1;
                     break;
+                }
+                else if(opt == 1)
+                    continue;
+                else {
+                    System.out.println("The input is invalid, transport aborted.");
+                    return -1;
                 }
             }
             else
