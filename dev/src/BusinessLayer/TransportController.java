@@ -63,10 +63,17 @@ public class TransportController {
         return details;
     }
 
-    public void setTransportDate(String date, int id) throws Exception {
+    public boolean setTransportDate(String date, int id) throws Exception {
         DateFormat formatter = new SimpleDateFormat("dd/mm/yyyy");
         Date transportDate = formatter.parse(date);
-        transports.get(id).setDate(transportDate);
+        boolean trucksAvailable = truckController.checkIfTrucksAvailableByDate(transportDate);
+        boolean driversAvailable = driverController.checkIfDriversAvailableByDate(transportDate);
+        if (trucksAvailable && driversAvailable){
+            transports.get(id).setDate(transportDate);
+            return true;
+        }
+        else
+            return false;
     }
 
     public Date getTransportDate(int id){return transports.get(id).getDate();}

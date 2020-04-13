@@ -63,7 +63,7 @@ public class DriverController {
         return drivers.get(id).checkIfAvailableByLicence(licence);
     }
 
-    public boolean checkIfTrucksAvailableByDate(Date d)
+    public boolean checkIfDriversAvailableByDate(Date d)
     {
         for (Integer i:drivers.keySet()) {
             if(checkIfAvailableByDate(d, i))

@@ -39,12 +39,12 @@ public class FacadeController {
     }
 
     public String getAvailableTrucks(Date date, int totalWeight) {
-        return truckController.getAvailableTrucks(date, totalWeight);
+        return truckController.getAvailableTrucks(totalWeight);
     }
 
     public String getAvailableDrivers(Date date, int truckID) {
         String truckLicense = truckController.getDriversLicense(truckID);
-        return driverController.getAvailableDrivers(date, truckLicense);
+        return driverController.getAvailableDrivers(truckLicense);
     }
 
     public String getAvailableSites(int sourceID) {
@@ -108,8 +108,8 @@ public class FacadeController {
         productsController.removeProducts(productsToRemove, fileToEdit);
     }
 
-    public void setTransportDate(int transportID, String date) throws Exception {
-        transportController.setTransportDate(date, transportID);
+    public boolean setTransportDate(int transportID, String date) throws Exception {
+        return transportController.setTransportDate(date, transportID);
     }
 
     public void setTransportSource(int transportID, int sourceID) {
