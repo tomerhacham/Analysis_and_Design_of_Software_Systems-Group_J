@@ -63,40 +63,29 @@ public class DriverController {
         return drivers.get(id).checkIfAvailableByLicence(licence);
     }
 
-    public String getAvailableDrivers(Date date, String licence)
+    public boolean checkIfTrucksAvailableByDate(Date d)
     {
-        ArrayList<Integer> available = new ArrayList<>();
+        for (Integer i:drivers.keySet()) {
+            if(checkIfAvailableByDate(d, i))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public String getAvailableDrivers(String licence)
+    {
         String ret = "";
         for (Integer i:drivers.keySet()) {
-            if(checkIfAvailableByDate(date, i))
+            if(checkIfAvailableByLicence(licence, i))
             {
-                available.add(i);
-            }
-        }
-        if(available.size()==0)
-        {
-            return "there are no available drivers in this date.";
-        }
-        else{
-            for (int i=0; i<available.size(); i++) {
-                if(!checkIfAvailableByLicence(licence, i))
-                {
-                    available.remove(i);
-                }
-            }
-        }
-        if(available.size()==0)
-        {
-            return "There is no driver with compatible license to the selected truck in the system.";
-        }
-        else
-        {
-            for (int i=0; i<available.size(); i++) {
                 ret=ret+drivers.get(i).toString();
             }
         }
         return ret;
     }
+
 
     public void addDate(Date d, int id){drivers.get(id).addDate(d);}
 

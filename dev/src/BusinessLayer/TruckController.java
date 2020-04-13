@@ -67,40 +67,29 @@ public class TruckController {
         return trucks.get(id).checkIfAvailableByWeight(Weight);
     }
 
-    public String getAvailableTrucks(Date date, int Weight)
+    public boolean checkIfTrucksAvailableByDate(Date d)
     {
-        ArrayList<Integer> available = new ArrayList<>();
+        for (Integer i:trucks.keySet()) {
+            if(checkIfAvailableByDate(d, i))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public String getAvailableTrucks(int Weight)
+    {
         String ret = "";
         for (Integer i:trucks.keySet()) {
-            if(checkIfAvailableByDate(date, i))
+            if(checkIfAvailableByWeight(Weight, i))
             {
-                available.add(i);
-            }
-        }
-        if(available.size()==0)
-        {
-            return "there are no available trucks in this date.";
-        }
-        else{
-            for (int i=0; i<available.size(); i++) {
-                if(!checkIfAvailableByWeight(Weight, i))
-                {
-                    available.remove(i);
-                }
-            }
-        }
-        if(available.size()==0)
-        {
-            return "There is no truck that can carry such weight in the system.";
-        }
-        else
-        {
-            for (int i=0; i<available.size(); i++) {
-                ret=ret+trucks.get(i).toString();
+            ret=ret+trucks.get(i).toString();
             }
         }
         return ret;
     }
+
     public void addDate(Date d, int id){trucks.get(id).addDate(d);}
 
     public void removeDate(Date d, int id){trucks.get(id).removeDate(d);}
