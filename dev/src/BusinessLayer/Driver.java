@@ -6,13 +6,13 @@ import java.util.Date;
 public class Driver {
     private String name;
     private String license;
-    private ArrayList<Transport> transports;
+    private ArrayList<Date> Dates;
     private int id;
 
     public Driver(int id, String license, String name)
     {
         this.license = license;
-        transports= new ArrayList<>();
+        Dates= new ArrayList<>();
         this.id=id;
         this.name=name;
     }
@@ -25,28 +25,12 @@ public class Driver {
         return name;
     }
 
-    public ArrayList getTransports() {
-        return transports;
-    }
 
-    public String getLicense() {
-        return license;
-    }
-
-    public void setLicense(String license) {
-        this.license = license;
-    }
-
-    public Boolean checkIfAvailable(Date d, String needed_licence)
+    public Boolean checkIfAvailableByDate(Date d)
     {
-        if(license != needed_licence)
+        for(int i=0; i<Dates.size(); i++)
         {
-            return false;
-        }
-        //that the time isn't overlapping another transport
-        for(int i=0; i<transports.size(); i++)
-        {
-            if(transports.get(i).getDate().equals(d))
+            if(Dates.get(i).equals(d))
             {
                 return false;
             }
@@ -54,22 +38,38 @@ public class Driver {
         return true;
     }
 
-    public void AddTransport(Transport t)
+    public Boolean checkIfAvailableByLicence(String needed_licence)
     {
-        transports.add(t);
+        if(license != needed_licence)
+        {
+            return false;
+        }
+
+        return true;
     }
+
+    public void addDate(Date d){Dates.add(d);}
+
+    public void removeDate(Date d){
+        for (int i = 0 ; i<Dates.size() ; i++)
+        {
+            if(Dates.get(i).equals(d))
+                Dates.remove(i);
+        }
+    }
+
 
     public String toString()
     {
         String s = "id: "+id+" name: "+name+" license: "+license+"\n";
-        if(transports.size()>0) {
-            s = s + "transports:\n";
-            for (int i = 0; i < transports.size(); i++) {
-                s = s + i + ". " + transports.get(i).toString();
+        if(Dates.size()>0) {
+            s = s + "unavailable dates:\n";
+            for (int i = 0; i < Dates.size(); i++) {
+                s = s + i + ". " + Dates.get(i).toString();
             }
         }
         else {
-            s=s + "transports: none\n";
+            s=s + "unavailable dates: none\n";
         }
         return s;
     }

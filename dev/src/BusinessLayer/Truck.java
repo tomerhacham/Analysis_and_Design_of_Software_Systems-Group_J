@@ -1,5 +1,6 @@
 package BusinessLayer;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 
@@ -10,7 +11,7 @@ public class Truck {
     private Integer net_weight;
     private Integer max_weight;
     private String drivers_license;
-    private LinkedList<Transport> transports;
+    private ArrayList<Date> Dates;
     private Integer id;
 
     public Truck(Integer id, String license_plate, String model, Integer net_weight, Integer max_weight , String drivers_license)
@@ -21,7 +22,7 @@ public class Truck {
         this.net_weight = net_weight;
         this.max_weight = max_weight;
         this.drivers_license = drivers_license;
-        transports=new LinkedList();
+        Dates=new ArrayList<>();
     }
 
     public int getId() {
@@ -32,32 +33,17 @@ public class Truck {
         return license_plate;
     }
 
-    public String getModel() {
-        return model;
-    }
-
-    public Integer getNet_weight() {
-        return net_weight;
-    }
-
-    public Integer getMax_weight() {
-        return max_weight;
-    }
 
     public String getDrivers_license() {
         return drivers_license;
     }
 
-    public Boolean checkIfAvailable(Date d , Integer total_weight)
+    public Boolean checkIfAvailableByDate(Date d)
     {
         //that the time isn't overlapping another transport
-        for(int i=0; i<transports.size(); i++)
+        for(int i=0; i<Dates.size(); i++)
         {
-            if(transports.get(i).getDate().equals(d))
-            {
-                return false;
-            }
-            if(total_weight>max_weight)
+            if(Dates.get(i).equals(d))
             {
                 return false;
             }
@@ -65,22 +51,36 @@ public class Truck {
         return true;
     }
 
-    public void AddTransport(Transport t)
+    public Boolean checkIfAvailableByWeight(Integer total_weight)
     {
-        transports.add(t);
+        if(total_weight>max_weight)
+        {
+            return false;
+        }
+
+        return true;
+    }
+    public void addDate(Date d){Dates.add(d);}
+
+    public void removeDate(Date d){
+        for (int i = 0 ; i<Dates.size() ; i++)
+        {
+            if(Dates.get(i).equals(d))
+                Dates.remove(i);
+        }
     }
 
     public String toString()
     {
         String s = "id: "+id+ " license plate: "+license_plate+" model: "+model+" net weight: "+net_weight+" max weight: "+max_weight+" drivers license: "+drivers_license+"\n";
-        if(transports.size()>0) {
-            s = s + "transports:\n";
-            for (int i = 0; i < transports.size(); i++) {
-                s = s + i + ". " + transports.get(i).toString();
+        if(Dates.size()>0) {
+            s = s + "unavailable dates:\n";
+            for (int i = 0; i < Dates.size(); i++) {
+                s = s + i + ". " + Dates.get(i).toString();
             }
         }
         else {
-            s=s + "transports: none\n";
+            s=s + "unavailable dates: none\n";
         }
         return s;
     }

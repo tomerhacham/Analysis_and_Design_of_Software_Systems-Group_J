@@ -44,7 +44,7 @@ public class FacadeController {
 
     public String getAvailableDrivers(Date date, int truckID) {
         String truckLicense = truckController.getDriversLicense(truckID);
-        return driverController.getAvailbleDrivers(date, truckLicense);
+        return driverController.getAvailableDrivers(date, truckLicense);
     }
 
     public String getAvailableSites(int sourceID) {

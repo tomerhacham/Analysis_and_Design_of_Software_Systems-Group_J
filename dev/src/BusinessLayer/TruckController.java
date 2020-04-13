@@ -57,27 +57,53 @@ public class TruckController {
         return details;
     }
 
-    public boolean checkIfAvailable(Date date,Integer total_weight, Integer id)
+    public boolean checkIfAvailableByDate(Date date, Integer id)
     {
-        return trucks.get(id).checkIfAvailable(date, total_weight);
+        return trucks.get(id).checkIfAvailableByDate(date);
     }
 
-    public String getAvailableTrucks(Date date, Integer total_weight)
+    public boolean checkIfAvailableByWeight(int Weight, Integer id)
     {
-        String available = "";
+        return trucks.get(id).checkIfAvailableByWeight(Weight);
+    }
+
+    public String getAvailableTrucks(Date date, int Weight)
+    {
+        ArrayList<Integer> available = new ArrayList<>();
+        String ret = "";
         for (Integer i:trucks.keySet()) {
-            if(checkIfAvailable(date,total_weight, i))
+            if(checkIfAvailableByDate(date, i))
             {
-                available=available+getTruckDetails(i);
+                available.add(i);
             }
         }
-        return available;
+        if(available.size()==0)
+        {
+            return "there are no available trucks in this date";
+        }
+        else{
+            for (int i=0; i<available.size(); i++) {
+                if(!checkIfAvailableByWeight(Weight, i))
+                {
+                    available.remove(i);
+                }
+            }
+        }
+        if(available.size()==0)
+        {
+            return "There is no truck that can carry such weight in the system.";
+        }
+        else
+        {
+            for (int i=0; i<available.size(); i++) {
+                ret=ret+available.get(i).toString();
+            }
+        }
+        return ret;
     }
+    public void addDate(Date d, int id){trucks.get(id).addDate(d);}
 
-    public void addTransportToTruck(Integer id, Transport t)
-    {
-        trucks.get(id).AddTransport(t);
-    }
+    public void removeDate(Date d, int id){trucks.get(id).removeDate(d);}
 
     public String getDriversLicense(Integer id)
     {
