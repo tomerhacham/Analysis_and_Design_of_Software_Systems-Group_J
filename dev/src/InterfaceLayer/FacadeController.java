@@ -47,8 +47,8 @@ public class FacadeController {
         return driverController.getAvailableDrivers(truckLicense);
     }
 
-    public String getAvailableSites(int sourceID) {
-        return siteController.getAvailableSites(sourceID);
+    public String getAvailableSites(int sourceID, HashMap<Integer,Integer> destfile) {
+        return siteController.getAvailableSites(sourceID, destfile);
     }
 
     public String getSiteDetails(int siteID) {
@@ -67,20 +67,20 @@ public class FacadeController {
         siteController.CreateSite(address, phone_number, contact, shipping_area);
     }
 
-    public void deleteTruck(int truckToDelete) {
-        truckController.DeleteTruck(truckToDelete);
+    public boolean deleteTruck(int truckToDelete) {
+        return truckController.DeleteTruck(truckToDelete);
     }
 
-    public void deleteDriver(int driverToDelete) {
-        driverController.DeleteDriver(driverToDelete);
+    public boolean deleteDriver(int driverToDelete) {
+        return driverController.DeleteDriver(driverToDelete);
     }
 
-    public void deleteSite(int siteToDelete) {
-        siteController.DeleteSite(siteToDelete);
+    public boolean deleteSite(int siteToDelete) {
+        return siteController.DeleteSite(siteToDelete);
     }
 
-    public void deleteTransport(int transportToDelete) {
-        transportController.DeleteTransport(transportToDelete);
+    public boolean deleteTransport(int transportToDelete) {
+        return transportController.DeleteTransport(transportToDelete);
     }
 
     public int createTransport() {
@@ -170,5 +170,10 @@ public class FacadeController {
 
     public void removeInlayDate(Date transportDate, int transportID) {
         transportController.removeInlayDate(transportDate, transportID);
+    }
+
+    public boolean checkIfSiteExistAndAvailable(int destId, int sourceID)
+    {
+        return siteController.checkIfSiteExistAndAvailable(destId,sourceID );
     }
 }

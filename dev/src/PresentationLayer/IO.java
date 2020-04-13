@@ -101,7 +101,7 @@ public class IO {
         facadeController.createSite("Jerusalem","050-8912345","Eden",4);
         facadeController.createTruck("12-L8","XXX",1000,1500,"C1");
         facadeController.createTruck("17-LD","X23",1050,1260,"C1");
-        facadeController.createTruck("J0-38","1X6",700,1000,"c");
+        facadeController.createTruck("J0-38","1X6",700,1000,"C");
     }
 
     private void deleteSite() {
@@ -113,8 +113,13 @@ public class IO {
             System.out.println(details);
             System.out.println("Please choose the site ID you wish to remove:");
             int siteToDelete = Integer.parseInt(scanner.nextLine());
-            facadeController.deleteSite(siteToDelete);
-            System.out.println("\nThe site deleted successfully.\n");
+            boolean deleted = facadeController.deleteSite(siteToDelete);
+            if(deleted) {
+                System.out.println("The site deleted successfully.\n");
+            }
+            else {
+                System.out.println("The site ID:"+siteToDelete+" is not in the system, operation canceled.\n");
+            }
         }
     }
 
@@ -127,8 +132,13 @@ public class IO {
             System.out.println(details);
             System.out.println("Please choose the driver ID you wish to remove:");
             int driverToDelete = Integer.parseInt(scanner.nextLine());
-            facadeController.deleteDriver(driverToDelete);
-            System.out.println("\nThe driver deleted successfully.\n");
+            boolean deleted =facadeController.deleteDriver(driverToDelete);
+            if(deleted) {
+                System.out.println("The driver deleted successfully.\n");
+            }
+            else {
+                System.out.println("The driver ID:"+driverToDelete+" is not in the system, operation canceled.\n");
+            }
         }
     }
 
@@ -141,8 +151,13 @@ public class IO {
             System.out.println(details);
             System.out.println("Please choose the truck ID you wish to remove:");
             int truckToDelete = Integer.parseInt(scanner.nextLine());
-            facadeController.deleteTruck(truckToDelete);
-            System.out.println("\nThe truck deleted successfully.\n");
+            boolean deleted =facadeController.deleteTruck(truckToDelete);
+            if(deleted) {
+                System.out.println("The truck deleted successfully.\n");
+            }
+            else {
+                System.out.println("The truck ID:"+truckToDelete+" is not in the system, operation canceled.\n");
+            }
         }
     }
 
@@ -200,14 +215,19 @@ public class IO {
             System.out.println("Please choose the transport ID you wish to remove:");
             int transportToDelete = Integer.parseInt(scanner.nextLine());
             facadeController.removeInlayDate(facadeController.getTransportDate(transportToDelete), transportToDelete);
-            facadeController.deleteTransport(transportToDelete);
-            System.out.println("\nThe transport deleted successfully.\n");
+            boolean deleted = facadeController.deleteTransport(transportToDelete);
+            if(deleted) {
+                System.out.println("The transport deleted successfully.\n");
+            }
+            else {
+                System.out.println("The transport ID:"+transportToDelete+" is not in the system, operation canceled.\n");
+            }
         }
     }
 
     private void newTransport() {
         int transportID = facadeController.createTransport();
-        System.out.println("Please enter a date in the format dd/mm/yyyy\n");
+        System.out.println("Please enter a date in the format dd/mm/yyyy");
         String date;
         while (true){
             try {
@@ -227,10 +247,10 @@ public class IO {
             return;
         }
         facadeController.setTransportSource(transportID, sourceID);
-        System.out.println("Destinations:\n" + facadeController.getAvailableSites(sourceID));
-        System.out.println("How many destinations would you like? ");
-        int numDest = Integer.parseInt(scanner.nextLine());
-        HashMap<Integer, Integer> DestFiles = chooseProductsPerSite(numDest);
+        //System.out.println("Destinations:\n" + facadeController.getAvailableSites(sourceID));
+        //System.out.println("How many destinations would you like? ");
+        //int numDest = Integer.parseInt(scanner.nextLine());
+        HashMap<Integer, Integer> DestFiles = chooseProductsPerSite(sourceID);
         facadeController.setTransportDestFiles(transportID, DestFiles);
         int truckID = chooseTruck(transportID);
         if (truckID == -1) {
@@ -256,8 +276,8 @@ public class IO {
                     facadeController.getTransportTruck(transportID));
             if (drivers.equals("")) {
                 System.out.println("There is no driver with compatible license to the selected truck in the system.\n" +
-                        "choose 1 to change truck.\n" +
-                        "choose 2 to abort transport.\n");
+                        "\tchoose 1 to change truck.\n" +
+                        "\tchoose 2 to abort transport.");
                 int opt = Integer.parseInt(scanner.nextLine());
                 if (opt == 2) {
                     return -1;
@@ -287,8 +307,8 @@ public class IO {
             String trucks = facadeController.getAvailableTrucks(facadeController.getTransportDate(transportID), totalWeight);
             if (trucks.equals("")) {
                 System.out.println("There is no truck that can carry such weight in the system.\n" +
-                        "choose 1 to edit destination.\n" +
-                        "choose 2 to abort transport.\n");
+                        "\tchoose 1 to edit destination.\n" +
+                        "\tchoose 2 to abort transport.");
                 int opt = Integer.parseInt(scanner.nextLine());
                 if (opt == 2) {
                     return -1;
@@ -338,24 +358,54 @@ public class IO {
         }
     }
 
-    private HashMap<Integer, Integer> chooseProductsPerSite(int numDest) {
+    private HashMap<Integer, Integer> chooseProductsPerSite(int sourceID) {
         HashMap<Integer, Integer> destFiles = new HashMap<>();
-        for (int i = 0; i < numDest; i++){
+        boolean flag=true;
+        //for (int i = 0; i < numDest; i++){
+        String Destinations =  facadeController.getAvailableSites(sourceID,destFiles);
+        while(flag)
+        {
+            System.out.println("Destinations:\n" + Destinations);
             System.out.println("Please choose dest ID:\n");
             int destID = Integer.parseInt(scanner.nextLine());
-            int fileID = facadeController.createProductsFile();
-            System.out.println("How many products would you like for this destination? ");
-            int numProducts = Integer.parseInt(scanner.nextLine());
-            for (int j = 0; j < numProducts; j++){
-                System.out.println("Please enter name of a product: ");
-                String productName = scanner.nextLine();
-                System.out.println("Please enter weight of a product: ");
-                float productWeight = Float.parseFloat(scanner.nextLine());
-                System.out.println("How many items form this product? ");
-                int quantity = Integer.parseInt(scanner.nextLine());
-                facadeController.createProduct(productName, productWeight, fileID, quantity);
+            boolean exist =  facadeController.checkIfSiteExistAndAvailable(destID,sourceID);
+            if(exist) {
+                int fileID = facadeController.createProductsFile();
+                System.out.println("How many products would you like for this destination? ");
+                int numProducts = Integer.parseInt(scanner.nextLine());
+                for (int j = 0; j < numProducts; j++) {
+                    System.out.println("Please enter name of a product: ");
+                    String productName = scanner.nextLine();
+                    System.out.println("Please enter weight of a product: ");
+                    float productWeight = Float.parseFloat(scanner.nextLine());
+                    System.out.println("How many items form this product? ");
+                    int quantity = Integer.parseInt(scanner.nextLine());
+                    facadeController.createProduct(productName, productWeight, fileID, quantity);
+                }
+                destFiles.put(destID, fileID);
+                Destinations = facadeController.getAvailableSites(sourceID, destFiles);
+                if (Destinations.equals("")) {
+                    flag = false;
+                } else {
+                    System.out.println("Choose 1 if you want to choose another destination\n" +
+                            "Choose 2 if you want to continue");
+                    while (true) {
+                        int opt = Integer.parseInt(scanner.nextLine());
+                        if (opt == 2) {
+                            flag = false;
+                            break;
+                        } else if (opt == 1) {
+                            break;
+
+                        } else
+                            System.out.println("The input is invalid please try again\n");
+                    }
+
+                }
             }
-            destFiles.put(destID, fileID);
+            else {
+                System.out.println("The site ID:"+destID+" is not in the system, Please try again.\n");
+            }
         }
         return destFiles;
     }
@@ -363,14 +413,14 @@ public class IO {
     private int chooseSource() {
         int sourceID;
         while (true) {
-            System.out.println("Sources:\n" + facadeController.getAllSitesDetails());
+            System.out.println("\nSources:\n" + facadeController.getAllSitesDetails());
             System.out.println("Please choose source site ID from the above\n");
             sourceID = Integer.parseInt(scanner.nextLine());
-            String destinations = facadeController.getAvailableSites(sourceID);
+            String destinations = facadeController.getAvailableSites(sourceID, new HashMap<>());
             if (destinations.equals("")) {
-                System.out.println("No destination sites in this shipping area.\n " +
-                        "choose 1 to insert new source site\n" +
-                        "choose 2 to abort transport\n");
+                System.out.println("No destination sites in this shipping area.\n" +
+                        "\tchoose 1 to insert new source site\n" +
+                        "\tchoose 2 to abort transport");
                 int opt = Integer.parseInt(scanner.nextLine());
                 if (opt == 2){
                     sourceID = -1;

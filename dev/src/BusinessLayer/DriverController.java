@@ -34,9 +34,13 @@ public class DriverController {
         drivers.put(d.getId(),d);
     }
 
-    public void DeleteDriver(Integer id)
+    public boolean DeleteDriver(Integer id)
     {
-           drivers.remove(id);
+        if(drivers.containsKey(id)) {
+            drivers.remove(id);
+            return true;
+        }
+        else return false;
     }
 
     public String getDriverDetails(Integer id)

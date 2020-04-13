@@ -37,9 +37,13 @@ public class TruckController {
     }
 
     // removes truck with the specified id from the table
-    public void DeleteTruck(Integer id)
+    public boolean DeleteTruck(Integer id)
     {
-        trucks.remove(id);
+        if(trucks.containsKey(id)) {
+            trucks.remove(id);
+            return true;
+        }
+        return false;
     }
 
     // returns string of the details of truck with the specified id

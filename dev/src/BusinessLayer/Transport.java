@@ -98,10 +98,11 @@ public class Transport {
                 +" Source: "+Source.toString() +"\n";
         if(DestFiles.size()>0)
         {
+            int count=1;
             s = s + "\tdestinations and products: \n";
             for (Site site:DestFiles.keySet()) {
-                s=s+"\tsite: "+site.toString()+"\n";
-                s=s+"\tproducts: "+DestFiles.get(site).toString();
+                s=s+"\t"+count+". site: "+site.toString()+"\n";
+                s=s+"\t  products File: "+DestFiles.get(site).toString();
             }
         }
         else {

@@ -1,5 +1,6 @@
 package BusinessLayer;
 
+import java.util.HashMap;
 import java.util.Hashtable;
 
 //singleton
@@ -35,9 +36,14 @@ public class SiteController {
         return sites.get(id);
     }
 
-    public void DeleteSite(Integer id)
+    public boolean DeleteSite(Integer id)
     {
-        sites.remove(id);
+        if(sites.containsKey(id))
+        {
+            sites.remove(id);
+            return true;
+        }
+        return false;
     }
 
     public String getSiteDetails(Integer id)
@@ -61,17 +67,36 @@ public class SiteController {
         return sites.get(my_id).checkIfAvailable(sites.get(other_id).getShipping_area());
     }
 
-    public String getAvailableSites(int other_id)
+    public String getAvailableSites(int other_id, HashMap<Integer,Integer>destFile)
     {
         String available = "";
         int count=1;
         for (Integer i:sites.keySet()) {
-            if(checkIfAvailable(i,other_id))
+            boolean NotAvailable=false;
+            for(Integer j:destFile.keySet())
+            {
+                if(i==j)
+                {
+                    NotAvailable=true;
+                }
+            }
+            if(NotAvailable==false&&i!=other_id && checkIfAvailable(i,other_id))
             {
                 available=available+count+". "+getSiteDetails(i)+"\n";
                 count++;
             }
         }
         return available;
+    }
+
+    public boolean checkIfSiteExistAndAvailable(int destId, int sourceId)
+    {
+        if(sites.containsKey(destId)&&sites.containsKey(sourceId)){
+            if(sites.get(destId).getShipping_area()==sites.get(sourceId).getShipping_area())
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -35,9 +35,13 @@ public class TransportController {
         return t.getID();
     }
 
-    public void DeleteTransport(Integer id)
+    public boolean DeleteTransport(Integer id)
     {
-        transports.remove(id);
+        if(transports.containsKey(id)) {
+            transports.remove(id);
+            return true;
+        }
+        return false;
     }
 
     public String getTransportDetails(Integer id)

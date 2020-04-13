@@ -29,9 +29,10 @@ public class ProductFile {
 
     @Override
     public String toString() {
-        String s= "file id: "+fileID+" total weight: " + totalWeight +"products:\n";
+        String s= "file id: "+fileID+" total weight: " + totalWeight +"\n\t\tproducts:";
+        int count=1;
         for (Product p :products.keySet()) {
-            s=s+p.toString()+" quantity: " +products.get(p);
+            s=s+" "+count+". "+p.toString()+" quantity: " +products.get(p)+"\n";
         }
         return s;
     }
