@@ -51,8 +51,10 @@ public class TruckController {
     public String getAllTrucksDetails()
     {
         String details="";
+        int count=1;
         for (Integer i:trucks.keySet()) {
-            details=details+getTruckDetails(i);
+            details=details+count+". "+getTruckDetails(i);
+            count++;
         }
         return details;
     }
@@ -81,10 +83,12 @@ public class TruckController {
     public String getAvailableTrucks(int Weight)
     {
         String ret = "";
+        int count=1;
         for (Integer i:trucks.keySet()) {
             if(checkIfAvailableByWeight(Weight, i))
             {
-            ret=ret+trucks.get(i).toString();
+            ret=ret+count+". "+trucks.get(i).toString();
+            count++;
             }
         }
         return ret;

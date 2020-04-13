@@ -48,8 +48,10 @@ public class SiteController {
     public String getAllSitesDetails()
     {
         String details="";
+        int count=1;
         for (Integer i:sites.keySet()) {
-            details=details+getSiteDetails(i)+"\n";
+            details=details+count+". "+getSiteDetails(i)+"\n";
+            count++;
         }
         return details;
     }
@@ -62,10 +64,12 @@ public class SiteController {
     public String getAvailableSites(int other_id)
     {
         String available = "";
+        int count=1;
         for (Integer i:sites.keySet()) {
             if(checkIfAvailable(i,other_id))
             {
-                available=available+getSiteDetails(i)+"\n";
+                available=available+count+". "+getSiteDetails(i)+"\n";
+                count++;
             }
         }
         return available;

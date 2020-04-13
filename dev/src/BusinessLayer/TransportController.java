@@ -57,8 +57,10 @@ public class TransportController {
 
     public String getAllTransportsDetails() {
         String details="";
+        int count=1;
         for (Integer i:transports.keySet()) {
-            details = details+getTransportDetails(i)+"\n";
+            details = details+count+". "+getTransportDetails(i)+"\n";
+            count++;
         }
         return details;
     }

@@ -47,8 +47,10 @@ public class DriverController {
     public String getAllDriversDetails()
     {
         String details="";
+        int count=1;
         for (Integer i:drivers.keySet()) {
-           details=details+getDriverDetails(i)+"\n";
+           details=details+count+". "+getDriverDetails(i)+"\n";
+           count++;
         }
         return details;
     }
@@ -77,10 +79,12 @@ public class DriverController {
     public String getAvailableDrivers(String licence)
     {
         String ret = "";
+        int count=1;
         for (Integer i:drivers.keySet()) {
             if(checkIfAvailableByLicence(licence, i))
             {
-                ret=ret+drivers.get(i).toString();
+                ret=ret+count+". "+drivers.get(i).toString();
+                count++;
             }
         }
         return ret;
