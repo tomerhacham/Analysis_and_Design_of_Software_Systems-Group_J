@@ -157,7 +157,7 @@ public class IO {
         System.out.println("Shipping area:");
         int shipping_area = Integer.parseInt(scanner.nextLine());
         facadeController.createSite(address, phone_number, contact, shipping_area);
-        System.out.println("\nThe site added successfully.\n\n");
+        System.out.println("\nThe site added successfully.\n");
     }
 
     private void addDriver() {
@@ -167,7 +167,7 @@ public class IO {
         System.out.println("Driver's License:");
         String license = scanner.nextLine();
         facadeController.createDriver(name, license);
-        System.out.println("\nThe driver added successfully.\n\n");
+        System.out.println("\nThe driver added successfully.\n");
     }
 
     private void addTruck() {
@@ -187,7 +187,7 @@ public class IO {
         System.out.println("Drivers license:");
         String drivers_license = scanner.nextLine();
         facadeController.createTruck(license_plate, model, netWeight, maxWeight, drivers_license);
-        System.out.println("\nThe truck added successfully.\n\n");
+        System.out.println("\nThe truck added successfully.\n");
     }
 
     private void deleteTransport() {
@@ -199,6 +199,7 @@ public class IO {
             System.out.println(details);
             System.out.println("Please choose the transport ID you wish to remove:");
             int transportToDelete = Integer.parseInt(scanner.nextLine());
+            facadeController.removeInlayDate(facadeController.getTransportDate(transportToDelete), transportToDelete);
             facadeController.deleteTransport(transportToDelete);
             System.out.println("\nThe transport deleted successfully.\n");
         }
@@ -222,7 +223,6 @@ public class IO {
         }
         int sourceID = chooseSource();
         if (sourceID == -1){
-            facadeController.removeInlayDate(facadeController.getTransportDate(transportID), transportID);
             facadeController.deleteTransport(transportID);
             return;
         }
@@ -234,7 +234,6 @@ public class IO {
         facadeController.setTransportDestFiles(transportID, DestFiles);
         int truckID = chooseTruck(transportID);
         if (truckID == -1) {
-            facadeController.removeInlayDate(facadeController.getTransportDate(transportID), transportID);
             facadeController.deleteTransport(transportID);
             return;
         }
@@ -243,13 +242,12 @@ public class IO {
         facadeController.setTransportWeight(transportID, totalWeight);
         int driverID = chooseDriver(transportID);
         if (driverID == -1) {
-            facadeController.removeInlayDate(facadeController.getTransportDate(transportID), transportID);
             facadeController.deleteTransport(transportID);
             return;
         }
         facadeController.setTransportDriver(transportID, driverID);
         facadeController.addInlayDate(facadeController.getTransportDate(transportID), transportID);
-        System.out.println("\nThe transport added successfully.\n\n");
+        System.out.println("\nThe transport added successfully.\n");
     }
 
     private int chooseDriver(int transportID) {
