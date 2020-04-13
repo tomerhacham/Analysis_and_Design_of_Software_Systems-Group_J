@@ -11,7 +11,7 @@ public class Transport {
     private Driver Driver;
     private Site Source;
     private HashMap<Site, ProductFile> DestFiles;
-    private int TotalWeight;
+    private float TotalWeight;
     private ArrayList<String> log;
 
     public Transport(int id){
@@ -21,7 +21,7 @@ public class Transport {
     }
 
     public Transport(int id, Date date, Truck truck, Driver driver, Site source,
-                     HashMap<Site, ProductFile> destFiles, int weight){
+                     HashMap<Site, ProductFile> destFiles, float weight){
         ID = id;
         Date = date;
         Truck = truck;
@@ -60,19 +60,11 @@ public class Transport {
         Driver = driver;
     }
 
-    public Site getSource() {
-        return Source;
-    }
-
     public void setSource(Site source) {
         Source = source;
     }
 
-    public int getWeight() {
-        return TotalWeight;
-    }
-
-    public void setWeight(int weight) {
+    public void setWeight(float weight) {
         TotalWeight = weight;
     }
 
@@ -90,11 +82,6 @@ public class Transport {
        DestFiles.remove(site);
 
     }
-    public void editDestFiles(Site s, ProductFile newProductPerSite)
-    {
-        DestFiles.remove(s);
-        DestFiles.put(s, newProductPerSite);
-    }
 
     public HashMap<Site, ProductFile> getDestFiles() {
         return DestFiles;
@@ -111,21 +98,21 @@ public class Transport {
                 +" Source: "+Source.toString() +"\n";
         if(DestFiles.size()>0)
         {
-            s = s + " destinations and products: \n";
+            s = s + "\tdestinations and products: \n";
             for (Site site:DestFiles.keySet()) {
-                s=s+"site: "+site.toString()+"\n";
-                s=s+"products: "+DestFiles.get(site).toString();
+                s=s+"\tsite: "+site.toString()+"\n";
+                s=s+"\tproducts: "+DestFiles.get(site).toString();
             }
         }
         else {
-            s = s + " destinations and products: none\n";
+            s = s + "\tdestinations and products: none\n";
         }
-        s = s + "TotalWeight: " + TotalWeight +"\n";
+        s = s + "\tTotalWeight: " + TotalWeight +"\n";
         if(log.size()>0) {
-            s = s + "log messages: " + getLogMessages();
+            s = s + "\tlog messages: " + getLogMessages();
         }
         else {
-            s = s + "log messages: none";
+            s = s + "\tlog messages: none";
         }
         return s;
     }
@@ -140,7 +127,7 @@ public class Transport {
         String s = "";
         for (int i=0; i<log.size();i++)
         {
-            s=s+i+". "+log.get(i)+"\n";
+            s=s+"\t"+i+". "+log.get(i)+"\n";
         }
         return s;
     }

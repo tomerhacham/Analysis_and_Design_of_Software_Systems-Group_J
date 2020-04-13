@@ -1,6 +1,6 @@
 package PresentationLayer;
 
-import InterfaceLayer.FacadeController;
+import InterfaceLayer.*;
 
 import java.util.HashMap;
 import java.util.Scanner;
@@ -23,10 +23,10 @@ public class IO {
     }
 
     public void SystemActivation(){
-        System.out.println("Transports system\n Please choose an operation:\n");
-
+        System.out.println("Transports system\n");
+        initializeData();
         while (!terminated) {
-            System.out.println(
+            System.out.println( "Please choose an operation:\n" +
                     "1. Book new transport.\n" +
                     "2. Delete transport.\n" +
                     "3. Display all trucks.\n" +
@@ -49,16 +49,16 @@ public class IO {
                     deleteTransport();
                     break;
                 case 3:
-                    System.out.println(facadeController.getAllTrucksDetails());
+                    System.out.println("Trucks:\n" + facadeController.getAllTrucksDetails());
                     break;
                 case 4:
-                    System.out.println(facadeController.getAllDriversDetails());
+                    System.out.println("Drivers:\n" + facadeController.getAllDriversDetails());
                     break;
                 case 5:
-                    System.out.println(facadeController.getAllSitesDetails());
+                    System.out.println("Sites:\n" + facadeController.getAllSitesDetails());
                     break;
                 case 6:
-                    System.out.println(facadeController.getAllTransportsDetails());
+                    System.out.println("Transports:\n" + facadeController.getAllTransportsDetails());
                     break;
                 case 7:
                     addTruck();
@@ -88,25 +88,62 @@ public class IO {
         }
     }
 
+    public void initializeData()
+    {
+        facadeController.createDriver("Eran", "C1");
+        facadeController.createDriver("Omer","C");
+        facadeController.createDriver("Noam","C1");
+        facadeController.createSite("Beer-Sheva","054-1234567", "Shira",1);
+        facadeController.createSite("Ofakim","052-1234567","Einav",1);
+        facadeController.createSite("Omer","050-1234567", "Amit",1);
+        facadeController.createSite("herzelia","052-8912345","Shachaf",3);
+        facadeController.createSite("Tel-Aviv","050-8912345","Mai",3);
+        facadeController.createSite("Jerusalem","050-8912345","Eden",4);
+        facadeController.createTruck("12-L8","XXX",1000,1500,"C1");
+        facadeController.createTruck("17-LD","X23",1050,1260,"C1");
+        facadeController.createTruck("J0-38","1X6",700,1000,"c");
+    }
+
     private void deleteSite() {
-        System.out.println(facadeController.getAllSitesDetails());
-        System.out.println("Please choose the site ID you wish to remove:");
-        int siteToDelete = Integer.parseInt(scanner.nextLine());
-        facadeController.deleteSite(siteToDelete);
+        String details = facadeController.getAllSitesDetails();
+        if (details.equals("")){
+            System.out.println("There are no sites to delete.\n");
+        }
+        else {
+            System.out.println(details);
+            System.out.println("Please choose the site ID you wish to remove:");
+            int siteToDelete = Integer.parseInt(scanner.nextLine());
+            facadeController.deleteSite(siteToDelete);
+            System.out.println("\nThe site deleted successfully.\n");
+        }
     }
 
     private void deleteDriver() {
-        System.out.println(facadeController.getAllDriversDetails());
-        System.out.println("Please choose the driver ID you wish to remove:");
-        int driverToDelete = Integer.parseInt(scanner.nextLine());
-        facadeController.deleteDriver(driverToDelete);
+        String details = facadeController.getAllDriversDetails();
+        if (details.equals("")){
+            System.out.println("There are no drivers to delete.\n");
+        }
+        else {
+            System.out.println(details);
+            System.out.println("Please choose the driver ID you wish to remove:");
+            int driverToDelete = Integer.parseInt(scanner.nextLine());
+            facadeController.deleteDriver(driverToDelete);
+            System.out.println("\nThe driver deleted successfully.\n");
+        }
     }
 
     private void deleteTruck() {
-        System.out.println(facadeController.getAllTrucksDetails());
-        System.out.println("Please choose the truck ID you wish to remove:");
-        int truckToDelete = Integer.parseInt(scanner.nextLine());
-        facadeController.deleteTruck(truckToDelete);
+        String details = facadeController.getAllTrucksDetails();
+        if (details.equals("")){
+            System.out.println("There are no trucks to delete.\n");
+        }
+        else {
+            System.out.println(details);
+            System.out.println("Please choose the truck ID you wish to remove:");
+            int truckToDelete = Integer.parseInt(scanner.nextLine());
+            facadeController.deleteTruck(truckToDelete);
+            System.out.println("\nThe truck deleted successfully.\n");
+        }
     }
 
     private void addSite() {
@@ -120,6 +157,7 @@ public class IO {
         System.out.println("Shipping area:");
         int shipping_area = Integer.parseInt(scanner.nextLine());
         facadeController.createSite(address, phone_number, contact, shipping_area);
+        System.out.println("\nThe site added successfully.\n\n");
     }
 
     private void addDriver() {
@@ -129,6 +167,7 @@ public class IO {
         System.out.println("Driver's License:");
         String license = scanner.nextLine();
         facadeController.createDriver(name, license);
+        System.out.println("\nThe driver added successfully.\n\n");
     }
 
     private void addTruck() {
@@ -141,16 +180,28 @@ public class IO {
         int netWeight = Integer.parseInt(scanner.nextLine());
         System.out.println("Max weight the truck can curry:");
         int maxWeight = Integer.parseInt(scanner.nextLine());
+        if (maxWeight <= netWeight){
+            System.out.println("Max weight should be bigger than net weight. Add truck failed.");
+            return;
+        }
         System.out.println("Drivers license:");
         String drivers_license = scanner.nextLine();
         facadeController.createTruck(license_plate, model, netWeight, maxWeight, drivers_license);
+        System.out.println("\nThe truck added successfully.\n\n");
     }
 
     private void deleteTransport() {
-        System.out.println(facadeController.getAllTransportsDetails());
-        System.out.println("Please choose the truck ID you wish to remove:");
-        int transportToDelete = Integer.parseInt(scanner.nextLine());
-        facadeController.deleteTransport(transportToDelete);
+        String details = facadeController.getAllTransportsDetails();
+        if (details.equals("")){
+            System.out.println("There are no transports to delete.\n");
+        }
+        else {
+            System.out.println(details);
+            System.out.println("Please choose the transport ID you wish to remove:");
+            int transportToDelete = Integer.parseInt(scanner.nextLine());
+            facadeController.deleteTransport(transportToDelete);
+            System.out.println("\nThe transport deleted successfully.\n");
+        }
     }
 
     private void newTransport() {
@@ -188,7 +239,7 @@ public class IO {
             return;
         }
         facadeController.setTransportTruck(transportID, truckID);
-        int totalWeight = facadeController.getTotalWeight(DestFiles);
+        float totalWeight = facadeController.getTotalWeight(DestFiles);
         facadeController.setTransportWeight(transportID, totalWeight);
         int driverID = chooseDriver(transportID);
         if (driverID == -1) {
@@ -198,6 +249,7 @@ public class IO {
         }
         facadeController.setTransportDriver(transportID, driverID);
         facadeController.addInlayDate(facadeController.getTransportDate(transportID), transportID);
+        System.out.println("\nThe transport added successfully.\n\n");
     }
 
     private int chooseDriver(int transportID) {
@@ -232,9 +284,9 @@ public class IO {
     }
 
     private int chooseTruck(int transportID) {
-        int totalWeight = facadeController.getTotalWeight(facadeController.getTransportDestFiles(transportID));
+        float totalWeight = facadeController.getTotalWeight(facadeController.getTransportDestFiles(transportID));
         while (true) {
-            String trucks = facadeController.getAvailableTrucks(facadeController.getTransportDate(transportID), totalWeight); //TODO:: separate date and weight
+            String trucks = facadeController.getAvailableTrucks(facadeController.getTransportDate(transportID), totalWeight);
             if (trucks.equals("")) {
                 System.out.println("There is no truck that can carry such weight in the system.\n" +
                         "choose 1 to edit destination.\n" +
@@ -291,7 +343,7 @@ public class IO {
     private HashMap<Integer, Integer> chooseProductsPerSite(int numDest) {
         HashMap<Integer, Integer> destFiles = new HashMap<>();
         for (int i = 0; i < numDest; i++){
-            System.out.println("Please choose dest ID\n");
+            System.out.println("Please choose dest ID:\n");
             int destID = Integer.parseInt(scanner.nextLine());
             int fileID = facadeController.createProductsFile();
             System.out.println("How many products would you like for this destination? ");
@@ -300,7 +352,7 @@ public class IO {
                 System.out.println("Please enter name of a product: ");
                 String productName = scanner.nextLine();
                 System.out.println("Please enter weight of a product: ");
-                int productWeight = Integer.parseInt(scanner.nextLine());
+                float productWeight = Float.parseFloat(scanner.nextLine());
                 System.out.println("How many items form this product? ");
                 int quantity = Integer.parseInt(scanner.nextLine());
                 facadeController.createProduct(productName, productWeight, fileID, quantity);

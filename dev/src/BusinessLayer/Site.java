@@ -25,37 +25,9 @@ public class Site {
         return shipping_area;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public String getContact() {
-        return contact;
-    }
-
-    public String getPhone_number() {
-        return phone_number;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
-    }
-
-    public void setShipping_area(Integer shipping_area) {
-        this.shipping_area = shipping_area;
-    }
-
     @Override
     public String toString() {
-       String s="id: "+id+" address: "+address+" phone number: "+phone_number+" contact: "+contact+" shipping area"+shipping_area+"\n";
+       String s="id: "+id+" address: "+address+" phone number: "+phone_number+" contact: "+contact+" shipping area: "+shipping_area;
        return s;
     }
 

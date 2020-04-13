@@ -1,9 +1,7 @@
 package BusinessLayer;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
-import java.util.LinkedList;
 
 //singleton
 public class TruckController {
@@ -31,7 +29,7 @@ public class TruckController {
         return trucks.get(id);
     }
 
-    public void CreateTruck(String license_plate, String model, Integer net_weight, Integer max_weight, String drivers_license)
+    public void CreateTruck(String license_plate, String model, float net_weight, float max_weight, String drivers_license)
     {
         Truck t = new Truck(Id_Counter, license_plate, model, net_weight, max_weight, drivers_license);
         Id_Counter++;
@@ -64,7 +62,7 @@ public class TruckController {
         return trucks.get(id).checkIfAvailableByDate(date);
     }
 
-    public boolean checkIfAvailableByWeight(int Weight, Integer id)
+    public boolean checkIfAvailableByWeight(float Weight, Integer id)
     {
         return trucks.get(id).checkIfAvailableByWeight(Weight);
     }
@@ -80,7 +78,7 @@ public class TruckController {
         return false;
     }
 
-    public String getAvailableTrucks(int Weight)
+    public String getAvailableTrucks(float Weight)
     {
         String ret = "";
         int count=1;
@@ -103,8 +101,4 @@ public class TruckController {
         return trucks.get(id).getDrivers_license();
     }
 
-    public String getTruckNumber(int id)
-    {
-        return trucks.get(id).getLicense_plate();
-    }
 }

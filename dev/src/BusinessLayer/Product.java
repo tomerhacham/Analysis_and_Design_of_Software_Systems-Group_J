@@ -4,9 +4,9 @@ public class Product {
 
     private int ID;
     private String name;
-    private int weight;
+    private float weight;
 
-    public Product(int id, String productName, int productWeight) {
+    public Product(int id, String productName, float productWeight) {
         ID = id;
         name = productName;
         weight = productWeight;
@@ -16,11 +16,7 @@ public class Product {
         return ID;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public int getWeight() {
+    public float getWeight() {
         return weight;
     }
 

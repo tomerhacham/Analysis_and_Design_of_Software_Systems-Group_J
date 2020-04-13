@@ -38,7 +38,7 @@ public class FacadeController {
         return transportController.getAllTransportsDetails();
     }
 
-    public String getAvailableTrucks(Date date, int totalWeight) {
+    public String getAvailableTrucks(Date date, float totalWeight) {
         return truckController.getAvailableTrucks(totalWeight);
     }
 
@@ -55,7 +55,7 @@ public class FacadeController {
         return siteController.getSiteDetails(siteID);
     }
 
-    public void createTruck(String license_plate, String model, int netWeight, int maxWeight, String drivers_license) {
+    public void createTruck(String license_plate, String model, float netWeight, float maxWeight, String drivers_license) {
         truckController.CreateTruck(license_plate, model, netWeight, maxWeight, drivers_license);
     }
 
@@ -91,11 +91,11 @@ public class FacadeController {
         return productsController.CreateFile();
     }
 
-    public void createProduct(String productName, int productWeight, int fileID, int quantity) {
+    public void createProduct(String productName, float productWeight, int fileID, int quantity) {
         productsController.CreateProduct(productName, productWeight, fileID, quantity);
     }
 
-    public int getTotalWeight(HashMap<Integer, Integer> destFiles) {
+    public float getTotalWeight(HashMap<Integer, Integer> destFiles) {
         return productsController.getTotalWeight(destFiles);
     }
 
@@ -124,7 +124,7 @@ public class FacadeController {
         transportController.setTransportTruck(truckID, transportID);
     }
 
-    public void setTransportWeight(int transportID, int totalWeight) {
+    public void setTransportWeight(int transportID, float totalWeight) {
         transportController.setTransportWeight(totalWeight, transportID);
     }
 

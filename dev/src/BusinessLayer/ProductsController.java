@@ -16,6 +16,8 @@ public class ProductsController {
     private ProductsController(){
         productID_Counter = 0;
         fileID_Counter = 0;
+        files = new Hashtable<>();
+        products = new Hashtable<>();
     }
 
     public static ProductsController getInstance()
@@ -34,7 +36,7 @@ public class ProductsController {
         return file.getFileID();
     }
 
-    public void CreateProduct(String productName, int productWeight, int fileID, int quantity) {
+    public void CreateProduct(String productName, float productWeight, int fileID, int quantity) {
         Product p = new Product(productID_Counter, productName, productWeight);
         productID_Counter++;
         products.put(p.getID(), p);
@@ -45,8 +47,8 @@ public class ProductsController {
         return files.get(fileID);
     }
 
-    public int getTotalWeight(HashMap<Integer, Integer> destFiles) {
-        int total = 0;
+    public float getTotalWeight(HashMap<Integer, Integer> destFiles) {
+        float total = 0;
         for (int id: destFiles.keySet()) {
             total += files.get(destFiles.get(id)).getTotalWeight();
         }

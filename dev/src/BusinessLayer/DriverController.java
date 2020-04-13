@@ -83,7 +83,7 @@ public class DriverController {
         for (Integer i:drivers.keySet()) {
             if(checkIfAvailableByLicence(licence, i))
             {
-                ret=ret+count+". "+drivers.get(i).toString();
+                ret=ret+count+". "+drivers.get(i).toString() + "\n";
                 count++;
             }
         }

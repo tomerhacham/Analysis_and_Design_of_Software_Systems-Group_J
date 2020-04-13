@@ -5,11 +5,12 @@ import java.util.HashMap;
 public class ProductFile {
 
     private int fileID;
-    private int totalWeight;
+    private float totalWeight;
     private HashMap<Product, Integer> products;
 
     public ProductFile(int ID){
         fileID = ID;
+        totalWeight = 0;
         products = new HashMap<>();
     }
 
@@ -17,14 +18,9 @@ public class ProductFile {
         return fileID;
     }
 
-    public int getTotalWeight() {
+    public float getTotalWeight() {
         return totalWeight;
     }
-
-    public HashMap<Product, Integer> getProducts() {
-        return products;
-    }
-
 
     public void addProduct(Product p, int quantity) {
         products.put(p, quantity);
@@ -42,6 +38,7 @@ public class ProductFile {
 
     public void removeProduct(Product p )
     {
+        totalWeight -= p.getWeight()*products.get(p);
         products.remove(p);
     }
 }

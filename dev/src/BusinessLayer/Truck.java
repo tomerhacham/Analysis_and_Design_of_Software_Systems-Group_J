@@ -8,13 +8,13 @@ public class Truck {
 
     private String license_plate;
     private String model;
-    private Integer net_weight;
-    private Integer max_weight;
+    private float net_weight;
+    private float max_weight;
     private String drivers_license;
     private ArrayList<Date> Dates;
     private Integer id;
 
-    public Truck(Integer id, String license_plate, String model, Integer net_weight, Integer max_weight , String drivers_license)
+    public Truck(Integer id, String license_plate, String model, float net_weight, float max_weight , String drivers_license)
     {
         this.id=id;
         this.license_plate=license_plate;
@@ -51,7 +51,7 @@ public class Truck {
         return true;
     }
 
-    public Boolean checkIfAvailableByWeight(Integer total_weight)
+    public Boolean checkIfAvailableByWeight(float total_weight)
     {
         if(total_weight>max_weight)
         {
@@ -60,6 +60,7 @@ public class Truck {
 
         return true;
     }
+
     public void addDate(Date d){Dates.add(d);}
 
     public void removeDate(Date d){
@@ -74,13 +75,13 @@ public class Truck {
     {
         String s = "id: "+id+ " license plate: "+license_plate+" model: "+model+" net weight: "+net_weight+" max weight: "+max_weight+" drivers license: "+drivers_license+"\n";
         if(Dates.size()>0) {
-            s = s + "unavailable dates:\n";
+            s = s + "\tunavailable dates:\n";
             for (int i = 0; i < Dates.size(); i++) {
-                s = s + i + ". " + Dates.get(i).toString();
+                s = s + "\t" + i + ". " + Dates.get(i).toString();
             }
         }
         else {
-            s=s + "unavailable dates: none\n";
+            s=s + "\tunavailable dates: none\n";
         }
         return s;
     }

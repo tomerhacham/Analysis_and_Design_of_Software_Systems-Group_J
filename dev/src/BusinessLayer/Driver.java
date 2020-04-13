@@ -63,13 +63,13 @@ public class Driver {
     {
         String s = "id: "+id+" name: "+name+" license: "+license+"\n";
         if(Dates.size()>0) {
-            s = s + "unavailable dates:\n";
+            s = s + "\tunavailable dates:\n";
             for (int i = 0; i < Dates.size(); i++) {
                 s = s + i + ". " + Dates.get(i).toString();
             }
         }
         else {
-            s=s + "unavailable dates: none\n";
+            s=s + "\tunavailable dates: none";
         }
         return s;
     }

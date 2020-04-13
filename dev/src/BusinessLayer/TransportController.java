@@ -34,16 +34,6 @@ public class TransportController {
         transports.put(t.getID(),t);
         return t.getID();
     }
-//    public void CreateTransport(Date date, String truckNumber, int driver, int source, HashMap<Integer, Integer> destFiles, int weight)
-//    {
-//        HashMap<Site,ProductFile> D_F=new HashMap<>();
-//        for (int i:destFiles.keySet()) {
-//            D_F.put(siteController.getById(i),productsController.getFileByID(destFiles.get(i)));
-//        }
-//        Transport t = new Transport(Id_Counter, date, truckNumber, driverController.getById(driver),siteController.getById(source), D_F, weight);
-//        Id_Counter++;
-//        transports.put(t.getID(),t);
-//    }
 
     public void DeleteTransport(Integer id)
     {
@@ -93,7 +83,7 @@ public class TransportController {
         transports.get(t_id).setSource(siteController.getById(source));
     }
 
-    public void setTransportWeight(int weight, int id){transports.get(id).setWeight(weight); }
+    public void setTransportWeight(float weight, int id){transports.get(id).setWeight(weight); }
 
     public void setTransportDestFiles(HashMap<Integer,Integer> destFiles, int id)
     {
@@ -120,16 +110,12 @@ public class TransportController {
         return transports.get(transport_id).getFileByDest(siteController.getById(dest_id)).getFileID();
     }
 
-    public void addDestinationToTransport(int id, Site s, ProductFile productPerSite){transports.get(id).addDestFiles(s,productPerSite);}
-
     public void removeDestinationFromTransport(int site_id, int t_id){transports.get(t_id).removeDestFiles(siteController.getById(site_id));}
 
     public void addToLog(String s, Integer id)
     {
         transports.get(id).addToLog(s);
     }
-
-    public String getLogMessages(int id){return transports.get(id).getLogMessages();}
 
     public void addInlayDate(Date transportDate, int transportID) {
         driverController.addDate(transportDate, transports.get(transportID).getDriver().getId());
