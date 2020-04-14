@@ -1,17 +1,12 @@
 package presentation_layer;
 
-import bussines_layer.Category;
 import bussines_layer.Inventory;
 import bussines_layer.Result;
 import Initializer.Initializer;
 import bussines_layer.Sale;
-import com.sun.org.apache.xml.internal.security.Init;
-
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
 import java.io.File;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
