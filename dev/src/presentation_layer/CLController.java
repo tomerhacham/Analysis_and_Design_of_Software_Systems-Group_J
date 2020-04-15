@@ -893,18 +893,18 @@ public class CLController {
         System.out.println("Bye!");
         exit(0);
     }
-    private static void PlayBeep(){
-        //String filePath = new File(System.getProperty("user.dir")).getParent()+"//resources//beep.wav";
-        String filePath = new File(System.getProperty("user.dir"))+"//src//resources//beep.wav";
-        File beep = new File(filePath);
-        try (Clip clip = AudioSystem.getClip()) {
-            clip.open(AudioSystem.getAudioInputStream(beep));
-            clip.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
+//    private static void PlayBeep(){
+//        //String filePath = new File(System.getProperty("user.dir")).getParent()+"//resources//beep.wav";
+//        String filePath = new File(System.getProperty("user.dir"))+"//src//resources//beep.wav";
+//        File beep = new File(filePath);
+//        try (Clip clip = AudioSystem.getClip()) {
+//            clip.open(AudioSystem.getAudioInputStream(beep));
+//            clip.start();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
 
     //endregion
