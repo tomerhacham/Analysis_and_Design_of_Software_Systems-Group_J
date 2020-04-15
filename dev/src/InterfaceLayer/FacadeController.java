@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class FacadeController {
+//this class transfer functionality between the businessLayer and the presentationLayer
 
     private static FacadeController instance = null;
     private static DriverController driverController = DriverController.getInstance();
@@ -22,29 +23,66 @@ public class FacadeController {
         return instance;
     }
 
+    //truck controller functions
     public String getAllTrucksDetails() {
         return truckController.getAllTrucksDetails();
     }
 
+    public String getAvailableTrucks(Date date, float totalWeight) {
+        return truckController.getAvailableTrucks(date, totalWeight);
+    }
+
+    public void createTruck(String license_plate, String model, float netWeight, float maxWeight, String drivers_license) {
+        truckController.CreateTruck(license_plate, model, netWeight, maxWeight, drivers_license);
+    }
+
+    public boolean deleteTruck(int truckToDelete) {
+        return truckController.DeleteTruck(truckToDelete);
+    }
+
+    public String getTruckDetails(int truckID) {
+        return truckController.getTruckDetails(truckID);
+    }
+
+    public boolean checkIfTruckExistAndValid(int truckID, int transportId) {
+        float totalWeight = getTotalWeight(transportId);
+        Date d = getTransportDate(transportId);
+        return truckController.checkIfTruckExistAndValid(truckID, totalWeight, d);
+    }
+
+
+
+    //driver controller functions
     public String getAllDriversDetails() {
         return driverController.getAllDriversDetails();
     }
 
+    public String getAvailableDrivers(int transportId) {
+        Date date = getTransportDate(transportId);
+        int truckID = getTransportTruck(transportId);
+        String truckLicense = truckController.getDriversLicense(truckID);
+        return driverController.getAvailableDrivers(date, truckLicense);
+    }
+
+    public void createDriver(String name, String license) {
+        driverController.CreateDriver(license, name);
+    }
+
+    public boolean deleteDriver(int driverToDelete) {
+        return driverController.DeleteDriver(driverToDelete);
+    }
+    public boolean checkIfDriverExistAndValid(int driverID, int transport_id) {
+        int truckID = getTransportTruck(transport_id);
+        Date d =getTransportDate(transport_id);
+        String truckLicense = truckController.getDriversLicense(truckID);
+        return driverController.checkIfDriverExistAndValid(driverID, truckLicense, d);
+    }
+
+
+
+    //site controller functions
     public String getAllSitesDetails() {
         return siteController.getAllSitesDetails();
-    }
-
-    public String getAllTransportsDetails() {
-        return transportController.getAllTransportsDetails();
-    }
-
-    public String getAvailableTrucks(Date date, float totalWeight) {
-        return truckController.getAvailableTrucks(totalWeight);
-    }
-
-    public String getAvailableDrivers(Date date, int truckID) {
-        String truckLicense = truckController.getDriversLicense(truckID);
-        return driverController.getAvailableDrivers(truckLicense);
     }
 
     public String getAvailableSites(int sourceID, HashMap<Integer,Integer> destfile) {
@@ -55,28 +93,28 @@ public class FacadeController {
         return siteController.getSiteDetails(siteID);
     }
 
-    public void createTruck(String license_plate, String model, float netWeight, float maxWeight, String drivers_license) {
-        truckController.CreateTruck(license_plate, model, netWeight, maxWeight, drivers_license);
-    }
-
-    public void createDriver(String name, String license) {
-        driverController.CreateDriver(license, name);
-    }
-
     public void createSite(String address, String phone_number, String contact, int shipping_area) {
         siteController.CreateSite(address, phone_number, contact, shipping_area);
     }
 
-    public boolean deleteTruck(int truckToDelete) {
-        return truckController.DeleteTruck(truckToDelete);
-    }
-
-    public boolean deleteDriver(int driverToDelete) {
-        return driverController.DeleteDriver(driverToDelete);
-    }
-
     public boolean deleteSite(int siteToDelete) {
         return siteController.DeleteSite(siteToDelete);
+    }
+
+    public boolean checkIfSiteExist(int siteID)
+    {
+        return siteController.checkIfSiteExist(siteID);
+    }
+    public boolean checkIfSiteExistAndValid(int siteID, int sourceID, HashMap<Integer,Integer>destFile)
+    {
+        return siteController.checkIfAvailable(siteID, sourceID, destFile);
+    }
+
+
+
+    //transport controller functions
+    public String getAllTransportsDetails() {
+        return transportController.getAllTransportsDetails();
     }
 
     public boolean deleteTransport(int transportToDelete) {
@@ -87,25 +125,12 @@ public class FacadeController {
         return transportController.createTransport();
     }
 
-    public int createProductsFile() {
-        return productsController.CreateFile();
-    }
-
-    public void createProduct(String productName, float productWeight, int fileID, int quantity) {
-        productsController.CreateProduct(productName, productWeight, fileID, quantity);
-    }
-
-    public float getTotalWeight(HashMap<Integer, Integer> destFiles) {
-        return productsController.getTotalWeight(destFiles);
+    public float getTotalWeight( int transport_ID) {
+        return transportController.getTotalWeight(transport_ID);
     }
 
     public String getProductsByDest(int transportID) {
-        HashMap<Integer, Integer> destFiles = getTransportDestFiles(transportID);
-        return productsController.getProductByDest(destFiles);
-    }
-
-    public void removeProducts(String[] productsToRemove, Integer fileToEdit) {
-        productsController.removeProducts(productsToRemove, fileToEdit);
+        return transportController.getProductByDest(transportID);
     }
 
     public boolean setTransportDate(int transportID, String date) throws Exception {
@@ -124,8 +149,8 @@ public class FacadeController {
         transportController.setTransportTruck(truckID, transportID);
     }
 
-    public void setTransportWeight(int transportID, float totalWeight) {
-        transportController.setTransportWeight(totalWeight, transportID);
+    public void setTransportWeight(int transportID) {
+        transportController.setTransportWeight(transportID);
     }
 
     public void setTransportDriver(int transportID, int driverID) {
@@ -140,53 +165,24 @@ public class FacadeController {
         return transportController.getTransportTruck(transportID);
     }
 
-    public HashMap<Integer, Integer> getTransportDestFiles(int transportID) {
-        return transportController.getTransportDestFiles(transportID);
-    }
-
     public int getDestFileID(int transportID, int destToEdit) {
         return transportController.getFileID(transportID, destToEdit);
     }
 
-    public void removeDestFromTransport(int transportID, int destToRemove) {
-        transportController.removeDestinationFromTransport(destToRemove, transportID);
+    public boolean removeDestFromTransport(int transportID, int destToRemove) {
+        return transportController.removeDestinationFromTransport(destToRemove, transportID);
     }
 
     public void addTransportLog(String message, int transportID) {
         transportController.addToLog(message, transportID);
     }
 
-    public String getProductsDetails(String[] productsToRemove) {
-        return productsController.getProductsDetails(productsToRemove);
+    public void addDatesToDriverAndTruck(int transportID) {
+        transportController.addDatesToDriverAndTruck(transportID);
     }
 
-    public String getTruckDetails(int truckID) {
-        return truckController.getTruckDetails(truckID);
-    }
-
-    public void addInlayDate(Date transportDate, int transportID) {
-        transportController.addInlayDate(transportDate, transportID);
-    }
-
-    public void removeInlayDate(Date transportDate, int transportID) {
-        transportController.removeInlayDate(transportDate, transportID);
-    }
-
-    public boolean checkIfSiteExist(int siteID)
-    {
-        return siteController.checkIfSiteExist(siteID);
-    }
-
-    public boolean checkIfTruckExist(int truckID) {
-        return truckController.checkIfTruckExist(truckID);
-    }
-
-    public boolean checkIfDriverExist(int driverID) {
-        return driverController.checkIfDriverExist(driverID);
-    }
-
-    public boolean validateProducts(String[] products, int fileID) {
-        return productsController.validateProducts(products, fileID);
+    public void removeDatesToDriverAndTruck( int transportID) {
+        transportController.removeDatesToDriverAndTruck(transportID);
     }
 
     public boolean checkIfDestInFile(int transportID, int destToEdit) {
@@ -196,4 +192,29 @@ public class FacadeController {
     public boolean checkIfTransportExist(int transportID) {
         return transportController.checkIfTransportExist(transportID);
     }
+
+
+
+    //product controller functions
+    public int createProductsFile() {
+        return productsController.CreateFile();
+    }
+
+    public void createProduct(String productName, float productWeight, int fileID, int quantity) {
+        productsController.CreateProduct(productName, productWeight, fileID, quantity);
+    }
+
+    public boolean removeProducts(String[] productsToRemove, Integer fileToEdit) {
+        return productsController.removeProducts(productsToRemove, fileToEdit);
+    }
+
+    public String getProductsDetails(String[] productsToRemove) {
+        return productsController.getProductsDetails(productsToRemove);
+    }
+
+    public float getFileWeight(int fileID)
+    {
+        return productsController.getFileWeight(fileID);
+    }
+
 }

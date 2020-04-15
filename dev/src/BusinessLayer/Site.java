@@ -25,15 +25,17 @@ public class Site {
         return shipping_area;
     }
 
+    //check if a site has a specific shipping_area
+    public Boolean checkIfAvailable(int shipping_area)
+    {
+        return this.shipping_area==shipping_area;
+    }
+
     @Override
     public String toString() {
        String s="id: "+id+" address: "+address+" phone number: "+phone_number+" contact: "+contact+" shipping area: "+shipping_area;
        return s;
     }
 
-    public Boolean checkIfAvailable(int shipping_area)
-    {
-        return this.shipping_area==shipping_area;
-    }
 }
 

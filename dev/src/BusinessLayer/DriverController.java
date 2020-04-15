@@ -22,11 +22,16 @@ public class DriverController {
         return instance;
     }
 
+    //if the driver exist in the system return it, else return null
     public Driver getById(int id)
     {
-        return drivers.get(id);
+        if (drivers.containsKey(id)) {
+            return drivers.get(id);
+        }
+        else return null;
     }
 
+    //creating a new driver
     public void CreateDriver(String license, String name)
     {
         Driver d = new Driver(Id_Counter, license, name);
@@ -34,20 +39,26 @@ public class DriverController {
         drivers.put(d.getId(),d);
     }
 
+    //if the driver exist in the system delete it
     public boolean DeleteDriver(Integer id)
     {
         if(drivers.containsKey(id)) {
             drivers.remove(id);
             return true;
         }
-        else return false;
+        return false;
     }
 
+    //return a specific driver details
     public String getDriverDetails(Integer id)
     {
-        return drivers.get(id).toString();
+        if(drivers.containsKey(id)) {
+            return drivers.get(id).toString();
+        }
+        else return "";
     }
-    
+
+    //return all drivers details
     public String getAllDriversDetails()
     {
         String details="";
@@ -59,16 +70,25 @@ public class DriverController {
         return details;
     }
 
+    //if the driver exist in the system check if he available in a specific date
     public boolean checkIfAvailableByDate(Date date, Integer id)
     {
-        return drivers.get(id).checkIfAvailableByDate(date);
+        if(drivers.containsKey(id)) {
+            return drivers.get(id).checkIfAvailableByDate(date);
+        }
+        return false;
     }
 
+    //if the driver exist in the system check if he has a specific licence
     public boolean checkIfAvailableByLicence(String licence, Integer id)
     {
-        return drivers.get(id).checkIfAvailableByLicence(licence);
+        if(drivers.containsKey(id)) {
+            return drivers.get(id).checkIfAvailableByLicence(licence);
+        }
+        return false;
     }
 
+    //check if there is a driver in the system that is available in a specific date
     public boolean checkIfDriversAvailableByDate(Date d)
     {
         for (Integer i:drivers.keySet()) {
@@ -80,26 +100,42 @@ public class DriverController {
         return false;
     }
 
-    public String getAvailableDrivers(String licence)
+    //get all drivers that has available both by license and date
+    public String getAvailableDrivers(Date d, String licence)
     {
         String ret = "";
         int count=1;
         for (Integer i:drivers.keySet()) {
             if(checkIfAvailableByLicence(licence, i))
             {
-                ret=ret+count+". "+drivers.get(i).toString() + "\n";
-                count++;
+                if(checkIfAvailableByDate(d, i)) {
+                    ret = ret + count + ". " + drivers.get(i).toString() + "\n";
+                    count++;
+                }
             }
         }
         return ret;
     }
 
+    //if the driver exist in the system, add a date of a transport
+    public void addDate(Date d, int id){
+        if(drivers.containsKey(id)) {
+            drivers.get(id).addDate(d);
+        }
+    }
+    //if the driver exist in the system, remove a date of a transport
+    public void removeDate(Date d, int id){
+        if(drivers.containsKey(id)) {
+            drivers.get(id).removeDate(d);
+        }
+    }
 
-    public void addDate(Date d, int id){drivers.get(id).addDate(d);}
-
-    public void removeDate(Date d, int id){drivers.get(id).removeDate(d);}
-
-    public boolean checkIfDriverExist(int driverID) {
-        return drivers.containsKey(driverID);
+    //if the driver exist in the system check if he has a specific licence and if he available in a specific date
+    public boolean checkIfDriverExistAndValid(int driverID, String licence, Date d) {
+        if(drivers.containsKey(driverID))
+        {
+            return (checkIfAvailableByLicence(licence,driverID)&&checkIfAvailableByDate(d,driverID));
+        }
+        return false;
     }
 }

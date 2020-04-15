@@ -1,9 +1,11 @@
 package BusinessLayer;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 
+//singleton
 public class ProductsController {
     private static  ProductsController instance = null;
 
@@ -11,7 +13,6 @@ public class ProductsController {
     private int fileID_Counter;
     private Hashtable<Integer, ProductFile> files;
     private Hashtable<Integer,Product> products;
-
 
     private ProductsController(){
         productID_Counter = 0;
@@ -28,7 +29,7 @@ public class ProductsController {
         return instance;
     }
 
-
+    //creating a new Product-file
     public int CreateFile() {
         ProductFile file = new ProductFile(fileID_Counter);
         fileID_Counter++;
@@ -36,6 +37,7 @@ public class ProductsController {
         return file.getFileID();
     }
 
+    //creating a new Product
     public void CreateProduct(String productName, float productWeight, int fileID, int quantity) {
         Product p = new Product(productID_Counter, productName, productWeight);
         productID_Counter++;
@@ -43,35 +45,46 @@ public class ProductsController {
         files.get(fileID).addProduct(p, quantity);
     }
 
+    //if a File exist in the system return it, else return null
     public ProductFile getFileByID(int fileID){
-        return files.get(fileID);
-    }
-
-    public float getTotalWeight(HashMap<Integer, Integer> destFiles) {
-        float total = 0;
-        for (int id: destFiles.keySet()) {
-            total += files.get(destFiles.get(id)).getTotalWeight();
+        if(files.containsKey(fileID)) {
+            return files.get(fileID);
         }
-        return total;
+        return null;
     }
 
-    public String getProductByDest(HashMap<Integer,Integer> destFiles)
+    //if a File exist in the system return its details, else return empty string
+    public String geFileDetails(int file_id)
     {
-        String s = "";
-        for (int i:destFiles.keySet()) {
-            s = s + "destination id: "+i+" "+ files.get(destFiles.get(i)).toString()+"\n";
-        }
-        return s;
-    }
-
-    public void removeProducts(String[] product_id, int file_id){
-        ProductFile file = files.get(file_id);
-        for(int i=0;i<product_id.length;i++)
+        if(files.containsKey(file_id))
         {
-            file.removeProduct(products.get(Integer.parseInt(product_id[i])));
+            return files.get(file_id).toString();
         }
+
+        return "";
     }
 
+    //remove a list of Products from a specific file (if it exist in the system)
+    //if one of the products is not in the system return false,
+    //else call the removeProduct function in the file
+    public boolean removeProducts(String[] products_id, int file_id){
+        if(files.containsKey(file_id)) {
+            ArrayList<Product>  productsToDelete = new ArrayList<>();
+            for (String s:products_id) {
+                if(products.containsKey(s))
+                {
+                    productsToDelete.add(products.get(s));
+                }
+                else {
+                    return false;
+                }
+            }
+            return files.get(file_id).removeProducts(productsToDelete);
+        }
+        return false;
+    }
+
+    //get details of a list of product
     public String getProductsDetails(String[] productsID){
         String s = "";
         for (int i = 0; i < productsID.length; i++){
@@ -81,14 +94,12 @@ public class ProductsController {
         return s;
     }
 
-    public boolean validateProducts(String[] productsID, int fileID) {
-        ProductFile file = files.get(fileID);
-        for (int i = 0; i < productsID.length; i++){
-            int productID = Integer.parseInt(productsID[i]);
-            if (!file.validateProducts(products.get(productID)))
-                return false;
-        }
-        return true;
+    //if a file exist in the system, get its total weight
+    public float getFileWeight(int fileID)
+    {
+        if(files.containsKey(fileID))
+            return files.get(fileID).getTotalWeight();
+        else
+            return 0;
     }
-
 }

@@ -23,10 +23,13 @@ public class TruckController {
         return instance;
     }
 
-    // returns truck by specified id
+    // returns truck by specified id if it exist in the system else return null
     public Truck getById(int id)
     {
-        return trucks.get(id);
+        if(trucks.containsKey(id)) {
+            return trucks.get(id);
+        }
+        return null;
     }
 
     // create new instance of truck and add it to the table
@@ -48,7 +51,10 @@ public class TruckController {
     // returns string of the details of truck with the specified id
     public String getTruckDetails(Integer id)
     {
-        return trucks.get(id).toString();
+        if(trucks.containsKey(id)) {
+            return trucks.get(id).toString();
+        }
+        return "";
     }
 
     // returns string of the details of all trucks in the system
@@ -66,16 +72,22 @@ public class TruckController {
     // otherwise returns false
     public boolean checkIfAvailableByDate(Date date, Integer id)
     {
-        return trucks.get(id).checkIfAvailableByDate(date);
+        if(trucks.containsKey(id)) {
+            return trucks.get(id).checkIfAvailableByDate(date);
+        }
+        return false;
     }
 
     // returns true if the truck with the specified id have max weight sufficient to weight
     // otherwise returns false
     public boolean checkIfAvailableByWeight(float weight, Integer id) {
-        return trucks.get(id).checkIfAvailableByWeight(weight);
+        if(trucks.containsKey(id)) {
+            return trucks.get(id).checkIfAvailableByWeight(weight);
+        }
+        return false;
     }
 
-    // returns true if there is truck in the system which is available at date
+    // returns true if there is a truck in the system which is available at date
     // otherwise returns false
     public boolean checkIfTrucksAvailableByDate(Date d) {
         for (Integer i:trucks.keySet()) {
@@ -85,32 +97,48 @@ public class TruckController {
         return false;
     }
 
-    // returns string of details of all the trucks in the system which have max weight sufficient to weight
-    public String getAvailableTrucks(float Weight) {
+    // returns string of details of all the trucks in the system which have max weight sufficient to weight and are available by date
+    public String getAvailableTrucks(Date date,float Weight) {
         String ret = "";
         int count = 1;
         for (Integer i:trucks.keySet()) {
             if(checkIfAvailableByWeight(Weight, i)) {
-                ret = ret + count + ". " + trucks.get(i).toString();
-                count++;
+                if(checkIfAvailableByDate(date, i)) {
+                    ret = ret + count + ". " + trucks.get(i).toString();
+                    count++;
+                }
             }
         }
         return ret;
     }
 
     // adds a date to the list of occupied dates of the truck with the specified id
-    public void addDate(Date date, int id){trucks.get(id).addDate(date);}
+    public void addDate(Date date, int id){
+        if(trucks.containsKey(id)){
+            trucks.get(id).addDate(date);
+        }}
 
     // removes a date from the list of occupied dates of the truck with the specified id
-    public void removeDate(Date date, int id){trucks.get(id).removeDate(date);}
+    public void removeDate(Date date, int id){
+        if(trucks.containsKey(id))
+        {
+            trucks.get(id).removeDate(date);
+        }}
 
     // returns a string with the driver license compatible to the truck with the specified id
     public String getDriversLicense(Integer id) {
-        return trucks.get(id).getDrivers_license();
+        if(trucks.containsKey(id)) {
+            return trucks.get(id).getDrivers_license();
+        }
+        return "";
     }
 
     // returns true if the truck with the specified id exist in the system
-    public boolean checkIfTruckExist(int truckID) {
-        return trucks.containsKey(truckID);
+    public boolean checkIfTruckExistAndValid(int truckID, float totalWeight, Date d) {
+        if(trucks.containsKey(truckID))
+        {
+           return (checkIfAvailableByWeight(totalWeight, truckID)&&checkIfAvailableByDate(d,truckID));
+        }
+        return false;
     }
 }

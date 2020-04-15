@@ -25,7 +25,7 @@ public class Driver {
         return name;
     }
 
-
+    //check if the driver available in a specific date
     public Boolean checkIfAvailableByDate(Date d)
     {
         for(int i=0; i<Dates.size(); i++)
@@ -38,14 +38,10 @@ public class Driver {
         return true;
     }
 
+    //check if the driver has a specific licence
     public Boolean checkIfAvailableByLicence(String needed_licence)
     {
-        if(license != needed_licence)
-        {
-            return false;
-        }
-
-        return true;
+        return license == needed_licence;
     }
 
     public void addDate(Date d){Dates.add(d);}
@@ -57,7 +53,6 @@ public class Driver {
                 Dates.remove(i);
         }
     }
-
 
     public String toString()
     {

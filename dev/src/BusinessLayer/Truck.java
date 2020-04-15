@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.LinkedList;
 
 public class Truck {
-
     private String license_plate;
     private String model;
     private float net_weight;
@@ -33,14 +32,13 @@ public class Truck {
         return license_plate;
     }
 
-
     public String getDrivers_license() {
         return drivers_license;
     }
 
+    //check if the truck is available in a specific date
     public Boolean checkIfAvailableByDate(Date d)
     {
-        //that the time isn't overlapping another transport
         for(int i=0; i<Dates.size(); i++)
         {
             if(Dates.get(i).equals(d))
@@ -51,13 +49,13 @@ public class Truck {
         return true;
     }
 
+    //check if the truck can carry a given weight and that its not reach the max_weight
     public Boolean checkIfAvailableByWeight(float total_weight)
     {
-        if(total_weight>max_weight)
+        if((total_weight+net_weight)>max_weight)
         {
             return false;
         }
-
         return true;
     }
 
@@ -85,6 +83,4 @@ public class Truck {
         }
         return s;
     }
-
-
 }

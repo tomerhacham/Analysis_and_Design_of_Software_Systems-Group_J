@@ -20,76 +20,88 @@ public class Transport {
         log =new ArrayList<>();
     }
 
-    public Transport(int id, Date date, Truck truck, Driver driver, Site source,
-                     HashMap<Site, ProductFile> destFiles, float weight){
-        ID = id;
-        Date = date;
-        Truck = truck;
-        Driver = driver;
-        Source = source;
-        DestFiles=destFiles;
-        TotalWeight = weight;
-        log =new ArrayList<>();
+
+    public int getID() { return ID;}
+
+    public Date getDate() { return Date;}
+
+    public void setDate(Date date) { Date = date; }
+
+    public Truck getTruck() {return Truck; }
+
+    public void setTruck(Truck truck) {Truck = truck;}
+
+    public Driver getDriver() { return Driver; }
+
+    public void setDriver(Driver driver) { Driver = driver; }
+
+    public void setSource(Site source) { Source = source; }
+
+    //set the weight according to the destination file
+    public void setWeight() {
+        TotalWeight=0;
+        for (ProductFile f:DestFiles.values()) {
+            TotalWeight=+f.getTotalWeight();
+        }
     }
 
-    public int getID() {
-        return ID;
-    }
 
-    public Date getDate() {
-        return Date;
-    }
-
-    public void setDate(Date date) {
-        Date = date;
-    }
-
-    public Truck getTruck() {
-        return Truck;
-    }
-
-    public void setTruck(Truck truck) {
-        Truck = truck;
-    }
-
-    public Driver getDriver() {
-        return Driver;
-    }
-
-    public void setDriver(Driver driver) {
-        Driver = driver;
-    }
-
-    public void setSource(Site source) {
-        Source = source;
-    }
-
-    public void setWeight(float weight) {
-        TotalWeight = weight;
-    }
-
+    //every time the destFile change, set the weight as well
     public void setDestFiles(HashMap<Site, ProductFile> destFiles) {
         DestFiles = destFiles;
+        setWeight();
     }
 
-    public void addDestFiles(Site s, ProductFile productPerSite)
+    //if a Site exist in the system remove it from the destFile and calculate the total weight
+    public boolean removeFromDestFiles(Site site)
     {
-        DestFiles.put(s, productPerSite);
-    }
-
-    public void removeDestFiles(Site site)
-    {
-       DestFiles.remove(site);
-
+        if(DestFiles.containsKey(site))
+        {
+            DestFiles.remove(site);
+            setWeight();
+            return true;
+        }
+        return false;
     }
 
     public HashMap<Site, ProductFile> getDestFiles() {
         return DestFiles;
     }
 
+    //return a specific file according to its destination
     public ProductFile getFileByDest(Site dest)
     {
-        return DestFiles.get(dest);
+        if(DestFiles.containsKey(dest))
+        {
+            return DestFiles.get(dest);
+        }
+        return null;
+    }
+
+    public void addToLog (String s)
+    {
+        log.add(s);
+    }
+
+    public String getLogMessages()
+    {
+        String s = "";
+        for (int i=0; i<log.size();i++)
+        {
+            s=s+ (i+1) +". "+log.get(i)+"\n";
+        }
+        return s;
+    }
+
+    //check if a specific destination is in the destfile
+    public boolean checkIfDestInFile(Site site) {
+        return DestFiles.containsKey(site);
+    }
+
+    //doing first the setWeight method to validate the data
+    public float getTotalWeight() {
+        setWeight();
+        return TotalWeight;
     }
 
     @Override
@@ -117,24 +129,5 @@ public class Transport {
             s = s + "\tlog messages: none";
         }
         return s;
-    }
-
-    public void addToLog (String s)
-    {
-        log.add(s);
-    }
-
-    public String getLogMessages()
-    {
-        String s = "";
-        for (int i=0; i<log.size();i++)
-        {
-            s=s+"\t"+ (i+1) +". "+log.get(i)+"\n";
-        }
-        return s;
-    }
-
-    public boolean checkIfDestInFile(Site site) {
-        return DestFiles.containsKey(site);
     }
 }

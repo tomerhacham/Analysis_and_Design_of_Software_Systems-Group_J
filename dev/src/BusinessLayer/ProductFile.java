@@ -1,5 +1,6 @@
 package BusinessLayer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ProductFile {
@@ -14,17 +15,33 @@ public class ProductFile {
         products = new HashMap<>();
     }
 
-    public int getFileID() {
-        return fileID;
-    }
+    public int getFileID() { return fileID; }
 
     public float getTotalWeight() {
         return totalWeight;
     }
 
+    //add a product and calculate the total weight
     public void addProduct(Product p, int quantity) {
         products.put(p, quantity);
         totalWeight += p.getWeight()*quantity;
+    }
+
+    // check if all the products exists in the file, if they are remove them and calculate the total weight, else return false
+    public boolean removeProducts(ArrayList<Product> P)
+    {
+        for (Product p:P) {
+            if(!products.containsKey(p))
+            {
+                return false;
+            }
+        }
+        for (Product p:P) {
+            totalWeight -= p.getWeight() * products.get(p);
+            products.remove(p);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -37,15 +54,4 @@ public class ProductFile {
         }
         return s;
     }
-
-    public void removeProduct(Product p )
-    {
-        totalWeight -= p.getWeight()*products.get(p);
-        products.remove(p);
-    }
-
-    public boolean validateProducts(Product p) {
-        return products.containsKey(p);
-    }
-
 }
