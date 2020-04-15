@@ -65,11 +65,11 @@ public class Driver {
         if(Dates.size()>0) {
             s = s + "\tunavailable dates:\n";
             for (int i = 0; i < Dates.size(); i++) {
-                s = s + i + ". " + Dates.get(i).toString();
+                s = s + "\t" + (i+1) + ". " + Dates.get(i).toString() + "\n";
             }
         }
         else {
-            s=s + "\tunavailable dates: none";
+            s=s + "\tunavailable dates: non\n";
         }
         return s;
     }

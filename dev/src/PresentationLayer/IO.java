@@ -40,7 +40,12 @@ public class IO {
                     "11. Remove driver.\n" +
                     "12. Remove site.\n" +
                     "13. Exit system.\n");
-            int operation = Integer.parseInt(scanner.nextLine());
+            int operation;
+            try {
+                operation = Integer.parseInt(scanner.nextLine());
+            } catch (Exception e) {
+                operation = -1;
+            }
             switch (operation) {
                 case 1 :
                     newTransport();
@@ -112,7 +117,7 @@ public class IO {
         else {
             System.out.println(details);
             System.out.println("Please choose the site ID you wish to remove:");
-            int siteToDelete = Integer.parseInt(scanner.nextLine());
+            int siteToDelete = integerParse(scanner.nextLine());
             boolean deleted = facadeController.deleteSite(siteToDelete);
             if(deleted) {
                 System.out.println("The site deleted successfully.\n");
@@ -131,7 +136,7 @@ public class IO {
         else {
             System.out.println(details);
             System.out.println("Please choose the driver ID you wish to remove:");
-            int driverToDelete = Integer.parseInt(scanner.nextLine());
+            int driverToDelete = integerParse(scanner.nextLine());
             boolean deleted =facadeController.deleteDriver(driverToDelete);
             if(deleted) {
                 System.out.println("The driver deleted successfully.\n");
@@ -150,7 +155,7 @@ public class IO {
         else {
             System.out.println(details);
             System.out.println("Please choose the truck ID you wish to remove:");
-            int truckToDelete = Integer.parseInt(scanner.nextLine());
+            int truckToDelete = integerParse(scanner.nextLine());
             boolean deleted =facadeController.deleteTruck(truckToDelete);
             if(deleted) {
                 System.out.println("The truck deleted successfully.\n");
@@ -170,7 +175,7 @@ public class IO {
         System.out.println("Contact:");
         String contact = scanner.nextLine();
         System.out.println("Shipping area:");
-        int shipping_area = Integer.parseInt(scanner.nextLine());
+        int shipping_area = integerParse(scanner.nextLine());
         facadeController.createSite(address, phone_number, contact, shipping_area);
         System.out.println("\nThe site added successfully.\n");
     }
@@ -192,9 +197,9 @@ public class IO {
         System.out.println("Model:");
         String model = scanner.nextLine();
         System.out.println("Net weight of the truck:");
-        int netWeight = Integer.parseInt(scanner.nextLine());
+        int netWeight = integerParse(scanner.nextLine());
         System.out.println("Max weight the truck can curry:");
-        int maxWeight = Integer.parseInt(scanner.nextLine());
+        int maxWeight = integerParse(scanner.nextLine());
         if (maxWeight <= netWeight){
             System.out.println("Max weight should be bigger than net weight. Add truck failed.");
             return;
@@ -213,60 +218,78 @@ public class IO {
         else {
             System.out.println(details);
             System.out.println("Please choose the transport ID you wish to remove:");
-            int transportToDelete = Integer.parseInt(scanner.nextLine());
-            facadeController.removeInlayDate(facadeController.getTransportDate(transportToDelete), transportToDelete);
-            boolean deleted = facadeController.deleteTransport(transportToDelete);
-            if(deleted) {
-                System.out.println("The transport deleted successfully.\n");
+            int transportToDelete = integerParse(scanner.nextLine());
+            boolean exist = facadeController.checkIfTransportExist(transportToDelete);
+            if (exist) {
+                facadeController.removeInlayDate(facadeController.getTransportDate(transportToDelete), transportToDelete);
+                boolean deleted = facadeController.deleteTransport(transportToDelete);
+                if (deleted) {
+                    System.out.println("The transport deleted successfully.\n");
+                } else {
+                    System.out.println("The transport ID:" + transportToDelete + " is not in the system, operation canceled.\n");
+                }
             }
             else {
-                System.out.println("The transport ID:"+transportToDelete+" is not in the system, operation canceled.\n");
+                System.out.println("The transport ID:" + transportToDelete + " is not in the system, operation canceled.\n");
             }
         }
     }
 
     private void newTransport() {
+        // creates transport object and returns its ID
         int transportID = facadeController.createTransport();
-        System.out.println("Please enter a date in the format dd/mm/yyyy");
+
+        // selecting the date of transport
+        System.out.println("Please enter a date in the format dd-mm-yyyy");
         String date;
         while (true){
             try {
                 date = scanner.nextLine();
+                // check availability of the date with trucks and drivers
                 boolean dateAvailable = facadeController.setTransportDate(transportID, date);
                 if (dateAvailable)
                     break;
                 else
-                    System.out.println("There are no available trucks or drivers in the specified date. Choose different date.\n");
+                    System.out.println("There are no available trucks or drivers in the specified date. Enter different date.\n");
             } catch (Exception e) {
-                System.out.println("Format is incorrect. Try again.\n");
+                // wrong format or passed date
+                System.out.println(e.getMessage());
             }
         }
+
+        // selecting the source of transport
         int sourceID = chooseSource();
         if (sourceID == -1){
             facadeController.deleteTransport(transportID);
             return;
         }
         facadeController.setTransportSource(transportID, sourceID);
-        //System.out.println("Destinations:\n" + facadeController.getAvailableSites(sourceID));
-        //System.out.println("How many destinations would you like? ");
-        //int numDest = Integer.parseInt(scanner.nextLine());
+
+        // selecting destinations and products for each dest
         HashMap<Integer, Integer> DestFiles = chooseProductsPerSite(sourceID);
         facadeController.setTransportDestFiles(transportID, DestFiles);
+
+        // selecting truck for transport
         int truckID = chooseTruck(transportID);
         if (truckID == -1) {
             facadeController.deleteTransport(transportID);
             return;
         }
         facadeController.setTransportTruck(transportID, truckID);
+
         float totalWeight = facadeController.getTotalWeight(DestFiles);
         facadeController.setTransportWeight(transportID, totalWeight);
+
+        // selecting driver for transport
         int driverID = chooseDriver(transportID);
         if (driverID == -1) {
             facadeController.deleteTransport(transportID);
             return;
         }
         facadeController.setTransportDriver(transportID, driverID);
+        // add occupied date to truck and driver
         facadeController.addInlayDate(facadeController.getTransportDate(transportID), transportID);
+
         System.out.println("\nThe transport added successfully.\n");
     }
 
@@ -278,14 +301,14 @@ public class IO {
                 System.out.println("There is no driver with compatible license to the selected truck in the system.\n" +
                         "\tchoose 1 to change truck.\n" +
                         "\tchoose 2 to abort transport.");
-                int opt = Integer.parseInt(scanner.nextLine());
+                int opt = integerParse(scanner.nextLine());
                 if (opt == 2) {
                     return -1;
                 }
                 else if (opt == 1){
                     int truckID = facadeController.getTransportTruck(transportID);
                     facadeController.addTransportLog("The truck: " + facadeController.getTruckDetails(truckID) + "\n" +
-                            "was changed.", transportID);
+                            "\t\twas changed.", transportID);
                     facadeController.setTransportTruck(transportID, chooseTruck(transportID));
                 }
                 else {
@@ -296,7 +319,13 @@ public class IO {
             else {
                 System.out.println("Drivers:\n" + drivers);
                 System.out.println("Please choose a driver ID from the above");
-                return Integer.parseInt(scanner.nextLine());
+                int driverID = integerParse(scanner.nextLine());
+                boolean exist = facadeController.checkIfDriverExist(driverID);
+                if (exist)
+                    return driverID;
+                else {
+                    System.out.println("The truck ID: " + driverID + " is not in the system, Please try again.\n");
+                }
             }
         }
     }
@@ -305,11 +334,12 @@ public class IO {
         float totalWeight = facadeController.getTotalWeight(facadeController.getTransportDestFiles(transportID));
         while (true) {
             String trucks = facadeController.getAvailableTrucks(facadeController.getTransportDate(transportID), totalWeight);
+            // if there is no truck that can carry total weight give option to edit
             if (trucks.equals("")) {
                 System.out.println("There is no truck that can carry such weight in the system.\n" +
                         "\tchoose 1 to edit destination.\n" +
                         "\tchoose 2 to abort transport.");
-                int opt = Integer.parseInt(scanner.nextLine());
+                int opt = integerParse(scanner.nextLine());
                 if (opt == 2) {
                     return -1;
                 }
@@ -325,33 +355,57 @@ public class IO {
             else {
                 System.out.println("Trucks:\n" + trucks);
                 System.out.println("Please choose a truck ID from the above");
-                return Integer.parseInt(scanner.nextLine());
+                int truckID = integerParse(scanner.nextLine());
+                boolean exist = facadeController.checkIfTruckExist(truckID);
+                if (exist)
+                    return truckID;
+                else {
+                    System.out.println("The truck ID: " + truckID + " is not in the system, Please try again.\n");
+                }
             }
         }
     }
 
     private void editDestinations(int transportID) {
         System.out.println("Please choose the option you would like to edit:\n" +
-                "1. Remove destination from transport.\n" +
-                "2. Remove products from destination.\n");
-        int opt = Integer.parseInt(scanner.nextLine());
+                "\t1. Remove destination from transport.\n" +
+                "\t2. Remove products from destination.");
+        int opt = integerParse(scanner.nextLine());
         System.out.println(facadeController.getProductsByDest(transportID));
         if (opt == 1) {
-            System.out.println("Please choose destination site ID to remove\n");
-            int destToRemove = Integer.parseInt(scanner.nextLine());
-            facadeController.addTransportLog("The destination: " + facadeController.getSiteDetails(destToRemove) + "\n" +
-                            "was removed from transport.", transportID);
-            facadeController.removeDestFromTransport(transportID, destToRemove);
+            System.out.println("Please choose destination site ID to remove");
+            int destToRemove = integerParse(scanner.nextLine());
+            boolean exist = facadeController.checkIfSiteExist(destToRemove);
+            if (exist) {
+                facadeController.addTransportLog("The destination: " + facadeController.getSiteDetails(destToRemove) + "\n" +
+                        "\t\twas removed from transport.", transportID);
+                facadeController.removeDestFromTransport(transportID, destToRemove);
+            }
+            else {
+                System.out.println("The input is invalid, transport did not changed.");
+            }
         }
         else if (opt == 2){
-            System.out.println("Please choose destination site ID to edit\n");
-            int destToEdit = Integer.parseInt(scanner.nextLine());
-            int fileToEdit = facadeController.getDestFileID(transportID, destToEdit);
-            System.out.println("Please insert products ID to remove with spaces between\n");
-            String[] productsToRemove = (scanner.nextLine()).split(" ");
-            facadeController.addTransportLog("The products:\n" + facadeController.getProductsDetails(productsToRemove) + "\n" +
-                    "was removed from destination: " + facadeController.getSiteDetails(destToEdit), transportID);
-            facadeController.removeProducts(productsToRemove, fileToEdit);
+            System.out.println("Please choose destination site ID to edit");
+            int destToEdit = integerParse(scanner.nextLine());
+            boolean exist = facadeController.checkIfSiteExist(destToEdit) && facadeController.checkIfDestInFile(transportID, destToEdit);
+            if (exist) {
+                int fileToEdit = facadeController.getDestFileID(transportID, destToEdit);
+                System.out.println("Please insert products ID to remove with spaces between");
+                String[] productsToRemove = (scanner.nextLine()).split(" ");
+                boolean valid = facadeController.validateProducts(productsToRemove, fileToEdit);
+                if (valid) {
+                    facadeController.addTransportLog("The products:\n" + facadeController.getProductsDetails(productsToRemove) +
+                            "\t\twas removed from destination: " + facadeController.getSiteDetails(destToEdit), transportID);
+                    facadeController.removeProducts(productsToRemove, fileToEdit);
+                }
+                else {
+                    System.out.println("The input is invalid, products does not exist. Transport did not changed.");
+                }
+            }
+            else{
+                System.out.println("The input is invalid, transport did not changed.");
+            }
         }
         else {
             System.out.println("The input is invalid, transport did not changed.");
@@ -360,51 +414,54 @@ public class IO {
 
     private HashMap<Integer, Integer> chooseProductsPerSite(int sourceID) {
         HashMap<Integer, Integer> destFiles = new HashMap<>();
-        boolean flag=true;
-        //for (int i = 0; i < numDest; i++){
+        boolean flag = true;
+        // returns all sites which are not source & not chosen already & in the same shipping area as source
         String Destinations =  facadeController.getAvailableSites(sourceID,destFiles);
         while(flag)
         {
+
             System.out.println("Destinations:\n" + Destinations);
-            System.out.println("Please choose dest ID:\n");
-            int destID = Integer.parseInt(scanner.nextLine());
-            boolean exist =  facadeController.checkIfSiteExistAndAvailable(destID,sourceID);
+            System.out.println("Please choose dest ID:");
+            int destID = integerParse(scanner.nextLine());
+            boolean exist =  facadeController.checkIfSiteExist(destID);
             if(exist) {
                 int fileID = facadeController.createProductsFile();
                 System.out.println("How many products would you like for this destination? ");
-                int numProducts = Integer.parseInt(scanner.nextLine());
+                int numProducts = integerParse(scanner.nextLine());
                 for (int j = 0; j < numProducts; j++) {
-                    System.out.println("Please enter name of a product: ");
+                    System.out.println("\nPlease enter name of a product: ");
                     String productName = scanner.nextLine();
                     System.out.println("Please enter weight of a product: ");
                     float productWeight = Float.parseFloat(scanner.nextLine());
-                    System.out.println("How many items form this product? ");
-                    int quantity = Integer.parseInt(scanner.nextLine());
+                    System.out.println("How many items from this product? ");
+                    int quantity = integerParse(scanner.nextLine());
                     facadeController.createProduct(productName, productWeight, fileID, quantity);
                 }
+                // add to destinations file of transport: dest id and products file id (for the dest)
                 destFiles.put(destID, fileID);
+
                 Destinations = facadeController.getAvailableSites(sourceID, destFiles);
+                // if there is no more available destinations exit loop and continue with procedure
                 if (Destinations.equals("")) {
                     flag = false;
-                } else {
+                }
+                else {
                     System.out.println("Choose 1 if you want to choose another destination\n" +
                             "Choose 2 if you want to continue");
                     while (true) {
-                        int opt = Integer.parseInt(scanner.nextLine());
+                        int opt = integerParse(scanner.nextLine());
                         if (opt == 2) {
                             flag = false;
                             break;
                         } else if (opt == 1) {
-                            break;
-
+                            continue;
                         } else
-                            System.out.println("The input is invalid please try again\n");
+                            System.out.println("The operation is invalid please try again\n");
                     }
-
                 }
             }
             else {
-                System.out.println("The site ID:"+destID+" is not in the system, Please try again.\n");
+                System.out.println("The site ID: "+destID+" is not in the system, Please try again.\n");
             }
         }
         return destFiles;
@@ -414,28 +471,43 @@ public class IO {
         int sourceID;
         while (true) {
             System.out.println("\nSources:\n" + facadeController.getAllSitesDetails());
-            System.out.println("Please choose source site ID from the above\n");
-            sourceID = Integer.parseInt(scanner.nextLine());
-            String destinations = facadeController.getAvailableSites(sourceID, new HashMap<>());
-            if (destinations.equals("")) {
-                System.out.println("No destination sites in this shipping area.\n" +
-                        "\tchoose 1 to insert new source site\n" +
-                        "\tchoose 2 to abort transport");
-                int opt = Integer.parseInt(scanner.nextLine());
-                if (opt == 2){
-                    sourceID = -1;
+            System.out.println("Please choose source site ID from the above");
+            sourceID = integerParse(scanner.nextLine());
+            boolean exist = facadeController.checkIfSiteExist(sourceID);
+            if (exist) {
+                String destinations = facadeController.getAvailableSites(sourceID, new HashMap<>());
+                // if there is no destinations in the same shipping area
+                if (destinations.equals("")) {
+                    System.out.println("No destination sites in this shipping area.\n" +
+                            "\tchoose 1 to insert new source site\n" +
+                            "\tchoose 2 to abort transport");
+                    int opt = integerParse(scanner.nextLine());
+                    if (opt == 2) {
+                        sourceID = -1;
+                        break;
+                    } else if (opt == 1)
+                        continue;
+                    else {
+                        System.out.println("The input is invalid, transport aborted.\n");
+                        return -1;
+                    }
+                } else
                     break;
-                }
-                else if(opt == 1)
-                    continue;
-                else {
-                    System.out.println("The input is invalid, transport aborted.");
-                    return -1;
-                }
             }
-            else
-                break;
         }
         return sourceID;
+    }
+
+    private int integerParse(String s){
+        int ret = -1;
+        while (ret == -1) {
+            try {
+                ret = Integer.parseInt(s);
+            } catch (Exception e) {
+                System.out.println("Invalid operation. Try Again.");
+                s = scanner.nextLine();
+            }
+        }
+        return ret;
     }
 }

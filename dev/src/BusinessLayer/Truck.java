@@ -77,7 +77,7 @@ public class Truck {
         if(Dates.size()>0) {
             s = s + "\tunavailable dates:\n";
             for (int i = 0; i < Dates.size(); i++) {
-                s = s + "\t" + i + ". " + Dates.get(i).toString();
+                s = s + "\t\t" + Dates.get(i).toString() + "\n";
             }
         }
         else {

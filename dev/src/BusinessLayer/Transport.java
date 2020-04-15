@@ -98,11 +98,12 @@ public class Transport {
                 +" Source: "+Source.toString() +"\n";
         if(DestFiles.size()>0)
         {
-            int count=1;
+            int count = 1;
             s = s + "\tdestinations and products: \n";
             for (Site site:DestFiles.keySet()) {
-                s=s+"\t"+count+". site: "+site.toString()+"\n";
-                s=s+"\t  products File: "+DestFiles.get(site).toString();
+                s=s+"\t\t"+count+". site: "+site.toString()+"\n";
+                s=s+"\tproducts File: "+DestFiles.get(site).toString();
+                count++;
             }
         }
         else {
@@ -110,7 +111,7 @@ public class Transport {
         }
         s = s + "\tTotalWeight: " + TotalWeight +"\n";
         if(log.size()>0) {
-            s = s + "\tlog messages: " + getLogMessages();
+            s = s + "\tlog messages:\n" + getLogMessages();
         }
         else {
             s = s + "\tlog messages: none";
@@ -128,8 +129,12 @@ public class Transport {
         String s = "";
         for (int i=0; i<log.size();i++)
         {
-            s=s+"\t"+i+". "+log.get(i)+"\n";
+            s=s+"\t"+ (i+1) +". "+log.get(i)+"\n";
         }
         return s;
+    }
+
+    public boolean checkIfDestInFile(Site site) {
+        return DestFiles.containsKey(site);
     }
 }

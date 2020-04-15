@@ -1,6 +1,5 @@
 package BusinessLayer;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -35,8 +34,7 @@ public class TransportController {
         return t.getID();
     }
 
-    public boolean DeleteTransport(Integer id)
-    {
+    public boolean DeleteTransport(Integer id) {
         if(transports.containsKey(id)) {
             transports.remove(id);
             return true;
@@ -60,8 +58,18 @@ public class TransportController {
     }
 
     public boolean setTransportDate(String date, int id) throws Exception {
-        DateFormat formatter = new SimpleDateFormat("dd/mm/yyyy");
-        Date transportDate = formatter.parse(date);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        Date transportDate;
+        try {
+            transportDate = formatter.parse(date);
+        }
+        catch (Exception e){
+            throw new Exception("Format is incorrect. Try again.");
+        }
+        Date today = new Date();
+        formatter.format(today);
+        if (today.after(transportDate))
+            throw new Exception("Date already passed. Try again.");
         boolean trucksAvailable = truckController.checkIfTrucksAvailableByDate(transportDate);
         boolean driversAvailable = driverController.checkIfDriversAvailableByDate(transportDate);
         if (trucksAvailable && driversAvailable){
@@ -129,5 +137,13 @@ public class TransportController {
     public void removeInlayDate(Date transportDate, int transportID) {
         driverController.removeDate(transportDate, transports.get(transportID).getDriver().getId());
         truckController.removeDate(transportDate, transports.get(transportID).getTruck().getId());
+    }
+
+    public boolean checkIfDestInFile(int transportID, int destToEdit) {
+        return transports.get(transportID).checkIfDestInFile(siteController.getById(destToEdit));
+    }
+
+    public boolean checkIfTransportExist(int transportID) {
+        return transports.containsKey(transportID);
     }
 }

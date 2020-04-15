@@ -29,10 +29,11 @@ public class ProductFile {
 
     @Override
     public String toString() {
-        String s= "file id: "+fileID+" total weight: " + totalWeight +"\n\t\tproducts:";
-        int count=1;
+        String s = "file id: "+fileID+" total weight: " + totalWeight +"\n\tproducts:\n";
+        int count = 1;
         for (Product p :products.keySet()) {
-            s=s+" "+count+". "+p.toString()+" quantity: " +products.get(p)+"\n";
+            s += "\t\t" + count + ". " + p.toString()+" quantity: " + products.get(p) +"\n";
+            count ++;
         }
         return s;
     }
@@ -42,4 +43,9 @@ public class ProductFile {
         totalWeight -= p.getWeight()*products.get(p);
         products.remove(p);
     }
+
+    public boolean validateProducts(Product p) {
+        return products.containsKey(p);
+    }
+
 }

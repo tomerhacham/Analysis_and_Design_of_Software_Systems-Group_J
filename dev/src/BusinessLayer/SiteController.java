@@ -70,7 +70,7 @@ public class SiteController {
     public String getAvailableSites(int other_id, HashMap<Integer,Integer>destFile)
     {
         String available = "";
-        int count=1;
+        int count = 1;
         for (Integer i:sites.keySet()) {
             boolean NotAvailable=false;
             for(Integer j:destFile.keySet())
@@ -80,23 +80,17 @@ public class SiteController {
                     NotAvailable=true;
                 }
             }
-            if(NotAvailable==false&&i!=other_id && checkIfAvailable(i,other_id))
+            if(NotAvailable == false && i != other_id && checkIfAvailable(i,other_id))
             {
-                available=available+count+". "+getSiteDetails(i)+"\n";
+                available = available + count + ". " + getSiteDetails(i)+"\n";
                 count++;
             }
         }
         return available;
     }
 
-    public boolean checkIfSiteExistAndAvailable(int destId, int sourceId)
+    public boolean checkIfSiteExist(int siteId)
     {
-        if(sites.containsKey(destId)&&sites.containsKey(sourceId)){
-            if(sites.get(destId).getShipping_area()==sites.get(sourceId).getShipping_area())
-            {
-                return true;
-            }
-        }
-        return false;
+        return sites.containsKey(siteId);
     }
 }

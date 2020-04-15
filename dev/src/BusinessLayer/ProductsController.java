@@ -57,9 +57,9 @@ public class ProductsController {
 
     public String getProductByDest(HashMap<Integer,Integer> destFiles)
     {
-        String s="";
-        for (Integer i:destFiles.keySet()) {
-            s=s+"destination id: "+i+" products:\n"+destFiles.get(i).toString()+"\n";
+        String s = "";
+        for (int i:destFiles.keySet()) {
+            s = s + "destination id: "+i+" "+ files.get(destFiles.get(i)).toString()+"\n";
         }
         return s;
     }
@@ -75,8 +75,20 @@ public class ProductsController {
     public String getProductsDetails(String[] productsID){
         String s = "";
         for (int i = 0; i < productsID.length; i++){
-            s += products.get(productsID[i]).toString() + "\n";
+            int productID = Integer.parseInt(productsID[i]);
+            s += products.get(productID).toString() + "\n";
         }
         return s;
     }
+
+    public boolean validateProducts(String[] productsID, int fileID) {
+        ProductFile file = files.get(fileID);
+        for (int i = 0; i < productsID.length; i++){
+            int productID = Integer.parseInt(productsID[i]);
+            if (!file.validateProducts(products.get(productID)))
+                return false;
+        }
+        return true;
+    }
+
 }

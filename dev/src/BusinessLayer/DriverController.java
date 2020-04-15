@@ -53,7 +53,7 @@ public class DriverController {
         String details="";
         int count=1;
         for (Integer i:drivers.keySet()) {
-           details=details+count+". "+getDriverDetails(i)+"\n";
+           details=details+count+". "+getDriverDetails(i);
            count++;
         }
         return details;
@@ -98,4 +98,8 @@ public class DriverController {
     public void addDate(Date d, int id){drivers.get(id).addDate(d);}
 
     public void removeDate(Date d, int id){drivers.get(id).removeDate(d);}
+
+    public boolean checkIfDriverExist(int driverID) {
+        return drivers.containsKey(driverID);
+    }
 }

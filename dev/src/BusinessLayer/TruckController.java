@@ -37,8 +37,7 @@ public class TruckController {
     }
 
     // removes truck with the specified id from the table
-    public boolean DeleteTruck(Integer id)
-    {
+    public boolean DeleteTruck(Integer id) {
         if(trucks.containsKey(id)) {
             trucks.remove(id);
             return true;
@@ -110,4 +109,8 @@ public class TruckController {
         return trucks.get(id).getDrivers_license();
     }
 
+    // returns true if the truck with the specified id exist in the system
+    public boolean checkIfTruckExist(int truckID) {
+        return trucks.containsKey(truckID);
+    }
 }

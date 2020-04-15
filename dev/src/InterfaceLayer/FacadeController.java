@@ -172,8 +172,28 @@ public class FacadeController {
         transportController.removeInlayDate(transportDate, transportID);
     }
 
-    public boolean checkIfSiteExistAndAvailable(int destId, int sourceID)
+    public boolean checkIfSiteExist(int siteID)
     {
-        return siteController.checkIfSiteExistAndAvailable(destId,sourceID );
+        return siteController.checkIfSiteExist(siteID);
+    }
+
+    public boolean checkIfTruckExist(int truckID) {
+        return truckController.checkIfTruckExist(truckID);
+    }
+
+    public boolean checkIfDriverExist(int driverID) {
+        return driverController.checkIfDriverExist(driverID);
+    }
+
+    public boolean validateProducts(String[] products, int fileID) {
+        return productsController.validateProducts(products, fileID);
+    }
+
+    public boolean checkIfDestInFile(int transportID, int destToEdit) {
+        return transportController.checkIfDestInFile(transportID, destToEdit);
+    }
+
+    public boolean checkIfTransportExist(int transportID) {
+        return transportController.checkIfTransportExist(transportID);
     }
 }
