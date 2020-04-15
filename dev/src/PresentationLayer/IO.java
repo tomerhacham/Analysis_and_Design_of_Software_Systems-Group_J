@@ -207,17 +207,18 @@ public class IO {
         String license_plate = scanner.nextLine();
         System.out.println("Model:");
         String model = scanner.nextLine();
+        System.out.println("Drivers license:");
+        String drivers_license = scanner.nextLine();
         System.out.println("Net weight of the truck:");
         int netWeight = integerParse(scanner.nextLine());
         System.out.println("Max weight the truck can curry:");
         int maxWeight = integerParse(scanner.nextLine());
-        while (maxWeight <= netWeight){ //check that the maxWeight is bigger than the net weight
-            System.out.println("Max weight should be bigger than net weight. please try again.");
+        boolean created = facadeController.createTruck(license_plate, model, netWeight, maxWeight, drivers_license);
+        while (!created){ //check that the maxWeight is bigger than the net weight
+            System.out.println("Max weight should be bigger than net weight. Please enter max weight again.");
             maxWeight = integerParse(scanner.nextLine());
+            created = facadeController.createTruck(license_plate, model, netWeight, maxWeight, drivers_license);
         }
-        System.out.println("Drivers license:");
-        String drivers_license = scanner.nextLine();
-        facadeController.createTruck(license_plate, model, netWeight, maxWeight, drivers_license);
         System.out.println("\nThe truck added successfully.\n");
     }
 
@@ -565,6 +566,7 @@ public class IO {
             }
         }
     }
+
     private String[] splitScan()
     {
         while (true) {

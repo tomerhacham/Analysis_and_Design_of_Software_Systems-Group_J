@@ -80,7 +80,8 @@ public class TransportController {
         if (trucksAvailable && driversAvailable) {
             transports.get(id).setDate(transportDate);
             return true;
-        } else
+        }
+        else
             return false;
     }
 
@@ -251,6 +252,10 @@ public class TransportController {
             }
         }
         return s;
+    }
+
+    public Transport getByID(int transportID){
+        return transports.get(transportID);
     }
 
 }

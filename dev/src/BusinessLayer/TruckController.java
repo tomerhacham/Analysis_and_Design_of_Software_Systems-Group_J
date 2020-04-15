@@ -33,10 +33,14 @@ public class TruckController {
     }
 
     // create new instance of truck and add it to the table
-    public void CreateTruck(String license_plate, String model, float net_weight, float max_weight, String drivers_license) {
+    public boolean CreateTruck(String license_plate, String model, float net_weight, float max_weight, String drivers_license) {
+        if (max_weight <= net_weight){
+            return false;
+        }
         Truck t = new Truck(Id_Counter, license_plate, model, net_weight, max_weight, drivers_license);
         Id_Counter++;
         trucks.put(t.getId(),t);
+        return true;
     }
 
     // removes truck with the specified id from the table

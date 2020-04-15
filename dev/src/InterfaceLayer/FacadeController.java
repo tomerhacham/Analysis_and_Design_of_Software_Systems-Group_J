@@ -32,8 +32,8 @@ public class FacadeController {
         return truckController.getAvailableTrucks(date, totalWeight);
     }
 
-    public void createTruck(String license_plate, String model, float netWeight, float maxWeight, String drivers_license) {
-        truckController.CreateTruck(license_plate, model, netWeight, maxWeight, drivers_license);
+    public boolean createTruck(String license_plate, String model, float netWeight, float maxWeight, String drivers_license) {
+        return truckController.CreateTruck(license_plate, model, netWeight, maxWeight, drivers_license);
     }
 
     public boolean deleteTruck(int truckToDelete) {
@@ -71,6 +71,7 @@ public class FacadeController {
     public boolean deleteDriver(int driverToDelete) {
         return driverController.DeleteDriver(driverToDelete);
     }
+
     public boolean checkIfDriverExistAndValid(int driverID, int transport_id) {
         int truckID = getTransportTruck(transport_id);
         Date d =getTransportDate(transport_id);
@@ -105,6 +106,7 @@ public class FacadeController {
     {
         return siteController.checkIfSiteExist(siteID);
     }
+
     public boolean checkIfSiteExistAndValid(int siteID, int sourceID, HashMap<Integer,Integer>destFile)
     {
         return siteController.checkIfAvailable(siteID, sourceID, destFile);
