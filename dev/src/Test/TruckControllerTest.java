@@ -37,10 +37,10 @@ public class TruckControllerTest {
     @Test
     public void checkIfAvailableByWeight(){
         // weight is smaller than max weight
-        assertTrue(truckController.checkIfAvailableByWeight(2000, 3));
-        assertTrue(truckController.checkIfAvailableByWeight(999, 2));
-        assertTrue(truckController.checkIfAvailableByWeight(1000, 1));
-        assertTrue(truckController.checkIfAvailableByWeight(1400, 1));
+        assertTrue(truckController.checkIfAvailableByWeight(1500, 3));
+        assertTrue(truckController.checkIfAvailableByWeight(250, 2));
+        assertTrue(truckController.checkIfAvailableByWeight(100, 1));
+        assertTrue(truckController.checkIfAvailableByWeight(500, 0));
 
         // weight is bigger than max weight
         assertFalse(truckController.checkIfAvailableByWeight(2000, 0));

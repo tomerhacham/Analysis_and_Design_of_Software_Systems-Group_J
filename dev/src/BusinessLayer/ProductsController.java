@@ -71,9 +71,10 @@ public class ProductsController {
         if(files.containsKey(file_id)) {
             ArrayList<Product>  productsToDelete = new ArrayList<>();
             for (String s:products_id) {
-                if(products.containsKey(s))
+                int p_id=Integer.parseInt(s);
+                if(products.containsKey(p_id))
                 {
-                    productsToDelete.add(products.get(s));
+                    productsToDelete.add(products.get(p_id));
                 }
                 else {
                     return false;

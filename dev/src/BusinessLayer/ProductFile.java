@@ -39,9 +39,8 @@ public class ProductFile {
         for (Product p:P) {
             totalWeight -= p.getWeight() * products.get(p);
             products.remove(p);
-            return true;
         }
-        return false;
+        return true;
     }
 
     @Override
