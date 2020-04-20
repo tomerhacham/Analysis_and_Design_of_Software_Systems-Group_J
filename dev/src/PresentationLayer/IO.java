@@ -25,22 +25,22 @@ public class IO {
     //the main menu of the system - activates when the system starts and running in loops until it closed.
     public void SystemActivation(){
         System.out.println("Transports system\n");
-        initializeData();
         while (!terminated) {
             System.out.println( "Please choose an operation:\n" +
-                    "1. Book new transport.\n" +
-                    "2. Delete transport.\n" +
-                    "3. Display all trucks.\n" +
-                    "4. Display all drivers.\n" +
-                    "5. Display all sites.\n" +
-                    "6. Display all transports.\n" +
-                    "7. Add truck.\n" +
-                    "8. Add driver.\n" +
-                    "9. Add site.\n" +
-                    "10. Remove truck.\n" +
-                    "11. Remove driver.\n" +
-                    "12. Remove site.\n" +
-                    "13. Exit system.\n");
+                    "1. Initialize data" +
+                    "2. Book new transport.\n" +
+                    "3. Delete transport.\n" +
+                    "4. Display all trucks.\n" +
+                    "5. Display all drivers.\n" +
+                    "6. Display all sites.\n" +
+                    "7. Display all transports.\n" +
+                    "8. Add truck.\n" +
+                    "9. Add driver.\n" +
+                    "10. Add site.\n" +
+                    "11. Remove truck.\n" +
+                    "12. Remove driver.\n" +
+                    "13. Remove site.\n" +
+                    "14. Exit system.\n");
             int operation;
             try {
                 operation = Integer.parseInt(scanner.nextLine());
@@ -49,42 +49,44 @@ public class IO {
             }
             switch (operation) {
                 case 1 :
+                    initializeData();
+                case 2 :
                     newTransport();
                     break;
-                case 2:
+                case 3:
                     deleteTransport();
                     break;
-                case 3:
+                case 4:
                     System.out.println("Trucks:\n" + facadeController.getAllTrucksDetails());
                     break;
-                case 4:
+                case 5:
                     System.out.println("Drivers:\n" + facadeController.getAllDriversDetails());
                     break;
-                case 5:
+                case 6:
                     System.out.println("Sites:\n" + facadeController.getAllSitesDetails());
                     break;
-                case 6:
+                case 7:
                     System.out.println("Transports:\n" + facadeController.getAllTransportsDetails());
                     break;
-                case 7:
+                case 8:
                     addTruck();
                     break;
-                case 8:
+                case 9:
                     addDriver();
                     break;
-                case 9:
+                case 10:
                     addSite();
                     break;
-                case 10:
+                case 11:
                     deleteTruck();
                     break;
-                case 11:
+                case 12:
                     deleteDriver();
                     break;
-                case 12:
+                case 13:
                     deleteSite();
                     break;
-                case 13:
+                case 14:
                     System.out.println("Thank you, good bye!");
                     terminated = true;
                     break;
@@ -100,15 +102,26 @@ public class IO {
         facadeController.createDriver("Eran", "C1");
         facadeController.createDriver("Omer","C");
         facadeController.createDriver("Noam","C1");
+        facadeController.createDriver("David", "C");
+        facadeController.createDriver("Shon", "C1");
+        facadeController.createDriver("Yosi", "C4");
+
         facadeController.createSite("Beer-Sheva","054-1234567", "Shira",1);
         facadeController.createSite("Ofakim","052-1234567","Einav",1);
         facadeController.createSite("Omer","050-1234567", "Amit",1);
-        facadeController.createSite("herzelia","052-8912345","Shachaf",3);
+        facadeController.createSite("Herzelia","052-8912345","Shachaf",3);
         facadeController.createSite("Tel-Aviv","050-8912345","Mai",3);
         facadeController.createSite("Jerusalem","050-8912345","Eden",4);
-        facadeController.createTruck("12-L8","XXX",1000,1500,"C1");
-        facadeController.createTruck("17-LD","X23",1050,1260,"C1");
-        facadeController.createTruck("J0-38","1X6",700,1000,"C");
+        facadeController.createSite("Oren Ashkelon", "0521234567", "Eli", 2);
+        facadeController.createSite("Avraham avinu Sderot", "0501234567", "Maya", 2);
+
+        facadeController.createTruck("12-L8","XXX",1000,1800,"C4");
+        facadeController.createTruck("17-LD","X23",1050,2260,"C1");
+        facadeController.createTruck("J0-38","1X6",700,1500,"C");
+        facadeController.createTruck("12-23FF","XXL8",1000,2600,"C1");
+        facadeController.createTruck("17-45LD","X24",1050,3260,"C1");
+        facadeController.createTruck("J0-38AV","1X6ZA",700,1000,"C");
+        facadeController.createTruck("12345678", "XX32", 1000, 2550, "C4");
     }
 
     //delete site function
