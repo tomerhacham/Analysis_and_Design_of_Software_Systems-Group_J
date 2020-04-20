@@ -27,7 +27,7 @@ public class IO {
         System.out.println("Transports system\n");
         while (!terminated) {
             System.out.println( "Please choose an operation:\n" +
-                    "1. Initialize data" +
+                    "1. Initialize data\n" +
                     "2. Book new transport.\n" +
                     "3. Delete transport.\n" +
                     "4. Display all trucks.\n" +
@@ -50,6 +50,7 @@ public class IO {
             switch (operation) {
                 case 1 :
                     initializeData();
+                    break;
                 case 2 :
                     newTransport();
                     break;
