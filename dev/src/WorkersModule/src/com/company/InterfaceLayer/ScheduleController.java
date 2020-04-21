@@ -1,5 +1,6 @@
 package com.company.InterfaceLayer;
 
+import com.company.BussinesLayer.EmptyShift;
 import com.company.BussinesLayer.Scheduler;
 import com.company.BussinesLayer.Shift;
 import com.company.BussinesLayer.WeeklySchedule;
@@ -60,9 +61,16 @@ public class ScheduleController {
             return null;
         for(Shift s:week)
         {
-            output.add(new ModelShift(s));
+            if(s instanceof EmptyShift)
+                output.add(new ModelShift((EmptyShift)s));
+            else
+                output.add(new ModelShift(s));
+
         }
         return output;
+    }
+    public String removeWorkerFromRoster(String id){
+        return scheduler.removeWorkerFromRoster(id);
     }
 
 

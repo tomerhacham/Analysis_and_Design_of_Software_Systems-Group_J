@@ -7,7 +7,6 @@ public class DailySchedule {
     private Shift nightShift;
     private Date date;
 
-    //TODO:change the constructor
     public Date getDate() {
         return date;
     }

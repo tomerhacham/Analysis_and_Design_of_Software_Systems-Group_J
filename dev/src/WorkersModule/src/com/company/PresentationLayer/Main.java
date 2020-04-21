@@ -1,8 +1,7 @@
-package com.company;
+package com.company.PresentationLayer;
 
 
-import com.company.BussinesLayer.DateManipulator;
-import com.company.BussinesLayer.MyScanner;
+import com.company.BussinesLayer.Roster;
 import com.company.InterfaceLayer.ModelShift;
 import com.company.InterfaceLayer.ModelWorker;
 import com.company.InterfaceLayer.RosterController;
@@ -20,10 +19,9 @@ public class Main {
     private static final boolean morning=true;
     private static final boolean night=false;
     public static void main(String[] args) throws ParseException {
-
+        if(args.length>0&&args[0].equals("-i"))
+            init();
         mainLoop();
-
-
     }
 
     private static void mainLoop() {
@@ -255,9 +253,11 @@ public class Main {
         Date date=getDateFromUser();
         List<ModelShift>mw=sc.getWeeklyShifts(date);
         if(mw==null)
-            System.out.println("Invalid Date");
+            System.out.println("Invalid Date or no scheduled shifts for given date");
         else {
-            System.out.println("Displaying shifts for week of " + mw.get(0).date + ":");
+            SimpleDateFormat myFormat = new SimpleDateFormat("EE MMMM dd, yyyy",Locale.US);
+            String DateString = myFormat.format(mw.get(0).date);
+            System.out.println("Displaying shifts for week of " + DateString+ ":");
             for (ModelShift ms : mw) {
                 System.out.println(ms.minimizedView());
             }
@@ -296,7 +296,10 @@ public class Main {
         System.out.println("Enter shift date");
         Date date=getDateFromUser();
         boolean timeOfday = getTimeOfDayFromUser();
-        sc.removeAvailableWorker(date,timeOfday,id);
+        String output=sc.removeAvailableWorker(date,timeOfday,id);
+        if(output!=null)
+            System.out.println(output);
+
     }
 
     private static void MarkWorkerAvailbleForShift(String id) {
@@ -432,8 +435,11 @@ public class Main {
 
     private static void removeWorker() {
         String id=selectWorker();
+        String output=null;
         if(id!=null)
-            rc.removeWorker(id);
+            output=sc.removeWorkerFromRoster(id);
+        if(output!=null)
+            System.out.println(output);
     }
 
     private static String selectWorker() {
@@ -474,15 +480,69 @@ public class Main {
         return date;
     }
 
-    private static Date parseDate(String date) {
+    public static Date parseDate(String date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date2=null;
         try {
             //Parsing the String
-            date2 = dateFormat.parse(date);
-        } catch (ParseException e) {
+        date2 = dateFormat.parse(date);
+    } catch (ParseException e) {
 
-        }
+    }
         return date2;
+    }
+    private static void init()
+    {
+        List<String>positions1=new ArrayList<>();
+        positions1.add("manager");
+        positions1.add("cashier");
+        List<String>positions2=new ArrayList<>();
+        positions2.add("cleaner");
+        Date startDate1=parseDate("11/04/2020");
+        Date startDate2=parseDate("12/04/2020");
+        rc.addWorker("Gil",16,startDate1,positions1);
+        rc.addWorker("Sharon",15.9,startDate2,positions1);
+        rc.addWorker("Moshe",10,startDate1,positions2);
+        rc.addWorker("Dani",100,startDate2,positions2);
+        positions2.add("security guard");
+        rc.addWorker("Avi",100,startDate1,positions2);
+        List<ModelWorker> workers=rc.displayWorkers();
+        Date shiftDate1=parseDate("20/04/2020");
+        Date shiftDate2=parseDate("21/04/2020");
+        sc.addAvailableWorker(shiftDate1,morning,workers.get(0).id);
+        sc.addAvailableWorker(shiftDate1,night,workers.get(1).id);
+        sc.addAvailableWorker(shiftDate1,morning,workers.get(2).id);
+        sc.addAvailableWorker(shiftDate2,morning,workers.get(0).id);
+        sc.addAvailableWorker(shiftDate2,morning,workers.get(1).id);
+        sc.addAvailableWorker(shiftDate2,morning,workers.get(2).id);
+        sc.addAvailableWorker(shiftDate2,morning,workers.get(3).id);
+        sc.addAvailableWorker(shiftDate2,morning,workers.get(4).id);
+        sc.createShift(shiftDate2,morning);
+        sc.addPositionToShift("cashier",1);
+        sc.addPositionToShift("cleaner",2);
+        sc.addPositionToShift("security guard",1);
+        sc.addWorkerToPositionInShift("manager",workers.get(0).id);
+        sc.addWorkerToPositionInShift("cashier",workers.get(1).id);
+        sc.addWorkerToPositionInShift("cleaner",workers.get(2).id);
+        sc.addWorkerToPositionInShift("cleaner",workers.get(3).id);
+        sc.addWorkerToPositionInShift("security guard",workers.get(4).id);
+        sc.submitShift();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

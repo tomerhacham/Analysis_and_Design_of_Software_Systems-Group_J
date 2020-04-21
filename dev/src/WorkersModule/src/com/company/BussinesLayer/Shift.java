@@ -15,6 +15,7 @@ public class Shift {
         return availableWorkers;
     }
 
+
     public Shift(List<Worker>availableWorkers, Date date, boolean timeOfday)
     {
         this.timeOfDay=timeOfday;

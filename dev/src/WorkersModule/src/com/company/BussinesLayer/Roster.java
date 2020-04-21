@@ -8,17 +8,16 @@ import java.util.UUID;
 public class Roster {
     private List<Worker>workers;
     private static Roster roster;
-    public static Roster getInstance()
-    {
-        if(roster==null)
-            roster=new Roster();
-        return roster;
+    public static Roster getInstance(){
+      if(roster==null)
+          roster=new Roster();
+      return roster;
     }
     private Roster() {
         workers=new ArrayList<>();
     }
 
-    public String addWorker(String name, double salary, Date startDate,List<String>positions)
+    public String addWorker(String name, double salary, Date startDate, List<String> positions)
     {
         UUID uuid = UUID.randomUUID();
         if(name==null||name.length()==0)
@@ -36,7 +35,8 @@ public class Roster {
         }
         return null;
     }
-    public String removeWorker(String id)//TODO:"take care of removing from the scheduler also"
+     
+    public String removeWorker(String id)
     {
         if(id==null)
             return "Invalid ID";
@@ -46,11 +46,13 @@ public class Roster {
         workers.remove(searched);
         return null;
     }
+     
     public List<Worker> getWorkers() {
         return workers;
     }
 
-    public String editName(String newName,String id)
+     
+    public String editName(String newName, String id)
     {
         if(id==null)
             return "Invalid ID";
@@ -62,7 +64,8 @@ public class Roster {
         searched.setName(newName);
         return null;
     }
-    public String editSalary(double newSalary,String id)
+     
+    public String editSalary(double newSalary, String id)
     {
         if(id==null)
             return "Invalid ID";
@@ -74,7 +77,8 @@ public class Roster {
         searched.setSalary(newSalary);
         return null;
     }
-    public String addPosition(String pos,String id)
+     
+    public String addPosition(String pos, String id)
     {
         if(id==null)
             return "Invalid ID";
@@ -86,7 +90,8 @@ public class Roster {
         searched.addPosition(pos);
         return null;
     }
-    public String removePosition(String pos,String id){
+     
+    public String removePosition(String pos, String id){
         if(id==null)
             return "Invalid ID";
         if(pos==null||pos.length()==0)
@@ -97,6 +102,7 @@ public class Roster {
         searched.removePosition(pos);
         return null;
     }
+     
     public Worker findWorker(String id) {
         Worker searched=null;
         for(Worker w:workers)

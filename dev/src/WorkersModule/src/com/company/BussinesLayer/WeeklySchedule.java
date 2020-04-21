@@ -30,11 +30,11 @@ public class WeeklySchedule {
             Shift s=d.getMorningShift();
             if(s==null)
                 s=new EmptyShift(d.getDate(),morning);
-            output.add(d.getMorningShift());
+            output.add(s);
             s=d.getNightShift();
             if(s==null)
                 s=new EmptyShift(d.getDate(),night);
-            output.add(d.getNightShift());
+            output.add(s);
         }
         return output;
     }

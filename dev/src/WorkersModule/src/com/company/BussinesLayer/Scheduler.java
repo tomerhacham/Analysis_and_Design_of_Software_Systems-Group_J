@@ -2,14 +2,18 @@ package com.company.BussinesLayer;
 
 import javafx.util.Pair;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Scheduler {
     TreeSet<WeeklySchedule> schedule;
+
     private static final boolean morning=true;
     private static final boolean night=false;
     private HashMap<Date, Pair<List<Worker>,List<Worker>>> availableWorkers;
+
     private Shift currentEditedShift;
+
     private Date currentEditedShiftDate;
     private boolean  currentEditedShiftTOD;
     public Scheduler() {
@@ -18,10 +22,15 @@ public class Scheduler {
         } );
         availableWorkers=new HashMap<>();
     }
+    public void setAvailableWorkers(HashMap<Date, Pair<List<Worker>, List<Worker>>> availableWorkers) {
+        this.availableWorkers = availableWorkers;
+    }
+
 
     public Shift getCurrentEditedShift() {
         return currentEditedShift;
     }
+
     public String removeShift(Date date,boolean timeOfDay)
     {
         DailySchedule day=findDay(date);
@@ -33,9 +42,10 @@ public class Scheduler {
             day.setNightShift(null);
         return null;
     }
+
     public List<Shift> getWeeklySchedulebyDate(Date date)
     {
-        if(date==null)
+        if(date==null||schedule.size()==0||date.after(DateManipulator.addDays(schedule.last().dayStart,6)))
             return null;
         WeeklySchedule week=schedule.floor(new WeeklySchedule(date,false));
         if(week==null)
@@ -45,6 +55,12 @@ public class Scheduler {
     public String removeWorkerToPositionInShift(String pos,String id)
     {
         return currentEditedShift.removeWorkerFromPosition(pos,id);
+    }
+    public HashMap<Date, Pair<List<Worker>, List<Worker>>> getAvailableWorkers() {
+        return availableWorkers;
+    }
+    public TreeSet<WeeklySchedule> getSchedule() {
+        return schedule;
     }
     public String addWorkerToPositionInShift(String pos,String id)
     {
@@ -132,10 +148,19 @@ public class Scheduler {
             return "No Available workers were marked for this shift";
         List<Worker>cloned =new ArrayList<>();
         cloned.addAll(check);
-        currentEditedShift=findShift(date,timeOfDay);
+        currentEditedShift=new Shift(findShift(date,timeOfDay));
+        filterAvailableWorkers(cloned,currentEditedShift.getOccupation());
         currentEditedShift.setAvailableWorkers(cloned);
         return null;
     }
+
+    private List<Worker> filterAvailableWorkers(List<Worker> availables, HashMap<String, FixedSizeList<Worker>> occupation) {
+        for(String pos:occupation.keySet()) {
+            availables.removeAll(occupation.get(pos));
+        }
+        return availables;
+    }
+
     public String addWeeksIfAbsent(Date date)
     {
         if(date==null)
@@ -171,16 +196,63 @@ public class Scheduler {
     }
     public String addAvailableWorker(Date date,boolean partOfDay,String id)
     {
+        if(date==null)
+            return "Invalid date";
+        Worker worker=getWorkerById(id);
+        if(Roster.getInstance().findWorker(id)==null)
+            return "The worker hasn't been added to the system";
+        if(worker.getStart_Date().after(date))
+            return "Can not add worker before his start date of working";
         Pair<List<Worker>,List<Worker>> p=availableWorkers.putIfAbsent(date,new Pair<>(new ArrayList<>(),new ArrayList<>()));
         List<Worker> check=null;
-        if(partOfDay==morning)
+        if(partOfDay==morning) {
             check=availableWorkers.get(date).getKey();
-        else
+        }
+        else {
             check=availableWorkers.get(date).getValue();
-        Worker worker=getWorkerById(id);
+        }
         if(check.contains(worker))
             return "The worker is already marked as available for this shift";
         check.add(worker);
+        return null;
+    }
+    public String removeWorkerFromRoster(String id)
+    {
+        Worker w=Roster.getInstance().findWorker(id);
+        if(w==null)
+            return "No such worker is in the system";
+        String output="";
+        Date currentDate=new Date();
+        for(WeeklySchedule ws:schedule)
+        {
+            for(Shift shift:ws.getShifts())
+            {
+                if(shift.getDate().after(currentDate))
+                for(List<Worker> workers:shift.getOccupation().values())
+                {
+                    if(workers.contains(w)) {
+                        SimpleDateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy");
+                        String DateString = myFormat.format(shift.getDate());
+                        String timeOfDay=null;
+                        if(shift.getTimeOfDay()==morning)
+                            timeOfDay=" morning shift";
+                        else
+                            timeOfDay=" night shift";
+                        output += DateString+timeOfDay+", ";
+                    }
+
+                }
+            }
+        }
+        if(output.length()>0)
+            return "Can not remove worker because they are already scheduled to work on the following shifts:\n"+
+                    output;
+        Roster.getInstance().removeWorker(id);
+        for(Pair<List<Worker>,List<Worker>> p:availableWorkers.values())
+        {
+            p.getValue().remove(w);
+            p.getKey().remove(w);
+        }
         return null;
     }
     public String removeAvailableWorker(Date date,boolean partOfDay,String id) {
