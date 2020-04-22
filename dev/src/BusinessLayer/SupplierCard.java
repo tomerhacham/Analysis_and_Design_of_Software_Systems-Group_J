@@ -1,6 +1,14 @@
 package BusinessLayer;
-
 import java.util.LinkedList;
+
+/**
+ * Class SuppliersCard.
+ * Holds all the Information about a Supplier.
+ * Contains instance of the classes Contract and CostEngineering.
+ *
+ * Functionality that related to Supplier information.
+ *
+ */
 
 public class SupplierCard {
 
@@ -9,14 +17,14 @@ public class SupplierCard {
     private String Email;
     private String PhoneNumber;
     private int id;
-    private int BankAccountNum;
+    private String BankAccountNum;
     private String Payment;
     private LinkedList<String> ContactsName;
     private Contract contract;
     private CostEngineering costEngineering;
 
     public SupplierCard(String SupplierName , String Address , String Email , String PhoneNumber ,
-                        int id , int BankAccountNum , String Payment , LinkedList<String> ContactsName){
+                        int id , String BankAccountNum , String Payment , LinkedList<String> ContactsName, Contract contract){
 
         this.SupplierName = SupplierName;
         this.Address = Address;
@@ -27,7 +35,7 @@ public class SupplierCard {
         this.Payment = Payment;
         this.ContactsName = ContactsName;
 
-        contract = new Contract(id , this);
+        this.contract = contract;
         costEngineering = null;
     }
 
@@ -67,11 +75,11 @@ public class SupplierCard {
         return id;
     }
 
-    public int getBankAccountNum() {
+    public String getBankAccountNum() {
         return BankAccountNum;
     }
 
-    public void setBankAccountNum(int bankAccountNum) {
+    public void setBankAccountNum(String bankAccountNum) {
         BankAccountNum = bankAccountNum;
     }
 
@@ -116,7 +124,7 @@ public class SupplierCard {
             ContactsName.remove(i);
         }
         else{
-            System.out.println("The Name Is Not In The Contact List");
+            Result.setMsg("The Name Is Not In The Contact List");
         }
     }
 
@@ -146,6 +154,21 @@ public class SupplierCard {
 
     public boolean checkCategory(String c){
         return contract.checkCategory(c);
+    }
+
+    public String toString(){
+
+        String ans = "Supplier Name : "+getSupplierName()+'\n'+"Supplier Id : "+getId()+'\n';
+        LinkedList<Product> plist = contract.getProducts();
+
+        if(plist.isEmpty()){
+            ans = ans +"No Products For This Supplier";
+            return ans;
+        }
+        for (Product p:plist) {
+            ans = ans +"Product Name : " +p.getName()+'\t'+'\t'+"Product Id : "+p.getProductID()+'\t'+'\t'+"Product Catalog Id : "+p.getCatalogID()+'\n';
+        }
+        return ans;
     }
 }
 

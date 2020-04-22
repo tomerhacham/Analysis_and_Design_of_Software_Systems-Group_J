@@ -1,18 +1,21 @@
 package BusinessLayer;
-
-import com.sun.org.apache.xpath.internal.operations.Or;
-import javafx.util.Pair;
-
-import javax.print.attribute.standard.OrientationRequested;
 import java.util.HashMap;
 import java.util.LinkedList;
+
+/**
+ * Singleton OrdersController.
+ * Responsible of all the Orders in the system.
+ * Holds documentation of all the Orders.
+ *
+ * Functionality that related to Orders.
+ *
+ */
 
 //Singleton
 public class OrdersController {
 
     // static variable single_instance of type Singleton
     private static OrdersController instance = null;
-
     private LinkedList<Order> orders;
     private int orderidCounter;
 
@@ -49,6 +52,8 @@ public class OrdersController {
         return orders.get(i);
     }
 
+    public LinkedList<Order> getOrders() { return this.orders;}
+
     //getsupplierAndProduct
     public HashMap<Integer, LinkedList<Product>> suppliersProductsinOrder(int orderid){
         Order o = getOrder(orderid);
@@ -68,8 +73,8 @@ public class OrdersController {
     }
 
     //removeProductFromOrder
-    public void removeFromOrder(int productID) {
-        orders.getLast().removeProductFromOrder(productID);
+    public void removeFromOrder(int productID , int supid) {
+        orders.getLast().removeProductFromOrder(productID , supid);
     }
 
     //changeSupplierForProduct
@@ -79,15 +84,15 @@ public class OrdersController {
     }
 
     //get total price of an order
-    public int getTotalPrice (int orderID){
+    public Double getTotalPrice (int orderID){
         for (Order o : orders){
             if (o.getOrderID() == orderID)
                 return o.getTotalAmount();
         }
-        return -1;
+        return -1.0;
     }
 
-    public int getTotalAmountLastOrder (){
+    public Double getTotalAmountLastOrder (){
         return orders.getLast().getTotalAmount();
     }
 
@@ -97,8 +102,7 @@ public class OrdersController {
     }
 
     public  HashMap<Product , Integer> endOrder() {
-        orders.getLast().endOrder();
-        return orders.getLast().getProductsAndQuantity();
+       return orders.getLast().getProductsAndQuantity();
     }
 
     public void removeOrder (){
@@ -113,7 +117,7 @@ public class OrdersController {
         LinkedList<String> toDisplay = new LinkedList<>();
 
         if(orders.isEmpty()){
-            toDisplay.add("There Are No Orders In The System");
+            toDisplay.add("There Are No Orders In The System"+'\n');
             return toDisplay;
         }
 
@@ -127,7 +131,7 @@ public class OrdersController {
         LinkedList<String> toDisplay = new LinkedList<>();
 
         if(orders.isEmpty()){
-            toDisplay.add("There Are No Orders In The System");
+            toDisplay.add("There Are No Orders In The System"+'\n');
             return toDisplay;
         }
 
@@ -135,6 +139,10 @@ public class OrdersController {
             toDisplay.add(o.display(supId));
         }
         return toDisplay;
+    }
+
+    public Product createNewProduct(int productID, String name, int price, String producer, String category, int catalogid) {
+        return new Product(productID, name, price, producer, category, catalogid);
     }
 }
 

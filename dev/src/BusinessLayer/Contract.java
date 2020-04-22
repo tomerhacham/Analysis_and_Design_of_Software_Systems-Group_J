@@ -1,7 +1,13 @@
 package BusinessLayer;
-
 import java.util.HashMap;
 import java.util.LinkedList;
+
+/**
+ * Class Contract.
+ * Extension of the information that the SupplierCard contains about a Supplier.
+ * Represent the agreement with the Supplier including Category, Product, etc.
+ *
+ */
 
 public class Contract {
 
@@ -10,22 +16,18 @@ public class Contract {
     private int supplierID;
     private String kindOfSupplier;
 
-    public Contract(LinkedList<String> category , int supplierID , String kindOfSupplier , SupplierCard sp){
+    public Contract(LinkedList<String> category , int supplierID , String kindOfSupplier){
         this.category = category;
         this.supplierID = supplierID;
         this.kindOfSupplier = kindOfSupplier;
         products = new HashMap<>();
-
-        ProductController.getInstance().addSupplier(supplierID , sp);
     }
 
-    public Contract(int supplierID , SupplierCard sp){
+    public Contract(int supplierID){
         category= new LinkedList<>();
         products = new HashMap<>();
         this.supplierID = supplierID;
         kindOfSupplier = "";
-
-        ProductController.getInstance().addSupplier(supplierID,sp);
     }
 
     public int getSupplierID() {
@@ -49,7 +51,7 @@ public class Contract {
             category.add(c);
         }
         else{
-            System.out.println("The Category IS Already In The Contract");
+            Result.setMsg("The Category IS Already In The Contract");
         }
     }
 
@@ -69,7 +71,7 @@ public class Contract {
             }
         }
         else {
-            System.out.println("The Category IS Not In The Contract Category List");
+            Result.setMsg("The Category IS Not In The Contract Category List");
         }
     }
 
@@ -121,7 +123,7 @@ public class Contract {
 
         if (categoryInList){
             if (products.containsKey(p.getCatalogID())){
-                System.out.println("The Product Is Already In Your Product List");
+                Result.setMsg("The Product Is Already In Your Product List");
             }
             else{
                 products.put(p.getCatalogID() , p);
@@ -129,7 +131,7 @@ public class Contract {
             }
         }
         else{
-            System.out.println("The Category Of This Product Is Not In The Category List ");
+            Result.setMsg("The Category Of This Product Is Not In The Category List ");
         }
     }
 
@@ -143,6 +145,10 @@ public class Contract {
     }
 
     public  void removeProduct(Integer productcatalogid){
+        if (!products.containsKey(productcatalogid)){
+            Result.setMsg("There's no such Product on Contract");
+            return;
+        }
         Product p = products.get(productcatalogid); // get product
         ProductController.getInstance().removeProduct(supplierID , p); // remove product from product controller
         products.remove(productcatalogid); // remove product from contract
@@ -150,6 +156,10 @@ public class Contract {
 
     public void removeSupplier(){
         ProductController.getInstance().removeSupplierAndProducts(supplierID);
+    }
+
+    public void addSpplierToProductController (SupplierCard sp){
+        ProductController.getInstance().addSupplier(supplierID , sp);
     }
 
 }

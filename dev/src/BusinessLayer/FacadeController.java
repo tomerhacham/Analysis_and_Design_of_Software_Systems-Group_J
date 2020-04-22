@@ -1,9 +1,16 @@
 package BusinessLayer;
-
-import javafx.util.Pair;
-
 import java.util.HashMap;
 import java.util.LinkedList;
+
+/**
+ * Singleton FacadeController.
+ * Represent the Interface layer of the system.
+ *
+ * No functionality.
+ * Passing data from IO to SupplierController/ OrdersController
+ * according to the functionality.
+ *
+ */
 
 //Singleton
 public class FacadeController {
@@ -26,12 +33,12 @@ public class FacadeController {
 
 //#region Supplier
 
-     public void createSupplierCard(String supplierName, String address, String email, String phoneNumber, int id, int bankAccountNum, String payment, LinkedList<String> contactsName) {
-        supplierController.createSupplierCard(supplierName , address , email , phoneNumber , id , bankAccountNum , payment , contactsName);
+     public void createSupplierCard(String supplierName, String address, String email, String phoneNumber, int id, String bankAccountNum, String payment, LinkedList<String> contactsName, Contract contract) {
+        supplierController.createSupplierCard(supplierName , address , email , phoneNumber , id , bankAccountNum , payment , contactsName, contract);
     }
 
-    public void CreateContract(LinkedList<String> category, int supid, String kind) {
-        supplierController.CreateContract(category , supid , kind);
+    public Contract CreateContract(LinkedList<String> category, int supid, String kind) {
+        return supplierController.CreateContract(category , supid , kind);
     }
 
     public void addProductToContract(int supid, Product product) {
@@ -58,7 +65,7 @@ public class FacadeController {
         supplierController.ChangePhoneNumber(supid , phoneNumber);
     }
 
-    public void ChangeBankAccount(int supid, int bankAccountNum) {
+    public void ChangeBankAccount(int supid, String bankAccountNum) {
         supplierController.ChangeBankAccount(supid , bankAccountNum);
     }
 
@@ -110,8 +117,17 @@ public class FacadeController {
         return supplierController.getAllSupProducts(supId);
     }
 
+    public boolean createCostEng(int supid) {
+        return supplierController.createCostEngineering(supid);
+    }
+
+    public boolean isExistSupplier(int supid) {
+        return supplierController.isExist(supid);
+    }
 
 //#endregion
+
+//#region Order
 
     public void createOrder() {
         ordersController.createOrder();
@@ -121,17 +137,16 @@ public class FacadeController {
         ordersController.addProductToOrder(supID, productID, quantity);
     }
 
-
     public HashMap<Product , Integer> endOrder() {
         return ordersController.endOrder();
     }
 
-    public int getTotalAmountLastOrder() {
+    public Double getTotalAmountLastOrder() {
         return  ordersController.getTotalAmountLastOrder();
     }
 
-    public void removeFromOrder(int productID) {
-        ordersController.removeFromOrder(productID);
+    public void removeFromOrder(int productID , int supid) {
+        ordersController.removeFromOrder(productID , supid);
     }
 
     public void removeOrder() {
@@ -150,10 +165,18 @@ public class FacadeController {
         return ordersController.displayOrderBySupplier(supId);
     }
 
-
-    public void createCostEng(int supid) {
-        supplierController.createCostEngineering(supid);
+    public Product createNewProduct(int productID, String name, int price, String producer, String category, int catalogid) {
+        return ordersController.createNewProduct(productID, name, price, producer, category, catalogid);
     }
+
+    public LinkedList<String> printallsuppliers() {
+        return supplierController.printallsuppliers();
+    }
+
+
+
+//#endregion
+
 }
 
 

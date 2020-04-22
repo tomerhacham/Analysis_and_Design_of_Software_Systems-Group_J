@@ -1,29 +1,31 @@
 package BusinessLayer;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Set;
 
+/**
+ * Class Order.
+ * Holds all the Information about an Order.
+ *
+ * Functionality that related to Order information.
+ *
+ */
+
 public class Order {
 
-    public enum statusOption {inProccess , Done , Exception};
     private Integer orderID;
     private HashMap<Integer , LinkedList<Product>> supplierAndProduct; //<supplierid, product>
     private HashMap<Product , Integer> productsAndQuantity; // <product , quntity>
-    private statusOption status;
 
     public Order(int orderID){
         this.orderID = orderID;
         supplierAndProduct = new HashMap<>();
         productsAndQuantity = new HashMap<>();
-        status = statusOption.inProccess;
     }
 
     public int getOrderID() {
         return orderID;
     }
-
-    public void endOrder(){ status = statusOption.Done;}
 
     public HashMap<Integer, LinkedList<Product>> getsupplierAndProduct() {
         return supplierAndProduct;
@@ -32,11 +34,9 @@ public class Order {
     public  HashMap<Product , Integer> getProductsAndQuantity() {return productsAndQuantity;}
 
     public void addProductForSupplier(Integer supplierID, int productID , Integer quantity) {
+
         Product product= ProductController.getInstance().getProductsById(supplierID , productID);
         if (product == null ){
-            System.out.println("The Supplier has no such product");
-            System.out.println("Please Enter Another Product");
-            status = statusOption.Exception;
             return;
         }
 
@@ -72,39 +72,40 @@ public class Order {
     public void updateProductQuantity(Integer productId , Integer newquantity) {
         Set<Product> productSet = productsAndQuantity.keySet();
         Product p2Update;
+        boolean found= false;
         for (Product p: productSet) {
             if(p.getProductID() == productId) {
+                found = true;
                 p2Update = p;
                 productsAndQuantity.replace(p2Update , newquantity);
             }
         }
+        if (!found) {
+            Result.setMsg("No Such Product");
+        }
     }
 
-    public void removeProductFromOrder(int productId){
-        Integer supId = 0;
-        boolean exists= false;
-        boolean Item = false;
+    public void removeProductFromOrder(int productId , int supid){
         Product p2remove= null;
-        for (Integer supplier:supplierAndProduct.keySet()) {
-            for (Product p: supplierAndProduct.get(supplier) ) {
-                // we want to delete the product from all suppliers
-                if (p.getProductID() == productId) {
-                    supId = supplier;
-                    exists = true;
-                    Item = true;
-                    p2remove = p;
-                    productsAndQuantity.remove(p2remove);
-                    break;
-                }
-            }
-            if(exists)
-                supplierAndProduct.get(supId).remove(p2remove);
 
-            exists = false;
+        if(!(supplierAndProduct.containsKey(supid))){
+            Result.setMsg("No Such Supplier In This Order");
+            return;
         }
-        if (!Item){
-            System.out.println("The Product Is Not In The Order");
+
+        for(Product p: supplierAndProduct.get(supid)){
+            if (p.getProductID() == productId) {
+                p2remove = p;
+                productsAndQuantity.remove(p2remove);
+                break;
+            }
         }
+
+        if(p2remove==null){
+            Result.setMsg("No Such Product From This Supplier In The Order");
+            return;
+        }
+        supplierAndProduct.get(supid).remove(p2remove);
     }
 
     public void changeSupplierForProduct(Integer supplierId , int productid ,int catalogid, Integer quantity){
@@ -149,19 +150,20 @@ public class Order {
             productsAndQuantity.put(pnewSup , quantity);
         }
         else{
-            System.out.println("The Product Is Not In The Order Or The Supplier Is Not In The System");
+            Result.setMsg("The Product Is Not In The Order Or The Supplier Is Not In The System");
         }
     }
 
-    public Integer getTotalAmount (){
-        int total = 0;
-        int quantity , price;
+    public Double getTotalAmount (){
+        Double total = 0.0;
+        int quantity;
+        Double price;
         for (Integer supId : supplierAndProduct.keySet()){
             LinkedList<Product> listP = supplierAndProduct.get(supId);
             for (Product p : listP) {
                 quantity = productsAndQuantity.get(p);
                 price = ProductController.getInstance().getUpdatePrice(supId, p, quantity);
-                if (price==(-1)){
+                if (price==(-1.0)){
                     break;
                 }
                 else{
@@ -174,32 +176,36 @@ public class Order {
 
     public String display() {
         String toDisplay = "Order id : "+'\t'+this.orderID.toString() + '\n';
-        toDisplay = toDisplay+ "Product Name "+'\t'+'\t'+"Quantity" + '\n';
+        toDisplay = toDisplay+ "Product"+'\t'+'\t'+"Quantity" + '\n';
 
         for (Product p : productsAndQuantity.keySet()){
             toDisplay = toDisplay+ p.getName() + '\t' +'\t'+ productsAndQuantity.get(p).toString() + '\n';
         }
 
-        if (productsAndQuantity.keySet().size()==0){
-            toDisplay = toDisplay + "---"+'\t' +'\t'+"---\n";
-            toDisplay = toDisplay +"No Products In This Order";
+        if (productsAndQuantity.isEmpty()){
+            toDisplay = toDisplay + "----------------\n";
+            toDisplay = toDisplay +"No Products In This Order\n";
         }
         else{
-            toDisplay = toDisplay + "Order Total Amount : " + getTotalAmount().toString() +'\n' + '\n';
+            toDisplay = toDisplay + "Order Total Amount : " + getTotalAmount().toString() +'\n' ;
         }
         return toDisplay;
     }
 
     public String display(int supId) {
-        String toDisplay = "Order id : "+'\t'+this.orderID.toString() + '\n';
-        toDisplay = toDisplay+ "Product Name "+'\t'+'\t'+"Quantity" + '\n';
+        String toDisplay="";
 
         if (supplierAndProduct.containsKey(supId)) {
+            toDisplay = "Order id : "+'\t'+this.orderID.toString() + '\n';
+            toDisplay = toDisplay+ "Product"+'\t'+'\t'+"Quantity" + '\n';
             LinkedList<Product> listP = supplierAndProduct.get(supId);
             for (Product p : listP) {
                 toDisplay = toDisplay + p.getName() + '\t'+'\t' + productsAndQuantity.get(p).toString() + '\n';
             }
-            toDisplay = toDisplay + "Order Total Amount : " + getTotalAmount().toString() + '\n' + '\n';
+            toDisplay = toDisplay + "Order Total Amount : " + getTotalAmount().toString() + '\n' ;
+        }
+        else {
+            toDisplay= "There is No Orders From This Supplier\n";
         }
 
         return toDisplay;

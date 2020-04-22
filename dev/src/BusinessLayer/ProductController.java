@@ -1,8 +1,16 @@
 package BusinessLayer;
-
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
+
+/**
+ * Singleton ProductController.
+ * Documents the Relation between the suppliers and products
+ * according to their contract.
+ * Holds documentation of all the Products in the system.
+ *
+ * Holds information that necessary to make Orders.
+ *
+ */
 
 //Singleton
 public class ProductController {
@@ -45,7 +53,7 @@ public class ProductController {
             AllProducts.add(product);
         }
         else{
-            System.out.println("The Supplier Dose Not Have A Contract");
+            Result.setMsg("The Supplier Dose Not Have A Contract");
         }
     }
 
@@ -72,7 +80,7 @@ public class ProductController {
         }
 
         else {
-            System.out.println("The Supplier Is Not In The List");
+            Result.setMsg("The Supplier Is Not In The List");
         }
     }
 
@@ -86,7 +94,7 @@ public class ProductController {
             return SupProducts.get(supid);
         }
         else{
-            System.out.println("The Supplier Is Not In The List");
+            Result.setMsg("The Supplier Is Not In The List");
             return null;
         }
     }
@@ -116,7 +124,7 @@ public class ProductController {
             SupProducts.remove(supid);
         }
         else {
-            System.out.println("The Supplier Is Not In The List");
+            Result.setMsg("The Supplier Is Not In The List");
         }
     }
 
@@ -144,20 +152,33 @@ public class ProductController {
 
     public Product getProductsById (int supID, int productID){
         Product p= null;
+        if (SupProducts == null) {
+            Result.setMsg("There's no such Supplier in the System\n");
+            return null;
+        }
+
+        if (!(SupProducts.containsKey(supID))){
+            Result.setMsg("There's no such Supplier in the System\n");
+            return null;
+        }
+
         LinkedList<Product> list = SupProducts.get(supID);
+
         for (Product product : list){
             if (product.getProductID() == productID)
                 p= product;
         }
+        if (p==null)
+            Result.setMsg("There's No Such Product\n");
+
         return p;
     }
 
-    public int getUpdatePrice (int supId , Product product, int quantity){
-
-        int price = -1;
+    public Double getUpdatePrice (int supId , Product product, int quantity){
+        double price = -1.0;
 
         if (!(supplierCardHashMap.containsKey(supId))) {
-            System.out.println("There Is No Such Supplier");
+            Result.setMsg("There Is No Such Supplier");
             return price;
         }
 

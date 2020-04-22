@@ -1,6 +1,12 @@
 package BusinessLayer;
-
 import java.util.HashMap;
+
+/**
+ * Class Cost Engineering.
+ * Optional extension of the information that the SupplierCard contains about a Supplier.
+ * Represent the agreement with the Supplier about sales and new prices.
+ *
+ */
 
 public class CostEngineering {
 
@@ -41,18 +47,24 @@ public class CostEngineering {
             minQuntity.remove(catalogid);
         }
         else{
-            System.out.println("The Product Is Not In The Cost Engineering");
+            Result.setMsg("The Product Is Not In The Cost Engineering");
+            return;
         }
 
         if (newPrice.containsKey(catalogid)) {
             newPrice.remove(catalogid);
         }
         else{
-            System.out.println("The Product Is Not In The Cost Engineering");
+            Result.setMsg("The Product Is Not In The Cost Engineering");
         }
     }
 
     public void addProduct(int catalogid , int quantity , int price){
+
+        if (minQuntity.containsKey(catalogid) || (newPrice.containsKey(catalogid))){
+            Result.setMsg("Product Already exist, You Can Update the Quantity or the Price on main Menu.");
+            return;
+        }
         if (!(minQuntity.containsKey(catalogid))){
             minQuntity.put(catalogid ,quantity );
         }
@@ -61,8 +73,8 @@ public class CostEngineering {
         }
     }
 
-    public int getUpdatePrice (int catalogId , int quantity){
-        int price = -1;
+    public Double getUpdatePrice (int catalogId , int quantity){
+        double price = -1;
         if (minQuntity.containsKey(catalogId)) {
             int min = minQuntity.get(catalogId);
 

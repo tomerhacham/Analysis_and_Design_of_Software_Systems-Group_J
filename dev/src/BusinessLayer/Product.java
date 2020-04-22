@@ -1,10 +1,18 @@
 package BusinessLayer;
 
+/**
+ * Class Product.
+ * Holds all the Information about a Product.
+ *
+ * Functionality that related to Product information.
+ *
+ */
+
 public class Product {
 
     private int productID;
     private String name;
-    private int price;
+    private double price;
     private String producer;
     private String category;
     private int catalogID;
@@ -34,7 +42,7 @@ public class Product {
         this.name = name;
     }
 
-    public int getPrice() {
+    public Double getPrice() {
         return price;
     }
 
