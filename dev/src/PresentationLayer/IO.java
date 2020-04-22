@@ -27,7 +27,7 @@ public class IO {
         System.out.println("Transports system\n");
         while (!terminated) {
             System.out.println( "Please choose an operation:\n" +
-                    "1. Initialize data\n" +
+                    "1. Initialize data.\n" +
                     "2. Book new transport.\n" +
                     "3. Delete transport.\n" +
                     "4. Display all trucks.\n" +
