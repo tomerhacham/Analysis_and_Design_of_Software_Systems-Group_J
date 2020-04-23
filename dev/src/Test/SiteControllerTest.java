@@ -17,7 +17,8 @@ public class SiteControllerTest {
         createSites();
     }
 
-    public void createSites() {
+    private void createSites() {
+        siteController.reset();
         facadeController.createSite("Beer-Sheva", " 054-1234567", "Moshe", 1);
         facadeController.createSite("Ofakim", " 054-1234567", "Dan", 1);
         facadeController.createSite("Omer", " 054-1234567", "Moran", 1);

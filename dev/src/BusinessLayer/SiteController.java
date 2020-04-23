@@ -113,4 +113,10 @@ public class SiteController {
     {
         return sites.containsKey(siteId);
     }
+
+    public void reset()
+    {
+        sites.clear();
+        Id_Counter=0;
+    }
 }

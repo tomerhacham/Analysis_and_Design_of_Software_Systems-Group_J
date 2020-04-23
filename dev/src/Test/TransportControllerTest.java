@@ -28,7 +28,7 @@ public class TransportControllerTest {
         } catch (Exception e) {}
         facadeController.createTruck("12345678", "XX32", 1000, 2550, "C1");
         facadeController.setTransportTruck(transportID2, 0);
-        facadeController.createDriver("C1", "Yossi");
+        facadeController.createDriver("Yossi", "C1");
         facadeController.setTransportDriver(transportID2, 0);
         facadeController.createSite("Rabi akiva Beer Shave", "0541234567", "Einav", 2);
         facadeController.setTransportSource(transportID2, 0);

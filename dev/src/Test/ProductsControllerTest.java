@@ -3,7 +3,6 @@ package Test;
 import BusinessLayer.*;
 import InterfaceLayer.FacadeController;
 import org.junit.jupiter.api.*;
-import org.omg.CORBA.PUBLIC_MEMBER;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,13 +10,14 @@ public class ProductsControllerTest {
     ProductsController productsController;
     FacadeController facadeController;
     private int fileID;
+
     public ProductsControllerTest(){
-        productsController= ProductsController.getInstance();
+        productsController = ProductsController.getInstance();
         facadeController = FacadeController.getInstance();
         createProducts();
     }
 
-    public void createProducts()
+    private void createProducts()
     {
         fileID = facadeController.createProductsFile();
         facadeController.createProduct("Milk",3,0,3);

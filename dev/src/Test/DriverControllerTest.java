@@ -15,7 +15,9 @@ public class DriverControllerTest {
         createDrivers();
     }
 
-    public void createDrivers() {
+    private void createDrivers() {
+        driverController.reset();
+        facadeController.createDriver("Yossi", "C1");
         facadeController.createDriver("David", "C");
         facadeController.createDriver("Shon", "C1");
         facadeController.createDriver("Noam", "C4");
@@ -23,26 +25,26 @@ public class DriverControllerTest {
 
     @Test
     public void checkIfAvailableByLicence() {
-        assertTrue(driverController.checkIfAvailableByLicence("C", 0));
-        assertTrue(driverController.checkIfAvailableByLicence("C1", 1));
-        assertTrue(driverController.checkIfAvailableByLicence("C4", 2));
+        assertTrue(driverController.checkIfAvailableByLicence("C", 1));
+        assertTrue(driverController.checkIfAvailableByLicence("C1", 2));
+        assertTrue(driverController.checkIfAvailableByLicence("C4", 3));
 
         //The checked licenses are different than the drivers licenses
-        assertFalse(driverController.checkIfAvailableByLicence("D", 0));
-        assertFalse(driverController.checkIfAvailableByLicence("B1", 1));
-        assertFalse(driverController.checkIfAvailableByLicence("C", 2));
+        assertFalse(driverController.checkIfAvailableByLicence("D", 1));
+        assertFalse(driverController.checkIfAvailableByLicence("B1", 2));
+        assertFalse(driverController.checkIfAvailableByLicence("C", 3));
 
         //driver doesn't exist
-        assertFalse(driverController.checkIfAvailableByLicence("C", 3));
+        assertFalse(driverController.checkIfAvailableByLicence("C", 20));
     }
 
     @Test
     public void checkCreateAndDelete() {
         facadeController.createDriver("lola", "C");
-        Driver d = driverController.getById(3);
+        Driver d = driverController.getById(4);
         assertNotNull(d);
-        driverController.DeleteDriver(3);
-        d = driverController.getById(3);
+        driverController.DeleteDriver(4);
+        d = driverController.getById(4);
         assertNull(d);
     }
 }

@@ -138,4 +138,10 @@ public class DriverController {
         }
         return false;
     }
+
+    public void reset()
+    {
+        drivers.clear();
+        Id_Counter=0;
+    }
 }

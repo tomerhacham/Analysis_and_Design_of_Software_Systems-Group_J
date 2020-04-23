@@ -145,4 +145,10 @@ public class TruckController {
         }
         return false;
     }
+
+    public void reset()
+    {
+        trucks.clear();
+        Id_Counter=0;
+    }
 }

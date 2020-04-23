@@ -41,7 +41,7 @@ public class Driver {
     //check if the driver has a specific licence
     public Boolean checkIfAvailableByLicence(String needed_licence)
     {
-        return license == needed_licence;
+        return license.equals(needed_licence);
     }
 
     public void addDate(Date d){Dates.add(d);}

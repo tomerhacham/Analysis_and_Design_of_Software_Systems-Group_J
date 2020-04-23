@@ -19,6 +19,7 @@ public class TruckControllerTest {
     }
 
     private void createTrucks() {
+        truckController.reset();
         facadeController.createTruck("12-23FF","XXL8",1000,1500,"C1");
         facadeController.createTruck("17-45LD","X23",1050,1260,"C1");
         facadeController.createTruck("J0-38AV","1X6",700,1000,"C");
