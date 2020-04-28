@@ -1,6 +1,6 @@
 package TestTransportModule;
 
-import TruckController;
+import BusinessLayer.Transport.TruckController;
 import InterfaceLayer.Transport.FacadeController;
 import org.junit.jupiter.api.Test;
 
