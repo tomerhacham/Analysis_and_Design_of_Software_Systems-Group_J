@@ -1,4 +1,4 @@
-package BusinessLayer.Transport;
+package BusinessLayer.Workers;
 
 import java.util.*;
 
@@ -6,7 +6,7 @@ import java.util.*;
 public class DriverController {
     private static  DriverController instance = null;
 
-    private Hashtable<Integer,Driver> drivers;
+    private Hashtable<Integer, Driver> drivers;
     private Integer Id_Counter;
 
     private DriverController(){

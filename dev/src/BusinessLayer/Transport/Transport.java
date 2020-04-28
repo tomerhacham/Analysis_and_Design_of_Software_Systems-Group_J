@@ -1,4 +1,7 @@
 package BusinessLayer.Transport;
+
+import BusinessLayer.Workers.Driver;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,7 +11,7 @@ public class Transport {
     private int ID;
     private Date Date;
     private Truck Truck;
-    private Driver Driver;
+    private BusinessLayer.Workers.Driver Driver;
     private Site Source;
     private HashMap<Site, ProductFile> DestFiles;
     private float TotalWeight;

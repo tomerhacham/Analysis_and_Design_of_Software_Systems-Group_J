@@ -1,7 +1,12 @@
-package BusinessLayer.Transport;
+package BusinessLayer.Workers;
 
 import java.util.ArrayList;
 import java.util.Date;
+
+
+// TODO:: inheritance
+// TODO:: check if there is drivers available in specific date
+// TODO:: check if there is drivers available in specific date
 
 public class Driver {
     private String name;

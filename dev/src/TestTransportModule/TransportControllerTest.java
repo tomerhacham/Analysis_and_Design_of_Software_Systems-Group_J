@@ -1,6 +1,6 @@
 package TestTransportModule;
 
-import BusinessLayer.Transport.Driver;
+import BusinessLayer.Workers.Driver;
 import BusinessLayer.Transport.Transport;
 import BusinessLayer.Transport.TransportController;
 import BusinessLayer.Transport.Truck;
