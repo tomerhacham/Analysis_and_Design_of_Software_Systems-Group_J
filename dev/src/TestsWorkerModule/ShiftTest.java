@@ -2,7 +2,7 @@ package com.company.Tests;
 
 import BusinessLayer.Workers.Shift;
 import BusinessLayer.Workers.Worker;
-import PresentationLayer.Workers.Main;
+import PresentationLayer.Workers.IOWorkers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,8 +13,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ShiftTest {
-private  Date startDate= Main.parseDate("02/04/2020");
-private  Date dateOfShift= Main.parseDate("10/04/2020");
+private  Date startDate= IOWorkers.parseDate("02/04/2020");
+private  Date dateOfShift= IOWorkers.parseDate("10/04/2020");
 private Worker worker1;
 private Worker worker2;
 private static final boolean morning=true;

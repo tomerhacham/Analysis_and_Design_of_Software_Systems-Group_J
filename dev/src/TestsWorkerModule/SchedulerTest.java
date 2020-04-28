@@ -3,7 +3,7 @@ package com.company.Tests;
 import BusinessLayer.Workers.Roster;
 import BusinessLayer.Workers.Scheduler;
 import BusinessLayer.Workers.Worker;
-import PresentationLayer.Workers.Main;
+import PresentationLayer.Workers.IOWorkers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,9 +13,9 @@ import java.util.Date;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SchedulerTest {
-    private  Date startDate= Main.parseDate("02/04/2020");
+    private  Date startDate= IOWorkers.parseDate("02/04/2020");
     private  Date dateOfShift= new Date();
-    private  Date invalidShift= Main.parseDate("01/04/2020");
+    private  Date invalidShift= IOWorkers.parseDate("01/04/2020");
     private static final boolean morning=true;
     private static final boolean night=false;
     private Worker worker1;

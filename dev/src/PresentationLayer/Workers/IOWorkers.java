@@ -11,19 +11,29 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Stream;
 
-public class Main {
+public class IOWorkers {
+
+    private static IOWorkers instance = null;
     private static RosterController rc=new RosterController();
     private static ScheduleController sc=new ScheduleController();
     private static MyScanner scanner=new MyScanner(System.in);
     private static final boolean morning=true;
     private static final boolean night=false;
-    public static void main(String[] args) throws ParseException {
-        if(args.length>0&&args[0].equals("-i"))
-            init();
+   /* public static void main(String[] args) throws ParseException {
+        //if(args.length>0&&args[0].equals("-i"))
+         //   init();
         mainLoop();
+    }*/
+
+    private IOWorkers() {}
+
+    public static IOWorkers getInstance(){
+        if (instance == null)
+            instance = new IOWorkers();
+        return instance;
     }
 
-    private static void mainLoop() {
+    public static void mainLoop() {
         boolean terminate=false;
         while(!terminate)
         {
@@ -42,6 +52,7 @@ public class Main {
             }
             else if(opt==3)
             {
+                System.out.println("Exit workers system");
                 terminate=true;
             }
             else{

@@ -5,20 +5,20 @@ import InterfaceLayer.Transport.FacadeController;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class IO {
+public class IOTransport {
 
-    private static IO instance = null;
+    private static IOTransport instance = null;
     private static FacadeController facadeController = FacadeController.getInstance();
     private static Scanner scanner = new Scanner(System.in);
     private boolean terminated;
 
-    private IO() {
+    private IOTransport() {
         terminated = false;
     }
 
-    public static IO getInstance(){
+    public static IOTransport getInstance(){
         if (instance == null)
-            instance = new IO();
+            instance = new IOTransport();
         return instance;
     }
 
@@ -88,7 +88,7 @@ public class IO {
                     deleteSite();
                     break;
                 case 14:
-                    System.out.println("Thank you, good bye!");
+                    System.out.println("Exit transport system");
                     terminated = true;
                     break;
                 default:

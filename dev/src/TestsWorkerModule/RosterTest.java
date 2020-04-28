@@ -2,7 +2,7 @@ package com.company.Tests;
 
 import BusinessLayer.Workers.Roster;
 import BusinessLayer.Workers.Worker;
-import PresentationLayer.Workers.Main;
+import PresentationLayer.Workers.IOWorkers;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class RosterTest {
     private Roster roster =Roster.getInstance();
     private List<String> positions=new ArrayList<>();
-    private Date startDate= Main.parseDate("01/04/2020");
+    private Date startDate= IOWorkers.parseDate("01/04/2020");
 
 
     @Test
