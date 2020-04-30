@@ -74,10 +74,11 @@ public class TruckController {
 
     // returns true if the truck with the specified id is available at date
     // otherwise returns false
-    public boolean checkIfAvailableByDate(Date date, Integer id)
+    // shift- morning:true, night:false
+    public boolean checkIfAvailableByDate(Date date,Boolean shift, Integer id)
     {
         if(trucks.containsKey(id)) {
-            return trucks.get(id).checkIfAvailableByDate(date);
+            return trucks.get(id).checkIfAvailableByDateAndShift(date,shift);
         }
         return false;
     }
@@ -93,21 +94,24 @@ public class TruckController {
 
     // returns true if there is a truck in the system which is available at date
     // otherwise returns false
-    public boolean checkIfTrucksAvailableByDate(Date d) {
+    // shift- morning:true, night:false
+    public boolean checkIfTrucksAvailableByDate(Date d, boolean shift) {
         for (Integer i:trucks.keySet()) {
-            if(checkIfAvailableByDate(d, i))
+            if(checkIfAvailableByDate(d,shift, i))
                 return true;
         }
         return false;
     }
 
-    // returns string of details of all the trucks in the system which have max weight sufficient to weight and are available by date
-    public String getAvailableTrucks(Date date,float Weight) {
+    // returns string of details of all the trucks in the system which have max weight
+    // sufficient to weight and are available by date
+    // shift- morning:true, night:false
+    public String getAvailableTrucks(Date date,boolean shift, float Weight) {
         String ret = "";
         int count = 1;
         for (Integer i:trucks.keySet()) {
             if(checkIfAvailableByWeight(Weight, i)) {
-                if(checkIfAvailableByDate(date, i)) {
+                if(checkIfAvailableByDate(date, shift, i)) {
                     ret = ret + count + ". " + trucks.get(i).toString();
                     count++;
                 }
@@ -117,16 +121,18 @@ public class TruckController {
     }
 
     // adds a date to the list of occupied dates of the truck with the specified id
-    public void addDate(Date date, int id){
+    // shift- morning:true, night:false
+    public void addDate(Date date,boolean shift, int id){
         if(trucks.containsKey(id)){
-            trucks.get(id).addDate(date);
+            trucks.get(id).addDate(date,shift);
         }}
 
     // removes a date from the list of occupied dates of the truck with the specified id
-    public void removeDate(Date date, int id){
+    // shift- morning:true, night:false
+    public void removeDate(Date date,boolean shift, int id){
         if(trucks.containsKey(id))
         {
-            trucks.get(id).removeDate(date);
+            trucks.get(id).removeDate(date, shift);
         }}
 
     // returns a string with the driver license compatible to the truck with the specified id
@@ -138,10 +144,11 @@ public class TruckController {
     }
 
     // returns true if the truck with the specified id exist in the system
-    public boolean checkIfTruckExistAndValid(int truckID, float totalWeight, Date d) {
+    // shift- morning:true, night:false
+    public boolean checkIfTruckExistAndValid(int truckID, float totalWeight, Date d, boolean shift) {
         if(trucks.containsKey(truckID))
         {
-           return (checkIfAvailableByWeight(totalWeight, truckID)&&checkIfAvailableByDate(d,truckID));
+           return (checkIfAvailableByWeight(totalWeight, truckID)&&checkIfAvailableByDate(d,shift,truckID));
         }
         return false;
     }

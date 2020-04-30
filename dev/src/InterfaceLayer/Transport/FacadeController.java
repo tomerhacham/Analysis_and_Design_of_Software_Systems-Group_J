@@ -3,6 +3,7 @@ package InterfaceLayer.Transport;
 import BusinessLayer.Transport.*;
 import BusinessLayer.Workers.DriverController;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -10,7 +11,6 @@ public class FacadeController {
 //this class transfer functionality between the businessLayer and the presentationLayer
 
     private static FacadeController instance = null;
-    private static DriverController driverController = DriverController.getInstance();
     private static SiteController siteController = SiteController.getInstance();
     private static TransportController transportController = TransportController.getInstance();
     private static TruckController truckController = TruckController.getInstance();
@@ -29,8 +29,10 @@ public class FacadeController {
         return truckController.getAllTrucksDetails();
     }
 
-    public String getAvailableTrucks(Date date, float totalWeight) {
-        return truckController.getAvailableTrucks(date, totalWeight);
+    public String getAvailableTrucks(int transportId, float totalWeight) {
+        Date d= transportController.getTransportDate(transportId);
+        Boolean shift = transportController.getTransportShift(transportId);
+        return truckController.getAvailableTrucks(d,shift, totalWeight);
     }
 
     public boolean createTruck(String license_plate, String model, float netWeight, float maxWeight, String drivers_license) {
@@ -48,38 +50,9 @@ public class FacadeController {
     public boolean checkIfTruckExistAndValid(int truckID, int transportId) {
         float totalWeight = getTotalWeight(transportId);
         Date d = getTransportDate(transportId);
-        return truckController.checkIfTruckExistAndValid(truckID, totalWeight, d);
+        boolean shift = getTransportShift(transportId);
+        return truckController.checkIfTruckExistAndValid(truckID, totalWeight, d ,shift);
     }
-
-
-
-    //driver controller functions
-    public String getAllDriversDetails() {
-        return driverController.getAllDriversDetails();
-    }
-
-    public String getAvailableDrivers(int transportId) {
-        Date date = getTransportDate(transportId);
-        int truckID = getTransportTruck(transportId);
-        String truckLicense = truckController.getDriversLicense(truckID);
-        return driverController.getAvailableDrivers(date, truckLicense);
-    }
-
-    public void createDriver(String name, String license) {
-        driverController.CreateDriver(license, name);
-    }
-
-    public boolean deleteDriver(int driverToDelete) {
-        return driverController.DeleteDriver(driverToDelete);
-    }
-
-    public boolean checkIfDriverExistAndValid(int driverID, int transport_id) {
-        int truckID = getTransportTruck(transport_id);
-        Date d =getTransportDate(transport_id);
-        String truckLicense = truckController.getDriversLicense(truckID);
-        return driverController.checkIfDriverExistAndValid(driverID, truckLicense, d);
-    }
-
 
 
     //site controller functions
@@ -136,10 +109,6 @@ public class FacadeController {
         return transportController.getProductByDest(transportID);
     }
 
-    public boolean setTransportDate(int transportID, String date) throws Exception {
-        return transportController.setTransportDate(date, transportID);
-    }
-
     public void setTransportSource(int transportID, int sourceID) {
         transportController.setTransportSource(sourceID, transportID);
     }
@@ -156,8 +125,9 @@ public class FacadeController {
         transportController.setTransportWeight(transportID);
     }
 
-    public void setTransportDriver(int transportID, int driverID) {
-        transportController.setTransportDriver(driverID, transportID);
+    public void setTransportDriver(int transportID, String driverID) {
+        String driverName = getDriverName(driverID); //TODO:: function from workers
+        transportController.setTransportDriver(driverID, transportID, driverName);
     }
 
     public Date getTransportDate(int transportID) {
@@ -180,12 +150,16 @@ public class FacadeController {
         transportController.addToLog(message, transportID);
     }
 
-    public void addDatesToDriverAndTruck(int transportID) {
-        transportController.addDatesToDriverAndTruck(transportID);
+    public void addDatesToTruck(int transportID) {
+        transportController.addDatesToTruck(transportID);
     }
 
-    public void removeDatesToDriverAndTruck( int transportID) {
-        transportController.removeDatesToDriverAndTruck(transportID);
+    public void removeDatesFromDriverAndTruck( int transportID) {
+        String DriverId = transportController.getTransportDriverID(transportID);
+        Date d =transportController.getTransportDate(transportID);
+        boolean shift = transportController.getTransportShift(transportID);
+        removeDriverFromTransport(d, shift, DriverId); //TODO:: function from workers
+        transportController.removeDatesFromTruck(transportID);
     }
 
     public boolean checkIfDestInFile(int transportID, int destToEdit) {
@@ -196,7 +170,10 @@ public class FacadeController {
         return transportController.checkIfTransportExist(transportID);
     }
 
-
+    public boolean getTransportShift(int transportID)
+    {
+        return transportController.getTransportShift(transportID);
+    }
 
     //product controller functions
     public int createProductsFile() {
@@ -220,4 +197,70 @@ public class FacadeController {
         return productsController.getFileWeight(fileID);
     }
 
+
+    //added after mergings:
+    //shift- true:morning, false:night
+    public void changeDriverInTransport(String prevDriverId, String newDriverId, Date date, Boolean shift)
+    {
+        String newDriverName = getDriverName(newDriverId); //TODO:: function from workers
+        transportController.changeDriverInTransport(prevDriverId, newDriverId, date, shift, newDriverName);
+    }
+
+    public Boolean isTransportExist(Date date, Boolean shift)
+    {
+        return transportController.isTransportExist(date, shift);
+    }
+
+    //TODO::
+    public boolean setTransportDate(String date, int id) throws Exception {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        Date transportDate;
+        try {
+            transportDate = formatter.parse(date);
+        } catch (Exception e) {
+            throw new Exception("Format is incorrect. Try again.");
+        }
+        Date today = new Date();
+        formatter.format(today);
+        if (today.after(transportDate))
+            throw new Exception("Date already passed. Try again.");
+
+        //TODO::Take time and then check if its morning to night and send to the setter below
+        transportController.setTransportDate(transportDate, transportTime, shift, id);
+        return true;
+    }
+
+    public boolean checkIfStorageManInShift(int TransportId)
+    {
+        Date d = transportController.getTransportDate(TransportId);
+        boolean shift = transportController.getTransportShift(TransportId);
+        return StorageManInShift(d, shift); //TODO:: function from workers
+    }
+
+    public boolean checkIfDriversAndTrucksAvailable(int TransportId)
+    {
+        Date date = transportController.getTransportDate(TransportId);
+        boolean shift = transportController.getTransportShift(TransportId);
+        boolean trucksAvailable = truckController.checkIfTrucksAvailableByDate(date , shift);
+        boolean driversAvailable = DriversAvailability(date , shift);//TODO: function from workers
+        return driversAvailable&&trucksAvailable;
+    }
+
+    public String chooseDriver(int transportId)
+    {
+        Date date = transportController.getTransportDate(transportId);
+        boolean Shift = transportController.getTransportShift(transportId);
+        int TruckID = transportController.getTransportTruck(transportId);
+        String licence = truckController.getDriversLicense(TruckID);
+        String DriverId = chooseDriverForTransport(date, Shift, licence);//TODO: function from workers
+        if(DriverId.equals(""))
+        {
+            return "";
+        }
+        else {
+            String DriverName = getDriverName(DriverId); //TODO:: function from workers
+            transportController.setTransportDriver(DriverId,transportId,DriverName);
+            return DriverName;
+        }
+    }
 }

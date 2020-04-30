@@ -31,16 +31,13 @@ public class IOTransport {
                     "2. Book new transport.\n" +
                     "3. Delete transport.\n" +
                     "4. Display all trucks.\n" +
-                    "5. Display all drivers.\n" +
-                    "6. Display all sites.\n" +
-                    "7. Display all transports.\n" +
-                    "8. Add truck.\n" +
-                    "9. Add driver.\n" +
-                    "10. Add site.\n" +
-                    "11. Remove truck.\n" +
-                    "12. Remove driver.\n" +
-                    "13. Remove site.\n" +
-                    "14. Exit system.\n");
+                    "5. Display all sites.\n" +
+                    "6. Display all transports.\n" +
+                    "7. Add truck.\n" +
+                    "8. Add site.\n" +
+                    "9. Remove truck.\n" +
+                    "10. Remove site.\n" +
+                    "11. Exit system.\n");
             int operation;
             try {
                 operation = Integer.parseInt(scanner.nextLine());
@@ -61,33 +58,24 @@ public class IOTransport {
                     System.out.println("Trucks:\n" + facadeController.getAllTrucksDetails());
                     break;
                 case 5:
-                    System.out.println("Drivers:\n" + facadeController.getAllDriversDetails());
-                    break;
-                case 6:
                     System.out.println("Sites:\n" + facadeController.getAllSitesDetails());
                     break;
-                case 7:
+                case 6:
                     System.out.println("Transports:\n" + facadeController.getAllTransportsDetails());
                     break;
-                case 8:
+                case 7:
                     addTruck();
                     break;
-                case 9:
-                    addDriver();
-                    break;
-                case 10:
+                case 8:
                     addSite();
                     break;
-                case 11:
+                case 9:
                     deleteTruck();
                     break;
-                case 12:
-                    deleteDriver();
-                    break;
-                case 13:
+                case 10:
                     deleteSite();
                     break;
-                case 14:
+                case 11:
                     System.out.println("Exit transport system");
                     terminated = true;
                     break;
@@ -98,15 +86,9 @@ public class IOTransport {
     }
 
     //this data is initialized in every new run of the system.
+    //TODO::tell shira i deleted all the drivers
     public void initializeData()
     {
-        facadeController.createDriver("Eran", "C1");
-        facadeController.createDriver("Omer","C");
-        facadeController.createDriver("Noam","C1");
-        facadeController.createDriver("David", "C");
-        facadeController.createDriver("Shon", "C1");
-        facadeController.createDriver("Yosi", "C4");
-
         facadeController.createSite("Beer-Sheva","054-1234567", "Shira",1);
         facadeController.createSite("Ofakim","052-1234567","Einav",1);
         facadeController.createSite("Omer","050-1234567", "Amit",1);
@@ -142,27 +124,6 @@ public class IOTransport {
             }
             else {
                 System.out.println("The site ID:"+siteToDelete+" is not in the system, operation canceled.\n");
-            }
-        }
-    }
-
-    //delete driver function
-    private void deleteDriver() {
-        String details = facadeController.getAllDriversDetails();
-        if (details.equals("")){        //there are no drivers in the system
-            System.out.println("There are no drivers to delete.\n");
-        }
-        else {
-            System.out.println(details);
-            System.out.println("Please choose the driver ID you wish to remove:");
-            int driverToDelete = integerParse(scanner.nextLine());
-            //try to delete the given driver, if returns false the id is not in the system
-            boolean deleted =facadeController.deleteDriver(driverToDelete);
-            if(deleted) {
-                System.out.println("The driver deleted successfully.\n");
-            }
-            else {
-                System.out.println("The driver ID:"+driverToDelete+" is not in the system, operation canceled.\n");
             }
         }
     }
@@ -203,16 +164,6 @@ public class IOTransport {
         System.out.println("\nThe site added successfully.\n");
     }
 
-    //adding a new driver to the system
-    private void addDriver() {
-        System.out.println("Please enter the following details:\n");
-        System.out.println("Driver name:");
-        String name = scanner.nextLine();
-        System.out.println("Driver's License:");
-        String license = scanner.nextLine();
-        facadeController.createDriver(name, license);
-        System.out.println("\nThe driver added successfully.\n");
-    }
 
     //adding a new truck to the system
     private void addTruck() {
@@ -249,7 +200,7 @@ public class IOTransport {
             //try to delete the given transport, if returns false the id is not in the system
             boolean deleted = facadeController.deleteTransport(transportToDelete);
             if (deleted) {
-                facadeController.removeDatesToDriverAndTruck(transportToDelete);
+                facadeController.removeDatesFromDriverAndTruck(transportToDelete);
                 System.out.println("The transport deleted successfully.\n");
             } else {
                 System.out.println("The transport ID:" + transportToDelete + " is not in the system, operation canceled.\n");
@@ -263,23 +214,12 @@ public class IOTransport {
         int transportID = facadeController.createTransport();
 
         // selecting the date of transport
-        System.out.println("Please enter a date in the format dd-mm-yyyy");
-        String date;
-        while (true){
-            try {
-                date = scanner.nextLine();
-                // check availability of the date with trucks and drivers
-                boolean dateAvailable = facadeController.setTransportDate(transportID, date);
-                if (dateAvailable)
-                    break;
-                else
-                    System.out.println("There are no available trucks or drivers in the specified date. Enter different date.\n");
-            } catch (Exception e) {
-                // wrong format or passed date
-                System.out.println(e.getMessage());
-            }
+        int dateAndTime = chooseDateAndTime(transportID);
+        if(dateAndTime==-1)
+        {
+            facadeController.deleteTransport(transportID);
+            return;
         }
-
         // selecting the source of transport
         int sourceID = chooseSource();
         if (sourceID == -1){ //the transport canceled
@@ -303,23 +243,65 @@ public class IOTransport {
 
 
         // selecting driver for transport
-        int driverID = chooseDriver(transportID);
-        if (driverID == -1) { //the transport canceled
+        int driverChosen = chooseDriver(transportID);
+        if (driverChosen == -1) { //the transport canceled
             facadeController.deleteTransport(transportID);
             return;
         }
-        facadeController.setTransportDriver(transportID, driverID);
-        // add occupied date to truck and driver
-        facadeController.addDatesToDriverAndTruck(transportID);
+        // add occupied date to truck
+        facadeController.addDatesToTruck(transportID);
 
         System.out.println("\nThe transport added successfully.\n");
+    }
+
+    private int chooseDateAndTime(int transportID)
+    {
+        System.out.println("Please enter a date in the format dd-mm-yyyy");
+        String date;
+        while (true){
+            try {
+                date = scanner.nextLine();
+                // check availability of the date with trucks and drivers
+                //TODO:: ask for time
+                facadeController.setTransportDate(transportID, date);
+            } catch (Exception e) {
+                // wrong format or passed date
+                System.out.println(e.getMessage());
+            }
+        }
+        boolean storageMan = facadeController.checkIfStorageManInShift(transportID);
+        if(!storageMan)
+        {
+            System.out.println("There is no storage man in the specified shift.\n"
+                                +"choose 1 to select different date and time"
+                                +"choose 2 to abort transport");
+
+            int opt = integerParse(scanner.nextLine());
+            if (opt == 2) { //abort transport
+                return -1;
+            }
+            else if (opt == 1){ //change truck
+                return chooseDateAndTime(transportID);
+            }
+            else {
+                System.out.println("The input is invalid, transport aborted.");
+                return -1;
+            }
+        }
+        boolean driversAndTrucks = facadeController.checkIfDriversAndTrucksAvailable(transportID);
+        if(!driversAndTrucks)
+        {
+            System.out.println("There are no available trucks or drivers in the specified date. Enter different date and time.\n");
+            return chooseDateAndTime(transportID);
+        }
+        return 0;
     }
 
     //choose the driver of a transport
     private int chooseDriver(int transportID) {
         while (true) {
-            String drivers = facadeController.getAvailableDrivers(transportID);
-            if (drivers.equals("")) { //there are no available drivers give option to edit
+            String driver = facadeController.chooseDriver(transportID);
+            if (driver.equals("")) { //there are no available drivers give option to edit
                 System.out.println("There is no driver with compatible license to the selected truck in the system.\n" +
                         "\tchoose 1 to change truck.\n" +
                         "\tchoose 2 to abort transport.");
@@ -339,15 +321,7 @@ public class IOTransport {
                 }
             }
             else { //there are drivers
-                System.out.println("Drivers:\n" + drivers);
-                System.out.println("Please choose a driver ID from the above");
-                int driverID = integerParse(scanner.nextLine());
-                boolean exist = facadeController.checkIfDriverExistAndValid(driverID, transportID);
-                if (exist)
-                    return driverID;
-                else {
-                    System.out.println("The driver ID: " + driverID + " is not in valid for this operation, Please try again.\n");
-                }
+                System.out.println("The Driver: "+driver+" Chosen for Transport");
             }
         }
     }
@@ -361,7 +335,7 @@ public class IOTransport {
                 System.out.println("the total weight of the products is 0. the Transport is canceled.\n");
                 return -1;
             }
-            String trucks = facadeController.getAvailableTrucks(facadeController.getTransportDate(transportID), totalWeight);
+            String trucks = facadeController.getAvailableTrucks(transportID, totalWeight);
             // if there is no truck that can carry total weight give option to edit
             if (trucks.equals("")) {
                 System.out.println("There is no truck that can carry such weight in the system.\n" +

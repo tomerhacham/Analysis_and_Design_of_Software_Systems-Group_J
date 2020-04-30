@@ -10,8 +10,13 @@ public class Transport {
 
     private int ID;
     private Date Date;
+    //TODO: adding Time field, and adding it to setters&getters, and to the printings -Check if Its Date Format
+    private Date Time;
+    private boolean Shift; //in which shift is the transport
     private Truck Truck;
-    private BusinessLayer.Workers.Driver Driver;
+    //private BusinessLayer.Workers.Driver Driver;
+    private String driverId;
+    private String driverName;
     private Site Source;
     private HashMap<Site, ProductFile> DestFiles;
     private float TotalWeight;
@@ -28,15 +33,23 @@ public class Transport {
 
     public Date getDate() { return Date;}
 
-    public void setDate(Date date) { Date = date; }
+    //TODO::check if Time is Date type
+    public void setDate(Date date,Date time ,boolean shift) {
+        Date = date;
+        Time=time;
+        Shift=shift;
+    }
 
     public Truck getTruck() {return Truck; }
 
     public void setTruck(Truck truck) {Truck = truck;}
 
-    public Driver getDriver() { return Driver; }
+    public String getDriverId() { return driverId; }
 
-    public void setDriver(Driver driver) { Driver = driver; }
+    public void setDriver(String driver_Id, String driver_Name) {
+        driverId = driver_Id;
+        driverName = driver_Name;
+    }
 
     public void setSource(Site source) { Source = source; }
 
@@ -109,7 +122,7 @@ public class Transport {
 
     @Override
     public String toString() {
-        String s = "id: " + ID + " Date: " + Date.toString() + " TruckNumber: " + Truck.getLicense_plate() + " Driver: " + Driver.getName()
+        String s = "id: " + ID + " Date: " + Date.toString() + " TruckNumber: " + Truck.getLicense_plate() + " Driver: " + driverName
                 +" Source: "+Source.toString() +"\n";
         if(DestFiles.size()>0)
         {
@@ -133,4 +146,6 @@ public class Transport {
         }
         return s;
     }
+
+    public boolean getShift(){return Shift;}
 }

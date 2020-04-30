@@ -10,7 +10,6 @@ public class TransportController {
 
     private static TransportController instance = null;
     private static SiteController siteController = SiteController.getInstance();
-    private static DriverController driverController = DriverController.getInstance();
     private static ProductsController productsController = ProductsController.getInstance();
     private static TruckController truckController = TruckController.getInstance();
 
@@ -66,28 +65,35 @@ public class TransportController {
     }
 
     //set a transport date - check if its valid and throw an exception according to the problem
-    public boolean setTransportDate(String date, int id) throws Exception {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-        Date transportDate;
-        try {
-            transportDate = formatter.parse(date);
-        } catch (Exception e) {
-            throw new Exception("Format is incorrect. Try again.");
-        }
-        Date today = new Date();
-        formatter.format(today);
-        if (today.after(transportDate))
-            throw new Exception("Date already passed. Try again.");
-        boolean trucksAvailable = truckController.checkIfTrucksAvailableByDate(transportDate);
-        boolean driversAvailable = driverController.checkIfDriversAvailableByDate(transportDate);
-        if (trucksAvailable && driversAvailable) {
-            transports.get(id).setDate(transportDate);
-            return true;
-        }
-        else
-            return false;
-    }
+    //TODO:: add time and check which shift morning/night - ave the details in truck,
+    // need to check that there are drivers available (maybe move to facade?
+//    public boolean setTransportDate(String date, int id) throws Exception {
+//        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+//        Date transportDate;
+//        try {
+//            transportDate = formatter.parse(date);
+//        } catch (Exception e) {
+//            throw new Exception("Format is incorrect. Try again.");
+//        }
+//        Date today = new Date();
+//        formatter.format(today);
+//        if (today.after(transportDate))
+//            throw new Exception("Date already passed. Try again.");
+//        boolean trucksAvailable = truckController.checkIfTrucksAvailableByDate(transportDate);
+//        boolean driversAvailable = driverController.checkIfDriversAvailableByDate(transportDate);
+//        if (trucksAvailable && driversAvailable) {
+//            transports.get(id).setDate(transportDate);
+//            return true;
+//        }
+//        else
+//            return false;
+//    }
 
+    //TODO::check if time is a Date type
+    public void setTransportDate(Date date,Date time,boolean shift, int id) throws Exception {
+        if(transports.containsKey(id))
+            transports.get(id).setDate(date,time,shift);
+    }
     //if a transport exist in the system return its date, else null
     public Date getTransportDate(int id) {
         if(transports.containsKey(id)) {
@@ -120,14 +126,10 @@ public class TransportController {
 
 
     //if a transport exist in the system sets its driver
-    public void setTransportDriver(int driver, int id) {
-        if(transports.containsKey(id))
+    public void setTransportDriver(String driverID, int TransportId, String driver_name) {
+        if(transports.containsKey(TransportId))
         {
-            Driver d =driverController.getById(driver);
-            if(d!=null)
-            {
-                transports.get(id).setDriver(d);
-            }
+            transports.get(TransportId).setDriver(driverID,driver_name);
         }
     }
 
@@ -198,23 +200,23 @@ public class TransportController {
 
 
     //add the date of the given transport to its truck and driver
-    public void addDatesToDriverAndTruck(int transportID) {
+    public void addDatesToTruck(int transportID) {
         if(transports.containsKey(transportID))
         {
             Date d =getTransportDate(transportID);
-            driverController.addDate(d, transports.get(transportID).getDriver().getId());
-            truckController.addDate(d, transports.get(transportID).getTruck().getId());
+            boolean shift=getTransportShift(transportID);
+            truckController.addDate(d,shift, transports.get(transportID).getTruck().getId());
         }
 
     }
 
     //remove the date of the given transport to its truck and driver
-    public void removeDatesToDriverAndTruck(int transportID) {
+    public void removeDatesFromTruck(int transportID) {
         if(transports.containsKey(transportID))
         {
             Date d =getTransportDate(transportID);
-            driverController.removeDate(d, transports.get(transportID).getDriver().getId());
-            truckController.removeDate(d, transports.get(transportID).getTruck().getId());
+            boolean shift=getTransportShift(transportID);
+            truckController.removeDate(d,shift, transports.get(transportID).getTruck().getId());
         }
     }
 
@@ -261,4 +263,41 @@ public class TransportController {
         return transports.get(transportID);
     }
 
+    public boolean getTransportShift(int transportID)
+    {
+        if(transports.containsKey(transportID))
+        {
+            return transports.get(transportID).getShift();
+        }
+        return false; //TODO::exception? false can be a night shift
+    }
+
+    public void changeDriverInTransport(String prevDriverId, String newDriverId, Date date, Boolean shift, String newDriverName)
+    {
+        for (Transport t:transports.values()) {
+            if(t.getDriverId()==prevDriverId&&t.getDate()==date&&t.getShift()==shift)
+            {
+                t.setDriver(newDriverId,newDriverName);
+                return;
+            }
+        }
+    }
+
+    public Boolean isTransportExist(Date d, Boolean shift)
+    {
+        for (Transport t:transports.values()) {
+            if(t.getDate()==d&&t.getShift()==shift)
+            {
+               return true;
+            }
+        }
+        return false;
+    }
+
+    public String getTransportDriverID(int TransportID)
+    {
+        if(transports.containsKey(TransportID))
+            return transports.get(TransportID).getDriverId();
+        return "";
+    }
 }
