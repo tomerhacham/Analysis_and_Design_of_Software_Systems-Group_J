@@ -4,6 +4,7 @@ import BusinessLayer.Workers.Driver;
 import BusinessLayer.Workers.DriverController;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.*;
 
 public class TransportController {
@@ -67,33 +68,32 @@ public class TransportController {
     //set a transport date - check if its valid and throw an exception according to the problem
     //TODO:: add time and check which shift morning/night - ave the details in truck,
     // need to check that there are drivers available (maybe move to facade?
-//    public boolean setTransportDate(String date, int id) throws Exception {
-//        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-//        Date transportDate;
-//        try {
-//            transportDate = formatter.parse(date);
-//        } catch (Exception e) {
-//            throw new Exception("Format is incorrect. Try again.");
-//        }
-//        Date today = new Date();
-//        formatter.format(today);
-//        if (today.after(transportDate))
-//            throw new Exception("Date already passed. Try again.");
-//        boolean trucksAvailable = truckController.checkIfTrucksAvailableByDate(transportDate);
-//        boolean driversAvailable = driverController.checkIfDriversAvailableByDate(transportDate);
-//        if (trucksAvailable && driversAvailable) {
-//            transports.get(id).setDate(transportDate);
-//            return true;
-//        }
-//        else
-//            return false;
-//    }
+    public boolean setTransportDateTime(String date, String time, int id) throws Exception {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        Date transportDate;
+        try {
+            transportDate = formatter.parse(date);
+        } catch (Exception e) {
+            throw new Exception("Format is incorrect. Try again.");
+        }
+        Date today = new Date();
+        formatter.format(today);
+        if (today.after(transportDate))
+            throw new Exception("Date already passed. Try again.");
 
-    //TODO::check if time is a Date type
-    public void setTransportDate(Date date,Date time,boolean shift, int id) throws Exception {
-        if(transports.containsKey(id))
-            transports.get(id).setDate(date,time,shift);
+        boolean shift = false;
+        LocalTime transportTime = LocalTime.parse(time);
+        LocalTime noonShift = LocalTime.of(14, 00);
+        if (transportTime.isBefore(noonShift)){
+            shift = true;
+        }
+        if(transports.containsKey(id)) {
+            transports.get(id).setDateTime(transportDate, transportTime, shift);
+            return true;
+        }
+        return false;
     }
+
     //if a transport exist in the system return its date, else null
     public Date getTransportDate(int id) {
         if(transports.containsKey(id)) {

@@ -1,9 +1,6 @@
 package InterfaceLayer.Transport;
 
 import BusinessLayer.Transport.*;
-import BusinessLayer.Workers.DriverController;
-
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -24,15 +21,20 @@ public class FacadeController {
         return instance;
     }
 
+
     //truck controller functions
     public String getAllTrucksDetails() {
         return truckController.getAllTrucksDetails();
     }
 
     public String getAvailableTrucks(int transportId, float totalWeight) {
-        Date d= transportController.getTransportDate(transportId);
+        Date d = transportController.getTransportDate(transportId);
         Boolean shift = transportController.getTransportShift(transportId);
         return truckController.getAvailableTrucks(d,shift, totalWeight);
+    }
+
+    public String getTruckDetails(int truckID) {
+        return truckController.getTruckDetails(truckID);
     }
 
     public boolean createTruck(String license_plate, String model, float netWeight, float maxWeight, String drivers_license) {
@@ -41,10 +43,6 @@ public class FacadeController {
 
     public boolean deleteTruck(int truckToDelete) {
         return truckController.DeleteTruck(truckToDelete);
-    }
-
-    public String getTruckDetails(int truckID) {
-        return truckController.getTruckDetails(truckID);
     }
 
     public boolean checkIfTruckExistAndValid(int truckID, int transportId) {
@@ -81,11 +79,31 @@ public class FacadeController {
         return siteController.checkIfSiteExist(siteID);
     }
 
-    public boolean checkIfSiteExistAndValid(int siteID, int sourceID, HashMap<Integer,Integer>destFile)
-    {
+    public boolean checkIfSiteExistAndValid(int siteID, int sourceID, HashMap<Integer,Integer>destFile){
         return siteController.checkIfAvailable(siteID, sourceID, destFile);
     }
 
+
+    //product controller functions
+    public int createProductsFile() {
+        return productsController.CreateFile();
+    }
+
+    public void createProduct(String productName, float productWeight, int fileID, int quantity) {
+        productsController.CreateProduct(productName, productWeight, fileID, quantity);
+    }
+
+    public boolean removeProducts(String[] productsToRemove, Integer fileToEdit) {
+        return productsController.removeProducts(productsToRemove, fileToEdit);
+    }
+
+    public String getProductsDetails(String[] productsToRemove) {
+        return productsController.getProductsDetails(productsToRemove);
+    }
+
+    public float getFileWeight(int fileID){
+        return productsController.getFileWeight(fileID);
+    }
 
 
     //transport controller functions
@@ -93,20 +111,12 @@ public class FacadeController {
         return transportController.getAllTransportsDetails();
     }
 
-    public boolean deleteTransport(int transportToDelete) {
-        return transportController.DeleteTransport(transportToDelete);
-    }
-
     public int createTransport() {
         return transportController.createTransport();
     }
 
-    public float getTotalWeight( int transport_ID) {
-        return transportController.getTotalWeight(transport_ID);
-    }
-
-    public String getProductsByDest(int transportID) {
-        return transportController.getProductByDest(transportID);
+    public boolean deleteTransport(int transportToDelete) {
+        return transportController.DeleteTransport(transportToDelete);
     }
 
     public void setTransportSource(int transportID, int sourceID) {
@@ -128,6 +138,14 @@ public class FacadeController {
     public void setTransportDriver(int transportID, String driverID) {
         String driverName = getDriverName(driverID); //TODO:: function from workers
         transportController.setTransportDriver(driverID, transportID, driverName);
+    }
+
+    public float getTotalWeight( int transport_ID) {
+        return transportController.getTotalWeight(transport_ID);
+    }
+
+    public String getProductsByDest(int transportID) {
+        return transportController.getProductByDest(transportID);
     }
 
     public Date getTransportDate(int transportID) {
@@ -175,28 +193,6 @@ public class FacadeController {
         return transportController.getTransportShift(transportID);
     }
 
-    //product controller functions
-    public int createProductsFile() {
-        return productsController.CreateFile();
-    }
-
-    public void createProduct(String productName, float productWeight, int fileID, int quantity) {
-        productsController.CreateProduct(productName, productWeight, fileID, quantity);
-    }
-
-    public boolean removeProducts(String[] productsToRemove, Integer fileToEdit) {
-        return productsController.removeProducts(productsToRemove, fileToEdit);
-    }
-
-    public String getProductsDetails(String[] productsToRemove) {
-        return productsController.getProductsDetails(productsToRemove);
-    }
-
-    public float getFileWeight(int fileID)
-    {
-        return productsController.getFileWeight(fileID);
-    }
-
 
     //added after mergings:
     //shift- true:morning, false:night
@@ -211,23 +207,8 @@ public class FacadeController {
         return transportController.isTransportExist(date, shift);
     }
 
-    //TODO::
-    public boolean setTransportDate(String date, int id) throws Exception {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-        Date transportDate;
-        try {
-            transportDate = formatter.parse(date);
-        } catch (Exception e) {
-            throw new Exception("Format is incorrect. Try again.");
-        }
-        Date today = new Date();
-        formatter.format(today);
-        if (today.after(transportDate))
-            throw new Exception("Date already passed. Try again.");
-
-        //TODO::Take time and then check if its morning to night and send to the setter below
-        transportController.setTransportDate(transportDate, transportTime, shift, id);
-        return true;
+    public boolean setTransportDateTime(int id, String date, String time) throws Exception {
+        return transportController.setTransportDateTime(date, time, id);
     }
 
     public boolean checkIfStorageManInShift(int TransportId)

@@ -86,7 +86,6 @@ public class IOTransport {
     }
 
     //this data is initialized in every new run of the system.
-    //TODO::tell shira i deleted all the drivers
     public void initializeData()
     {
         facadeController.createSite("Beer-Sheva","054-1234567", "Shira",1);
@@ -215,8 +214,7 @@ public class IOTransport {
 
         // selecting the date of transport
         int dateAndTime = chooseDateAndTime(transportID);
-        if(dateAndTime==-1)
-        {
+        if(dateAndTime == -1){
             facadeController.deleteTransport(transportID);
             return;
         }
@@ -258,12 +256,14 @@ public class IOTransport {
     {
         System.out.println("Please enter a date in the format dd-mm-yyyy");
         String date;
+        String time;
         while (true){
             try {
                 date = scanner.nextLine();
+                System.out.println("Please enter time in the format hh:mm");
+                time = scanner.nextLine();
                 // check availability of the date with trucks and drivers
-                //TODO:: ask for time
-                facadeController.setTransportDate(transportID, date);
+                facadeController.setTransportDateTime(transportID, date, time);
             } catch (Exception e) {
                 // wrong format or passed date
                 System.out.println(e.getMessage());
@@ -273,14 +273,14 @@ public class IOTransport {
         if(!storageMan)
         {
             System.out.println("There is no storage man in the specified shift.\n"
-                                +"choose 1 to select different date and time"
-                                +"choose 2 to abort transport");
+                                + "choose 1 to select different date and time"
+                                + "choose 2 to abort transport");
 
             int opt = integerParse(scanner.nextLine());
             if (opt == 2) { //abort transport
                 return -1;
             }
-            else if (opt == 1){ //change truck
+            else if (opt == 1){
                 return chooseDateAndTime(transportID);
             }
             else {
@@ -294,7 +294,6 @@ public class IOTransport {
             System.out.println("There are no available trucks or drivers in the specified date. Enter different date and time.\n");
             return chooseDateAndTime(transportID);
         }
-        return 0;
     }
 
     //choose the driver of a transport
@@ -555,8 +554,7 @@ public class IOTransport {
         }
     }
 
-    private String[] splitScan()
-    {
+    private String[] splitScan(){
         while (true) {
             try {
                 String[] in = (scanner.nextLine()).split(" ");

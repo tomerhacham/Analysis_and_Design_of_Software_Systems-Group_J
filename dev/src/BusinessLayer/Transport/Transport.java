@@ -1,7 +1,11 @@
 package BusinessLayer.Transport;
 
 import BusinessLayer.Workers.Driver;
+import org.junit.jupiter.api.Test;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,7 +15,7 @@ public class Transport {
     private int ID;
     private Date Date;
     //TODO: adding Time field, and adding it to setters&getters, and to the printings -Check if Its Date Format
-    private Date Time;
+    private LocalTime Time;
     private boolean Shift; //in which shift is the transport
     private Truck Truck;
     //private BusinessLayer.Workers.Driver Driver;
@@ -33,11 +37,14 @@ public class Transport {
 
     public Date getDate() { return Date;}
 
-    //TODO::check if Time is Date type
-    public void setDate(Date date,Date time ,boolean shift) {
+    public LocalTime getTime() {
+        return Time;
+    }
+
+    public void setDateTime(Date date,LocalTime time ,boolean shift) {
         Date = date;
-        Time=time;
-        Shift=shift;
+        Time = time;
+        Shift = shift;
     }
 
     public Truck getTruck() {return Truck; }
@@ -69,8 +76,7 @@ public class Transport {
     }
 
     //if a Site exist in the system remove it from the destFile and calculate the total weight
-    public boolean removeFromDestFiles(Site site)
-    {
+    public boolean removeFromDestFiles(Site site){
         if(DestFiles.containsKey(site))
         {
             DestFiles.remove(site);
@@ -85,8 +91,7 @@ public class Transport {
     }
 
     //return a specific file according to its destination
-    public ProductFile getFileByDest(Site dest)
-    {
+    public ProductFile getFileByDest(Site dest){
         if(DestFiles.containsKey(dest))
         {
             return DestFiles.get(dest);
@@ -99,8 +104,7 @@ public class Transport {
         log.add(s);
     }
 
-    public String getLogMessages()
-    {
+    public String getLogMessages(){
         String s = "";
         for (int i=0; i<log.size();i++)
         {
@@ -122,12 +126,15 @@ public class Transport {
 
     @Override
     public String toString() {
-        String s = "id: " + ID + " Date: " + Date.toString() + " TruckNumber: " + Truck.getLicense_plate() + " Driver: " + driverName
-                +" Source: "+Source.toString() +"\n";
-        if(DestFiles.size()>0)
-        {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+        String s = "Transport Details:\n" + "\tid: " + ID + "\tDate: " + formatter.format(Date) +
+                " \tTruckNumber: " + Truck.getLicense_plate() +"\n\t\tLeaving time: " + Time.format(dtf) +
+                " \tDriver: " + driverName + "\n"
+                +"\tSource details:\n" + Source.toString() + "\n";
+        if(DestFiles.size()>0) {
             int count = 1;
-            s = s + "\tdestinations and products: \n";
+            s = s + "\tDestinations and products details: \n";
             for (Site site:DestFiles.keySet()) {
                 s=s+"\t\t"+count+". site: "+site.toString()+"\n";
                 s=s+"\tproducts File: "+DestFiles.get(site).toString();
@@ -135,14 +142,14 @@ public class Transport {
             }
         }
         else {
-            s = s + "\tdestinations and products: none\n";
+            s = s + "\tDestinations and products: none\n";
         }
         s = s + "\tTotalWeight: " + TotalWeight +"\n";
         if(log.size()>0) {
-            s = s + "\tlog messages:\n" + getLogMessages();
+            s = s + "\tLog messages:\n" + getLogMessages();
         }
         else {
-            s = s + "\tlog messages: none";
+            s = s + "\tLog messages: none";
         }
         return s;
     }
