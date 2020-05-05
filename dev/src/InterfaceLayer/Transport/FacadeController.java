@@ -1,6 +1,8 @@
 package InterfaceLayer.Transport;
 
 import BusinessLayer.Transport.*;
+import InterfaceLayer.Workers.ScheduleController;
+
 import java.util.Date;
 import java.util.HashMap;
 
@@ -12,6 +14,7 @@ public class FacadeController {
     private static TransportController transportController = TransportController.getInstance();
     private static TruckController truckController = TruckController.getInstance();
     private static ProductsController productsController = ProductsController.getInstance();
+    private static ScheduleController scheduleController = ScheduleController.getInstance();
 
     private FacadeController(){}
 
@@ -136,7 +139,7 @@ public class FacadeController {
     }
 
     public void setTransportDriver(int transportID, String driverID) {
-        String driverName = getDriverName(driverID); //TODO:: function from workers
+        String driverName = scheduleController.getDriverName(driverID);
         transportController.setTransportDriver(driverID, transportID, driverName);
     }
 
@@ -176,7 +179,7 @@ public class FacadeController {
         String DriverId = transportController.getTransportDriverID(transportID);
         Date d =transportController.getTransportDate(transportID);
         boolean shift = transportController.getTransportShift(transportID);
-        removeDriverFromTransport(d, shift, DriverId); //TODO:: function from workers
+        scheduleController.removeDriverFromTransport(d, shift, DriverId);
         transportController.removeDatesFromTruck(transportID);
     }
 
@@ -198,7 +201,7 @@ public class FacadeController {
     //shift- true:morning, false:night
     public void changeDriverInTransport(String prevDriverId, String newDriverId, Date date, Boolean shift)
     {
-        String newDriverName = getDriverName(newDriverId); //TODO:: function from workers
+        String newDriverName = scheduleController.getDriverName(newDriverId);
         transportController.changeDriverInTransport(prevDriverId, newDriverId, date, shift, newDriverName);
     }
 
@@ -215,7 +218,7 @@ public class FacadeController {
     {
         Date d = transportController.getTransportDate(TransportId);
         boolean shift = transportController.getTransportShift(TransportId);
-        return StorageManInShift(d, shift); //TODO:: function from workers
+        return scheduleController.StorageManInShift(d, shift);
     }
 
     public boolean checkIfDriversAndTrucksAvailable(int TransportId)
@@ -223,7 +226,7 @@ public class FacadeController {
         Date date = transportController.getTransportDate(TransportId);
         boolean shift = transportController.getTransportShift(TransportId);
         boolean trucksAvailable = truckController.checkIfTrucksAvailableByDate(date , shift);
-        boolean driversAvailable = DriversAvailability(date , shift);//TODO: function from workers
+        boolean driversAvailable = scheduleController.DriversAvailability(date , shift);
         return driversAvailable&&trucksAvailable;
     }
 
@@ -233,13 +236,13 @@ public class FacadeController {
         boolean Shift = transportController.getTransportShift(transportId);
         int TruckID = transportController.getTransportTruck(transportId);
         String licence = truckController.getDriversLicense(TruckID);
-        String DriverId = chooseDriverForTransport(date, Shift, licence);//TODO: function from workers
-        if(DriverId.equals(""))
+        String DriverId = scheduleController.chooseDriverForTransport(date, Shift, licence);
+        if(DriverId == null)
         {
             return "";
         }
         else {
-            String DriverName = getDriverName(DriverId); //TODO:: function from workers
+            String DriverName = scheduleController.getDriverName(DriverId);
             transportController.setTransportDriver(DriverId,transportId,DriverName);
             return DriverName;
         }

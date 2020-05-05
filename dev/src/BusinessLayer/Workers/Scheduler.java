@@ -1,5 +1,6 @@
 package BusinessLayer.Workers;
 
+import BusinessLayer.Transport.TransportController;
 import javafx.util.Pair;
 
 import java.text.SimpleDateFormat;
@@ -7,10 +8,11 @@ import java.util.*;
 
 public class Scheduler {
     TreeSet<WeeklySchedule> schedule;
-
+//TODO:to-lower all the inserted positions(in roster too)
     private static final boolean morning=true;
     private static final boolean night=false;
     private HashMap<Date, Pair<List<Worker>,List<Worker>>> availableWorkers;
+    private TransportController transportController;
 
     private Shift currentEditedShift;
 
@@ -24,6 +26,7 @@ public class Scheduler {
     }
     public void setAvailableWorkers(HashMap<Date, Pair<List<Worker>, List<Worker>>> availableWorkers) {
         this.availableWorkers = availableWorkers;
+        transportController=TransportController.getInstance();
     }
 
 
@@ -36,6 +39,8 @@ public class Scheduler {
         DailySchedule day=findDay(date);
         if(day==null)
             return "Invalid date";
+        if(transportController.isTransportExist(currentEditedShiftDate,currentEditedShiftTOD))
+           return "Can not remove shift schedueled for transportaion";
         if(timeOfDay==morning)
             day.setMorningShift(null);
         else
@@ -54,7 +59,10 @@ public class Scheduler {
     }
     public String removeWorkerToPositionInShift(String pos,String id)
     {
-        return currentEditedShift.removeWorkerFromPosition(pos,id);
+        if(pos.equals("storage man")&&transportController.isTransportExist(currentEditedShiftDate,currentEditedShiftTOD))
+            return "Can not remove storage man from shift with transportation";
+        else
+            return currentEditedShift.removeWorkerFromPosition(pos,id);
     }
     public HashMap<Date, Pair<List<Worker>, List<Worker>>> getAvailableWorkers() {
         return availableWorkers;
@@ -72,6 +80,10 @@ public class Scheduler {
     }
     public String removePositionToShift(String pos)
     {
+        if(pos!=null)
+            return "Invalid positions";
+        if(pos.equals("storage man")&transportController.isTransportExist(currentEditedShiftDate,currentEditedShiftTOD))
+            return "Can not remove storage man because there is transportation scheduled for this shift";
         return currentEditedShift.removePosition(pos);
     }
     public void cancelShift()
@@ -275,6 +287,8 @@ public class Scheduler {
         Shift shift=findShift(date,partOfDay);
         if(shift==null)
             return false;
+        if(worker instanceof Driver&&shift.getScheduledDrivers().contains((Driver)worker))
+            return true;
         Map<String,FixedSizeList<Worker>> occupation=shift.getOccupation();
         for(String pos:worker.getPositions())
         {
@@ -289,4 +303,72 @@ public class Scheduler {
         Roster roster=Roster.getInstance();
         return roster.findWorker(id);
     }
+    //Integration functions
+    public boolean StorageManInShift(Date date, boolean timeOfDay)
+    {
+        Shift shift=findShift(date,timeOfDay);
+        if(shift==null)
+            return false;
+        return shift.getOccupation().containsKey("storage man");
+    }
+    public boolean DriversAvailability(Date date, boolean timeOfDay)//TODO:the next function covers this one
+    {
+        if(!availableWorkers.containsKey(date))
+            return false;
+        List<Worker> availables=availableWorkers.get(date).getValue();
+        if(timeOfDay=morning)
+            availables=availableWorkers.get(date).getKey();
+        for(Worker w: availables)
+        {
+            if(w.positions.contains("driver"))
+                return true;
+        }
+        return false;
+    }
+    public String chooseDriverForTransport(Date date, boolean timeOfDay, String license)
+    {
+        if(date==null||license==null)
+            return null;
+        Shift shift=findShift(date,timeOfDay);
+        if(shift==null)
+            return null;
+        List<Worker> availables=availableWorkers.get(date).getValue();
+        if(timeOfDay==morning)
+            availables=availableWorkers.get(date).getKey();
+        Worker temp=null;
+        for(Worker w: availables)
+        {
+            if(w.positions.contains("driver")&&w.getLicense().equals(license)) {
+                shift.addDriverToShift((Driver)w);
+                temp=w;
+                break;
+            }
+        }
+        if(temp!=null) {
+            availables.remove(temp);
+            return temp.getId();
+        }
+        return null;
+    }
+    public void removeDriverFromTransport(Date date, boolean timeOfDay, String id)
+    {
+        Shift shift=findShift(date,timeOfDay);
+        Driver d=null;
+        if(shift!=null)
+            d=shift.removeDriver(id);
+        if(d!=null) {
+            List<Worker> availables = availableWorkers.get(date).getValue();
+            if(timeOfDay==morning)
+                availables = availableWorkers.get(date).getKey();
+            availables.add(d);
+        }
+    }
+    public String getDriverName(String id)
+    {
+         Worker w=getWorkerById(id);
+         if(w!=null)
+             return w.getName();
+         return null;
+    }
+
 }

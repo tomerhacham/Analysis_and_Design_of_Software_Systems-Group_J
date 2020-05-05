@@ -1,34 +1,48 @@
 package BusinessLayer.Workers;
 
-import java.util.ArrayList;
+import InterfaceLayer.Workers.ModelDriver;
+import InterfaceLayer.Workers.ModelWorker;
+
 import java.util.Date;
 
 
-// TODO:: inheritance
-// TODO:: check if there is drivers available in specific date
-// TODO:: check if there is drivers available in specific date
 
-public class Driver {
-    private String name;
+
+public class Driver extends Worker {
     private String license;
-    private ArrayList<Date> Dates;
-    private int id;
 
-    public Driver(int id, String license, String name)
+
+    public Driver(String id,String license, String name,Date startDate,double salary)
     {
+        super(name,id,startDate,salary);
         this.license = license;
-        Dates= new ArrayList<>();
-        this.id=id;
-        this.name=name;
+        this.positions.add("driver");
+    }
+    @Override
+    public ModelWorker getModel(){return new ModelDriver(this);}
+
+    @Override
+    public String addPosition(String pos)
+    {
+        return "Can not add another position to driver";
+    }
+    @Override
+    public String removePosition(String pos)
+    {
+        return "cannot remove positions from driver";
     }
 
-    public int getId() {
-        return id;
+    public String setLicense(String license) {
+        this.license = license;
+        return null;
     }
 
-    public String getName() {
-        return name;
+    public String getLicense() {
+        return license;
     }
+
+
+ /*
 
     //check if the driver available in a specific date
     public Boolean checkIfAvailableByDate(Date d)
@@ -43,12 +57,6 @@ public class Driver {
         return true;
     }
 
-    //check if the driver has a specific licence
-    public Boolean checkIfAvailableByLicence(String needed_licence)
-    {
-        return license.equals(needed_licence);
-    }
-
     public void addDate(Date d){Dates.add(d);}
 
     public void removeDate(Date d){
@@ -58,8 +66,7 @@ public class Driver {
                 Dates.remove(i);
         }
     }
-
-    public String toString()
+        public String toString()
     {
         String s = "id: "+id+" name: "+name+" license: "+license+"\n";
         if(Dates.size()>0) {
@@ -73,4 +80,11 @@ public class Driver {
         }
         return s;
     }
+
+  */
+public Boolean checkIfAvailableByLicence(String needed_licence)
+{
+    return license.equals(needed_licence);
+}
+
 }

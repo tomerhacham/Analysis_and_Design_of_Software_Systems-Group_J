@@ -5,7 +5,7 @@ import java.util.*;
 //Singleton
 public class DriverController {
     private static  DriverController instance = null;
-
+/*
     private Hashtable<Integer, Driver> drivers;
     private Integer Id_Counter;
 
@@ -144,4 +144,6 @@ public class DriverController {
         drivers.clear();
         Id_Counter=0;
     }
+
+ */
 }

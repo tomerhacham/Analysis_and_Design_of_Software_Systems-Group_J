@@ -1,9 +1,6 @@
 package InterfaceLayer.Workers;
 
-import BusinessLayer.Workers.EmptyShift;
-import BusinessLayer.Workers.FixedSizeList;
-import BusinessLayer.Workers.Shift;
-import BusinessLayer.Workers.Worker;
+import BusinessLayer.Workers.*;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,10 +13,11 @@ public class ModelShift {
     public List<ModelWorker> availableWorkers;
     public Date date;
     public String partOfday;
-
+    public List<ModelDriver> drivers;
     public ModelShift(EmptyShift es) {
         occupation = new HashMap<>();
         availableWorkers = new ArrayList<>();
+        drivers=new ArrayList<>();
         date=es.getDate();
         if(es.getTimeOfDay()==true)
             partOfday="Empty morning shift";
@@ -30,6 +28,8 @@ public class ModelShift {
     public ModelShift(Shift shift)
     {
         if(shift!=null) {
+            drivers=new ArrayList<>();
+            shift.getScheduledDrivers().forEach(d->drivers.add(new ModelDriver(d)));
             occupation = new HashMap<>();
             HashMap<String, FixedSizeList<Worker>> businessOccupation = shift.getOccupation();
             for (String pos : businessOccupation.keySet()) {

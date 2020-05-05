@@ -24,6 +24,7 @@ public class IOTransport {
 
     //the main menu of the system - activates when the system starts and running in loops until it closed.
     public void SystemActivation(){
+        terminated = false;
         System.out.println("Transports system\n");
         while (!terminated) {
             System.out.println( "Please choose an operation:\n" +
@@ -264,6 +265,7 @@ public class IOTransport {
                 time = scanner.nextLine();
                 // check availability of the date with trucks and drivers
                 facadeController.setTransportDateTime(transportID, date, time);
+                break;
             } catch (Exception e) {
                 // wrong format or passed date
                 System.out.println(e.getMessage());
@@ -294,6 +296,7 @@ public class IOTransport {
             System.out.println("There are no available trucks or drivers in the specified date. Enter different date and time.\n");
             return chooseDateAndTime(transportID);
         }
+        return 1;
     }
 
     //choose the driver of a transport
@@ -320,9 +323,11 @@ public class IOTransport {
                 }
             }
             else { //there are drivers
-                System.out.println("The Driver: "+driver+" Chosen for Transport");
+                System.out.println("The Driver: "+driver+" chosen for Transport");
+                break;
             }
         }
+        return 1;
     }
 
     //choose the truck of a transport

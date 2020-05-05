@@ -19,13 +19,13 @@ public class RosterController {
         List<ModelWorker> output=new ArrayList<>();
         for(Worker w:workers)
         {
-            output.add(new ModelWorker(w));
+            output.add(w.getModel());
         }
         return output;
     }
     public ModelWorker displaySingleWorker(String id)
     {
-        return new ModelWorker(roster.findWorker(id));
+        return (roster.findWorker(id).getModel());
     }
     public String editName(String newName,String id)
     {
@@ -47,8 +47,16 @@ public class RosterController {
     {
         return roster.addWorker(name,salary,startDate,positions);
     }
+    public String addDriver(String name, double salary, Date startDate,String license)
+    {
+        return roster.addDriver(name,salary,startDate,license);
+    }
     public String removeWorker(String id)
     {
         return roster.removeWorker(id);
+    }
+
+    public String changeLicencse(String license,String id) {
+        return roster.changeLicencse(license,id);
     }
 }

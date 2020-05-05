@@ -1,5 +1,7 @@
 package BusinessLayer.Workers;
 
+import InterfaceLayer.Workers.ModelWorker;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,11 +21,16 @@ public class Worker {
         this.salary = salary;
         positions=new ArrayList<>();
     }
-
+    public String getLicense(){
+        return null;
+    }
+    public String setLicense(String license){
+        return "The worker is not a driver";
+    }
     public String getName() {
         return name;
     }
-
+    public ModelWorker getModel(){return new ModelWorker(this);}
     public Date getStart_Date() {
         return start_Date;
     }
@@ -43,10 +50,11 @@ public class Worker {
     public void setSalary(double salary) {
         this.salary = salary;
     }
-    public void addPosition(String pos)
+    public String addPosition(String pos)
     {
         if(!positions.contains(pos))
             positions.add(pos);
+        return null;
     }
     public String removePosition(String pos)
     {

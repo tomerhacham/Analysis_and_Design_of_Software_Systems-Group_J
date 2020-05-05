@@ -1,8 +1,5 @@
 package BusinessLayer.Transport;
 
-import BusinessLayer.Workers.Driver;
-import org.junit.jupiter.api.Test;
-
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -14,7 +11,6 @@ public class Transport {
 
     private int ID;
     private Date Date;
-    //TODO: adding Time field, and adding it to setters&getters, and to the printings -Check if Its Date Format
     private LocalTime Time;
     private boolean Shift; //in which shift is the transport
     private Truck Truck;
@@ -128,7 +124,7 @@ public class Transport {
     public String toString() {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
-        String s = "Transport Details:\n" + "\tid: " + ID + "\tDate: " + formatter.format(Date) +
+        String s = "Transport Details:\n" + "id: " + ID + "\tDate: " + formatter.format(Date) +
                 " \tTruckNumber: " + Truck.getLicense_plate() +"\n\t\tLeaving time: " + Time.format(dtf) +
                 " \tDriver: " + driverName + "\n"
                 +"\tSource details:\n" + Source.toString() + "\n";

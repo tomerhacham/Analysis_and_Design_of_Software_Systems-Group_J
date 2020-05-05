@@ -16,26 +16,41 @@ public class Roster {
     private Roster() {
         workers=new ArrayList<>();
     }
+    public String addDriver(String name, double salary, Date startDate,String license)
+    {
+        UUID uuid = UUID.randomUUID();
+        String output = checkNewWorkerInputValdity(name, salary, startDate);
+        if (output != null) return output;
+        workers.add(new Driver(uuid.toString(),license,name,startDate,salary));
+        return null;
+    }
 
     public String addWorker(String name, double salary, Date startDate, List<String> positions)
     {
         UUID uuid = UUID.randomUUID();
+        String output = checkNewWorkerInputValdity(name, salary, startDate);
+        if (output != null) return output;
+        Worker w=new Worker(name,uuid.toString(),startDate,salary);
+        workers.add(w);
+        if(positions!=null) {
+            for (String pos : positions) {
+                if(!pos.equals("driver"))
+                    w.addPosition(pos);
+            }
+        }
+        return null;
+    }
+
+    private String checkNewWorkerInputValdity(String name, double salary, Date startDate) {
         if(name==null||name.length()==0)
             return "Illegal name";
         if(salary<0)
             return "Illegal salary";
         if(startDate==null)
             return "Invalid date";
-        Worker w=new Worker(name,uuid.toString(),startDate,salary);
-        workers.add(w);
-        if(positions!=null) {
-            for (String pos : positions) {
-                w.addPosition(pos);
-            }
-        }
         return null;
     }
-     
+
     public String removeWorker(String id)
     {
         if(id==null)
@@ -117,4 +132,12 @@ public class Roster {
     }
 
 
+    public String changeLicencse(String license,String id) {
+        Worker w=findWorker(id);
+        if(license==null||license.length()==0)
+            return "Not a valid license";
+        if(w==null)
+            return "The worker does not exist";
+        return w.setLicense(license);
+    }
 }

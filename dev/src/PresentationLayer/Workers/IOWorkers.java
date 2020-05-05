@@ -15,7 +15,7 @@ public class IOWorkers {
 
     private static IOWorkers instance = null;
     private static RosterController rc=new RosterController();
-    private static ScheduleController sc=new ScheduleController();
+    private static ScheduleController sc= ScheduleController.getInstance();
     private static MyScanner scanner=new MyScanner(System.in);
     private static final boolean morning=true;
     private static final boolean night=false;
@@ -35,6 +35,7 @@ public class IOWorkers {
 
     public static void mainLoop() {
         boolean terminate=false;
+        init();
         while(!terminate)
         {
             System.out.println("Choose an option:");
@@ -337,9 +338,10 @@ public class IOWorkers {
             System.out.println("Choose an option:");
             System.out.println("1.Display workers");
             System.out.println("2.Add worker");
-            System.out.println("3.Remove worker");
-            System.out.println("4.Edit worker");
-            System.out.println("5.Return to the previous menu");
+            System.out.println("3.Add driver");
+            System.out.println("4.Remove worker");
+            System.out.println("5.Edit worker");
+            System.out.println("6.Return to the previous menu");
             int opt=scanner.nextInt();
             switch(opt) {
                 case(1):
@@ -348,20 +350,35 @@ public class IOWorkers {
                 case (2):
                     addWorker();
                     break;
-                case(3):
+                case (3):
+                    addDriver();
+                    break;
+                case(4):
                     removeWorker();
                     break;
-
-                case(4):
+                case(5):
                     editWorker();
                     break;
-                case(5):
+                case(6):
                     goBack=true;
                     break;
 
             }
         }
 
+    }
+
+    private static void addDriver() {
+        System.out.println("Please enter name:");
+        String name=scanner.nextLine();
+        System.out.println("Please enter salary:");
+        double salary=scanner.nextDouble();
+        System.out.println("Please enter a license:");
+        String lic=scanner.nextLine();
+        Date date = getDateFromUser();
+        String output=rc.addDriver(name,salary,date,lic);
+        if(output!=null)
+            System.out.println(output);
     }
 
     private static void editWorker() {
@@ -377,7 +394,8 @@ public class IOWorkers {
                 System.out.println("2.Add position to worker");
                 System.out.println("3.Remove position from worker");
                 System.out.println("4.Change worker's salary");
-                System.out.println("5.Finish editing");
+                System.out.println("5.Change license for driver");
+                System.out.println("6.Finish editing");
                 int opt=scanner.nextInt();
                 switch(opt){
                     case(1):
@@ -393,12 +411,22 @@ public class IOWorkers {
                         changeWorkerSalary(id);
                         break;
                     case(5):
+                        changeLicencse(id);
+                    case(6):
                         goBack=true;
                         break;
                 }
 
             }
         }
+    }
+
+    private static void changeLicencse(String id) {
+        System.out.println("Enter new license:");
+        String license=scanner.nextLine();
+        String output=rc.changeLicencse(license,id);
+        if(output!=null)
+            System.out.println(output);
     }
 
     private static void changeWorkerSalary(String id) {
@@ -503,56 +531,6 @@ public class IOWorkers {
     }
     private static void init()
     {
-        List<String>positions1=new ArrayList<>();
-        positions1.add("manager");
-        positions1.add("cashier");
-        List<String>positions2=new ArrayList<>();
-        positions2.add("cleaner");
-        Date startDate1=parseDate("11/04/2020");
-        Date startDate2=parseDate("12/04/2020");
-        rc.addWorker("Gil",16,startDate1,positions1);
-        rc.addWorker("Sharon",15.9,startDate2,positions1);
-        rc.addWorker("Moshe",10,startDate1,positions2);
-        rc.addWorker("Dani",100,startDate2,positions2);
-        positions2.add("security guard");
-        rc.addWorker("Avi",100,startDate1,positions2);
-        List<ModelWorker> workers=rc.displayWorkers();
-        Date shiftDate1=parseDate("20/04/2020");
-        Date shiftDate2=parseDate("21/04/2020");
-        sc.addAvailableWorker(shiftDate1,morning,workers.get(0).id);
-        sc.addAvailableWorker(shiftDate1,night,workers.get(1).id);
-        sc.addAvailableWorker(shiftDate1,morning,workers.get(2).id);
-        sc.addAvailableWorker(shiftDate2,morning,workers.get(0).id);
-        sc.addAvailableWorker(shiftDate2,morning,workers.get(1).id);
-        sc.addAvailableWorker(shiftDate2,morning,workers.get(2).id);
-        sc.addAvailableWorker(shiftDate2,morning,workers.get(3).id);
-        sc.addAvailableWorker(shiftDate2,morning,workers.get(4).id);
-        sc.createShift(shiftDate2,morning);
-        sc.addPositionToShift("cashier",1);
-        sc.addPositionToShift("cleaner",2);
-        sc.addPositionToShift("security guard",1);
-        sc.addWorkerToPositionInShift("manager",workers.get(0).id);
-        sc.addWorkerToPositionInShift("cashier",workers.get(1).id);
-        sc.addWorkerToPositionInShift("cleaner",workers.get(2).id);
-        sc.addWorkerToPositionInShift("cleaner",workers.get(3).id);
-        sc.addWorkerToPositionInShift("security guard",workers.get(4).id);
-        sc.submitShift();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        sc.test(rc);
     }
 }
