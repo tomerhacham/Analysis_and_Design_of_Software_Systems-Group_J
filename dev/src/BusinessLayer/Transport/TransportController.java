@@ -66,8 +66,6 @@ public class TransportController {
     }
 
     //set a transport date - check if its valid and throw an exception according to the problem
-    //TODO:: add time and check which shift morning/night - ave the details in truck,
-    // need to check that there are drivers available (maybe move to facade?
     public boolean setTransportDateTime(String date, String time, int id) throws Exception {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         Date transportDate;

@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 public class RosterController {
-    Roster roster;
+    private Roster roster;
 
     public RosterController() {
         roster=Roster.getInstance();
