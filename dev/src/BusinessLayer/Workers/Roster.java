@@ -8,14 +8,17 @@ import java.util.UUID;
 public class Roster {
     private List<Worker>workers;
     private static Roster roster;
+
+    private Roster() {
+        workers=new ArrayList<>();
+    }
+
     public static Roster getInstance(){
       if(roster==null)
           roster=new Roster();
       return roster;
     }
-    private Roster() {
-        workers=new ArrayList<>();
-    }
+
     public String addDriver(String name, double salary, Date startDate,String license)
     {
         UUID uuid = UUID.randomUUID();
@@ -66,7 +69,6 @@ public class Roster {
         return workers;
     }
 
-     
     public String editName(String newName, String id)
     {
         if(id==null)
@@ -130,7 +132,6 @@ public class Roster {
         }
         return searched;
     }
-
 
     public String changeLicencse(String license,String id) {
         Worker w=findWorker(id);

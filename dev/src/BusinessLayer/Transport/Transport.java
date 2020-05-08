@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class Transport {
-
     private int ID;
     private Date Date;
     private LocalTime Time;
@@ -27,7 +26,6 @@ public class Transport {
         DestFiles = new HashMap<>();
         log =new ArrayList<>();
     }
-
 
     public int getID() { return ID;}
 

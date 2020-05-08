@@ -9,6 +9,7 @@ public class WeeklySchedule {
     private static final boolean night=false;
     private DailySchedule[] shifts;
     Date dayStart;
+
     public WeeklySchedule(Date dayStart,boolean empty)
     {
         this.dayStart=dayStart;
@@ -38,6 +39,7 @@ public class WeeklySchedule {
         }
         return output;
     }
+
     public Shift getShift(Date date,boolean timeOfDay)
     {
         DailySchedule day=getDay(date);
@@ -48,6 +50,7 @@ public class WeeklySchedule {
         else
             return day.getNightShift();
     }
+
     public DailySchedule getDay(Date date)
     {
         if(date.before(shifts[0].getDate())||

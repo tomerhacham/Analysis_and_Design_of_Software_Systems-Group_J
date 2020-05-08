@@ -7,7 +7,6 @@ import java.util.Hashtable;
 //singleton
 public class ProductsController {
     private static  ProductsController instance = null;
-
     private int productID_Counter;
     private int fileID_Counter;
     private Hashtable<Integer, ProductFile> files;

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ProductFile {
-
     private int fileID;
     private float totalWeight;
     private HashMap<Product, Integer> products;

@@ -1,10 +1,8 @@
 package BusinessLayer.Workers;
-
 import java.util.Calendar;
 import java.util.Date;
 
 public class DateManipulator {
-
     // Add days to a date in Java
     public static Date addDays(Date date, int days) {
         Calendar cal = Calendar.getInstance();

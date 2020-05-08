@@ -1,19 +1,15 @@
 package BusinessLayer.Transport;
 
-import BusinessLayer.Workers.Driver;
-import BusinessLayer.Workers.DriverController;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.*;
 
 public class TransportController {
-
     private static TransportController instance = null;
     private static SiteController siteController = SiteController.getInstance();
     private static ProductsController productsController = ProductsController.getInstance();
     private static TruckController truckController = TruckController.getInstance();
-
     private Hashtable<Integer, Transport> transports;
     private int Id_Counter;
 
@@ -147,6 +143,7 @@ public class TransportController {
             transports.get(id).setWeight();
         }
     }
+
     //if a transport exist in the system sets its destination file
     public void setTransportDestFiles(HashMap<Integer, Integer> destFiles, int id) {
         if(transports.containsKey(id)) {

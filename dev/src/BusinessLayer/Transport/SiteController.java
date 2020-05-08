@@ -5,9 +5,7 @@ import java.util.Hashtable;
 
 //singleton
 public class SiteController {
-
     private static  SiteController instance = null;
-
     private Hashtable<Integer , Site> sites;
     private int Id_Counter;
 

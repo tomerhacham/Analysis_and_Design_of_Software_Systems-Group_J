@@ -1,5 +1,4 @@
 package BusinessLayer.Workers;
-
 import java.util.Date;
 
 public class DailySchedule {
@@ -7,12 +6,12 @@ public class DailySchedule {
     private Shift nightShift;
     private Date date;
 
-    public Date getDate() {
-        return date;
-    }
-
     public DailySchedule(Date time) {
         this.date = time;
+    }
+
+    public Date getDate() {
+        return date;
     }
 
     public Shift getMorningShift() {

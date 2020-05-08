@@ -1,5 +1,4 @@
 package BusinessLayer.Workers;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,10 +10,6 @@ public class Shift {
     private boolean timeOfDay;
     private List<Worker> availableWorkers;
     private List<Driver> scheduledDrivers;
-    public List<Worker> getAvailableWorkers() {
-        return availableWorkers;
-    }
-
 
     public Shift(List<Worker>availableWorkers,  Date date, boolean timeOfday)
     {
@@ -25,6 +20,7 @@ public class Shift {
         this.availableWorkers=availableWorkers;
         occupation.put("manager",new FixedSizeList<>(1));
     }
+
     public Shift(Shift other)
     {
         this.timeOfDay=other.timeOfDay;
@@ -41,6 +37,11 @@ public class Shift {
             this.occupation.put(pos,temp);
         }
     }
+
+    public List<Worker> getAvailableWorkers() {
+        return availableWorkers;
+    }
+
     /*
         public String addAvailableWorker(Worker worker)
         {
@@ -67,6 +68,7 @@ public class Shift {
     public boolean getTimeOfDay() {
         return timeOfDay;
     }
+
     public String addPosition(String pos,int quantity)
     {
         if(pos==null||pos.length()==0||pos.equals("driver"))
@@ -78,6 +80,7 @@ public class Shift {
         occupation.put(pos,new FixedSizeList<>(quantity));
         return null;
     }
+
     public void setAvailableWorkers(List<Worker> availableWorkers) {
         this.availableWorkers = availableWorkers;
     }
@@ -94,6 +97,7 @@ public class Shift {
         occupation.remove(pos);
         return null;
     }
+
     public String removeWorkerFromPosition(String position,String id) {
         if(position.equals("driver"))
             return replaceDriver(id);
@@ -140,7 +144,6 @@ public class Shift {
         return "The worker is not scheduled for this shift";
     }
 
-
     public String addWorkerToPosition(String position,String id)
     {
         Worker w=null;
@@ -160,11 +163,13 @@ public class Shift {
         }
             return null;
     }
+
     public void addDriverToShift(Driver driver)
     {
         scheduledDrivers.add(driver);
         availableWorkers.remove(driver);
     }
+
     public Driver removeDriver(String id)
     {
         for(Driver d:scheduledDrivers)
@@ -178,6 +183,7 @@ public class Shift {
     public HashMap<String, FixedSizeList<Worker>> getOccupation() {
         return occupation;
     }
+
     public boolean isValid()
     {
         if(!occupation.containsKey("manager"))
@@ -189,8 +195,6 @@ public class Shift {
         }
         return true;
     }
-
-
 
     private Worker findIfAvailable(String id) {
         Worker avail=null;

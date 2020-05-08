@@ -11,6 +11,7 @@ public class FixedSizeList<T> extends ArrayList<T> {
         super(capacity);
         this.capacity=capacity;
             }
+
     public T findAndRemove(Predicate<T> p)
     {
         T searched=null;
@@ -40,7 +41,6 @@ public class FixedSizeList<T> extends ArrayList<T> {
         if (!isFull())
             super.add(index, element);
     }
-
 
     public boolean isFull()
     {

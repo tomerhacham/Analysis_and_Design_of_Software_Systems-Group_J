@@ -7,28 +7,27 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Scheduler {
-    TreeSet<WeeklySchedule> schedule;
+    private TreeSet<WeeklySchedule> schedule;
 //TODO:to-lower all the inserted positions(in roster too)
     private static final boolean morning=true;
     private static final boolean night=false;
     private HashMap<Date, Pair<List<Worker>,List<Worker>>> availableWorkers;
     private TransportController transportController;
-
     private Shift currentEditedShift;
-
     private Date currentEditedShiftDate;
     private boolean  currentEditedShiftTOD;
+
     public Scheduler() {
         schedule=new TreeSet<>((a,b)-> {
             return a.dayStart.compareTo(b.dayStart);
         } );
         availableWorkers=new HashMap<>();
     }
+
     public void setAvailableWorkers(HashMap<Date, Pair<List<Worker>, List<Worker>>> availableWorkers) {
         this.availableWorkers = availableWorkers;
         transportController=TransportController.getInstance();
     }
-
 
     public Shift getCurrentEditedShift() {
         return currentEditedShift;
@@ -57,6 +56,7 @@ public class Scheduler {
             return null;
         return week.getShifts();
     }
+
     public String removeWorkerToPositionInShift(String pos,String id)
     {
         if(pos.equals("storage man")&&transportController.isTransportExist(currentEditedShiftDate,currentEditedShiftTOD))
@@ -64,20 +64,25 @@ public class Scheduler {
         else
             return currentEditedShift.removeWorkerFromPosition(pos,id);
     }
+
     public HashMap<Date, Pair<List<Worker>, List<Worker>>> getAvailableWorkers() {
         return availableWorkers;
     }
+
     public TreeSet<WeeklySchedule> getSchedule() {
         return schedule;
     }
+
     public String addWorkerToPositionInShift(String pos,String id)
     {
         return currentEditedShift.addWorkerToPosition(pos,id);
     }
+
     public String addPositionToShift(String pos,int quantity)
     {
         return currentEditedShift.addPosition(pos,quantity);
     }
+
     public String removePositionToShift(String pos)
     {
         if(pos!=null)
@@ -91,6 +96,7 @@ public class Scheduler {
         currentEditedShift=null;
         currentEditedShiftDate=null;
     }
+
     public String submitShift()
     {
         if(currentEditedShift!=null) {
@@ -109,6 +115,7 @@ public class Scheduler {
         }
             return "Error-No shift is being edited";
     }
+
     private DailySchedule findDay(Date date)
     {
         if(date==null||schedule.size()==0||date.before(schedule.first().dayStart)||
@@ -123,6 +130,7 @@ public class Scheduler {
         }
         return null;
     }
+
     public String createShift(Date date,boolean timeOfDay)
     {
         if(date==null)
@@ -143,6 +151,7 @@ public class Scheduler {
         currentEditedShift=new Shift(cloned,date,timeOfDay);
         return null;
     }
+
     public String editShift(Date date,boolean timeOfDay)
     {
         if(date==null)
@@ -196,6 +205,7 @@ public class Scheduler {
         }
         return null;
     }
+
     public Shift findShift(Date date,boolean timeOfDay)
     {
         DailySchedule day=findDay(date);
@@ -206,6 +216,7 @@ public class Scheduler {
         else
             return day.getNightShift();
     }
+
     public String addAvailableWorker(Date date,boolean partOfDay,String id)
     {
         if(date==null)
@@ -228,6 +239,7 @@ public class Scheduler {
         check.add(worker);
         return null;
     }
+
     public String removeWorkerFromRoster(String id)
     {
         Worker w=Roster.getInstance().findWorker(id);
@@ -267,6 +279,7 @@ public class Scheduler {
         }
         return null;
     }
+
     public String removeAvailableWorker(Date date,boolean partOfDay,String id) {
         if (availableWorkers.containsKey(date)) {
             List<Worker> check = null;
@@ -303,6 +316,7 @@ public class Scheduler {
         Roster roster=Roster.getInstance();
         return roster.findWorker(id);
     }
+
     //Integration functions
     public boolean StorageManInShift(Date date, boolean timeOfDay)
     {
@@ -311,6 +325,7 @@ public class Scheduler {
             return false;
         return shift.getOccupation().containsKey("storage man");
     }
+
     public boolean DriversAvailability(Date date, boolean timeOfDay)//TODO:the next function covers this one
     {
         if(!availableWorkers.containsKey(date))
@@ -325,6 +340,7 @@ public class Scheduler {
         }
         return false;
     }
+
     public String chooseDriverForTransport(Date date, boolean timeOfDay, String license)
     {
         if(date==null||license==null)
@@ -350,6 +366,7 @@ public class Scheduler {
         }
         return null;
     }
+
     public void removeDriverFromTransport(Date date, boolean timeOfDay, String id)
     {
         Shift shift=findShift(date,timeOfDay);
@@ -363,6 +380,7 @@ public class Scheduler {
             availables.add(d);
         }
     }
+
     public String getDriverName(String id)
     {
          Worker w=getWorkerById(id);

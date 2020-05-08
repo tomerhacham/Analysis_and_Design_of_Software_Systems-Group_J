@@ -5,7 +5,6 @@ import java.util.Hashtable;
 
 //singleton
 public class TruckController {
-
     private static  TruckController instance = null;
     private Hashtable<Integer, Truck> trucks; // aggregates all trucks in the system <truckID, truck object>
     private int Id_Counter;
