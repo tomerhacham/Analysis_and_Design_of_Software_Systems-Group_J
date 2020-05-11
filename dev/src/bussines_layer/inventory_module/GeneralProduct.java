@@ -1,4 +1,6 @@
-package bussines_layer;
+package bussines_layer.inventory_module;
+
+import bussines_layer.Result;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -94,7 +96,7 @@ public class GeneralProduct {
     //endregion
 
     //region Methods
-    public Result addProduct(Integer product_id,Date expiration_date){
+    public Result addProduct(Integer product_id, Date expiration_date){
         SpecificProduct product = new SpecificProduct(product_id,Location.warehouse,expiration_date);
         boolean res= products.add(product);
         Result<SpecificProduct> result;

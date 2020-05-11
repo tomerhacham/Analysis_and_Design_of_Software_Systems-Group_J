@@ -1,4 +1,6 @@
-package bussines_layer;
+package bussines_layer.inventory_module;
+
+import bussines_layer.Result;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -54,7 +56,7 @@ public class Category {
     //endregion
 
     //region Methods
-    public Result addSubCategory(String name,Integer  id){
+    public Result addSubCategory(String name, Integer  id){
         Category  new_category = new Category(name,id,level+1);
         boolean res=false;
         String msg="";

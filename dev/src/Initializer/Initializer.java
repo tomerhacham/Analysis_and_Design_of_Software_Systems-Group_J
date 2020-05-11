@@ -1,12 +1,8 @@
 package Initializer;
 
-import bussines_layer.Category;
-import bussines_layer.Inventory;
+import bussines_layer.inventory_module.Category;
+import bussines_layer.inventory_module.Inventory;
 import bussines_layer.Result;
-import javafx.util.Pair;
-
-import java.util.LinkedList;
-import java.util.List;
 
 import static presentation_layer.CLController.convertStringToDate;
 

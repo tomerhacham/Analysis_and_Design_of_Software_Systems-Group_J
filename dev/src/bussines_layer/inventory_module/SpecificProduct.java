@@ -1,4 +1,4 @@
-package bussines_layer;
+package bussines_layer.inventory_module;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 

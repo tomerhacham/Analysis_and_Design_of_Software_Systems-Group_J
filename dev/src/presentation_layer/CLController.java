@@ -1,12 +1,10 @@
 package presentation_layer;
 
-import bussines_layer.Inventory;
+import bussines_layer.inventory_module.Inventory;
 import bussines_layer.Result;
 import Initializer.Initializer;
-import bussines_layer.Sale;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import java.io.File;
+import bussines_layer.inventory_module.Sale;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;

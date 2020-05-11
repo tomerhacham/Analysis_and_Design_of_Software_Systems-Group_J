@@ -1,4 +1,6 @@
-package bussines_layer;
+package bussines_layer.inventory_module;
+
+import bussines_layer.Result;
 
 import java.util.Date;
 import java.util.LinkedList;
