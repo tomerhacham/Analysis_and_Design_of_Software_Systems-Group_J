@@ -161,7 +161,7 @@ public class Contract {
     public boolean isProductExist (Integer id , boolean isCatalogid){
         if(isCatalogid){
             for (Integer pid : products.keySet()){
-                if (products.get(pid).getCatalogID() == id){
+                if (products.get(pid).getCatalogID(supplier.getId()).equals(id)){
                     return true;
                 }
             }

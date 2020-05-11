@@ -3,13 +3,13 @@ package bussines_layer.inventory_module;
 public class CatalogProduct {
 
     //fields
-    private final String catalogID;
+    private final Integer catalogID;
     private final Integer gpID;
     private Float supplier_price;
     private final Integer supplier_id;
     private String supplier_category;
 
-    public CatalogProduct(String catalogID, Integer gpID, Float supplier_price, Integer supplier_id, String supplier_category) {
+    public CatalogProduct(Integer catalogID, Integer gpID, Float supplier_price, Integer supplier_id, String supplier_category) {
         this.catalogID = catalogID;
         this.gpID = gpID;
         this.supplier_price = supplier_price;
@@ -18,7 +18,7 @@ public class CatalogProduct {
     }
 
     //region Getters & setters
-    public String getCatalogID() {
+    public Integer getCatalogID() {
         return catalogID;
     }
 

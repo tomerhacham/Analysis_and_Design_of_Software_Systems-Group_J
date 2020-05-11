@@ -97,16 +97,18 @@ public class GeneralProduct {
     //endregion
 
     //region Methods
+
+    //TODO check supplier id
     public Result addProduct(Integer product_id, Date expiration_date){
         SpecificProduct product = new SpecificProduct(product_id,Location.warehouse,expiration_date);
         boolean res= products.add(product);
         Result<SpecificProduct> result;
         if(res){
             this.quantity++;
-            result = new Result(res, product, "Product:"+this.name+"("+product_id+")"+" added successfully");
+            result = new Result<>(res, product, "Product:"+this.name+"("+product_id+")"+" added successfully");
         }
         else{
-            result = new Result(res,product,"There was a problem in adding the product:"+product_id );
+            result = new Result<>(res,product,"There was a problem in adding the product:"+product_id );
         }
         return result;
     }
@@ -241,7 +243,6 @@ public class GeneralProduct {
         return (Math.abs(min_quantity-quantity)+5); //TODO !!!!
     }
 
-
     /**
      * Search supplier's category of this general product
      * @param supplier_id - id of requested supplier
@@ -261,7 +262,7 @@ public class GeneralProduct {
      * @param supplier_id - id of requested supplier
      * @return catalod ID, null if supplier not found
      */
-    public String getCatalogID(Integer supplier_id){
+    public Integer getCatalogID(Integer supplier_id){
         for (CatalogProduct cp : catalog_products){
             if (cp.getSupplierId().equals(supplier_id)){
                 return cp.getCatalogID();
@@ -282,6 +283,18 @@ public class GeneralProduct {
             }
         }
         return null;
+    }
+
+    public Result addCatalogProduct(Integer catalogID, Integer gpID, Float supplier_price, Integer supplier_id, String supplier_category){
+        CatalogProduct toAdd = new CatalogProduct(catalogID, gpID, supplier_price, supplier_id, supplier_category);
+        boolean res = catalog_products.add(toAdd);
+        Result<CatalogProduct> result;
+        if (res){
+            result = new Result<>(res,toAdd,"Catalog Product " + name + " of supplier " + supplier_id + " added successfully");
+        } else {
+            result = new Result<>(res, toAdd, "There was a problem adding the product " + productID + " from supplier " + supplier_id);
+        }
+        return result;
     }
 
 
