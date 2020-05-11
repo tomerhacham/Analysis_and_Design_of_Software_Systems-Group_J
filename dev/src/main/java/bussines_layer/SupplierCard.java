@@ -1,7 +1,4 @@
 package bussines_layer;
-import bussines_layer.supplier_module.Contract;
-import bussines_layer.supplier_module.CostEngineering;
-import bussines_layer.supplier_module.Product;
 
 import java.util.LinkedList;
 
@@ -13,6 +10,7 @@ import java.util.LinkedList;
  * Functionality that related to Supplier information.
  *
  */
+enum supplierType {byOrder , periodic , selfDelivery;}
 
 public class SupplierCard {
 
@@ -24,11 +22,13 @@ public class SupplierCard {
     private String BankAccountNum;
     private String Payment;
     private LinkedList<String> ContactsName;
-    private Contract contract;
-    private CostEngineering costEngineering;
+    private int numOfContract;
+    private supplierType type;
+
+    //private CostEngineering costEngineering;
 
     public SupplierCard(String SupplierName , String Address , String Email , String PhoneNumber ,
-                        int id , String BankAccountNum , String Payment , LinkedList<String> ContactsName, Contract contract){
+                        int id , String BankAccountNum , String Payment , LinkedList<String> ContactsName, supplierType type){
 
         this.SupplierName = SupplierName;
         this.Address = Address;
@@ -38,10 +38,14 @@ public class SupplierCard {
         this.BankAccountNum = BankAccountNum;
         this.Payment = Payment;
         this.ContactsName = ContactsName;
+        this.numOfContract =0;
+        this.type = type;
 
-        this.contract = contract;
-        costEngineering = null;
+        //this.contract = contract;
+        //costEngineering = null;
     }
+
+//#region getters_setters
 
     public String getSupplierName() {
         return SupplierName;
@@ -95,14 +99,6 @@ public class SupplierCard {
         Payment = payment;
     }
 
-    public Contract getContract() {
-        return contract;
-    }
-
-    public void setContract(Contract contract) {
-        this.contract = contract;
-    }
-
     public LinkedList<String> getContactsName() {
         return ContactsName;
     }
@@ -110,6 +106,19 @@ public class SupplierCard {
     public void setContactsName(LinkedList<String> contactsName) {
         ContactsName = contactsName;
     }
+
+    public supplierType getType () { return type; }
+
+    public void setType (supplierType type) {this.type =type; }
+
+    public Integer getNumOfContract () {return numOfContract;}
+
+    public void incNumOfContract () {numOfContract++; }
+
+    public void decNumOfContract () {numOfContract--; }
+
+
+//#endregion
 
     public void deleteContactName(String contactName){
 
@@ -128,7 +137,7 @@ public class SupplierCard {
             ContactsName.remove(i);
         }
         else{
-            sz_Result.setMsg("The Name Is Not In The Contact List");
+            //sz_Result.setMsg("The Name Is Not In The Contact List");   //TODO - RESULT
         }
     }
 
@@ -136,16 +145,26 @@ public class SupplierCard {
         ContactsName.add(contactName);
     }
 
+
+
+
+
+  /*  public Contract getContract() {
+        return contract;
+    }
+
+    public void setContract(Contract contract) {
+        this.contract = contract;
+    }*/
+
+
+/*
     public CostEngineering getCostEngineering() {
         return costEngineering;
     }
 
     public void createCostEngineering() {
         this.costEngineering = new CostEngineering();
-    }
-
-    public void removeSupplierCard(){
-        contract.removeSupplier();
     }
 
     public void addProduct(Product product){
@@ -173,7 +192,7 @@ public class SupplierCard {
             ans = ans +"Product Name : " +p.getName()+'\t'+'\t'+"Product Id : "+p.getProductID()+'\t'+'\t'+"Product Catalog Id : "+p.getCatalogID()+'\n';
         }
         return ans;
-    }
+    }*/
 
 }
 

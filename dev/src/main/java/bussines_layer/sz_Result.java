@@ -1,14 +1,16 @@
+/*
 package main.java.bussines_layer;
-import PresentationLayer.IO;
 import presentation_layer.CLController;
 
+*/
 /**
  * Class Result.
  *
  * Service static class for passing messages from the
  * business layer to presentation layer.
  *
- */
+ *//*
+
 
 public class sz_Result {
 
@@ -28,3 +30,4 @@ public class sz_Result {
     }
 
 }
+*/

@@ -1,18 +1,12 @@
 package bussines_layer.supplier_module;
 import bussines_layer.SupplierCard;
-import main.java.bussines_layer.sz_Result;
+import bussines_layer.inventory_module.GeneralProduct;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
- * Singleton ProductController.
- * Documents the Relation between the suppliers and products
- * according to their contract.
- * Holds documentation of all the Products in the system.
- *
- * Holds information that necessary to make Orders.
- *
+ *DELETE
  */
 
 //Singleton
@@ -21,8 +15,8 @@ public class ProductController {
     // static variable single_instance of type Singleton
     private static ProductController instance = null;
 
-    private LinkedList<Product> AllProducts;
-    private HashMap<Integer , LinkedList<Product>> SupProducts; // <supplierId , ProductsList>
+    private LinkedList<GeneralProduct> AllProducts;
+    private HashMap<Integer , LinkedList<GeneralProduct>> SupProducts; // <supplierId , ProductsList>
     private HashMap<Integer , SupplierCard> supplierCardHashMap; // <supplierId , SupplierCard>
 
 
@@ -31,7 +25,6 @@ public class ProductController {
         SupProducts = new HashMap<>();
         supplierCardHashMap = new HashMap<>();
     }
-
     // static method to create instance of Singleton class
     public static ProductController getInstance(){
         if (instance == null)
@@ -45,7 +38,7 @@ public class ProductController {
          supplierCardHashMap.put(supid , sp);
     }
 
-    public void addProduct(Integer supId , Product product){
+    /*public void addProduct(Integer supId , Product product){
 
         // Notice : we already checked that the products category is in the Suppliers list
 
@@ -56,11 +49,10 @@ public class ProductController {
             AllProducts.add(product);
         }
         else{
-            sz_Result.setMsg("The Supplier Dose Not Have A Contract");
+            //sz_Result.setMsg("The Supplier Dose Not Have A Contract"); //TODO RESULT
         }
-    }
-
-    public void removeProduct(Integer supid , Product product){
+    }*/
+   /* public void removeProduct(Integer supid , Product product){
         if (SupProducts.containsKey(supid)){
 
             LinkedList<Product> products = SupProducts.get(supid);
@@ -83,10 +75,10 @@ public class ProductController {
         }
 
         else {
-            sz_Result.setMsg("The Supplier Is Not In The List");
+            //sz_Result.setMsg("The Supplier Is Not In The List"); //TODO RESULT
         }
-    }
-
+    }*/
+/*
     public LinkedList<Product> getAllProducts() {
         return AllProducts;
     }
@@ -97,7 +89,7 @@ public class ProductController {
             return SupProducts.get(supid);
         }
         else{
-            sz_Result.setMsg("The Supplier Is Not In The List");
+            // sz_Result.setMsg("The Supplier Is Not In The List"); //TODO RESULT
             return null;
         }
     }
@@ -127,7 +119,7 @@ public class ProductController {
             SupProducts.remove(supid);
         }
         else {
-            sz_Result.setMsg("The Supplier Is Not In The List");
+            // sz_Result.setMsg("The Supplier Is Not In The List"); //TODO RESULT
         }
     }
 
@@ -152,16 +144,15 @@ public class ProductController {
         }
         return p;
     }
-
     public Product getProductsById (int supID, int productID){
         Product p= null;
         if (SupProducts == null) {
-            sz_Result.setMsg("There's no such Supplier in the System\n");
+           //  sz_Result.setMsg("There's no such Supplier in the System\n"); //TODO RESULT
             return null;
         }
 
         if (!(SupProducts.containsKey(supID))){
-            sz_Result.setMsg("There's no such Supplier in the System\n");
+           //  sz_Result.setMsg("There's no such Supplier in the System\n"); //TODO RESULT
             return null;
         }
 
@@ -172,7 +163,7 @@ public class ProductController {
                 p= product;
         }
         if (p==null)
-            sz_Result.setMsg("There's No Such Product\n");
+            // sz_Result.setMsg("There's No Such Product\n");  //TODO RESULT
 
         return p;
     }
@@ -181,7 +172,7 @@ public class ProductController {
         double price = -1.0;
 
         if (!(supplierCardHashMap.containsKey(supId))) {
-            sz_Result.setMsg("There Is No Such Supplier");
+          //  sz_Result.setMsg("There Is No Such Supplier");  //TODO RESULT
             return price;
         }
 
@@ -198,5 +189,8 @@ public class ProductController {
 
         return price;
 
-    }
+    }*/
 }
+
+
+

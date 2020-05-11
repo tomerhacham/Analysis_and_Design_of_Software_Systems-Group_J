@@ -55,13 +55,13 @@ public class OrdersController {
     public LinkedList<Order> getOrders() { return this.orders;}
 
     //getsupplierAndProduct
-    public HashMap<Integer, LinkedList<Product>> suppliersProductsinOrder(int orderid){
+    public HashMap<Integer, LinkedList<GeneralProduct>> suppliersProductsinOrder(int orderid){
         Order o = getOrder(orderid);
         return o.getsupplierAndProduct();
     }
 
     //addProductForSupplier
-    public void addProductForSupplierInOrder(int orderid , int supid , Product product , int quantity){
+    public void addProductForSupplierInOrder(int orderid , int supid , GeneralProduct product , int quantity){
         Order o = getOrder(orderid);
         o.addProductForSupplier(supid , product.getProductID() , quantity);
     }
@@ -101,7 +101,7 @@ public class OrdersController {
         orders.getLast().addProductForSupplier(supID , productID , quantity);
     }
 
-    public  HashMap<Product , Integer> endOrder() {
+    public  HashMap<GeneralProduct, Integer> endOrder() {
        return orders.getLast().getProductsAndQuantity();
     }
 
@@ -141,8 +141,8 @@ public class OrdersController {
         return toDisplay;
     }
 
-    public Product createNewProduct(int productID, String name, int price, String producer, String category, int catalogid) {
-        return new Product(productID, name, price, producer, category, catalogid);
+    public GeneralProduct createNewProduct(int productID, String name, int price, String producer, String category, int catalogid) {
+        return new GeneralProduct(productID, name, price, producer, category, catalogid);
     }
 }
 

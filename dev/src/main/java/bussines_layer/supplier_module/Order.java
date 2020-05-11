@@ -1,4 +1,5 @@
 package bussines_layer.supplier_module;
+import bussines_layer.inventory_module.GeneralProduct;
 import main.java.bussines_layer.sz_Result;
 
 import java.util.HashMap;
@@ -16,8 +17,8 @@ import java.util.Set;
 public class Order {
 
     private Integer orderID;
-    private HashMap<Integer , LinkedList<Product>> supplierAndProduct; //<supplierid, product>
-    private HashMap<Product , Integer> productsAndQuantity; // <product , quntity>
+    private HashMap<Integer , LinkedList<GeneralProduct>> supplierAndProduct; //<supplierid, product>
+    private HashMap<GeneralProduct, Integer> productsAndQuantity; // <product , quntity>
 
     public Order(int orderID){
         this.orderID = orderID;
@@ -29,15 +30,15 @@ public class Order {
         return orderID;
     }
 
-    public HashMap<Integer, LinkedList<Product>> getsupplierAndProduct() {
+    public HashMap<Integer, LinkedList<GeneralProduct>> getsupplierAndProduct() {
         return supplierAndProduct;
     }
 
-    public  HashMap<Product , Integer> getProductsAndQuantity() {return productsAndQuantity;}
+    public  HashMap<GeneralProduct, Integer> getProductsAndQuantity() {return productsAndQuantity;}
 
     public void addProductForSupplier(Integer supplierID, int productID , Integer quantity) {
 
-        Product product= ProductController.getInstance().getProductsById(supplierID , productID);
+        GeneralProduct product= ProductController.getInstance().getProductsById(supplierID , productID);
         if (product == null ){
             return;
         }
@@ -50,9 +51,9 @@ public class Order {
             return;
         }
 
-        LinkedList<Product> supProd = supplierAndProduct.get(supplierID);
+        LinkedList<GeneralProduct> supProd = supplierAndProduct.get(supplierID);
         boolean exists = false;
-        for (Product p : supProd) {
+        for (GeneralProduct p : supProd) {
             if (p.getCatalogID()==product.getCatalogID()){
                 exists = true;
                 break;
@@ -72,10 +73,10 @@ public class Order {
     }
 
     public void updateProductQuantity(Integer productId , Integer newquantity) {
-        Set<Product> productSet = productsAndQuantity.keySet();
-        Product p2Update;
+        Set<GeneralProduct> productSet = productsAndQuantity.keySet();
+        GeneralProduct p2Update;
         boolean found= false;
-        for (Product p: productSet) {
+        for (GeneralProduct p: productSet) {
             if(p.getProductID() == productId) {
                 found = true;
                 p2Update = p;
@@ -88,14 +89,14 @@ public class Order {
     }
 
     public void removeProductFromOrder(int productId , int supid){
-        Product p2remove= null;
+        GeneralProduct p2remove= null;
 
         if(!(supplierAndProduct.containsKey(supid))){
             sz_Result.setMsg("No Such Supplier In This Order");
             return;
         }
 
-        for(Product p: supplierAndProduct.get(supid)){
+        for(GeneralProduct p: supplierAndProduct.get(supid)){
             if (p.getProductID() == productId) {
                 p2remove = p;
                 productsAndQuantity.remove(p2remove);
@@ -114,7 +115,7 @@ public class Order {
         Integer supId = 0;
         boolean exists= false;
         for (Integer supplier:supplierAndProduct.keySet()) {
-            for (Product p: supplierAndProduct.get(supplier) ) {
+            for (GeneralProduct p: supplierAndProduct.get(supplier) ) {
                 if (p.getProductID() == productid) {
                     supId = supplier;
                     exists = true;
@@ -126,14 +127,14 @@ public class Order {
         }
         if(exists){
             int i = 0;
-            LinkedList<Product> oldSupprod = supplierAndProduct.get(supId);
-            for (Product p:oldSupprod) {
+            LinkedList<GeneralProduct> oldSupprod = supplierAndProduct.get(supId);
+            for (GeneralProduct p:oldSupprod) {
                 if (p.getProductID() == productid){
                     break;
                 }
                 i++;
             }
-            Product pnewSup = oldSupprod.get(i);
+            GeneralProduct pnewSup = oldSupprod.get(i);
             oldSupprod.remove(i);
             productsAndQuantity.remove(pnewSup);
 
@@ -144,7 +145,7 @@ public class Order {
             }
 
             pnewSup.setCatalogID(catalogid); // update the product catalog id with the new suppliers catalogid
-            LinkedList<Product> supProd = supplierAndProduct.get(supplierId);
+            LinkedList<GeneralProduct> supProd = supplierAndProduct.get(supplierId);
             if (supProd==null) {
                 supProd = new LinkedList<>();
                 supProd.add(pnewSup);
@@ -161,8 +162,8 @@ public class Order {
         int quantity;
         Double price;
         for (Integer supId : supplierAndProduct.keySet()){
-            LinkedList<Product> listP = supplierAndProduct.get(supId);
-            for (Product p : listP) {
+            LinkedList<GeneralProduct> listP = supplierAndProduct.get(supId);
+            for (GeneralProduct p : listP) {
                 quantity = productsAndQuantity.get(p);
                 price = ProductController.getInstance().getUpdatePrice(supId, p, quantity);
                 if (price==(-1.0)){
@@ -180,7 +181,7 @@ public class Order {
         String toDisplay = "Order id : "+'\t'+this.orderID.toString() + '\n';
         toDisplay = toDisplay+ "Product"+'\t'+'\t'+"Quantity" + '\n';
 
-        for (Product p : productsAndQuantity.keySet()){
+        for (GeneralProduct p : productsAndQuantity.keySet()){
             toDisplay = toDisplay+ p.getName() + '\t' +'\t'+ productsAndQuantity.get(p).toString() + '\n';
         }
 
@@ -200,8 +201,8 @@ public class Order {
         if (supplierAndProduct.containsKey(supId)) {
             toDisplay = "Order id : "+'\t'+this.orderID.toString() + '\n';
             toDisplay = toDisplay+ "Product"+'\t'+'\t'+"Quantity" + '\n';
-            LinkedList<Product> listP = supplierAndProduct.get(supId);
-            for (Product p : listP) {
+            LinkedList<GeneralProduct> listP = supplierAndProduct.get(supId);
+            for (GeneralProduct p : listP) {
                 toDisplay = toDisplay + p.getName() + '\t'+'\t' + productsAndQuantity.get(p).toString() + '\n';
             }
             toDisplay = toDisplay + "Order Total Amount : " + getTotalAmount().toString() + '\n' ;

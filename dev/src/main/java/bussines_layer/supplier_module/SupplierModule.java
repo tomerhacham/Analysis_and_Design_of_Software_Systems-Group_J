@@ -1,5 +1,7 @@
 package bussines_layer.supplier_module;
-import java.util.HashMap;
+import bussines_layer.SupplierCard;
+import bussines_layer.inventory_module.GeneralProduct;
+
 import java.util.LinkedList;
 
 /**
@@ -17,117 +19,87 @@ public class SupplierModule {
 
     // static variable single_instance of type Singleton
     private static SupplierModule instance = null;
-    public static SupplierController supplierController = SupplierController.getInstance();
-    public static OrdersController ordersController = OrdersController.getInstance();
+    private Integer branchId;
+    private ContractController contractController = new ContractController(branchId);
+    private OrdersController ordersController = OrdersController.getInstance();
 
-    private SupplierModule(){}
+    private SupplierModule(Integer branchId){ this.branchId = branchId; }
 
     // static method to create instance of Singleton class
-    public static SupplierModule getInstance()
+    public SupplierModule getInstance(Integer branchId)
     {
-        if (instance == null)
-            instance = new SupplierModule();
+       if (instance == null)
+            instance = new SupplierModule(branchId);
 
         return instance;
     }
 
-//#region Supplier
+//#region Contract Controller
 
-     public void createSupplierCard(String supplierName, String address, String email, String phoneNumber, int id, String bankAccountNum, String payment, LinkedList<String> contactsName, Contract contract) {
-        supplierController.createSupplierCard(supplierName , address , email , phoneNumber , id , bankAccountNum , payment , contactsName, contract);
+//#region Contract
+
+    public void addContract(SupplierCard supplier){
+        contractController.addContract(supplier);
     }
 
-    public Contract CreateContract(LinkedList<String> category, int supid, String kind) {
-        return supplierController.CreateContract(category , supid , kind);
+    public void removeContract(SupplierCard supplier){
+        contractController.removeContract(supplier);
     }
 
-    public void addProductToContract(int supid, Product product) {
-        supplierController.addProductToContract(supid ,product);
+    public void addProductToContract(Integer supplierID, GeneralProduct product){
+        contractController.addProductToContract(supplierID, product);
     }
 
-    public void deleteSupplierCard(int supid) {
-        supplierController.deleteSupplierCard(supid);
+    public void removeProductFromContract(Integer supplierID, GeneralProduct product){
+        contractController.removeProductFromContract(supplierID, product);
     }
 
-    public void ChangeSupplierName(int supid, String supplierName) {
-        supplierController.ChangeSupplierName(supid , supplierName);
+    public void addCategory (Integer supplierID, String category){
+        contractController.addCategory(supplierID, category);
     }
 
-    public void ChangeAddress(int supid, String address) {
-        supplierController.ChangeAddress(supid , address);
+    public void removeCategory (Integer supplierID, String category){
+        contractController.removeCategory(supplierID, category);
     }
 
-    public void ChangeEmail(int supid, String email) {
-        supplierController.ChangeEmail(supid , email);
-    }
-
-    public void ChangePhoneNumber(int supid, String phoneNumber) {
-        supplierController.ChangePhoneNumber(supid , phoneNumber);
-    }
-
-    public void ChangeBankAccount(int supid, String bankAccountNum) {
-        supplierController.ChangeBankAccount(supid , bankAccountNum);
-    }
-
-    public void ChangePayment(int supid, String payment) {
-        supplierController.ChangePayment(supid , payment);
-    }
-
-    public void AddContactName(int supid, LinkedList<String> contactsName) {
-        supplierController.AddContactName(supid , contactsName);
-    }
-
-    public void DeleteContactName(int supid, String contactName) {
-        supplierController.DeleteContactName(supid , contactName);
-    }
-
-    public void addCategory(int supid, String category) {
-        supplierController.addCategory(supid , category);
-    }
-
-    public void deleteCategory(int supid, String categoryToDelete) {
-        supplierController.deleteCategory(supid , categoryToDelete);
-    }
-
-    public void deleteProduct(int supid, int catalogid) {
-        supplierController.deleteProduct(supid , catalogid);
-    }
-
-    public void ChangeSupplierKind(int supid, String kind) {
-        supplierController.ChangeSupplierKind(supid , kind);
-    }
-
-    public void removeProductCostEng(int supid, int catalogid2delete) {
-        supplierController.removeProductCostEng(supid , catalogid2delete);
-    }
-
-    public void changeMinQuantity(int supid, int catalogid, int minQuantity) {
-        supplierController.changeMinQuantity(supid , catalogid , minQuantity);
-    }
-
-    public void changenewPriceAfterSale(int supid, int catalogid, int price) {
-        supplierController.changenewPriceAfterSale(supid , catalogid , price);
-    }
-
-    public void addProductToCostEng(int supid, int catalogid, int minQuantity, int price) {
-        supplierController.addProductToCostEng(supid , catalogid , minQuantity , price);
-    }
-
-    public LinkedList<Product> getAllSupProducts(int supId) {
-        return supplierController.getAllSupProducts(supId);
-    }
-
-    public boolean createCostEng(int supid) {
-        return supplierController.createCostEngineering(supid);
-    }
-
-    public boolean isExistSupplier(int supid) {
-        return supplierController.isExist(supid);
-    }
 
 //#endregion
 
-//#region Order
+//#region CostEngineering
+
+    public void addProductToCostEng(int supid, int catalogid, int minQuantity, int price) {
+        contractController.addProductToCostEng(supid , catalogid , minQuantity , price);
+    }
+
+    public void removeProductCostEng(int supid, int catalogid2delete) {
+        contractController.removeProductFromCostEng(supid , catalogid2delete);
+    }
+
+    public void updateMinQuantity(int supid, int catalogid, int minQuantity) {
+        contractController.updateMinQuantity(supid , catalogid , minQuantity);
+    }
+
+    public void updatePriceAfterSale(int supid, int catalogid, int price) {
+        contractController.updatePriceAfterSale(supid , catalogid , price);
+    }
+
+    public LinkedList<GeneralProduct> getAllSupplierProducts(int supId) {
+        return contractController.getAllSupplierProducts(supId);
+    }
+
+    public void addCostEng(int supid) {
+        contractController.addCostEngineering(supid);
+    }
+
+    public void removeCostEng(int supid) {
+        contractController.removeCostEngineering(supid);
+    }
+//#endregion
+
+//#endregion
+
+
+//#region Order Controller
 
     public void createOrder() {
         ordersController.createOrder();
@@ -137,9 +109,9 @@ public class SupplierModule {
         ordersController.addProductToOrder(supID, productID, quantity);
     }
 
-    public HashMap<Product , Integer> endOrder() {
+  /*  public HashMap<GeneralProduct, Integer> endOrder() {
         return ordersController.endOrder();
-    }
+    }*/
 
     public Double getTotalAmountLastOrder() {
         return  ordersController.getTotalAmountLastOrder();
@@ -165,13 +137,10 @@ public class SupplierModule {
         return ordersController.displayOrderBySupplier(supId);
     }
 
-    public Product createNewProduct(int productID, String name, int price, String producer, String category, int catalogid) {
+ /*   public GeneralProduct createNewProduct(int productID, String name, int price, String producer, String category, int catalogid) {
         return ordersController.createNewProduct(productID, name, price, producer, category, catalogid);
-    }
+    }*/
 
-    public LinkedList<String> printallsuppliers() {
-        return supplierController.printallsuppliers();
-    }
 
 
 

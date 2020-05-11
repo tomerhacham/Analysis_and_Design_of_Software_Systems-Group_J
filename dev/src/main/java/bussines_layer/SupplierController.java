@@ -60,7 +60,7 @@ public class SupplierController {
     //add a new supplierCard to the linked list
     private void addSupplierCardToList(SupplierCard supplierCard){
         if (suppliers.containsKey(supplierCard.getId())){
-            sz_Result.setMsg("The SupplierCard Already Exists.");
+            //sz_Result.setMsg("The SupplierCard Already Exists.");  //TODO RESULT
         }
         else{
             suppliers.put(supplierCard.getId() , supplierCard);
@@ -178,7 +178,7 @@ public class SupplierController {
 
     public boolean isExist (int id){
         if ( ! suppliers.containsKey(id)){
-            sz_Result.setMsg("There's No Such Supplier in the System");
+            //sz_Result.setMsg("There's No Such Supplier in the System");  //TODO RESULT
             return false;
         }
         return true;

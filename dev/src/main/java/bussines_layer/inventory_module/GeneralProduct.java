@@ -8,8 +8,9 @@ import java.util.List;
 
 public class GeneralProduct {
     //fields
+    private final Integer productID;
     private final String manufacture;
-    private final String catalogID;
+    private final Integer catalogID;  //TODO Catalog Product
     private String name;
     private Float supplier_price;
     private Float retail_price;
@@ -17,9 +18,11 @@ public class GeneralProduct {
     private Integer quantity;
     private Integer min_quantity;
     private List<SpecificProduct> products;
+    private String supplier_category;  //TODO Catalog Product
 
     //Constructor
-    public GeneralProduct(String manufacture, String catalogID, String name, Float supplier_price, Float retail_price, Integer min_quantity)
+    public GeneralProduct(String manufacture, Integer catalogID, String name, Float supplier_price,
+                          Float retail_price, Integer min_quantity, Integer productID , String supplier_category)
     {
         this.manufacture = manufacture;
         this.catalogID = catalogID;
@@ -30,6 +33,8 @@ public class GeneralProduct {
         this.quantity = 0;
         this.min_quantity = min_quantity;
         this.products = new LinkedList<>();
+        this.productID = productID;
+        this.supplier_category = supplier_category;
     }
 
     //region Getters - Setters
@@ -38,11 +43,15 @@ public class GeneralProduct {
         return manufacture;
     }
 
+    public Integer getProductID() {return this.productID;}
+
+    public String getSupplierCategory() {return this.supplier_category;}
+
     /*public void setManufacture(String manufacture) {
         this.manufacture = manufacture;
     }*/
 
-    public String getCatalogID() {
+    public Integer getCatalogID() {
         return catalogID;
     }
 

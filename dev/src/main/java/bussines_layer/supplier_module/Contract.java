@@ -1,6 +1,6 @@
 package bussines_layer.supplier_module;
 import bussines_layer.SupplierCard;
-import main.java.bussines_layer.sz_Result;
+import bussines_layer.inventory_module.GeneralProduct;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -14,155 +14,186 @@ import java.util.LinkedList;
 
 public class Contract {
 
-    private LinkedList<String> category; // a supplier can have a lot of categories
-    private HashMap<Integer , Product> products; // <catalogid, product>
+    private LinkedList<String> categories; // a supplier can have a lot of categories
+    private HashMap<Integer , GeneralProduct> products; // <product ID, product>
     private SupplierCard supplier;
-    private String kindOfSupplier;
+    private CostEngineering costEngineering;
+    private int contractID;
+    private int branchID;
 
-    public Contract(LinkedList<String> category , SupplierCard supplier , String kindOfSupplier){
-        this.category = category;
+    public Contract(SupplierCard supplier , int contractID , int branchID){
+        this.categories = new LinkedList<>();
         this.supplier = supplier;
-        this.kindOfSupplier = kindOfSupplier;
-        products = new HashMap<>();
-    }
-
-    public Contract(int supplierID){
-        category= new LinkedList<>();
-        products = new HashMap<>();
-        this.supplier = supplier;
-        kindOfSupplier = "";
+        this.products = new HashMap<>();
+        this.costEngineering = null;
+        this.contractID = contractID;
+        this.branchID = branchID;
     }
 
     public int getSupplierID() {
-        return supplierID;
+        return supplier.getId();
     }
 
-    public void setSupplierID(int supplierID) {
-        this.supplierID = supplierID;
+    public SupplierCard getSupplierCard() {return supplier; }
+
+
+//#region Categories
+
+    public boolean isCategoryExist (String category){
+        for (String c : categories) {
+            if(c.equals(category)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public LinkedList<String> getCategory() {
-        return category;
+        return categories;
     }
 
     public void setCategory(LinkedList<String> category) {
-        this.category = category;
+        this.categories = category;
     }
 
-    public void addCategory(String c){
-        if (!category.contains(c)){
-            category.add(c);
+    public void addCategory(String c) {
+        if (isCategoryExist(c)) {
+            //sz_Result.setMsg("The Category IS Already In The Contract");  //TODO RESULT
+            return;
         }
-        else{
-            sz_Result.setMsg("The Category IS Already In The Contract");
-        }
+        categories.add(c);
     }
 
     public void removeCategory(String c){
-
-        if (category.contains(c)){
-            category.remove(c);
-            LinkedList <Integer> toRemove = new LinkedList<>();
-            for (Integer i : products.keySet()){
-                if (products.get(i).getCategory().equals(c) ){
-                    toRemove.add(i);
-                }
-            }
-            for (Integer index : toRemove){
-                ProductController.getInstance().removeProduct(this.supplierID , products.get(index));
-                products.remove(index);
+        if (!isCategoryExist(c)) {
+            //sz_Result.setMsg("The Category dose not Exist");  //TODO RESULT
+            return;
+        }
+        categories.remove(c);
+        //remove all product from this category from products list
+        LinkedList <GeneralProduct> toRemove = new LinkedList<>();
+        for (Integer i : products.keySet()){
+            if (products.get(i).getSupplierCategory().equals(c) ){
+                toRemove.add(products.get(i));
             }
         }
-        else {
-            sz_Result.setMsg("The Category IS Not In The Contract Category List");
+        for (GeneralProduct p : toRemove){
+            removeProduct(p);
         }
+
     }
 
-    public boolean checkCategory(String c){
+//#endregion
 
-        boolean containsCategory= false;
+//#region Products
 
-        for (String s : category) {
-            if(s.equals(c)){
-                containsCategory = true;
-                break;
-            }
+    public LinkedList<GeneralProduct> getProducts() {
+        if (products.isEmpty()){
+            //sz_Result.setMsg("The Supplier Has No Products");  //TODO result
         }
-        return containsCategory;
-    }
-
-    public String getKindOfSupplier() {
-        return kindOfSupplier;
-    }
-
-    public void setKindOfSupplier(String kindOfSupplier) {
-        this.kindOfSupplier = kindOfSupplier;
-    }
-
-    public LinkedList<Product> getProducts() {
-        LinkedList<Product> listP = new LinkedList<>();
+        LinkedList<GeneralProduct> listP = new LinkedList<>();
         for (Integer i : products.keySet()){
             listP.add(products.get(i));
         }
         return listP;
     }
 
-    public void setProducts(HashMap<Integer, Product> products) {
+    public void setProducts(HashMap<Integer, GeneralProduct> products) {
         this.products = products;
     }
 
-    public void addProduct(Product p){
-
+    public void addProduct(GeneralProduct p){
         // first check if the supplier can supply this category (check if the category is in the category list)
-        String prodCategory = p.getCategory();
-        boolean categoryInList = false;
-
-        for (String s : category) {
-            if(s.equals(prodCategory)){
-                categoryInList = true;
-                break;
-            }
-        }
+        boolean categoryInList = isCategoryExist(p.getSupplierCategory());
 
         if (categoryInList){
-            if (products.containsKey(p.getCatalogID())){
-                sz_Result.setMsg("The Product Is Already In Your Product List");
+            if (products.containsKey(p.getProductID())){
+                //sz_Result.setMsg("The Product Is Already In Your Product List");  //TODO RESULT
             }
             else{
-                products.put(p.getCatalogID() , p);
-                ProductController.getInstance().addProduct(supplierID ,p); // add to product controller
+                products.put(p.getProductID() , p);
             }
         }
         else{
-            sz_Result.setMsg("The Category Of This Product Is Not In The Category List ");
+            //sz_Result.setMsg("The Category Of This Product Is Not In The Category List ");  //TODO RESULT
         }
     }
 
-    public boolean checkProduct(int catalogid){
+    public void removeProduct(GeneralProduct product){
+        if (!products.containsKey(product.getProductID())){
+            //sz_Result.setMsg("There's no such Product on Contract"); //TODO RESULT
+            return;
+        }
+        products.remove(product.getProductID()); // remove product
+    }
 
-        if (ProductController.getInstance().checkProduct(supplierID , catalogid) == null)
+    public boolean isProductExist(GeneralProduct product){
+        if (products.containsKey(product.getProductID()))
             return false;
-
         else
             return true;
     }
 
-    public  void removeProduct(Integer productcatalogid){
-        if (!products.containsKey(productcatalogid)){
-            sz_Result.setMsg("There's no such Product on Contract");
-            return;
+//#endregion
+
+//#region CostEngineering
+
+    public boolean isProductExist (Integer catalogID){
+        for (Integer pid : products.keySet()){
+            if (products.get(pid).getCatalogID() == catalogID){
+                return true;
+            }
         }
-        Product p = products.get(productcatalogid); // get product
-        ProductController.getInstance().removeProduct(supplierID , p); // remove product from product controller
-        products.remove(productcatalogid); // remove product from contract
+        return false;
     }
 
-    public void removeSupplier(){
-        ProductController.getInstance().removeSupplierAndProducts(supplierID);
+    public void addCostEngineering() {
+        if (costEngineering != null){
+            //sz_result ("There is already CostEngineering to the Supplier");  //TODO- result
+        }
+        this.costEngineering = new CostEngineering();
     }
 
-    public void addSpplierToProductController (SupplierCard sp){
-        ProductController.getInstance().addSupplier(supplierID , sp);
+    public void removeCostEngineering() {
+        costEngineering = null;
     }
+
+    public CostEngineering getCostEngineering() {
+        return costEngineering;
+    }
+
+    //update min quantity
+    public void updateMinQuantity(int catalogid , int minQuantity){
+        if (!isProductExist(catalogid)){
+            //sz_Result ("Product does not exist in the Contract" )  //TODO result
+        }
+       costEngineering.updateMinQuantity(catalogid , minQuantity);
+    }
+
+    //update new price with sale
+    public void updatePriceAfterSale(int catalogid , int price){
+        costEngineering.updatePriceAfterSale(catalogid , price);
+    }
+
+    //add product to cost engineering
+    public void addProductToCostEng(int catalogid , int minQuantity , int price){
+        //check if the product is in the suppliers product list
+        if(isProductExist(catalogid)){
+            costEngineering.addProduct(catalogid , minQuantity , price);
+        }
+        else{
+            //sz_Result.setMsg("The Product Is Not In The Product list");   //TODO result
+        }
+    }
+
+    //delete product from cost engineering
+    public void removeProductFromCostEng(int catalogid){
+        costEngineering.removeProduct(catalogid);
+    }
+
+
+//#endregion
 
 }
+
+
