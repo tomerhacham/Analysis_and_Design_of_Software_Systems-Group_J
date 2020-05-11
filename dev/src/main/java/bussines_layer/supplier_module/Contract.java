@@ -137,7 +137,7 @@ public class Contract {
 
     public float getProductPrice(Integer productID){
         if (products.containsKey(productID)){
-            return products.get(productID).getSupplier_price();
+            return products.get(productID).getSupplierPrice();
         }
         //sz_result ("The Product Is Not In The Contract");  //TODO- result
         return Integer.MAX_VALUE;

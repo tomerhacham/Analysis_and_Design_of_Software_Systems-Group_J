@@ -10,7 +10,6 @@ public class GeneralProduct {
     //fields
     private final Integer productID;
     private final String manufacture;
-    private final Integer catalogID;
     private String name;
     private Float supplier_price; //TODO - problem !!
     private Float retail_price;
@@ -21,11 +20,10 @@ public class GeneralProduct {
     private List<CatalogProduct> catalog_products;
 
     //Constructor
-    public GeneralProduct(String manufacture, Integer catalogID, String name, Float supplier_price,
+    public GeneralProduct(String manufacture, String name, Float supplier_price,
                           Float retail_price, Integer min_quantity, Integer productID)
     {
         this.manufacture = manufacture;
-        this.catalogID = catalogID;
         this.name = name;
         this.supplier_price = supplier_price;
         this.retail_price = retail_price;
@@ -34,6 +32,7 @@ public class GeneralProduct {
         this.min_quantity = min_quantity;
         this.products = new LinkedList<>();
         this.productID = productID;
+        this.catalog_products = new LinkedList<>();
     }
 
     //region Getters - Setters
@@ -48,10 +47,6 @@ public class GeneralProduct {
         this.manufacture = manufacture;
     }*/
 
-    public Integer getCatalogID() {
-        return catalogID;
-    }
-
     /*public void setCatalogID(String catalogID) {
         this.catalogID = catalogID;
     }*/
@@ -64,22 +59,22 @@ public class GeneralProduct {
         this.name = name;
     }
 
-    public Float getSupplier_price() {
+    public Float getSupplierPrice() {
         return supplier_price;
     }
 
-    public void setSupplier_price(Float supplier_price) {
+    public void setSupplierPrice(Float supplier_price) {
         this.supplier_price = supplier_price;
     }
 
-    public Float getRetail_price() {
+    public Float getRetailPrice() {
         if (sale_price>-1){
             return sale_price;
         }
         return retail_price;
     }
 
-    public void setRetail_price(Float retail_price) {
+    public void setRetailPrice(Float retail_price) {
         this.retail_price = retail_price;
     }
 
@@ -91,11 +86,11 @@ public class GeneralProduct {
         this.quantity = quantity;
     }
 
-    public Integer getMin_quantity() {
+    public Integer getMinQuantity() {
         return min_quantity;
     }
 
-    public void setMin_quantity(Integer min_quantity) {
+    public void setMinQuantity(Integer min_quantity) {
         if(min_quantity>=0)
         this.min_quantity = min_quantity;
     }
@@ -289,12 +284,13 @@ public class GeneralProduct {
         return null;
     }
 
+
     @Override
     public String toString() {
         return "" +
                 "name:'" + name + '\'' +
                 ", manufacture:'" + manufacture + '\'' +
-                ", catalogID:'" + catalogID + '\'' +
+                ", productID:'" + productID + '\'' +
                 ", supplier price:" + supplier_price +
                 ", retail price:" + retail_price +
                 ", sale price:" + sale_price +
@@ -303,7 +299,7 @@ public class GeneralProduct {
                 "";
     }
     public String print(){
-        String toReturn="\t-"+this.name+" catalogID:"+this.getCatalogID()+"("+products.size()+")\n";
+        String toReturn="\t-"+this.name+" productID: "+productID+"("+products.size()+")\n";
         for(SpecificProduct product:products){
             toReturn=toReturn.concat("\t\t"+product.toString()+"\n");
         }
