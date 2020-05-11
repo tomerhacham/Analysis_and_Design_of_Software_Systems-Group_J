@@ -73,7 +73,7 @@ public class Contract {
         //remove all product from this category from products list
         LinkedList <GeneralProduct> toRemove = new LinkedList<>();
         for (Integer i : products.keySet()){
-            if (products.get(i).getSupplierCategory().equals(c) ){
+            if (products.get(i).getSupplierCategory(supplier.getId()).equals(c) ){
                 toRemove.add(products.get(i));
             }
         }
@@ -104,7 +104,7 @@ public class Contract {
 
     public void addProduct(GeneralProduct p){
         // first check if the supplier can supply this category (check if the category is in the category list)
-        boolean categoryInList = isCategoryExist(p.getSupplierCategory());
+        boolean categoryInList = isCategoryExist(p.getSupplierCategory(supplier.getId()));
 
         if (categoryInList){
             if (products.containsKey(p.getProductID())){

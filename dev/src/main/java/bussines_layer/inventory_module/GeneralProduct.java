@@ -10,7 +10,7 @@ public class GeneralProduct {
     //fields
     private final Integer productID;
     private final String manufacture;
-    private final Integer catalogID;  //TODO Catalog Product
+    private final Integer catalogID;
     private String name;
     private Float supplier_price; //TODO - problem !!
     private Float retail_price;
@@ -18,11 +18,11 @@ public class GeneralProduct {
     private Integer quantity;
     private Integer min_quantity;
     private List<SpecificProduct> products;
-    private String supplier_category;  //TODO Catalog Product
+    private List<CatalogProduct> catalog_products;
 
     //Constructor
     public GeneralProduct(String manufacture, Integer catalogID, String name, Float supplier_price,
-                          Float retail_price, Integer min_quantity, Integer productID , String supplier_category)
+                          Float retail_price, Integer min_quantity, Integer productID)
     {
         this.manufacture = manufacture;
         this.catalogID = catalogID;
@@ -34,7 +34,6 @@ public class GeneralProduct {
         this.min_quantity = min_quantity;
         this.products = new LinkedList<>();
         this.productID = productID;
-        this.supplier_category = supplier_category;
     }
 
     //region Getters - Setters
@@ -44,8 +43,6 @@ public class GeneralProduct {
     }
 
     public Integer getProductID() {return this.productID;}
-
-    public String getSupplierCategory() {return this.supplier_category;}
 
     /*public void setManufacture(String manufacture) {
         this.manufacture = manufacture;
@@ -222,7 +219,7 @@ public class GeneralProduct {
     /**
      * search if the specific product is type of this general product
      * @param product_id - id of the specific product (allocated by the product controller)
-     * @return
+     * @return true/false
      */
     public boolean typeOf(Integer product_id){
         for(SpecificProduct product:products){
@@ -247,6 +244,49 @@ public class GeneralProduct {
 
     public int quantityToOrder(){
         return (Math.abs(min_quantity-quantity)+5); //TODO !!!!
+    }
+
+
+    /**
+     * Search supplier's category of this general product
+     * @param supplier_id - id of requested supplier
+     * @return name of category, null if supplier not found
+     */
+    public String getSupplierCategory(Integer supplier_id) {
+        for (CatalogProduct cp : catalog_products){
+            if (cp.getSupplierId().equals(supplier_id)){
+                return cp.getSupplierCategory();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Search supplier id's catalogID of this general product
+     * @param supplier_id - id of requested supplier
+     * @return catalod ID, null if supplier not found
+     */
+    public String getCatalogID(Integer supplier_id){
+        for (CatalogProduct cp : catalog_products){
+            if (cp.getSupplierId().equals(supplier_id)){
+                return cp.getCatalogID();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Search supplier's price of this general product
+     * @param supplier_id - id of requested supplier
+     * @return price, null if supplier not found
+     */
+    public Float getSupplierPrice(Integer supplier_id){
+        for (CatalogProduct cp : catalog_products){
+            if (cp.getSupplierId().equals(supplier_id)){
+                return cp.getSupplierPrice();
+            }
+        }
+        return null;
     }
 
     @Override
