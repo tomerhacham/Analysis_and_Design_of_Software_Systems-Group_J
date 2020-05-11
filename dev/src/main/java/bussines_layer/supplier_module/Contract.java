@@ -134,15 +134,42 @@ public class Contract {
             return true;
     }
 
+
+    public float getProductPrice(Integer productID){
+        if (products.containsKey(productID)){
+            return products.get(productID).getSupplier_price();
+        }
+        //sz_result ("The Product Is Not In The Contract");  //TODO- result
+        return Integer.MAX_VALUE;
+    }
+
+
 //#endregion
 
 //#region CostEngineering
 
-    public boolean isProductExist (Integer catalogID){
-        for (Integer pid : products.keySet()){
-            if (products.get(pid).getCatalogID() == catalogID){
-                return true;
+//    public boolean isProductExist (Integer catalogID){
+//        for (Integer pid : products.keySet()){
+//            if (products.get(pid).getCatalogID() == catalogID){
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+
+    //TODo - update the changes
+    public boolean isProductExist (Integer id , boolean isCatalogid){
+        if(isCatalogid){
+            for (Integer pid : products.keySet()){
+                if (products.get(pid).getCatalogID() == id){
+                    return true;
+                }
             }
+            return false;
+        }
+
+        if(products.containsKey(id)){
+            return true;
         }
         return false;
     }
@@ -164,7 +191,7 @@ public class Contract {
 
     //update min quantity
     public void updateMinQuantity(int catalogid , int minQuantity){
-        if (!isProductExist(catalogid)){
+        if (!isProductExist(catalogid , true)){
             //sz_Result ("Product does not exist in the Contract" )  //TODO result
         }
        costEngineering.updateMinQuantity(catalogid , minQuantity);
@@ -178,7 +205,7 @@ public class Contract {
     //add product to cost engineering
     public void addProductToCostEng(int catalogid , int minQuantity , int price){
         //check if the product is in the suppliers product list
-        if(isProductExist(catalogid)){
+        if(isProductExist(catalogid , true)){
             costEngineering.addProduct(catalogid , minQuantity , price);
         }
         else{
@@ -189,6 +216,11 @@ public class Contract {
     //delete product from cost engineering
     public void removeProductFromCostEng(int catalogid){
         costEngineering.removeProduct(catalogid);
+    }
+
+
+    public boolean isCostEngExist(){
+        return costEngineering!=null;
     }
 
 

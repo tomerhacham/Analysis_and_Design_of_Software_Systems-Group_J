@@ -1,4 +1,6 @@
 package bussines_layer.supplier_module;
+import bussines_layer.inventory_module.GeneralProduct;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -25,57 +27,78 @@ public class OrdersController {
     }
 
     // static method to create instance of Singleton class
-    public static OrdersController getInstance()
-    {
+    public static OrdersController getInstance(){
         if (instance == null)
             instance = new OrdersController();
 
         return instance;
     }
 
-    public int createOrder(){
+    public int createOrder(int supplierID){
         orderidCounter++;
-        orders.add(new Order(orderidCounter));
+        orders.add(new Order(orderidCounter  , supplierID));
+        return orderidCounter;
+    }
+
+    public int createOrder(int supplierID , LinkedList<GeneralProduct> products){
+        orderidCounter++;
+        orders.add(new Order(orderidCounter  , supplierID , products));
         return orderidCounter;
     }
 
     //get specific order from the systems order list
     public Order getOrder(int orderid){
-        int i =0;
         for (Order or:orders) {
             if(or.getOrderID() == orderid){
-                break;
+                return or;
             }
-            i++;
         }
-
-        return orders.get(i);
+        //sz_Result ( "No Such Order ID" ); //TODO RESULT
+        return null;
     }
 
-    public LinkedList<Order> getOrders() { return this.orders;}
+    public LinkedList<Order> getAllOrders() { return this.orders;}
 
-    //getsupplierAndProduct
-    public HashMap<Integer, LinkedList<GeneralProduct>> suppliersProductsinOrder(int orderid){
-        Order o = getOrder(orderid);
-        return o.getsupplierAndProduct();
+    public void addProductToOrder(int orderID , GeneralProduct product , Integer quantity){
+        getOrder(orderID).addProduct(product , quantity);
     }
 
-    //addProductForSupplier
-    public void addProductForSupplierInOrder(int orderid , int supid , GeneralProduct product , int quantity){
-        Order o = getOrder(orderid);
-        o.addProductForSupplier(supid , product.getProductID() , quantity);
+    //TODO - do we need this function at all ?
+    public void updateProductQuantityInOrder(int orderid ,GeneralProduct product , int quantity){
+        getOrder(orderid).updateProductQuantity(product , quantity);
     }
 
-    //updateProductQuantity
-    public void updateProductQuantityInOrder(int orderid ,int catalogig , int quantity){
-        Order o = getOrder(orderid);
-        o.updateProductQuantity(catalogig , quantity);
-    }
-
-    //removeProductFromOrder
-    public void removeFromOrder(int productID , int supid) {
+    //TODO - do we want to remove products only from the last order ? or make it available to remove from all orders with the order id ?
+    public void removeFromOrder(int orderID , GeneralProduct product) {
         orders.getLast().removeProductFromOrder(productID , supid);
     }
+
+//    public void addProductToOrder(int supID, int productID, int quantity) {
+//        orders.getLast().addProductForSupplier(supID , productID , quantity);
+//    }
+
+    //getsupplierAndProduct
+//    public HashMap<Integer, LinkedList<GeneralProduct>> suppliersProductsinOrder(int orderid){
+//        Order o = getOrder(orderid);
+//        return o.getsupplierAndProduct();
+//    }
+
+    //addProductForSupplier
+//    public void addProductForSupplierInOrder(int orderid , int supid , GeneralProduct product , int quantity){
+//        Order o = getOrder(orderid);
+//        o.addProductForSupplier(supid , product.getProductID() , quantity);
+//    }
+
+    //updateProductQuantity
+//    public void updateProductQuantityInOrder(int orderid ,int catalogig , int quantity){
+//        Order o = getOrder(orderid);
+//        o.updateProductQuantity(catalogig , quantity);
+//    }
+
+    //removeProductFromOrder
+//    public void removeFromOrder(int productID , int supid) {
+//        orders.getLast().removeProductFromOrder(productID , supid);
+//    }
 
     //changeSupplierForProduct
     public void changeSupplierForProductInOrder(int orderid , Integer supplierId , int productid ,int catalogid, Integer quantity){
@@ -96,10 +119,7 @@ public class OrdersController {
         return orders.getLast().getTotalAmount();
     }
 
-    public void addProductToOrder(int supID, int productID, int quantity) {
 
-        orders.getLast().addProductForSupplier(supID , productID , quantity);
-    }
 
     public  HashMap<GeneralProduct, Integer> endOrder() {
        return orders.getLast().getProductsAndQuantity();

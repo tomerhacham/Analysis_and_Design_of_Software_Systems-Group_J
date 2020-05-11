@@ -89,6 +89,24 @@ public class ContractController {
         return findContract(supplierID).getProducts();
     }
 
+    //TODO - check the cost eng
+    public Contract getBestSupplierForProduct(Integer productID , Integer quantity){
+        float price = Integer.MAX_VALUE;
+        Contract contract = null;
+
+        for (Contract c: contracts) {
+            if(c.isProductExist(productID , false)){
+                if(c.isCostEngExist()){
+                    c.getCostEngineering().getUpdatePrice()
+                }
+            } (c.getProductPrice(productID) < price)){
+                price = c.getProductPrice(productID);
+                contract = c;
+            }
+        }
+        return contract;
+    }
+
 //#endregion
 
 //#region Category

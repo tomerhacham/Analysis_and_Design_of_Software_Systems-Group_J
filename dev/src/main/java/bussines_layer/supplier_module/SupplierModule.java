@@ -1,7 +1,9 @@
 package bussines_layer.supplier_module;
 import bussines_layer.SupplierCard;
 import bussines_layer.inventory_module.GeneralProduct;
+import bussines_layer.inventory_module.Report;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
@@ -101,8 +103,31 @@ public class SupplierModule {
 
 //#region Order Controller
 
-    public void createOrder() {
-        ordersController.createOrder();
+    public void generateOrdersFromReport(Report report){
+
+        HashMap<Contract , LinkedList<GeneralProduct>> productsForEachSupplier = new HashMap<>();
+
+        for (GeneralProduct product: report.getProducts() ) {
+            Contract contract = contractController.getBestSupplierForProduct(product.getProductID() , product.quantityToOrder());
+
+            if(productsForEachSupplier.containsKey(contract)){
+                productsForEachSupplier.get(contract).add(product);
+            }
+            else{
+                LinkedList<GeneralProduct> products = new LinkedList<>();
+                products.add(product);
+                productsForEachSupplier.put(contract , products);
+            }
+        }
+
+        for (Contract contract: productsForEachSupplier.keySet()) {
+            ordersController.createOrder(contract.getSupplierID() , productsForEachSupplier.get(contract));
+        }
+    }
+
+    //return the order id
+    public int createOrder(Integer supplierID) {
+        return ordersController.createOrder(supplierID);
     }
 
     public void addProductToOrder(int supID, int productID , int quantity) {
@@ -145,6 +170,8 @@ public class SupplierModule {
 
 
 //#endregion
+
+
 
 }
 

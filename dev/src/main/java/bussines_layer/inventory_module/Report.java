@@ -34,4 +34,9 @@ public class Report {
     public String getReport() {
         return report;
     }
+
+    //TODO - zoe added this function
+    public List<GeneralProduct> getProducts() {
+        return products;
+    }
 }

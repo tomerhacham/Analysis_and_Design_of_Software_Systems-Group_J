@@ -12,7 +12,7 @@ public class GeneralProduct {
     private final String manufacture;
     private final Integer catalogID;  //TODO Catalog Product
     private String name;
-    private Float supplier_price;
+    private Float supplier_price; //TODO - problem !!
     private Float retail_price;
     private Float sale_price;
     private Integer quantity;
@@ -243,6 +243,10 @@ public class GeneralProduct {
     }
     private boolean lowBoundCheck(){
         return products.size()==min_quantity;
+    }
+
+    public int quantityToOrder(){
+        return (Math.abs(min_quantity-quantity)+5); //TODO !!!!
     }
 
     @Override
