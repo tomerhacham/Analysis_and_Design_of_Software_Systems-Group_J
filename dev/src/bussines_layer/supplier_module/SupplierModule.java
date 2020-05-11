@@ -13,20 +13,20 @@ import java.util.LinkedList;
  */
 
 //Singleton
-public class FacadeController {
+public class SupplierModule {
 
     // static variable single_instance of type Singleton
-    private static FacadeController instance = null;
+    private static SupplierModule instance = null;
     public static SupplierController supplierController = SupplierController.getInstance();
     public static OrdersController ordersController = OrdersController.getInstance();
 
-    private FacadeController(){}
+    private SupplierModule(){}
 
     // static method to create instance of Singleton class
-    public static FacadeController getInstance()
+    public static SupplierModule getInstance()
     {
         if (instance == null)
-            instance = new FacadeController();
+            instance = new SupplierModule();
 
         return instance;
     }
