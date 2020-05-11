@@ -1,5 +1,6 @@
-package bussines_layer.supplier_module;
+package bussines_layer;
 import PresentationLayer.IO;
+import presentation_layer.CLController;
 
 /**
  * Class Result.
@@ -21,7 +22,7 @@ public class sz_Result {
 
     public static void sendToIO(){
         if (msg.length()>0){
-            IO.getInstance().printResult(msg);
+            CLController.printResult(msg);
         }
         msg = "";
     }

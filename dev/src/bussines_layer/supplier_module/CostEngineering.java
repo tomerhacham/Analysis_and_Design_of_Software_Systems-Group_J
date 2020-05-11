@@ -1,4 +1,6 @@
 package bussines_layer.supplier_module;
+import bussines_layer.sz_Result;
+
 import java.util.HashMap;
 
 /**

@@ -1,4 +1,7 @@
 package bussines_layer.supplier_module;
+import bussines_layer.SupplierCard;
+import bussines_layer.sz_Result;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -13,12 +16,12 @@ public class Contract {
 
     private LinkedList<String> category; // a supplier can have a lot of categories
     private HashMap<Integer , Product> products; // <catalogid, product>
-    private int supplierID;
+    private SupplierCard supplier;
     private String kindOfSupplier;
 
-    public Contract(LinkedList<String> category , int supplierID , String kindOfSupplier){
+    public Contract(LinkedList<String> category , SupplierCard supplier , String kindOfSupplier){
         this.category = category;
-        this.supplierID = supplierID;
+        this.supplier = supplier;
         this.kindOfSupplier = kindOfSupplier;
         products = new HashMap<>();
     }
@@ -26,7 +29,7 @@ public class Contract {
     public Contract(int supplierID){
         category= new LinkedList<>();
         products = new HashMap<>();
-        this.supplierID = supplierID;
+        this.supplier = supplier;
         kindOfSupplier = "";
     }
 
