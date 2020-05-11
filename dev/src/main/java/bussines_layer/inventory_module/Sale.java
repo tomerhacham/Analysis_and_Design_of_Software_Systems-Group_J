@@ -43,7 +43,7 @@ public class Sale {
         for (GeneralProduct product:products_on_sale) {
             Float sale_price=number;
             if (type.equals(discountType.precentage)){
-                sale_price=product.getRetail_price()*(1-(number/100));
+                sale_price=product.getRetailPrice()*(1-(number/100));
             }
             result = product.setSale(sale_price);
             msg=msg.concat(result.getMessage().concat("\n"));

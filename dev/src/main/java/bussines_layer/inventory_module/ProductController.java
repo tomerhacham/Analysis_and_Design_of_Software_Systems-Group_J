@@ -76,7 +76,7 @@ public class ProductController {
         GeneralProduct toEdit = searchGeneralProductbyCatalogID(catalogID);
         Result result;
         if (toEdit != null) {
-            toEdit.setSupplier_price(new_supplier_price);
+            toEdit.setSupplierPrice(new_supplier_price);
             result = new Result<GeneralProduct>(true, toEdit, "Supplier price of general product has been changed");
         } else {
             result = new Result<String>(false, catalogID, "Could not find general product");
@@ -88,7 +88,7 @@ public class ProductController {
         GeneralProduct toEdit = searchGeneralProductbyCatalogID(catalogID);
         Result result;
         if (toEdit != null) {
-            toEdit.setSupplier_price(new_retail_price);
+            toEdit.setSupplierPrice(new_retail_price);
             result = new Result<GeneralProduct>(true, toEdit, "Retail price of general product has been changed");
         } else {
             result = new Result<String>(false, catalogID, "Could not find general product");
@@ -112,7 +112,7 @@ public class ProductController {
         GeneralProduct toEdit = searchGeneralProductbyCatalogID(catalogID);
         Result result;
         if (toEdit != null) {
-            toEdit.setMin_quantity(new_min_quantity);
+            toEdit.setMinQuantity(new_min_quantity);
             result = new Result<GeneralProduct>(true, toEdit, "Min quantity price of general product has been changed");
         } else {
             result = new Result<String>(false, catalogID, "Could not find general product");

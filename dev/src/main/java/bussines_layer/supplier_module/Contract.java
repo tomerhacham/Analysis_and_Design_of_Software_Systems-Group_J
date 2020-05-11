@@ -73,7 +73,7 @@ public class Contract {
         //remove all product from this category from products list
         LinkedList <GeneralProduct> toRemove = new LinkedList<>();
         for (Integer i : products.keySet()){
-            if (products.get(i).getSupplierCategory().equals(c) ){
+            if (products.get(i).getSupplierCategory(supplier.getId()).equals(c) ){
                 toRemove.add(products.get(i));
             }
         }
@@ -104,7 +104,7 @@ public class Contract {
 
     public void addProduct(GeneralProduct p){
         // first check if the supplier can supply this category (check if the category is in the category list)
-        boolean categoryInList = isCategoryExist(p.getSupplierCategory());
+        boolean categoryInList = isCategoryExist(p.getSupplierCategory(supplier.getId()));
 
         if (categoryInList){
             if (products.containsKey(p.getProductID())){
@@ -137,7 +137,7 @@ public class Contract {
 
     public float getProductPrice(Integer productID){
         if (products.containsKey(productID)){
-            return products.get(productID).getSupplier_price();
+            return products.get(productID).getSupplierPrice();
         }
         //sz_result ("The Product Is Not In The Contract");  //TODO- result
         return Integer.MAX_VALUE;

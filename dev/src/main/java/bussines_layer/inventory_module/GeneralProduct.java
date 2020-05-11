@@ -10,7 +10,6 @@ public class GeneralProduct {
     //fields
     private final Integer productID;
     private final String manufacture;
-    private final Integer catalogID;  //TODO Catalog Product
     private String name;
     private Float supplier_price; //TODO - problem !!
     private Float retail_price;
@@ -18,14 +17,13 @@ public class GeneralProduct {
     private Integer quantity;
     private Integer min_quantity;
     private List<SpecificProduct> products;
-    private String supplier_category;  //TODO Catalog Product
+    private List<CatalogProduct> catalog_products;
 
     //Constructor
-    public GeneralProduct(String manufacture, Integer catalogID, String name, Float supplier_price,
-                          Float retail_price, Integer min_quantity, Integer productID , String supplier_category)
+    public GeneralProduct(String manufacture, String name, Float supplier_price,
+                          Float retail_price, Integer min_quantity, Integer productID)
     {
         this.manufacture = manufacture;
-        this.catalogID = catalogID;
         this.name = name;
         this.supplier_price = supplier_price;
         this.retail_price = retail_price;
@@ -34,7 +32,7 @@ public class GeneralProduct {
         this.min_quantity = min_quantity;
         this.products = new LinkedList<>();
         this.productID = productID;
-        this.supplier_category = supplier_category;
+        this.catalog_products = new LinkedList<>();
     }
 
     //region Getters - Setters
@@ -45,15 +43,9 @@ public class GeneralProduct {
 
     public Integer getProductID() {return this.productID;}
 
-    public String getSupplierCategory() {return this.supplier_category;}
-
     /*public void setManufacture(String manufacture) {
         this.manufacture = manufacture;
     }*/
-
-    public Integer getCatalogID() {
-        return catalogID;
-    }
 
     /*public void setCatalogID(String catalogID) {
         this.catalogID = catalogID;
@@ -67,22 +59,22 @@ public class GeneralProduct {
         this.name = name;
     }
 
-    public Float getSupplier_price() {
+    public Float getSupplierPrice() {
         return supplier_price;
     }
 
-    public void setSupplier_price(Float supplier_price) {
+    public void setSupplierPrice(Float supplier_price) {
         this.supplier_price = supplier_price;
     }
 
-    public Float getRetail_price() {
+    public Float getRetailPrice() {
         if (sale_price>-1){
             return sale_price;
         }
         return retail_price;
     }
 
-    public void setRetail_price(Float retail_price) {
+    public void setRetailPrice(Float retail_price) {
         this.retail_price = retail_price;
     }
 
@@ -94,11 +86,11 @@ public class GeneralProduct {
         this.quantity = quantity;
     }
 
-    public Integer getMin_quantity() {
+    public Integer getMinQuantity() {
         return min_quantity;
     }
 
-    public void setMin_quantity(Integer min_quantity) {
+    public void setMinQuantity(Integer min_quantity) {
         if(min_quantity>=0)
         this.min_quantity = min_quantity;
     }
@@ -222,7 +214,7 @@ public class GeneralProduct {
     /**
      * search if the specific product is type of this general product
      * @param product_id - id of the specific product (allocated by the product controller)
-     * @return
+     * @return true/false
      */
     public boolean typeOf(Integer product_id){
         for(SpecificProduct product:products){
@@ -249,12 +241,56 @@ public class GeneralProduct {
         return (Math.abs(min_quantity-quantity)+5); //TODO !!!!
     }
 
+
+    /**
+     * Search supplier's category of this general product
+     * @param supplier_id - id of requested supplier
+     * @return name of category, null if supplier not found
+     */
+    public String getSupplierCategory(Integer supplier_id) {
+        for (CatalogProduct cp : catalog_products){
+            if (cp.getSupplierId().equals(supplier_id)){
+                return cp.getSupplierCategory();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Search supplier id's catalogID of this general product
+     * @param supplier_id - id of requested supplier
+     * @return catalod ID, null if supplier not found
+     */
+    public String getCatalogID(Integer supplier_id){
+        for (CatalogProduct cp : catalog_products){
+            if (cp.getSupplierId().equals(supplier_id)){
+                return cp.getCatalogID();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Search supplier's price of this general product
+     * @param supplier_id - id of requested supplier
+     * @return price, null if supplier not found
+     */
+    public Float getSupplierPrice(Integer supplier_id){
+        for (CatalogProduct cp : catalog_products){
+            if (cp.getSupplierId().equals(supplier_id)){
+                return cp.getSupplierPrice();
+            }
+        }
+        return null;
+    }
+
+
     @Override
     public String toString() {
         return "" +
                 "name:'" + name + '\'' +
                 ", manufacture:'" + manufacture + '\'' +
-                ", catalogID:'" + catalogID + '\'' +
+                ", productID:'" + productID + '\'' +
                 ", supplier price:" + supplier_price +
                 ", retail price:" + retail_price +
                 ", sale price:" + sale_price +
@@ -263,7 +299,7 @@ public class GeneralProduct {
                 "";
     }
     public String print(){
-        String toReturn="\t-"+this.name+" catalogID:"+this.getCatalogID()+"("+products.size()+")\n";
+        String toReturn="\t-"+this.name+" productID: "+productID+"("+products.size()+")\n";
         for(SpecificProduct product:products){
             toReturn=toReturn.concat("\t\t"+product.toString()+"\n");
         }
