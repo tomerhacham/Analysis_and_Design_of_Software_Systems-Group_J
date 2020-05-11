@@ -9,6 +9,10 @@ public class Branch {
     private Inventory inventory;
     private SupplierModule supplierModule;
 
+    //Constructor
+    public Branch(Integer branch_id) {
+        this.branch_id = branch_id;
+    }
 }
 
 

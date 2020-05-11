@@ -1,6 +1,6 @@
 package bussines_layer.supplier_module;
 import bussines_layer.SupplierCard;
-import bussines_layer.sz_Result;
+import main.java.bussines_layer.sz_Result;
 
 import java.util.HashMap;
 import java.util.LinkedList;

@@ -17,6 +17,8 @@ public class Mapper {
     private CostEngineeringDAO cost_engineering_dao;
     private catalog_product_in_contractDAO catalog_product_in_contract_dao;
 
+    private IDsDAO ids_dao;
+
     //Constructor
     public Mapper() {
     }

@@ -1,6 +1,6 @@
 package persistence_layer.DAO;
 
-import bussines_layer.supplier_module.SupplierCard;
+import bussines_layer.SupplierCard;
 
 import java.util.WeakHashMap;
 

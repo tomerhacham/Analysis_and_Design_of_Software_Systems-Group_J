@@ -1,5 +1,7 @@
 package bussines_layer.supplier_module;
 
+import bussines_layer.SupplierCard;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -18,7 +20,7 @@ public class SupplierController {
     //fields
     // static variable single_instance of type Singleton
     private static SupplierController instance = null;
-    private HashMap<Integer ,SupplierCard> suppliers;
+    private HashMap<Integer , SupplierCard> suppliers;
 
     //constructor
     private SupplierController(){
