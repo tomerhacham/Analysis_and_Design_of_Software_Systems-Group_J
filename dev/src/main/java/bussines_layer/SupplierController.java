@@ -22,7 +22,7 @@ public class SupplierController {
 
     //constructor
     private SupplierController(){
-        suppliers = new HashMap<>();
+        suppliers = new HashMap<Integer, SupplierCard>();
     }
 
     // static method to create instance of Singleton class
@@ -163,7 +163,7 @@ public class SupplierController {
 //#endregion
 
     public LinkedList<String> printallsuppliers() {
-        LinkedList<String> toreturn = new LinkedList<>();
+        LinkedList<String> toreturn = new LinkedList<String>();
 
         if (suppliers.isEmpty()){
             toreturn.add("No Suppliers In The System");
