@@ -8,13 +8,15 @@ public class CatalogProduct {
     private Float supplier_price;
     private final Integer supplier_id;
     private String supplier_category;
+    private String name;
 
-    public CatalogProduct(Integer catalogID, Integer gpID, Float supplier_price, Integer supplier_id, String supplier_category) {
+    public CatalogProduct(Integer catalogID, Integer gpID, Float supplier_price, Integer supplier_id, String supplier_category , String name) {
         this.catalogID = catalogID;
         this.gpID = gpID;
         this.supplier_price = supplier_price;
         this.supplier_id = supplier_id;
         this.supplier_category = supplier_category;
+        this.name = name;
     }
 
     //region Getters & setters
@@ -40,6 +42,10 @@ public class CatalogProduct {
 
     public String getSupplierCategory() {
         return supplier_category;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setSupplierCategory(String supplier_category) {

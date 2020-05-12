@@ -65,8 +65,8 @@ public class CostEngineering {
         }
     }
 
-    public Double getUpdatePrice (int catalogId , int quantity){
-        double price = -1;
+    public float getUpdatePrice (int catalogId , int quantity){
+        float price = -1;
         if (minQuntity.containsKey(catalogId)) {
             int min = minQuntity.get(catalogId);
 
@@ -77,4 +77,6 @@ public class CostEngineering {
 
         return price;
     }
+
+
 }

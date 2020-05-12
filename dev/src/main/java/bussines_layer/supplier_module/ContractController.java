@@ -1,7 +1,9 @@
 package bussines_layer.supplier_module;
 
 import bussines_layer.SupplierCard;
-import bussines_layer.inventory_module.GeneralProduct;
+import bussines_layer.inventory_module.CatalogProduct;
+import javafx.util.Pair;
+
 
 import java.util.LinkedList;
 
@@ -59,7 +61,7 @@ public class ContractController {
 
 //#region Products
 
-    public void addProductToContract(Integer supplierID, GeneralProduct product) {
+    public void addProductToContract(Integer supplierID, CatalogProduct product) {
         // Notice : we checked that the products category is in the Suppliers list inside the contract
         if (findContract(supplierID) == null) {
             //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
@@ -70,7 +72,7 @@ public class ContractController {
         //supplierProducts.get(supplierID).add(product);
     }
 
-    public void removeProductFromContract(Integer supplierID, GeneralProduct product) {
+    public void removeProductFromContract(Integer supplierID, CatalogProduct product) {
 
         if (findContract(supplierID) == null) {
             //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
@@ -81,7 +83,7 @@ public class ContractController {
         //supplierProducts.get(supplierID).remove(product);
     }
 
-    public LinkedList<GeneralProduct> getAllSupplierProducts (Integer supplierID){
+    public LinkedList<CatalogProduct> getAllSupplierProducts (Integer supplierID){
         if (findContract(supplierID) == null) {
             //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
             return null;
@@ -89,22 +91,27 @@ public class ContractController {
         return findContract(supplierID).getProducts();
     }
 
-    //TODO - check the cost eng
-    public Contract getBestSupplierForProduct(Integer productID , Integer quantity){
+
+    public Pair getBestSupplierForProduct(Integer productID , Integer quantity){
         float price = Integer.MAX_VALUE;
         Contract contract = null;
 
         for (Contract c: contracts) {
             if(c.isProductExist(productID , false)){
                 if(c.isCostEngExist()){
-                    c.getCostEngineering().getUpdatePrice()
+                    float priceFromCostEng = c.getCostEngineering().getUpdatePrice(c.getProductCatalogID(productID) , quantity);
+                    if((priceFromCostEng != -1) && (priceFromCostEng < price)){
+                        price = priceFromCostEng;
+                        contract = c;
+                    }
                 }
-            } (c.getProductPrice(productID) < price)){
-                price = c.getProductPrice(productID);
-                contract = c;
+                else if (c.getProductPrice(productID) < price){
+                    price = c.getProductPrice(productID);
+                    contract = c;
+                }
             }
         }
-        return contract;
+        return new Pair(contract, price);
     }
 
 //#endregion

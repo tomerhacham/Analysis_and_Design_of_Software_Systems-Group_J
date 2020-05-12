@@ -31,7 +31,7 @@ public class GeneralProduct {
         this.products = new LinkedList<>();
         this.productID = productID;
         this.catalog_products = new LinkedList<>();
-        addCatalogProduct(catalogID, gpID, supplier_price, supplier_id, supplier_category);
+        addCatalogProduct(catalogID, gpID, supplier_price, supplier_id, supplier_category , name);
     }
 
     //region Getters - Setters
@@ -286,8 +286,18 @@ public class GeneralProduct {
         return null;
     }
 
-    public Result addCatalogProduct(Integer catalogID, Integer gpID, Float supplier_price, Integer supplier_id, String supplier_category){
-        CatalogProduct toAdd = new CatalogProduct(catalogID, gpID, supplier_price, supplier_id, supplier_category);
+    public CatalogProduct getSupplierCatalogProduct(Integer supplierID){
+
+        for ( CatalogProduct cp: catalog_products  ) {
+            if(cp.getSupplierId() == supplierID){
+                return cp;
+            }
+        }
+        return null;
+    }
+
+    public Result addCatalogProduct(Integer catalogID, Integer gpID, Float supplier_price, Integer supplier_id, String supplier_category , String name){
+        CatalogProduct toAdd = new CatalogProduct(catalogID, gpID, supplier_price, supplier_id, supplier_category , name);
         boolean res = catalog_products.add(toAdd);
         Result<CatalogProduct> result;
         if (res){

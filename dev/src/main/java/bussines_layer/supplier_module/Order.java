@@ -1,10 +1,10 @@
 package bussines_layer.supplier_module;
-import bussines_layer.inventory_module.GeneralProduct;
-import main.java.bussines_layer.sz_Result;
+import bussines_layer.inventory_module.CatalogProduct;
+import bussines_layer.inventory_module.ProductController;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Set;
+
 
 /**
  * Class Order.
@@ -18,23 +18,24 @@ public class Order {
 
     private Integer orderID;
     private Integer supplierID; // TODO - how else can we know who is the supplier ?
-    //private status //TODO
-    private HashMap<GeneralProduct, Integer> productsAndQuantity; // <product , quantity>
-    //private HashMap<Integer , LinkedList<GeneralProduct>> supplierAndProduct; //<supplierid, product>
+    private OrderType status; //TODO
+    private HashMap<CatalogProduct, Integer> productsAndQuantity; // <product , quantity>
+    private HashMap<CatalogProduct , Integer> productsAndPrice; //<product, price>
 
 
-    public Order(int orderID , int supplierID ){
+    public Order(int orderID , int supplierID , OrderType status){
         this.orderID = orderID;
         productsAndQuantity = new HashMap<>();
         this.supplierID = supplierID;
-        //supplierAndProduct = new HashMap<>();
+        productsAndPrice = new HashMap<>();
+        status = status;
     }
 
-    public Order(int orderID , int supplierID , LinkedList<GeneralProduct> products){
+    public Order(int orderID , int supplierID , LinkedList<CatalogProduct> products){
         this.orderID = orderID;
         productsAndQuantity = new HashMap<>();
         this.supplierID = supplierID;
-        //supplierAndProduct = new HashMap<>();
+        productsAndPrice = new HashMap<>();
     }
 
     public int getOrderID() {
@@ -45,38 +46,40 @@ public class Order {
         return supplierID;
     }
 
-    public  HashMap<GeneralProduct, Integer> getProductsAndQuantity() {return productsAndQuantity;}
+    public OrderType getStatus() {
+        return status;
+    }
 
-    public void addProduct(GeneralProduct product , Integer quantity){
+    public  HashMap<CatalogProduct, Integer> getProductsAndQuantity() {return productsAndQuantity;}
+
+    public void addProduct(CatalogProduct product , Integer quantity , Integer price){
 
         if (productsAndQuantity.containsKey(product)){
             //sz_Result ( "Product Already Exists In The Order" ); //TODO RESULT
             return;
         }
         productsAndQuantity.put(product , quantity);
+        productsAndPrice.put(product , price);
     }
 
-    public void removeProduct(GeneralProduct product){
+    public void removeProduct(CatalogProduct product){
         if (!(productsAndQuantity.containsKey(product))){
             //sz_Result ( "Product Is Not In The Order" ); //TODO RESULT
             return;
         }
         productsAndQuantity.remove(product);
+        productsAndPrice.remove(product);
     }
 
-    public void updateProductQuantity(GeneralProduct product , Integer newQuantity){
-        if (!(productsAndQuantity.containsKey(product))){
-            //sz_Result ( "Product Is Not In The Order" ); //TODO RESULT
-            return;
-        }
+    public void updateProductQuantityInOrder(CatalogProduct product , Integer newQuantity){
         productsAndQuantity.replace(product , newQuantity);
     }
 
     public String display() {
-        String toDisplay = "Order id : "+'\t'+this.orderID.toString() + '\n';
+        String toDisplay = "Order id : "+'\t'+this.orderID.toString() +'\t'+"Supplier id : "+this.supplierID+ '\n';
         toDisplay = toDisplay+ "Product"+'\t'+'\t'+"Quantity" + '\n';
 
-        for (GeneralProduct p : productsAndQuantity.keySet()){
+        for (CatalogProduct p : productsAndQuantity.keySet()){
             toDisplay = toDisplay+ p.getName() + '\t' +'\t'+ productsAndQuantity.get(p).toString() + '\n';
         }
 
@@ -93,26 +96,15 @@ public class Order {
     public Double getTotalAmount (){
         Double total = 0.0;
         int quantity;
-        Double price;
+        Integer price;
 
-        for (GeneralProduct gp :productsAndQuantity.keySet()) {
-
-
+        for (CatalogProduct cp :productsAndQuantity.keySet()) {
+            quantity = productsAndQuantity.get(cp);
+            price = productsAndPrice.get(cp);
+            total = total + (price * quantity);
         }
-
-        for (GeneralProduct p : productsAndQuantity) {
-            quantity = productsAndQuantity.get(p);
-            price = ProductController.getInstance().getUpdatePrice(supId, p, quantity);
-            if (price==(-1.0)){
-                break;
-            }
-            else{
-                total = total + (price * quantity);
-            }
-        }
-
         return total;
-    } //TODO - do we need this at all ?? (it is an amount for a specific supplier and not really for the whole report)
+    }
 
 
 

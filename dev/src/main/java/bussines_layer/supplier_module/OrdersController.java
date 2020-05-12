@@ -1,4 +1,5 @@
 package bussines_layer.supplier_module;
+import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.inventory_module.GeneralProduct;
 
 import java.util.HashMap;
@@ -12,6 +13,9 @@ import java.util.LinkedList;
  * Functionality that related to Orders.
  *
  */
+enum OrderType
+{PeriodicOrder,UpdateStockOrder;}
+
 
 //Singleton
 public class OrdersController {
@@ -34,15 +38,9 @@ public class OrdersController {
         return instance;
     }
 
-    public int createOrder(int supplierID){
+    public int createOrder(int supplierID , OrderType status){
         orderidCounter++;
-        orders.add(new Order(orderidCounter  , supplierID));
-        return orderidCounter;
-    }
-
-    public int createOrder(int supplierID , LinkedList<GeneralProduct> products){
-        orderidCounter++;
-        orders.add(new Order(orderidCounter  , supplierID , products));
+        orders.add(new Order(orderidCounter  , supplierID , status));
         return orderidCounter;
     }
 
@@ -59,19 +57,95 @@ public class OrdersController {
 
     public LinkedList<Order> getAllOrders() { return this.orders;}
 
-    public void addProductToOrder(int orderID , GeneralProduct product , Integer quantity){
-        getOrder(orderID).addProduct(product , quantity);
+    public void addProductToOrder(int orderID , CatalogProduct product , Integer quantity , Integer price){
+        getOrder(orderID).addProduct(product , quantity , price);
     }
 
-    //TODO - do we need this function at all ?
-    public void updateProductQuantityInOrder(int orderid ,GeneralProduct product , int quantity){
-        getOrder(orderid).updateProductQuantity(product , quantity);
+    public void removeFromOrder(int orderID , CatalogProduct product) {
+        if(getOrder(orderID).getStatus() == OrderType.PeriodicOrder){
+            getOrder(orderID).removeProduct(product);
+        }
+        else{
+            //sz_Result("The order is not a periodic order , Therefor you cant change the order") TODO Result
+        }
     }
 
-    //TODO - do we want to remove products only from the last order ? or make it available to remove from all orders with the order id ?
-    public void removeFromOrder(int orderID , GeneralProduct product) {
-        orders.getLast().removeProductFromOrder(productID , supid);
+    //TODO - do we also need to check if the price is updated due to this change?
+    public void updateProductQuantityInOrder(int orderID , CatalogProduct product , Integer newQuantity) {
+        if(getOrder(orderID).getStatus() == OrderType.PeriodicOrder){
+            getOrder(orderID).updateProductQuantityInOrder(product , newQuantity);
+        }
+        else{
+            //sz_Result("The order is not a periodic order , Therefor you cant change the order") TODO Result
+        }
     }
+
+    //get total price of an order
+    public Double getTotalPrice (int orderID){
+        for (Order o : orders){
+            if (o.getOrderID() == orderID)
+                return o.getTotalAmount();
+        }
+        return -1.0;
+    }
+
+    public Double getTotalAmountLastOrder (){
+        return orders.getLast().getTotalAmount();
+    }
+
+    //removes only the last order
+    public void removeOrder (){
+        orders.removeLast();
+    }
+
+
+    public LinkedList<String> displayAllSupplierOrders(int supId) {
+        LinkedList<String> toDisplay = new LinkedList<>();
+
+        if(orders.isEmpty()){
+            toDisplay.add("There Are No Orders In The System"+'\n');
+            return toDisplay;
+        }
+
+        for (Order o : orders){
+            if(o.getSupplierID()==supId){
+                toDisplay.add(o.display());
+            }
+        }
+        return toDisplay;
+    }
+
+
+    public LinkedList<String> displayAllOrders (){
+        LinkedList<String> toDisplay = new LinkedList<>();
+
+        if(orders.isEmpty()){
+            toDisplay.add("There Are No Orders In The System"+'\n');
+            return toDisplay;
+        }
+
+        for (Order o: orders){
+            toDisplay.add(o.display());
+        }
+        return toDisplay;
+    }
+
+
+
+    //TODO - it was never used - check if we still need it
+//    public  HashMap<GeneralProduct, Integer> endOrder() {
+//        return orders.getLast().getProductsAndQuantity();
+//    }
+
+
+
+
+
+//    //TODO - do we need this function at all ?
+//    public void updateProductQuantityInOrder(int orderid ,CatalogProduct product , int quantity){
+//        getOrder(orderid).updateProductQuantity(product , quantity);
+//    }
+
 
 //    public void addProductToOrder(int supID, int productID, int quantity) {
 //        orders.getLast().addProductForSupplier(supID , productID , quantity);
@@ -100,70 +174,28 @@ public class OrdersController {
 //        orders.getLast().removeProductFromOrder(productID , supid);
 //    }
 
-    //changeSupplierForProduct
-    public void changeSupplierForProductInOrder(int orderid , Integer supplierId , int productid ,int catalogid, Integer quantity){
-        Order o = getOrder(orderid);
-        o.changeSupplierForProduct(supplierId , productid , catalogid , quantity);
-    }
-
-    //get total price of an order
-    public Double getTotalPrice (int orderID){
-        for (Order o : orders){
-            if (o.getOrderID() == orderID)
-                return o.getTotalAmount();
-        }
-        return -1.0;
-    }
-
-    public Double getTotalAmountLastOrder (){
-        return orders.getLast().getTotalAmount();
-    }
+//    //changeSupplierForProduct //TODO - not relevant eny more
+//    public void changeSupplierForProductInOrder(int orderid , Integer supplierId , int productid ,int catalogid, Integer quantity){
+//        Order o = getOrder(orderid);
+//        o.changeSupplierForProduct(supplierId , productid , catalogid , quantity);
+//    }
 
 
 
-    public  HashMap<GeneralProduct, Integer> endOrder() {
-       return orders.getLast().getProductsAndQuantity();
-    }
 
-    public void removeOrder (){
-        orders.removeLast();
-    }
 
-    public void updateProductQuantity(int productID, int quantity) {
-        orders.getLast().updateProductQuantity(productID, quantity);
-    }
 
-    public LinkedList<String> displayAllOrders (){
-        LinkedList<String> toDisplay = new LinkedList<>();
 
-        if(orders.isEmpty()){
-            toDisplay.add("There Are No Orders In The System"+'\n');
-            return toDisplay;
-        }
 
-        for (Order o: orders){
-            toDisplay.add(o.display());
-        }
-        return toDisplay;
-    }
 
-    public LinkedList<String> displayOrderBySupplier(int supId) {
-        LinkedList<String> toDisplay = new LinkedList<>();
 
-        if(orders.isEmpty()){
-            toDisplay.add("There Are No Orders In The System"+'\n');
-            return toDisplay;
-        }
 
-        for (Order o : orders){
-            toDisplay.add(o.display(supId));
-        }
-        return toDisplay;
-    }
 
-    public GeneralProduct createNewProduct(int productID, String name, int price, String producer, String category, int catalogid) {
-        return new GeneralProduct(productID, name, price, producer, category, catalogid);
-    }
+
+
+
+
+
 }
 
 
