@@ -11,7 +11,6 @@ public class GeneralProduct {
     private final Integer productID;
     private final String manufacture;
     private String name;
-    private Float supplier_price; //TODO - problem !!
     private Float retail_price;
     private Float sale_price;
     private Integer quantity;
@@ -21,11 +20,10 @@ public class GeneralProduct {
 
     //Constructor
     public GeneralProduct(String manufacture, String name, Float supplier_price,
-                          Float retail_price, Integer min_quantity, Integer productID)
+                          Float retail_price, Integer min_quantity, Integer productID, Integer catalogID, Integer gpID, Integer supplier_id, String supplier_category)
     {
         this.manufacture = manufacture;
         this.name = name;
-        this.supplier_price = supplier_price;
         this.retail_price = retail_price;
         this.sale_price=new Float(-1);
         this.quantity = 0;
@@ -33,6 +31,7 @@ public class GeneralProduct {
         this.products = new LinkedList<>();
         this.productID = productID;
         this.catalog_products = new LinkedList<>();
+        addCatalogProduct(catalogID, gpID, supplier_price, supplier_id, supplier_category);
     }
 
     //region Getters - Setters
@@ -57,14 +56,6 @@ public class GeneralProduct {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Float getSupplierPrice() {
-        return supplier_price;
-    }
-
-    public void setSupplierPrice(Float supplier_price) {
-        this.supplier_price = supplier_price;
     }
 
     public Float getRetailPrice() {
@@ -94,11 +85,10 @@ public class GeneralProduct {
         if(min_quantity>=0)
         this.min_quantity = min_quantity;
     }
+
     //endregion
 
     //region Methods
-
-    //TODO check supplier id
     public Result addProduct(Integer product_id, Date expiration_date){
         SpecificProduct product = new SpecificProduct(product_id,Location.warehouse,expiration_date);
         boolean res= products.add(product);
@@ -227,6 +217,17 @@ public class GeneralProduct {
         return false;
     }
 
+    //TODO check in product controller old method
+    public boolean setSupplierPrice(Float supplier_price, Integer supplier_id) {
+        for (CatalogProduct cp : catalog_products){
+            if (cp.getSupplierId().equals(supplier_id)){
+                cp.setSupplierPrice(supplier_price);
+                return true;
+            }
+        }
+        return false;
+    }
+
     private SpecificProduct getProductbyID(Integer id){
         for (SpecificProduct product:products) {
             if(product.getId()==id){
@@ -304,7 +305,6 @@ public class GeneralProduct {
                 "name:'" + name + '\'' +
                 ", manufacture:'" + manufacture + '\'' +
                 ", productID:'" + productID + '\'' +
-                ", supplier price:" + supplier_price +
                 ", retail price:" + retail_price +
                 ", sale price:" + sale_price +
                 ", quantity:" + quantity +
