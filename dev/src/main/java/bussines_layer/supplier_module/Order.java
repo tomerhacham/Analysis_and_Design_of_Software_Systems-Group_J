@@ -13,22 +13,29 @@ import java.util.LinkedList;
  * Functionality that related to Order information.
  *
  */
+enum OrderType
+{PeriodicOrder,UpdateStockOrder;}
+
+enum Status
+{received,waiting}
 
 public class Order {
 
     private Integer orderID;
     private Integer supplierID; // TODO - how else can we know who is the supplier ?
-    private OrderType status; //TODO
+    private OrderType type; //TODO
+    private Status status;
     private HashMap<CatalogProduct, Integer> productsAndQuantity; // <product , quantity>
     private HashMap<CatalogProduct , Integer> productsAndPrice; //<product, price>
 
 
-    public Order(int orderID , int supplierID , OrderType status){
+    public Order(int orderID , int supplierID , OrderType type){
         this.orderID = orderID;
         productsAndQuantity = new HashMap<>();
         this.supplierID = supplierID;
         productsAndPrice = new HashMap<>();
-        status = status;
+        this.type = type;
+        this.status=Status.waiting;
     }
 
     public Order(int orderID , int supplierID , LinkedList<CatalogProduct> products){
@@ -46,10 +53,20 @@ public class Order {
         return supplierID;
     }
 
-    public OrderType getStatus() {
+    public Status getStatus() {
         return status;
     }
 
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+    public OrderType getType() {
+        return type;
+    }
+
+    public void setType(OrderType type) {
+        this.type = type;
+    }
     public  HashMap<CatalogProduct, Integer> getProductsAndQuantity() {return productsAndQuantity;}
 
     public void addProduct(CatalogProduct product , Integer quantity , Integer price){
