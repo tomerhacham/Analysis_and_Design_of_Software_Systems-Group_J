@@ -22,11 +22,11 @@ public class ProductController {
      * remove general product from the list in condition is was removed from the category.
      *
      * @param category  - the specific category the general product belongs to
-     * @param catalogID - catalogId of the general product
+     * @param gpID - catalogId of the general product
      * @return
      */
-    public Result removeGeneralProduct(Category category, String catalogID) {
-        GeneralProduct toRemove = searchGeneralProductbyCatalogID(catalogID);
+    public Result removeGeneralProduct(Category category, Integer gpID) {
+        GeneralProduct toRemove = searchGeneralProductbyCatalogID(gpID);
         Result result;
         if (toRemove != null) {
             result = category.removeGeneralProduct(toRemove);
@@ -34,7 +34,7 @@ public class ProductController {
                 generalProducts.remove(toRemove);
             }
         } else {
-            result = new Result<String>(false, catalogID, "Could not find general product by it catalogID");
+            result = new Result<Integer>(false, gpID, "Could not find general product by it gpID");
         }
         return result;
     }
@@ -51,8 +51,9 @@ public class ProductController {
      * @param min_quantity
      * @return
      */
-    public Result addGeneralProduct(Category category, String manufacture, String catalogID, String name, Float supplier_price, Float retail_price, Integer min_quantity) {
-        GeneralProduct newProduct = new GeneralProduct(manufacture, catalogID, name, supplier_price, retail_price, min_quantity);
+    public Result addGeneralProduct(Category category, String manufacture, String name, Float supplier_price, Float retail_price,
+                                        Integer min_quantity, Integer catalogID, Integer gpID, Integer supplier_id, String supplier_category) {
+        GeneralProduct newProduct = new GeneralProduct(manufacture, name, supplier_price, retail_price, min_quantity, catalogID, gpID, supplier_id, supplier_category);
         Result result = category.addGeneralProduct(newProduct);
         if (result.isOK()) {
             generalProducts.add(newProduct);
@@ -60,62 +61,62 @@ public class ProductController {
         return result;
     }
 
-    public Result editGeneralProduct_name(String catalogID, String new_name) {
-        GeneralProduct toEdit = searchGeneralProductbyCatalogID(catalogID);
+    public Result editGeneralProductName(Integer gpID, String new_name) {
+        GeneralProduct toEdit = searchGeneralProductbyCatalogID(gpID);
         Result result;
         if (toEdit != null) {
             toEdit.setName(new_name);
             result = new Result<GeneralProduct>(true, toEdit, "Name of general product has been changed");
         } else {
-            result = new Result<String>(false, catalogID, "Could not find general product");
+            result = new Result<Integer>(false, gpID, "Could not find general product");
         }
         return result;
     }
 
-    public Result editGeneralProduct_supplier_price(String catalogID, Float new_supplier_price) {
-        GeneralProduct toEdit = searchGeneralProductbyCatalogID(catalogID);
+    public Result editGeneralProductSupplierPrice(Integer gpID, Float new_supplier_price, Integer supplier_id) {
+        GeneralProduct toEdit = searchGeneralProductbyCatalogID(gpID);
         Result result;
         if (toEdit != null) {
-            toEdit.setSupplierPrice(new_supplier_price);
+            toEdit.setSupplierPrice(new_supplier_price, supplier_id);
             result = new Result<GeneralProduct>(true, toEdit, "Supplier price of general product has been changed");
         } else {
-            result = new Result<String>(false, catalogID, "Could not find general product");
+            result = new Result<Integer>(false, gpID, "Could not find general product");
         }
         return result;
     }
 
-    public Result editGeneralProduct_retail_price(String catalogID, Float new_retail_price) {
-        GeneralProduct toEdit = searchGeneralProductbyCatalogID(catalogID);
+    public Result editGeneralProductRetailPrice(Integer gpID, Float new_retail_price) {
+        GeneralProduct toEdit = searchGeneralProductbyCatalogID(gpID);
         Result result;
         if (toEdit != null) {
-            toEdit.setSupplierPrice(new_retail_price);
+            toEdit.setRetailPrice(new_retail_price);
             result = new Result<GeneralProduct>(true, toEdit, "Retail price of general product has been changed");
         } else {
-            result = new Result<String>(false, catalogID, "Could not find general product");
+            result = new Result<Integer>(false, gpID, "Could not find general product");
         }
         return result;
     }
 
-    public Result editGeneralProduct_quantity(String catalogID, Integer new_quantity) {
-        GeneralProduct toEdit = searchGeneralProductbyCatalogID(catalogID);
+    public Result editGeneralProductQuantity(Integer gpID, Integer new_quantity) {
+        GeneralProduct toEdit = searchGeneralProductbyCatalogID(gpID);
         Result result;
         if (toEdit != null) {
             toEdit.setQuantity(new_quantity);
             result = new Result<GeneralProduct>(true, toEdit, "Quantity price of general product has been changed");
         } else {
-            result = new Result<String>(false, catalogID, "Could not find general product");
+            result = new Result<Integer>(false, gpID, "Could not find general product");
         }
         return result;
     }
 
-    public Result editGeneralProduct_min_quantity(String catalogID, Integer new_min_quantity) {
-        GeneralProduct toEdit = searchGeneralProductbyCatalogID(catalogID);
+    public Result editGeneralProductMinQuantity(Integer gpID, Integer new_min_quantity) {
+        GeneralProduct toEdit = searchGeneralProductbyCatalogID(gpID);
         Result result;
         if (toEdit != null) {
             toEdit.setMinQuantity(new_min_quantity);
             result = new Result<GeneralProduct>(true, toEdit, "Min quantity price of general product has been changed");
         } else {
-            result = new Result<String>(false, catalogID, "Could not find general product");
+            result = new Result<Integer>(false, gpID, "Could not find general product");
         }
         return result;
     }
@@ -126,13 +127,13 @@ public class ProductController {
     /**
      * add specific product to the general product list.
      *
-     * @param catalogID       - catalog id of the general product
+     * @param gpID       - catalog id of the general product
      * @param expiration_date - of the specific product or the batch of products
      * @param quantity        - how many specific product with the SAME expiration date
      * @return
      */
-    public Result addSpecificProduct(String catalogID, Date expiration_date, Integer quantity) {
-        GeneralProduct generalProduct = searchGeneralProductbyCatalogID(catalogID);
+    public Result addSpecificProduct(Integer gpID, Date expiration_date, Integer quantity) {
+        GeneralProduct generalProduct = searchGeneralProductbyCatalogID(gpID);
         Result result = null;
         String msg = "";
         if (generalProduct != null) {
@@ -142,7 +143,7 @@ public class ProductController {
             }
             result.setMessage(msg);
         } else {
-            result = new Result<String>(false, catalogID, "Could not find general product with the same catalog ID");
+            result = new Result<Integer>(false, gpID, "Could not find general product with the same catalog ID");
         }
         return result;
     }
@@ -204,12 +205,12 @@ public class ProductController {
     /**
      * search general product by catalogId, if not found return null
      *
-     * @param catalogID
+     * @param gpID
      * @return
      */
-    public GeneralProduct searchGeneralProductbyCatalogID(String catalogID) {
+    public GeneralProduct searchGeneralProductbyCatalogID(Integer gpID) {
         for (GeneralProduct product : generalProducts) {
-            if (product.getCatalogID().equals(catalogID)) {
+            if (product.getGpID().equals(gpID)) {
                 return product;
             }
         }

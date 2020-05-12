@@ -8,7 +8,7 @@ import java.util.List;
 
 public class GeneralProduct {
     //fields
-    private final Integer productID;
+    private final Integer gpID;
     private final String manufacture;
     private String name;
     private Float retail_price;
@@ -20,7 +20,8 @@ public class GeneralProduct {
 
     //Constructor
     public GeneralProduct(String manufacture, String name, Float supplier_price,
-                          Float retail_price, Integer min_quantity, Integer productID, Integer catalogID, Integer gpID, Integer supplier_id, String supplier_category)
+                            Float retail_price, Integer min_quantity, Integer catalogID,
+                            Integer gpID, Integer supplier_id, String supplier_category)
     {
         this.manufacture = manufacture;
         this.name = name;
@@ -29,7 +30,7 @@ public class GeneralProduct {
         this.quantity = 0;
         this.min_quantity = min_quantity;
         this.products = new LinkedList<>();
-        this.productID = productID;
+        this.gpID = gpID;
         this.catalog_products = new LinkedList<>();
         addCatalogProduct(catalogID, gpID, supplier_price, supplier_id, supplier_category , name);
     }
@@ -40,7 +41,7 @@ public class GeneralProduct {
         return manufacture;
     }
 
-    public Integer getProductID() {return this.productID;}
+    public Integer getGpID() {return this.gpID;}
 
     /*public void setManufacture(String manufacture) {
         this.manufacture = manufacture;
@@ -303,7 +304,7 @@ public class GeneralProduct {
         if (res){
             result = new Result<>(res,toAdd,"Catalog Product " + name + " of supplier " + supplier_id + " added successfully");
         } else {
-            result = new Result<>(res, toAdd, "There was a problem adding the product " + productID + " from supplier " + supplier_id);
+            result = new Result<>(res, toAdd, "There was a problem adding the product " + this.gpID + " from supplier " + supplier_id);
         }
         return result;
     }
@@ -314,7 +315,7 @@ public class GeneralProduct {
         return "" +
                 "name:'" + name + '\'' +
                 ", manufacture:'" + manufacture + '\'' +
-                ", productID:'" + productID + '\'' +
+                ", gpID:'" + gpID + '\'' +
                 ", retail price:" + retail_price +
                 ", sale price:" + sale_price +
                 ", quantity:" + quantity +
@@ -322,7 +323,7 @@ public class GeneralProduct {
                 "";
     }
     public String print(){
-        String toReturn="\t-"+this.name+" productID: "+productID+"("+products.size()+")\n";
+        String toReturn="\t-"+this.name+" gpID: "+ gpID +"("+products.size()+")\n";
         for(SpecificProduct product:products){
             toReturn=toReturn.concat("\t\t"+product.toString()+"\n");
         }

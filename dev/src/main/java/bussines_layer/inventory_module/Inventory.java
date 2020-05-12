@@ -32,7 +32,7 @@ public class Inventory {
         return categoryController.removeCategory(category_id);
     }
     public Result editCategoryname(Integer category_id,String name){
-        return categoryController.editCategoryname(category_id,name);
+        return categoryController.editCategoryName(category_id,name);
     }
     //endregion
 
@@ -62,20 +62,20 @@ public class Inventory {
         }
         return result;    }
     public Result editGeneralProduct_name(String catalogID,String new_name){
-        return productController.editGeneralProduct_name(catalogID, new_name);
+        return productController.editGeneralProductName(catalogID, new_name);
     }
     public Result editGeneralProduct_supplier_price(String catalogID, Float new_supplier_price){
-        return productController.editGeneralProduct_supplier_price(catalogID, new_supplier_price);
+        return productController.editGeneralProductSupplierPrice(catalogID, new_supplier_price);
     }
     public Result editGeneralProduct_retail_price(String catalogID, Float new_retail_price){
-        return productController.editGeneralProduct_retail_price(catalogID, new_retail_price);
+        return productController.editGeneralProductRetailPrice(catalogID, new_retail_price);
 
     }
     public Result editGeneralProduct_quantity(String catalogID, Integer new_quantity){
-        return productController.editGeneralProduct_quantity(catalogID, new_quantity);
+        return productController.editGeneralProductQuantity(catalogID, new_quantity);
     }
     public Result editGeneralProduct_min_quantity(String catalogID, Integer new_min_quantity){
-        return productController.editGeneralProduct_min_quantity(catalogID, new_min_quantity);
+        return productController.editGeneralProductMinQuantity(catalogID, new_min_quantity);
 
     }
     //endregion

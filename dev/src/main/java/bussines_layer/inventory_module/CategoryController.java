@@ -125,7 +125,7 @@ public class CategoryController {
      * @param name - the new name
      * @return
      */
-    public Result editCategoryname(Integer category_id,String name){
+    public Result editCategoryName(Integer category_id, String name){
         Category category = searchCategorybyId(category_id);
         Result<Category> result;
         if(category!=null){

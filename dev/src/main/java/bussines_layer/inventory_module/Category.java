@@ -154,10 +154,10 @@ public class Category {
         if(generalProducts.contains(toRemove)){
             res=generalProducts.remove(toRemove);
             if(res){
-                result = new Result<>(res,toRemove,"General product "+toRemove.getName()+"("+toRemove.getCatalogID()+")"+ "has been removed from the category");
+                result = new Result<>(res,toRemove,"General product "+toRemove.getName()+"("+toRemove.getGpID()+")"+ "has been removed from the category");
             }
             else{
-                result = new Result<>(res,toRemove,"There was a problem removing the product "+toRemove.getName()+"("+toRemove.getCatalogID()+")"+"from the category");
+                result = new Result<>(res,toRemove,"There was a problem removing the product "+toRemove.getName()+"("+toRemove.getGpID()+")"+"from the category");
             }
         }
         else{

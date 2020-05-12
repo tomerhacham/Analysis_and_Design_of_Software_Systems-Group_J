@@ -189,7 +189,7 @@ public class SupplierCard {
             return ans;
         }
         for (Product p:plist) {
-            ans = ans +"Product Name : " +p.getName()+'\t'+'\t'+"Product Id : "+p.getProductID()+'\t'+'\t'+"Product Catalog Id : "+p.getCatalogID()+'\n';
+            ans = ans +"Product Name : " +p.getName()+'\t'+'\t'+"Product Id : "+p.getGpID()+'\t'+'\t'+"Product Catalog Id : "+p.getCatalogID()+'\n';
         }
         return ans;
     }*/
