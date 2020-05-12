@@ -421,7 +421,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length==2) {
-            result = inv.editCategoryname(Integer.parseInt(param[0]),param[1]);
+            result = inv.editCategoryName(Integer.parseInt(param[0]),param[1]);
             System.out.println(result.getMessage());
         }
         else{
@@ -496,10 +496,10 @@ public class CLController {
         String[] param = getInputParserbyComma(sc);
         if (param.length==1) {
             if(param[0].equals("all")){
-                result = inv.makeReport(0, "outofstock");
+                result = inv.makeReportByCategory(0, "outofstock");
             }
             else{
-                result = inv.makeReport(Integer.parseInt(param[0]), "outofstock");
+                result = inv.makeReportByCategory(Integer.parseInt(param[0]), "outofstock");
             }
             System.out.println(result.getMessage());
         }
@@ -515,7 +515,7 @@ public class CLController {
         System.out.println(menu);
         String[] param=getInputParserbyComma(sc);
         if(param.length==1) {
-            result = inv.makeReport(param[0], "outofstock");
+            result = inv.makeReportByGeneralProduct(param[0], "outofstock");
             System.out.println(result.getMessage());
         }
         else{
@@ -560,10 +560,10 @@ public class CLController {
         String[] param = getInputParserbyComma(sc);
         if (param.length==1) {
             if(param[0].equals("all")){
-                result = inv.makeReport(0, "instock");
+                result = inv.makeReportByCategory(0, "instock");
             }
             else{
-                result = inv.makeReport(Integer.parseInt(param[0]), "instock");
+                result = inv.makeReportByCategory(Integer.parseInt(param[0]), "instock");
             }
             System.out.println(result.getMessage());
         }
@@ -576,7 +576,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if(param.length==1) {
-            result = inv.makeReport(param[0], "instock");
+            result = inv.makeReportByGeneralProduct(param[0], "instock");
             System.out.println(result.getMessage());
         }
         else{
@@ -621,10 +621,10 @@ public class CLController {
         String[] param = getInputParserbyComma(sc);
         if (param.length==1) {
             if(param[0].equals("all")){
-                result = inv.makeReport(0, "dne");
+                result = inv.makeReportByCategory(0, "dne");
             }
             else{
-                result = inv.makeReport(Integer.parseInt(param[0]), "dne");
+                result = inv.makeReportByCategory(Integer.parseInt(param[0]), "dne");
             }
             System.out.println(result.getMessage());
         }
@@ -637,7 +637,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if(param.length==1) {
-            result = inv.makeReport(param[0], "dne");
+            result = inv.makeReportByGeneralProduct(param[0], "dne");
             System.out.println(result.getMessage());
         }
         else{
@@ -713,18 +713,18 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if(param.length==2) {
-            result = inv.addSale(Integer.parseInt(param[0]),"fix",Float.parseFloat(param[1]));
+            result = inv.addSaleByCategory(Integer.parseInt(param[0]),"fix",Float.parseFloat(param[1]));
             System.out.println(result.getMessage());
         }
         else if(param.length==3){
-            result = inv.addSale(Integer.parseInt(param[0]),"percentage",Float.parseFloat(param[1]));
+            result = inv.addSaleByCategory(Integer.parseInt(param[0]),"percentage",Float.parseFloat(param[1]));
             System.out.println(result.getMessage());
         }
         else if(param.length==4){
                 Date start_date=convertStringToDate(param[2]);
                 Date end_date =convertStringToDate(param[3]);
                 if(start_date!=null && end_date!=null){
-                    result = inv.addSale(Integer.parseInt(param[0]),"fix",Float.parseFloat(param[1]),start_date,end_date);
+                    result = inv.addSaleByCategory(Integer.parseInt(param[0]),"fix",Float.parseFloat(param[1]),start_date,end_date);
                     System.out.println(result.getMessage());
                 }
                 else{
@@ -735,7 +735,7 @@ public class CLController {
             Date start_date=convertStringToDate(param[3]);
             Date end_date =convertStringToDate(param[4]);
             if(start_date!=null && end_date!=null && param[2].equals("%")){
-                result = inv.addSale(Integer.parseInt(param[0]),"percentage",Float.parseFloat(param[1]),start_date,end_date);
+                result = inv.addSaleByCategory(Integer.parseInt(param[0]),"percentage",Float.parseFloat(param[1]),start_date,end_date);
                 System.out.println(result.getMessage());
             }
             else{
@@ -754,18 +754,18 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if(param.length==2) {
-            result = inv.addSale(param[0],"fix",Float.parseFloat(param[1]));
+            result = inv.addSaleByGeneralProduct(param[0],"fix",Float.parseFloat(param[1]));
             System.out.println(result.getMessage());
         }
         else if(param.length==3){
-            result = inv.addSale(param[0],"percentage",Float.parseFloat(param[1]));
+            result = inv.addSaleByGeneralProduct(param[0],"percentage",Float.parseFloat(param[1]));
             System.out.println(result.getMessage());
         }
         else if(param.length==4){
             Date start_date=convertStringToDate(param[2]);
             Date end_date =convertStringToDate(param[3]);
             if(start_date!=null && end_date!=null){
-                result = inv.addSale(param[0],"fix",Float.parseFloat(param[1]),start_date,end_date);
+                result = inv.addSaleByGeneralProduct(param[0],"fix",Float.parseFloat(param[1]),start_date,end_date);
                 System.out.println(result.getMessage());
             }
             else{
@@ -776,7 +776,7 @@ public class CLController {
             Date start_date=convertStringToDate(param[3]);
             Date end_date =convertStringToDate(param[4]);
             if(start_date!=null && end_date!=null && param[2].equals("%")){
-                result = inv.addSale(param[0],"percentage",Float.parseFloat(param[1]),start_date,end_date);
+                result = inv.addSaleByGeneralProduct(param[0],"percentage",Float.parseFloat(param[1]),start_date,end_date);
                 System.out.println(result.getMessage());
             }
             else{

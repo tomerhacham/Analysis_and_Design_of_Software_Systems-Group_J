@@ -31,18 +31,19 @@ public class Inventory {
     public Result removeCategory(Integer category_id){
         return categoryController.removeCategory(category_id);
     }
-    public Result editCategoryname(Integer category_id,String name){
+    public Result editCategoryName(Integer category_id, String name){
         return categoryController.editCategoryName(category_id,name);
     }
     //endregion
 
     //region General Product Management
-    public Result addGeneralProduct(Integer category_id, String manufacture, String catalogID, String name, Float supplier_price, Float retail_price, Integer min_quantity)
-    {
+    public Result addGeneralProduct(Integer category_id, String manufacture, String name, Float supplier_price, Float retail_price,
+                                    Integer min_quantity, Integer catalogID, Integer gpID, Integer supplier_id, String supplier_category){
     Category category = categoryController.searchCategorybyId(category_id);
     Result result;
         if (category!=null){
-            result= productController.addGeneralProduct(category,manufacture, catalogID, name, supplier_price, retail_price, min_quantity);
+            result= productController.addGeneralProduct(category,manufacture, name, supplier_price, retail_price,
+                        min_quantity, catalogID, gpID, supplier_id, supplier_category);
         }
         else{
             result=new Result<Integer>(false,category_id,"Could not find category");
@@ -50,39 +51,39 @@ public class Inventory {
         return result;
     }
 
-    public Result removeGeneralProduct(Integer category_id, String catalogID)
+    public Result removeGeneralProduct(Integer category_id, Integer gpID)
     {
         Category category = categoryController.searchCategorybyId(category_id);
         Result result;
         if (category!=null){
-            result= productController.removeGeneralProduct(category,catalogID);
+            result= productController.removeGeneralProduct(category,gpID);
         }
         else{
             result=new Result<Integer>(false,category_id,"Could not find category");
         }
         return result;    }
-    public Result editGeneralProduct_name(String catalogID,String new_name){
-        return productController.editGeneralProductName(catalogID, new_name);
+    public Result editGeneralProduct_name(Integer gpID,String new_name){
+        return productController.editGeneralProductName(gpID, new_name);
     }
-    public Result editGeneralProduct_supplier_price(String catalogID, Float new_supplier_price){
-        return productController.editGeneralProductSupplierPrice(catalogID, new_supplier_price);
+    public Result editGeneralProduct_supplier_price(Integer gpID, Float new_supplier_price, Integer supplier_id){
+        return productController.editGeneralProductSupplierPrice(gpID, new_supplier_price, supplier_id);
     }
-    public Result editGeneralProduct_retail_price(String catalogID, Float new_retail_price){
-        return productController.editGeneralProductRetailPrice(catalogID, new_retail_price);
+    public Result editGeneralProduct_retail_price(Integer gpID, Float new_retail_price){
+        return productController.editGeneralProductRetailPrice(gpID, new_retail_price);
 
     }
-    public Result editGeneralProduct_quantity(String catalogID, Integer new_quantity){
-        return productController.editGeneralProductQuantity(catalogID, new_quantity);
+    public Result editGeneralProduct_quantity(Integer gpID, Integer new_quantity){
+        return productController.editGeneralProductQuantity(gpID, new_quantity);
     }
-    public Result editGeneralProduct_min_quantity(String catalogID, Integer new_min_quantity){
-        return productController.editGeneralProductMinQuantity(catalogID, new_min_quantity);
+    public Result editGeneralProduct_min_quantity(Integer gpID, Integer new_min_quantity){
+        return productController.editGeneralProductMinQuantity(gpID, new_min_quantity);
 
     }
     //endregion
 
     //region Specific Products Management
-    public Result addSpecificProduct(String catalogID, Date expiration_date,Integer quantity){
-        return productController.addSpecificProduct(catalogID, expiration_date, quantity);
+    public Result addSpecificProduct(Integer gpID, Date expiration_date,Integer quantity){
+        return productController.addSpecificProduct(gpID, expiration_date, quantity);
     }
     public Result removeSpecificProduct(Integer specific_product_id){
         return productController.removeSpecificProduct(specific_product_id);
@@ -96,14 +97,14 @@ public class Inventory {
     //endregion
 
     //region Report Management
-    public Result makeReport(String catalogID,String stype){
+    public Result makeReportByGeneralProduct(Integer gpID, String stype){
 
-        GeneralProduct generalProduct=productController.searchGeneralProductbyCatalogID(catalogID);
+        GeneralProduct generalProduct = productController.searchGeneralProductbyGpID(gpID);
         List<GeneralProduct> dummy_list = new LinkedList<>();
         dummy_list.add(generalProduct);
         return reportController.makeReport(dummy_list, convertStringToReportType(stype));
     }
-    public Result makeReport(Integer category_id,String stype){
+    public Result makeReportByCategory(Integer category_id, String stype){
         Category category;
         if(category_id==0){
             category=categoryController.superCategory();
@@ -129,19 +130,19 @@ public class Inventory {
     //endregion
 
     //region Sales Management
-    public Result addSale(String catalogID,String stype,Float amount){
-        GeneralProduct generalProduct = productController.searchGeneralProductbyCatalogID(catalogID);
+    public Result addSaleByGeneralProduct(Integer gpID, String stype, Float amount){
+        GeneralProduct generalProduct = productController.searchGeneralProductbyGpID(gpID);
         return saleController.addSale(generalProduct,convertStringToDiscountType(stype),amount);
     }
-    public Result addSale(String catalogID,String stype,Float amount, Date start, Date end){
-        GeneralProduct generalProduct = productController.searchGeneralProductbyCatalogID(catalogID);
+    public Result addSaleByGeneralProduct(Integer gpID, String stype, Float amount, Date start, Date end){
+        GeneralProduct generalProduct = productController.searchGeneralProductbyGpID(gpID);
         return saleController.addSale(generalProduct,convertStringToDiscountType(stype),amount,start,end);
     }
-    public Result addSale(Integer category_id,String stype,Float amount){
+    public Result addSaleByCategory(Integer category_id, String stype, Float amount){
         Category _category = categoryController.searchCategorybyId(category_id);
         return saleController.addSale(_category,convertStringToDiscountType(stype),amount);
     }
-    public Result addSale(Integer category_id,String stype,Float amount,Date start, Date end){
+    public Result addSaleByCategory(Integer category_id, String stype, Float amount, Date start, Date end){
         Category _category = categoryController.searchCategorybyId(category_id);
         return saleController.addSale(_category,convertStringToDiscountType(stype),amount,start,end);
     }

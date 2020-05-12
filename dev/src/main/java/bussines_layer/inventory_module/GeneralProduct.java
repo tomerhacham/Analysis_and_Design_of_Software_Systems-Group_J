@@ -47,10 +47,6 @@ public class GeneralProduct {
         this.manufacture = manufacture;
     }*/
 
-    /*public void setCatalogID(String catalogID) {
-        this.catalogID = catalogID;
-    }*/
-
     public String getName() {
         return name;
     }
@@ -218,7 +214,6 @@ public class GeneralProduct {
         return false;
     }
 
-    //TODO check in product controller old method
     public boolean setSupplierPrice(Float supplier_price, Integer supplier_id) {
         for (CatalogProduct cp : catalog_products){
             if (cp.getSupplierId().equals(supplier_id)){
