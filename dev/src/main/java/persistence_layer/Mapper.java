@@ -31,7 +31,6 @@ public class Mapper {
         String databaseUrl = "jdbc:sqlite:SuperLi.db";
         try (ConnectionSource conn = new JdbcConnectionSource(databaseUrl)) {
             this.conn=conn;
-
             //region setting up DAOs with cache functionality
             this.general_product_dao = DaoManager.createDao(conn,GeneralProductDTO.class);
             this.general_product_dao.setObjectCache(true);

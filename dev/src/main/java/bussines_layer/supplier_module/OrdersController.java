@@ -13,8 +13,7 @@ import java.util.LinkedList;
  * Functionality that related to Orders.
  *
  */
-enum OrderType
-{PeriodicOrder,UpdateStockOrder;}
+
 
 
 //Singleton
@@ -62,7 +61,7 @@ public class OrdersController {
     }
 
     public void removeFromOrder(int orderID , CatalogProduct product) {
-        if(getOrder(orderID).getStatus() == OrderType.PeriodicOrder){
+        if(getOrder(orderID).getType() == OrderType.PeriodicOrder){
             getOrder(orderID).removeProduct(product);
         }
         else{
@@ -72,7 +71,7 @@ public class OrdersController {
 
     //TODO - do we also need to check if the price is updated due to this change?
     public void updateProductQuantityInOrder(int orderID , CatalogProduct product , Integer newQuantity) {
-        if(getOrder(orderID).getStatus() == OrderType.PeriodicOrder){
+        if(getOrder(orderID).getType() == OrderType.PeriodicOrder){
             getOrder(orderID).updateProductQuantityInOrder(product , newQuantity);
         }
         else{
