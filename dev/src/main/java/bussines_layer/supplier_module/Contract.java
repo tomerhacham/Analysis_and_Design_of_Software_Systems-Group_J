@@ -1,5 +1,6 @@
 package bussines_layer.supplier_module;
 import bussines_layer.SupplierCard;
+import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.inventory_module.GeneralProduct;
 
 import java.util.HashMap;
@@ -15,7 +16,7 @@ import java.util.LinkedList;
 public class Contract {
 
     private LinkedList<String> categories; // a supplier can have a lot of categories
-    private HashMap<Integer , GeneralProduct> products; // <product ID, product>
+    private HashMap<Integer , CatalogProduct> products; // <product ID, product>
     private SupplierCard supplier;
     private CostEngineering costEngineering;
     private int contractID;
@@ -71,13 +72,13 @@ public class Contract {
         }
         categories.remove(c);
         //remove all product from this category from products list
-        LinkedList <GeneralProduct> toRemove = new LinkedList<>();
+        LinkedList <CatalogProduct> toRemove = new LinkedList<>();
         for (Integer i : products.keySet()){
-            if (products.get(i).getSupplierCategory(supplier.getId()).equals(c) ){
+            if (products.get(i).getSupplierCategory().equals(c) ){
                 toRemove.add(products.get(i));
             }
         }
-        for (GeneralProduct p : toRemove){
+        for (CatalogProduct p : toRemove){
             removeProduct(p);
         }
 
@@ -87,31 +88,31 @@ public class Contract {
 
 //#region Products
 
-    public LinkedList<GeneralProduct> getProducts() {
+    public LinkedList<CatalogProduct> getProducts() {
         if (products.isEmpty()){
             //sz_Result.setMsg("The Supplier Has No Products");  //TODO result
         }
-        LinkedList<GeneralProduct> listP = new LinkedList<>();
+        LinkedList<CatalogProduct> listP = new LinkedList<>();
         for (Integer i : products.keySet()){
             listP.add(products.get(i));
         }
         return listP;
     }
 
-    public void setProducts(HashMap<Integer, GeneralProduct> products) {
+    public void setProducts(HashMap<Integer, CatalogProduct> products) {
         this.products = products;
     }
 
-    public void addProduct(GeneralProduct p){
+    public void addProduct(CatalogProduct p){
         // first check if the supplier can supply this category (check if the category is in the category list)
-        boolean categoryInList = isCategoryExist(p.getSupplierCategory(supplier.getId()));
+        boolean categoryInList = isCategoryExist(p.getSupplierCategory());
 
         if (categoryInList){
-            if (products.containsKey(p.getProductID())){
+            if (products.containsKey(p.getGpID())){
                 //sz_Result.setMsg("The Product Is Already In Your Product List");  //TODO RESULT
             }
             else{
-                products.put(p.getProductID() , p);
+                products.put(p.getGpID() , p);
             }
         }
         else{
@@ -119,16 +120,16 @@ public class Contract {
         }
     }
 
-    public void removeProduct(GeneralProduct product){
-        if (!products.containsKey(product.getProductID())){
+    public void removeProduct(CatalogProduct product){
+        if (!products.containsKey(product.getGpID())){
             //sz_Result.setMsg("There's no such Product on Contract"); //TODO RESULT
             return;
         }
-        products.remove(product.getProductID()); // remove product
+        products.remove(product.getGpID()); // remove product
     }
 
-    public boolean isProductExist(GeneralProduct product){
-        if (products.containsKey(product.getProductID()))
+    public boolean isProductExist(CatalogProduct product){
+        if (products.containsKey(product.getGpID()))
             return false;
         else
             return true;
@@ -161,7 +162,7 @@ public class Contract {
     public boolean isProductExist (Integer id , boolean isCatalogid){
         if(isCatalogid){
             for (Integer pid : products.keySet()){
-                if (products.get(pid).getCatalogID() == id){
+                if (products.get(pid).getCatalogID().equals(id)){
                     return true;
                 }
             }
@@ -172,6 +173,11 @@ public class Contract {
             return true;
         }
         return false;
+    }
+
+    public int getProductCatalogID(Integer productID){
+
+        return products.get(productID).getCatalogID();
     }
 
     public void addCostEngineering() {

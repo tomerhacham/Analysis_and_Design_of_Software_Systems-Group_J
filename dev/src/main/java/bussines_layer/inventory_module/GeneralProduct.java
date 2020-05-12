@@ -11,7 +11,6 @@ public class GeneralProduct {
     private final Integer productID;
     private final String manufacture;
     private String name;
-    private Float supplier_price; //TODO - problem !!
     private Float retail_price;
     private Float sale_price;
     private Integer quantity;
@@ -21,11 +20,10 @@ public class GeneralProduct {
 
     //Constructor
     public GeneralProduct(String manufacture, String name, Float supplier_price,
-                          Float retail_price, Integer min_quantity, Integer productID)
+                          Float retail_price, Integer min_quantity, Integer productID, Integer catalogID, Integer gpID, Integer supplier_id, String supplier_category)
     {
         this.manufacture = manufacture;
         this.name = name;
-        this.supplier_price = supplier_price;
         this.retail_price = retail_price;
         this.sale_price=new Float(-1);
         this.quantity = 0;
@@ -33,6 +31,7 @@ public class GeneralProduct {
         this.products = new LinkedList<>();
         this.productID = productID;
         this.catalog_products = new LinkedList<>();
+        addCatalogProduct(catalogID, gpID, supplier_price, supplier_id, supplier_category , name);
     }
 
     //region Getters - Setters
@@ -57,14 +56,6 @@ public class GeneralProduct {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Float getSupplierPrice() {
-        return supplier_price;
-    }
-
-    public void setSupplierPrice(Float supplier_price) {
-        this.supplier_price = supplier_price;
     }
 
     public Float getRetailPrice() {
@@ -94,6 +85,7 @@ public class GeneralProduct {
         if(min_quantity>=0)
         this.min_quantity = min_quantity;
     }
+
     //endregion
 
     //region Methods
@@ -103,10 +95,10 @@ public class GeneralProduct {
         Result<SpecificProduct> result;
         if(res){
             this.quantity++;
-            result = new Result(res, product, "Product:"+this.name+"("+product_id+")"+" added successfully");
+            result = new Result<>(res, product, "Product:"+this.name+"("+product_id+")"+" added successfully");
         }
         else{
-            result = new Result(res,product,"There was a problem in adding the product:"+product_id );
+            result = new Result<>(res,product,"There was a problem in adding the product:"+product_id );
         }
         return result;
     }
@@ -225,6 +217,17 @@ public class GeneralProduct {
         return false;
     }
 
+    //TODO check in product controller old method
+    public boolean setSupplierPrice(Float supplier_price, Integer supplier_id) {
+        for (CatalogProduct cp : catalog_products){
+            if (cp.getSupplierId().equals(supplier_id)){
+                cp.setSupplierPrice(supplier_price);
+                return true;
+            }
+        }
+        return false;
+    }
+
     private SpecificProduct getProductbyID(Integer id){
         for (SpecificProduct product:products) {
             if(product.getId()==id){
@@ -240,7 +243,6 @@ public class GeneralProduct {
     public int quantityToOrder(){
         return (Math.abs(min_quantity-quantity)+5); //TODO !!!!
     }
-
 
     /**
      * Search supplier's category of this general product
@@ -261,7 +263,7 @@ public class GeneralProduct {
      * @param supplier_id - id of requested supplier
      * @return catalod ID, null if supplier not found
      */
-    public String getCatalogID(Integer supplier_id){
+    public Integer getCatalogID(Integer supplier_id){
         for (CatalogProduct cp : catalog_products){
             if (cp.getSupplierId().equals(supplier_id)){
                 return cp.getCatalogID();
@@ -284,6 +286,28 @@ public class GeneralProduct {
         return null;
     }
 
+    public CatalogProduct getSupplierCatalogProduct(Integer supplierID){
+
+        for ( CatalogProduct cp: catalog_products  ) {
+            if(cp.getSupplierId() == supplierID){
+                return cp;
+            }
+        }
+        return null;
+    }
+
+    public Result addCatalogProduct(Integer catalogID, Integer gpID, Float supplier_price, Integer supplier_id, String supplier_category , String name){
+        CatalogProduct toAdd = new CatalogProduct(catalogID, gpID, supplier_price, supplier_id, supplier_category , name);
+        boolean res = catalog_products.add(toAdd);
+        Result<CatalogProduct> result;
+        if (res){
+            result = new Result<>(res,toAdd,"Catalog Product " + name + " of supplier " + supplier_id + " added successfully");
+        } else {
+            result = new Result<>(res, toAdd, "There was a problem adding the product " + productID + " from supplier " + supplier_id);
+        }
+        return result;
+    }
+
 
     @Override
     public String toString() {
@@ -291,7 +315,6 @@ public class GeneralProduct {
                 "name:'" + name + '\'' +
                 ", manufacture:'" + manufacture + '\'' +
                 ", productID:'" + productID + '\'' +
-                ", supplier price:" + supplier_price +
                 ", retail price:" + retail_price +
                 ", sale price:" + sale_price +
                 ", quantity:" + quantity +
