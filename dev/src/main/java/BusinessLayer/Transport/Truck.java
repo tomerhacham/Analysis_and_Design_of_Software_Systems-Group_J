@@ -2,8 +2,6 @@ package BusinessLayer.Transport;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
 
 public class Truck {
     private String license_plate;
