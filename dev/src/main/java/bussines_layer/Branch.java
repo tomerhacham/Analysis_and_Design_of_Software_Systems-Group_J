@@ -179,6 +179,7 @@ public class Branch {
     public Result generateOrderFromReport(Report report){
         return supplierModule.generateOrdersFromReport(report);
     }
+    public Result
     //endregion
 
     //endregion
