@@ -141,7 +141,7 @@ public class IOWorkers {
             boolean goBack=false;
             while(!goBack)
             {
-                System.out.println(sc.getCurrentEditedShift().fullView());
+                System.out.println(sc.getCurrentEditedModelShift().fullView());
                 System.out.println("Choose an option:");
                 System.out.println("1.Add position");
                 System.out.println("2.Remove position");
@@ -189,10 +189,10 @@ public class IOWorkers {
     private static void removeWorkerFromShift() {
         System.out.println("Enter position from which you want to remove a worker:");
         String pos=scanner.nextLine();
-        if(!sc.getCurrentEditedShift().occupation.containsKey(pos))
+        if(!sc.getCurrentEditedModelShift().occupation.containsKey(pos))
             System.out.println("The position was not found");
         else {
-            List<ModelWorker> workersInpos=sc.getCurrentEditedShift().occupation.get(pos);
+            List<ModelWorker> workersInpos=sc.getCurrentEditedModelShift().occupation.get(pos);
             if(workersInpos.size()>0) {
                 System.out.println("Eligible workers:");
                 int i = 0;
@@ -217,7 +217,7 @@ public class IOWorkers {
         System.out.println("Enter position to be occupied:");
         String pos=scanner.nextLine();
         int i=0;
-        Stream<ModelWorker> smw= sc.getCurrentEditedShift().availableWorkers.stream().filter((mw)->mw.positions.contains(pos));
+        Stream<ModelWorker> smw= sc.getCurrentEditedModelShift().availableWorkers.stream().filter((mw)->mw.positions.contains(pos));
         ModelWorker[] relevantWorkers=smw.toArray(size-> new ModelWorker[size]);
         if(relevantWorkers.length>0) {
             System.out.println("Available workers for this position:");
@@ -394,8 +394,7 @@ public class IOWorkers {
                 System.out.println("2.Add position to worker");
                 System.out.println("3.Remove position from worker");
                 System.out.println("4.Change worker's salary");
-                System.out.println("5.Change license for driver");
-                System.out.println("6.Finish editing");
+                System.out.println("5.Finish editing");
                 int opt=scanner.nextInt();
                 switch(opt){
                     case(1):
@@ -411,22 +410,12 @@ public class IOWorkers {
                         changeWorkerSalary(id);
                         break;
                     case(5):
-                        changeLicencse(id);
-                    case(6):
                         goBack=true;
                         break;
                 }
 
             }
         }
-    }
-
-    private static void changeLicencse(String id) {
-        System.out.println("Enter new license:");
-        String license=scanner.nextLine();
-        String output=rc.changeLicencse(license,id);
-        if(output!=null)
-            System.out.println(output);
     }
 
     private static void changeWorkerSalary(String id) {

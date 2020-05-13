@@ -28,10 +28,6 @@ public class Driver extends Worker {
         return "cannot remove positions from driver";
     }
 
-    public String setLicense(String license) {
-        this.license = license;
-        return null;
-    }
 
     public String getLicense() {
         return license;

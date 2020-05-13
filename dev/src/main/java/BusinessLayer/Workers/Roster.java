@@ -37,7 +37,7 @@ public class Roster {
         workers.add(w);
         if(positions!=null) {
             for (String pos : positions) {
-                if(!pos.equals("driver"))
+                if(!pos.toLowerCase().equals("driver"))
                     w.addPosition(pos);
             }
         }
@@ -116,7 +116,7 @@ public class Roster {
         Worker searched = findWorker(id);
         if(searched==null)
             return "The worker does not exist";
-        searched.removePosition(pos);
+        searched.removePosition(pos.toLowerCase());
         return null;
     }
      
@@ -133,12 +133,5 @@ public class Roster {
         return searched;
     }
 
-    public String changeLicencse(String license,String id) {
-        Worker w=findWorker(id);
-        if(license==null||license.length()==0)
-            return "Not a valid license";
-        if(w==null)
-            return "The worker does not exist";
-        return w.setLicense(license);
-    }
+
 }

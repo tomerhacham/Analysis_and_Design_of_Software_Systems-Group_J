@@ -57,8 +57,9 @@ public class Worker {
 
     public String addPosition(String pos)
     {
-        if(!positions.contains(pos))
-            positions.add(pos);
+        String position=pos.toLowerCase();
+        if(!positions.contains(position))
+            positions.add(position);
         return null;
     }
 

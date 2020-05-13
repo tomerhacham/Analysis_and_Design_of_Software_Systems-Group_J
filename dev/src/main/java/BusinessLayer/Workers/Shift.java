@@ -11,7 +11,11 @@ public class Shift {
     private List<Worker> availableWorkers;
     private List<Driver> scheduledDrivers;
 
-    public Shift(List<Worker>availableWorkers,  Date date, boolean timeOfday)
+    public void setTimeOfDay(boolean timeOfDay) {
+        this.timeOfDay = timeOfDay;
+    }
+
+    public Shift(List<Worker>availableWorkers, Date date, boolean timeOfday)
     {
         scheduledDrivers=new ArrayList<>();
         this.timeOfDay=timeOfday;
@@ -209,4 +213,7 @@ public class Shift {
         return avail;
     }
 
+    public void setDate(Date date) {
+        this.date = date;
+    }
 }

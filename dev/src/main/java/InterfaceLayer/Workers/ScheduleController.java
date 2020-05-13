@@ -4,6 +4,7 @@ import BusinessLayer.Workers.EmptyShift;
 import BusinessLayer.Workers.Roster;
 import BusinessLayer.Workers.Scheduler;
 import BusinessLayer.Workers.Shift;
+import InterfaceLayer.Transport.FacadeController;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,6 +17,7 @@ public class ScheduleController {
     private static ScheduleController instance = null;
     private static final boolean morning=true;
     private static final boolean night=false;
+    private FacadeController facade=FacadeController.getInstance();
 
     private ScheduleController() {
         scheduler=new Scheduler();
@@ -28,6 +30,8 @@ public class ScheduleController {
     }
 
     public String removeShift(Date date,boolean timeOfDay){
+        if(facade.isTransportExist(date,timeOfDay))
+            return "Can not remove shift schedueled for transportaion";
         return scheduler.removeShift(date,timeOfDay);
     }
     public String createShift(Date date, boolean timeOfDay)
@@ -38,7 +42,7 @@ public class ScheduleController {
     {
         return scheduler.editShift(date,timeOfDay);
     }
-    public ModelShift getCurrentEditedShift(){
+    public ModelShift getCurrentEditedModelShift(){
         return new ModelShift(scheduler.getCurrentEditedShift());
     }
     public void cancelShift(){scheduler.cancelShift();}
@@ -46,7 +50,10 @@ public class ScheduleController {
         return scheduler.submitShift();
     }
     public String removePositionFromShift(String pos){
-        return scheduler.removePositionToShift(pos);
+        String position=pos.toLowerCase();
+        if(position.equals("storage man")&&facade.isTransportExist(scheduler.getCurrentEditedShift().getDate(),scheduler.getCurrentEditedShift().getTimeOfDay()))
+            return "Can not remove storage man because there is transportation scheduled for this shift";
+        return scheduler.removePositionToShift(position);
     }
     public String addPositionToShift(String pos,int quantity)
     {
@@ -57,7 +64,10 @@ public class ScheduleController {
     }
     public String removeWorkerToPositionInShift(String pos,String id)
     {
-        return scheduler.removeWorkerToPositionInShift(pos,id);
+        String position=pos.toLowerCase();
+        if(position.equals("storage man")&&facade.isTransportExist(scheduler.getCurrentEditedShift().getDate(),scheduler.getCurrentEditedShift().getTimeOfDay()))
+            return "Can not remove storage man from shift with transportation";
+        return scheduler.removeWorkerToPositionInShift(position,id);
     }
     public String addAvailableWorker(Date date, boolean partOfDay, String id){
         return scheduler.addAvailableWorker(date,partOfDay,id);
