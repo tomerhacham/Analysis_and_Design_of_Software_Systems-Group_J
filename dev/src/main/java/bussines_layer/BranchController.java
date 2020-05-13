@@ -82,9 +82,8 @@ public class BranchController {
     }
     public Result switchBranch(Integer branch_id){
         if (branches.containsKey(branch_id)){
-            Branch toSwitch = branches.get(branch_id);
-            curr = toSwitch;
-            return new Result<>(true, toSwitch, String.format("Switched to Branch %d successfully", curr.getBranchId()));
+            curr = branches.get(branch_id);
+            return new Result<>(true, curr, String.format("Switched to Branch %d successfully", curr.getBranchId()));
         }
         return new Result<>(false, null, String.format("Branch with ID %d not found", branch_id));
     }
