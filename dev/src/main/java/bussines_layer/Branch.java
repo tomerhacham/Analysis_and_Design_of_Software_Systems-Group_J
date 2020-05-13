@@ -175,11 +175,8 @@ public class Branch {
     }
     //endregion
 
+    //TODO orders
     //region Orders
-    public Result generateOrderFromReport(Report report){
-        return supplierModule.generateOrdersFromReport(report);
-    }
-    public Result
     //endregion
 
     //endregion
