@@ -1,4 +1,5 @@
 package bussines_layer.supplier_module;
+import bussines_layer.Result;
 import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.inventory_module.ProductController;
 
@@ -17,13 +18,13 @@ enum OrderType
 {PeriodicOrder,OutOfStockOrder;}
 
 enum Status
-{received,waiting}
+{received,inProcess , sent}
 
 public class Order {
 
     private Integer orderID;
-    private Integer supplierID; // TODO - how else can we know who is the supplier ?
-    private OrderType type; //TODO
+    private Integer supplierID;
+    private OrderType type;
     private Status status;
     private HashMap<CatalogProduct, Integer> productsAndQuantity; // <product , quantity>
     private HashMap<CatalogProduct , Float> productsAndPrice; //<product, price>
@@ -35,15 +36,8 @@ public class Order {
         this.supplierID = supplierID;
         productsAndPrice = new HashMap<>();
         this.type = type;
-        this.status=Status.waiting;
+        this.status=Status.inProcess;
     }
-
-//    public Order(int orderID , int supplierID , LinkedList<CatalogProduct> products){
-//        this.orderID = orderID;
-//        productsAndQuantity = new HashMap<>();
-//        this.supplierID = supplierID;
-//        productsAndPrice = new HashMap<>();
-//    }
 
     public int getOrderID() {
         return orderID;
@@ -60,6 +54,7 @@ public class Order {
     public void setStatus(Status status) {
         this.status = status;
     }
+
     public OrderType getType() {
         return type;
     }
@@ -67,32 +62,40 @@ public class Order {
     public void setType(OrderType type) {
         this.type = type;
     }
+
     public  HashMap<CatalogProduct, Integer> getProductsAndQuantity() {return productsAndQuantity;}
 
-    public void addProduct(CatalogProduct product , Integer quantity , Float price){
+    public Result addProduct(CatalogProduct product , Integer quantity , Float price){
 
         if (productsAndQuantity.containsKey(product)){
-            //sz_Result ( "Product Already Exists In The Order" ); //TODO RESULT
-            return;
+            return new Result(false,product, String.format("The product %s is already in the order:%d . Therefore it is not possible to add the product (only possible is to change the quantity)", product.getName() , getOrderID()));
         }
         productsAndQuantity.put(product , quantity);
         productsAndPrice.put(product , price);
+        return new Result(true,product, String.format("The product %s has been added to the order:%d", product.getName() , getOrderID()));
     }
 
-    public void removeProduct(CatalogProduct product){
+    public Result removeProductFromPeriodicOrder(CatalogProduct product){
         if (!(productsAndQuantity.containsKey(product))){
-            //sz_Result ( "Product Is Not In The Order" ); //TODO RESULT
-            return;
+            return new Result(false,product, String.format("The product %s is not in the order:%d , therefore can not be removed", product.getName() , getOrderID()));
         }
         productsAndQuantity.remove(product);
         productsAndPrice.remove(product);
+
+        if (productsAndQuantity.size()==0){
+            return new Result(true,product, String.format("The product %s has been removed from the order:%d , - But notice , the order now is empty and therefore is deleted", product.getName() , getOrderID()));
+        }
+        return new Result(true,product, String.format("The product %s has been removed from the order:%d", product.getName() , getOrderID()));
     }
 
-    public void updateProductQuantityInOrder(CatalogProduct product , Integer newQuantity){
+    public Result updateProductQuantityInPeriodicOrder(CatalogProduct product , Integer newQuantity , Float newPrice){
         productsAndQuantity.replace(product , newQuantity);
+        productsAndPrice.replace(product , newPrice);
+        return new Result(true,product, String.format("The product %s has been updated in the order:%d", product.getName() , getOrderID()));
     }
 
-    public String display() {
+    public Result<String> display() {
+        status = Status.sent;
         String toDisplay = "Order id : "+'\t'+this.orderID.toString() +'\t'+"Supplier id : "+this.supplierID+ '\n';
         toDisplay = toDisplay+ "Product"+'\t'+'\t'+"Quantity" + '\n';
 
@@ -105,12 +108,12 @@ public class Order {
             toDisplay = toDisplay +"No Products In This Order\n";
         }
         else{
-            toDisplay = toDisplay + "Order Total Amount : " + getTotalAmount().toString() +'\n' ;
+            toDisplay = toDisplay + "Order Total Amount : " + getTotalAmount().toString() +'\n'+" Employee - Do Not Forget To Send The Order To The supplier\n" ;
         }
-        return toDisplay;
+        return new Result<>(true, toDisplay, String.format(" The Order Is Ready And Has Been Sent Back To The Employee: %s", toDisplay));
     }
 
-    public Float getTotalAmount (){
+    public Result<Float> getTotalAmount (){
         Float total = new Float(0);
         int quantity;
         Float price;
@@ -120,99 +123,7 @@ public class Order {
             price = productsAndPrice.get(cp);
             total = total + (price * quantity);
         }
-        return total;
+        return new Result<>(true, total, String.format(" The orders total amount is : %d", total));
     }
-
-
-
-
-
-
-
-
-//
-//    public void addProductForSupplier(Integer supplierID, int productID , Integer quantity) {
-//
-//        GeneralProduct product= ProductController.getInstance().getProductsById(supplierID , productID);
-//        if (product == null ){
-//            return;
-//        }
-//
-//        //in case this is the first product from this supplier
-//        if (! supplierAndProduct.containsKey(supplierID)){
-//            supplierAndProduct.put (supplierID , new LinkedList<>());
-//            supplierAndProduct.get(supplierID).add(product);
-//            productsAndQuantity.put(product , quantity);
-//            return;
-//        }
-//
-//        LinkedList<GeneralProduct> supProd = supplierAndProduct.get(supplierID);
-//        boolean exists = false;
-//        for (GeneralProduct p : supProd) {
-//            if (p.getCatalogID()==product.getCatalogID()){
-//                exists = true;
-//                break;
-//            }
-//        }
-//
-//        if(exists){
-//            int currentQ = productsAndQuantity.get(product);
-//            //adds the new quantity to an exist product
-//            productsAndQuantity.replace(product , currentQ , quantity + currentQ);
-//        }
-//        else{
-//            supProd.add(product);
-//            productsAndQuantity.put(product , quantity);
-//        }
-//
-//    }
-
-
-
-//    public void changeSupplierForProduct(Integer supplierId , int productid ,int catalogid, Integer quantity){
-//        Integer supId = 0;
-//        boolean exists= false;
-//        for (Integer supplier:supplierAndProduct.keySet()) {
-//            for (GeneralProduct p: supplierAndProduct.get(supplier) ) {
-//                if (p.getGpID() == productid) {
-//                    supId = supplier;
-//                    exists = true;
-//                    break;
-//                }
-//            }
-//            if (exists)
-//                break;
-//        }
-//        if(exists){
-//            int i = 0;
-//            LinkedList<GeneralProduct> oldSupprod = supplierAndProduct.get(supId);
-//            for (GeneralProduct p:oldSupprod) {
-//                if (p.getGpID() == productid){
-//                    break;
-//                }
-//                i++;
-//            }
-//            GeneralProduct pnewSup = oldSupprod.get(i);
-//            oldSupprod.remove(i);
-//            productsAndQuantity.remove(pnewSup);
-//
-//
-//            // if the suppliers product list is empty then remove him from the order
-//            if(oldSupprod.size()==0){
-//                supplierAndProduct.remove(supId);
-//            }
-//
-//            pnewSup.setCatalogID(catalogid); // update the product catalog id with the new suppliers catalogid
-//            LinkedList<GeneralProduct> supProd = supplierAndProduct.get(supplierId);
-//            if (supProd==null) {
-//                supProd = new LinkedList<>();
-//                supProd.add(pnewSup);
-//            }
-//            productsAndQuantity.put(pnewSup , quantity);
-//        }
-//        else{
-//            sz_Result.setMsg("The Product Is Not In The Order Or The Supplier Is Not In The System");
-//        }
-//    }
 
    }

@@ -202,7 +202,28 @@ public class Contract {
             result=new Result(true,supplier_price, String.format("Supplier price for catalog product:%d", productID));
         }
         else{
-            result=new Result(false, productID, String.format("Could not find product:%d under contract ID:%d", productID,contractID));
+            result=new Result(false, null, String.format("Could not find product:%d under contract ID:%d", productID,contractID));
+        }
+        return result;
+    }
+
+    public Result<Float> getProductPriceConsideringQuantity(Integer productID , Integer quantity){
+        Result<Float> result;
+        if (products.containsKey(productID)){
+            if(isCostEngExist()){
+                result = costEngineering.getUpdatePrice( products.get(productID).getCatalogID() , quantity);
+                if (result.getData() == -1){
+                    Float supplier_price=products.get(productID).getSupplierPrice();
+                    result=new Result(true,supplier_price, String.format("Supplier price for catalog product:%d", productID));
+                }
+            }
+            else{
+                Float supplier_price=products.get(productID).getSupplierPrice();
+                result=new Result(true,supplier_price, String.format("Supplier price for catalog product:%d", productID));
+            }
+        }
+        else{
+            result=new Result(false, null, String.format("Could not find product:%d under contract ID:%d", productID,contractID));
         }
         return result;
     }
