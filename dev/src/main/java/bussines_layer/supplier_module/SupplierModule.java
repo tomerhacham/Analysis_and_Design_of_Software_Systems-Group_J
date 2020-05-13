@@ -110,7 +110,7 @@ public class SupplierModule {
 
     //region Order Controller
 
-        public Result generateOrdersFromReport(Report report){
+        public Result DueToLackOrder(Report report){
 
             HashMap<Contract , LinkedList<Pair<CatalogProduct , Integer>>> productsForEachSupplier = new HashMap<>();
 
@@ -137,7 +137,7 @@ public class SupplierModule {
 
             //for each supplier(contract) get its catalog product and check the quantity needed throw the General Product
             for (Contract contract: productsForEachSupplier.keySet()) {
-                int orderid = ordersController.createOrder(contract.getSupplierID() , OrderType.UpdateStockOrder);//(contract.getSupplierID() , productsForEachSupplier.get(contract));
+                int orderid = ordersController.createOrder(contract.getSupplierID() , OrderType.OutOfStockOrder);//(contract.getSupplierID() , productsForEachSupplier.get(contract));
 
                 LinkedList<Pair<CatalogProduct , Integer>> cpPrice = productsForEachSupplier.get(contract);
 
@@ -154,7 +154,7 @@ public class SupplierModule {
 
         //return the order id
         public int createOrder(Integer supplierID) {
-            return ordersController.createOrder(supplierID , OrderType.UpdateStockOrder);
+            return ordersController.createOrder(supplierID , OrderType.OutOfStockOrder);
         }
 
         //a periodic order is for one supplier
@@ -165,7 +165,7 @@ public class SupplierModule {
         public void addProductToPeriodicOrder(Integer orderId , CatalogProduct product , Integer quantity){
 
             Order order = ordersController.getOrder(orderId);
-            float price = contractController.findContract(order.getSupplierID()).getProductPrice(product.getGpID());
+            float price = contractController.findContract(order.getSupplierID()).getData().getProductPrice(product.getGpID()).getData();
             ordersController.addProductToOrder(orderId , product , quantity , (int)price);
         }
 
