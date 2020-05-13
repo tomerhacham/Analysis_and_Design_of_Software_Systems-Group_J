@@ -81,7 +81,7 @@ public class IOTransport {
                     terminated = true;
                     break;
                 default:
-                    System.out.println("Invalid operation.");
+                    System.out.println("Invalid operation.\n");
             }
         }
     }
@@ -153,11 +153,11 @@ public class IOTransport {
     private void addSite() {
         System.out.println("Please enter the following details:\n");
         System.out.println("Address:");
-        String address = scanner.nextLine();
+        String address = getVal();
         System.out.println("Phone number:");
-        String phone_number = scanner.nextLine();
+        String phone_number = getVal();
         System.out.println("Contact:");
-        String contact = scanner.nextLine();
+        String contact = getVal();
         System.out.println("Shipping area:");
         int shipping_area = integerParse(scanner.nextLine());
         facadeController.createSite(address, phone_number, contact, shipping_area);
@@ -169,11 +169,11 @@ public class IOTransport {
     private void addTruck() {
         System.out.println("Please enter the following details:\n");
         System.out.println("License plate:");
-        String license_plate = scanner.nextLine();
+        String license_plate = getVal();
         System.out.println("Model:");
-        String model = scanner.nextLine();
+        String model = getVal();
         System.out.println("Drivers license:");
-        String drivers_license = scanner.nextLine();
+        String drivers_license = getVal();
         System.out.println("Net weight of the truck:");
         int netWeight = integerParse(scanner.nextLine());
         System.out.println("Max weight the truck can curry:");
@@ -260,9 +260,9 @@ public class IOTransport {
         String time;
         while (true){
             try {
-                date = scanner.nextLine();
+                date = getVal();
                 System.out.println("Please enter time in the format hh:mm");
-                time = scanner.nextLine();
+                time = getVal();
                 // check availability of the date with trucks and drivers
                 facadeController.setTransportDateTime(transportID, date, time);
                 break;
@@ -447,7 +447,7 @@ public class IOTransport {
                 int numProducts = integerParse(scanner.nextLine());
                 for (int j = 0; j < numProducts; j++) {
                     System.out.println("\nPlease enter name of a product: ");
-                    String productName = scanner.nextLine();
+                    String productName = getVal();
                     System.out.println("Please enter weight of a product: ");
                     float productWeight = floatParse(scanner.nextLine());
                     while (productWeight<=0)
@@ -570,4 +570,12 @@ public class IOTransport {
         }
     }
 
+    private String getVal(){
+        String val = scanner.nextLine();
+        while (val.equals("")){
+            System.out.println("Value can't be empty. Try again.");
+            val = scanner.nextLine();
+        }
+        return val;
+    }
 }
