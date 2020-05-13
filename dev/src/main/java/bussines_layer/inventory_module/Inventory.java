@@ -47,7 +47,7 @@ public class Inventory {
                         min_quantity, catalogID, gpID, supplier_id, supplier_category);
         }
         else{
-            result=new Result<Integer>(false,category_id,"Could not find category");
+            result=new Result<>(false,category_id,"Could not find category");
         }
         return result;
     }

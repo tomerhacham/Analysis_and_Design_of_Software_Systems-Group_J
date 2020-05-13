@@ -180,6 +180,14 @@ public class Branch {
     //endregion
 
     //endregion
+
+    //region Getters & setters
+
+    public Integer getBranchId() {
+        return branch_id;
+    }
+
+    //endregion
 }
 
 
