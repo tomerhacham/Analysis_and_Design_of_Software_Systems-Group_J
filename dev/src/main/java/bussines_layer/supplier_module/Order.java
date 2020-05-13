@@ -14,7 +14,7 @@ import java.util.LinkedList;
  *
  */
 enum OrderType
-{PeriodicOrder,UpdateStockOrder;}
+{PeriodicOrder,OutOfStockOrder;}
 
 enum Status
 {received,waiting}
@@ -38,12 +38,12 @@ public class Order {
         this.status=Status.waiting;
     }
 
-    public Order(int orderID , int supplierID , LinkedList<CatalogProduct> products){
-        this.orderID = orderID;
-        productsAndQuantity = new HashMap<>();
-        this.supplierID = supplierID;
-        productsAndPrice = new HashMap<>();
-    }
+//    public Order(int orderID , int supplierID , LinkedList<CatalogProduct> products){
+//        this.orderID = orderID;
+//        productsAndQuantity = new HashMap<>();
+//        this.supplierID = supplierID;
+//        productsAndPrice = new HashMap<>();
+//    }
 
     public int getOrderID() {
         return orderID;

@@ -284,7 +284,7 @@ public class GeneralProduct {
     public CatalogProduct getSupplierCatalogProduct(Integer supplierID){
 
         for ( CatalogProduct cp: catalog_products  ) {
-            if(cp.getSupplierId() == supplierID){
+            if(cp.getSupplierId().equals(supplierID)){
                 return cp;
             }
         }

@@ -195,8 +195,8 @@ public class Contract {
      * @param productID
      * @return
      */
-    public Result getProductPrice(Integer productID){
-        Result result;
+    public Result<Float> getProductPrice(Integer productID){
+        Result<Float> result;
         if (products.containsKey(productID)){
             Float supplier_price=products.get(productID).getSupplierPrice();
             result=new Result(true,supplier_price, String.format("Supplier price for catalog product:%d", productID));
