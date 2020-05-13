@@ -1,5 +1,7 @@
 package bussines_layer;
 
+import bussines_layer.inventory_module.CatalogProduct;
+import bussines_layer.inventory_module.GeneralProduct;
 import bussines_layer.inventory_module.Inventory;
 import bussines_layer.inventory_module.discountType;
 import bussines_layer.supplier_module.SupplierModule;
@@ -59,6 +61,9 @@ public class Branch {
     public Result editGeneralProductMinQuantity(Integer gpID, Integer new_min_quantity){
         return inventory.editGeneralProductMinQuantity(gpID, new_min_quantity);
     }
+    public Result<GeneralProduct> searchGeneralProductByGpID(Integer gpID){
+        return inventory.searchGeneralProductByGpID(gpID);
+    }
     //endregion
 
     //region Specific Products
@@ -114,6 +119,21 @@ public class Branch {
     //region Supplier Module
 
     //region Contracts
+    public Result addContract(SupplierCard supplier){
+        return supplierModule.addContract(supplier);
+    }
+    public Result removeContract(SupplierCard supplier){
+        return supplierModule.removeContract(supplier);
+    }
+    public Result addProductToContract(Integer supplierID, Integer catalogID, Integer gpID, Float supplier_price, Integer supplier_id, String supplier_category , String name){
+        GeneralProduct gp = searchGeneralProductByGpID(gpID).getData();
+        if (gp == null){
+            //TODO check if GP created here
+        }
+        Result<CatalogProduct> res = gp.addCatalogProduct(catalogID, gpID, supplier_price, supplier_id, supplier_category, name);
+        return supplierModule.addProductToContract(supplierID, res.getData());
+    }
+
     //endregion
 
     //region Cost Engineering

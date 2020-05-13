@@ -226,7 +226,7 @@ public class GeneralProduct {
 
     private SpecificProduct getProductbyID(Integer id){
         for (SpecificProduct product:products) {
-            if(product.getId()==id){
+            if(product.getId().equals(id)){
                 return product;
             }
         }
@@ -235,7 +235,6 @@ public class GeneralProduct {
     private boolean lowBoundCheck(){
         return products.size()==min_quantity;
     }
-
     public int quantityToOrder(){
         return (Math.abs(min_quantity-quantity)+5); //TODO !!!!
     }
@@ -292,16 +291,10 @@ public class GeneralProduct {
         return null;
     }
 
-    public Result addCatalogProduct(Integer catalogID, Integer gpID, Float supplier_price, Integer supplier_id, String supplier_category , String name){
+    public Result<CatalogProduct> addCatalogProduct(Integer catalogID, Integer gpID, Float supplier_price, Integer supplier_id, String supplier_category , String name){
         CatalogProduct toAdd = new CatalogProduct(catalogID, gpID, supplier_price, supplier_id, supplier_category , name);
-        boolean res = catalog_products.add(toAdd);
-        Result<CatalogProduct> result;
-        if (res){
-            result = new Result<>(res,toAdd,"Catalog Product " + name + " of supplier " + supplier_id + " added successfully");
-        } else {
-            result = new Result<>(res, toAdd, "There was a problem adding the product " + this.gpID + " from supplier " + supplier_id);
-        }
-        return result;
+        catalog_products.add(toAdd);
+        return new Result<>(true,toAdd,"Catalog Product " + name + " of supplier " + supplier_id + " added successfully");
     }
 
 

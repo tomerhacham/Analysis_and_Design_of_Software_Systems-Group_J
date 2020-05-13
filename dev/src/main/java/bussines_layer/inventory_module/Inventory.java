@@ -80,6 +80,13 @@ public class Inventory {
         return productController.editGeneralProductMinQuantity(gpID, new_min_quantity);
 
     }
+    public Result<GeneralProduct> searchGeneralProductByGpID(Integer gpID){
+        GeneralProduct gp = productController.searchGeneralProductByGpID(gpID);
+        if (gp == null){
+            return new Result<>(false, null, String.format("General Product with ID %d not found", gpID));
+        }
+        return new Result<>(true, gp, String.format("General Product with ID %d found", gpID));
+    }
     //endregion
 
     //region Specific Products Management
@@ -100,7 +107,7 @@ public class Inventory {
     //region Report Management
     public Result makeReportByGeneralProduct(Integer gpID, String stype){
 
-        GeneralProduct generalProduct = productController.searchGeneralProductbyGpID(gpID);
+        GeneralProduct generalProduct = productController.searchGeneralProductByGpID(gpID);
         List<GeneralProduct> dummy_list = new LinkedList<>();
         dummy_list.add(generalProduct);
         return reportController.makeReport(dummy_list, convertStringToReportType(stype));
@@ -132,11 +139,11 @@ public class Inventory {
 
     //region Sales Management
     public Result addSaleByGeneralProduct(Integer gpID, String stype, Float amount){
-        GeneralProduct generalProduct = productController.searchGeneralProductbyGpID(gpID);
+        GeneralProduct generalProduct = productController.searchGeneralProductByGpID(gpID);
         return saleController.addSale(generalProduct,convertStringToDiscountType(stype),amount);
     }
     public Result addSaleByGeneralProduct(Integer gpID, String stype, Float amount, Date start, Date end){
-        GeneralProduct generalProduct = productController.searchGeneralProductbyGpID(gpID);
+        GeneralProduct generalProduct = productController.searchGeneralProductByGpID(gpID);
         return saleController.addSale(generalProduct,convertStringToDiscountType(stype),amount,start,end);
     }
     public Result addSaleByCategory(Integer category_id, String stype, Float amount){

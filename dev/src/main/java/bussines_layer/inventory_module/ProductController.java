@@ -26,7 +26,7 @@ public class ProductController {
      * @return
      */
     public Result removeGeneralProduct(Category category, Integer gpID) {
-        GeneralProduct toRemove = searchGeneralProductbyGpID(gpID);
+        GeneralProduct toRemove = searchGeneralProductByGpID(gpID);
         Result result;
         if (toRemove != null) {
             result = category.removeGeneralProduct(toRemove);
@@ -62,7 +62,7 @@ public class ProductController {
     }
 
     public Result editGeneralProductName(Integer gpID, String new_name) {
-        GeneralProduct toEdit = searchGeneralProductbyGpID(gpID);
+        GeneralProduct toEdit = searchGeneralProductByGpID(gpID);
         Result result;
         if (toEdit != null) {
             toEdit.setName(new_name);
@@ -74,7 +74,7 @@ public class ProductController {
     }
 
     public Result editGeneralProductSupplierPrice(Integer gpID, Float new_supplier_price, Integer supplier_id) {
-        GeneralProduct toEdit = searchGeneralProductbyGpID(gpID);
+        GeneralProduct toEdit = searchGeneralProductByGpID(gpID);
         Result result;
         if (toEdit != null) {
             toEdit.setSupplierPrice(new_supplier_price, supplier_id);
@@ -86,7 +86,7 @@ public class ProductController {
     }
 
     public Result editGeneralProductRetailPrice(Integer gpID, Float new_retail_price) {
-        GeneralProduct toEdit = searchGeneralProductbyGpID(gpID);
+        GeneralProduct toEdit = searchGeneralProductByGpID(gpID);
         Result result;
         if (toEdit != null) {
             toEdit.setRetailPrice(new_retail_price);
@@ -98,7 +98,7 @@ public class ProductController {
     }
 
     public Result editGeneralProductQuantity(Integer gpID, Integer new_quantity) {
-        GeneralProduct toEdit = searchGeneralProductbyGpID(gpID);
+        GeneralProduct toEdit = searchGeneralProductByGpID(gpID);
         Result result;
         if (toEdit != null) {
             toEdit.setQuantity(new_quantity);
@@ -110,7 +110,7 @@ public class ProductController {
     }
 
     public Result editGeneralProductMinQuantity(Integer gpID, Integer new_min_quantity) {
-        GeneralProduct toEdit = searchGeneralProductbyGpID(gpID);
+        GeneralProduct toEdit = searchGeneralProductByGpID(gpID);
         Result result;
         if (toEdit != null) {
             toEdit.setMinQuantity(new_min_quantity);
@@ -133,7 +133,7 @@ public class ProductController {
      * @return
      */
     public Result addSpecificProduct(Integer gpID, Date expiration_date, Integer quantity) {
-        GeneralProduct generalProduct = searchGeneralProductbyGpID(gpID);
+        GeneralProduct generalProduct = searchGeneralProductByGpID(gpID);
         Result result = null;
         String msg = "";
         if (generalProduct != null) {
@@ -208,7 +208,7 @@ public class ProductController {
      * @param gpID
      * @return
      */
-    public GeneralProduct searchGeneralProductbyGpID(Integer gpID) {
+    public GeneralProduct searchGeneralProductByGpID(Integer gpID) {
         for (GeneralProduct product : generalProducts) {
             if (product.getGpID().equals(gpID)) {
                 return product;

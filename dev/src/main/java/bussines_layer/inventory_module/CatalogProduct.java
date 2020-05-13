@@ -52,4 +52,17 @@ public class CatalogProduct {
         this.supplier_category = supplier_category;
     }
     //endregion
+
+
+    @Override
+    public String toString() {
+        return
+                "catalogID=" + catalogID +
+                ", gpID=" + gpID +
+                ", supplier_price=" + supplier_price +
+                ", supplier_id=" + supplier_id +
+                ", supplier_category='" + supplier_category + '\'' +
+                ", name='" + name + '\''
+                ;
+    }
 }
