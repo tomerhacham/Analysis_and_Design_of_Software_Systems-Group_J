@@ -159,7 +159,7 @@ public class OrdersController {
     //addProductForSupplier
 //    public void addProductForSupplierInOrder(int orderid , int supid , GeneralProduct product , int quantity){
 //        Order o = getOrder(orderid);
-//        o.addProductForSupplier(supid , product.getProductID() , quantity);
+//        o.addProductForSupplier(supid , product.getGpID() , quantity);
 //    }
 
     //updateProductQuantity

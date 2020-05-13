@@ -32,13 +32,15 @@ public class SupplierModule {
     private SupplierModule(Integer branchId){ this.branchId = branchId; }
 
     // static method to create instance of Singleton class
-    public SupplierModule getInstance(Integer branchId)
+    public static SupplierModule getInstance(Integer branchId)
     {
        if (instance == null)
             instance = new SupplierModule(branchId);
 
         return instance;
     }
+
+    //TODO Change functions' return value to Result
 
     //#region Contract Controller
 

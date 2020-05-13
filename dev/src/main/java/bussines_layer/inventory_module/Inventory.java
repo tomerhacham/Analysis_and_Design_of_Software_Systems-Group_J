@@ -13,6 +13,7 @@ public class Inventory {
     private ReportController reportController;
     private SaleController saleController;
 
+
     //Constructors
     public Inventory() {
         this.categoryController=new CategoryController();
@@ -62,20 +63,20 @@ public class Inventory {
             result=new Result<Integer>(false,category_id,"Could not find category");
         }
         return result;    }
-    public Result editGeneralProduct_name(Integer gpID,String new_name){
+    public Result editGeneralProductName(Integer gpID, String new_name){
         return productController.editGeneralProductName(gpID, new_name);
     }
-    public Result editGeneralProduct_supplier_price(Integer gpID, Float new_supplier_price, Integer supplier_id){
+    public Result editGeneralProductSupplierPrice(Integer gpID, Float new_supplier_price, Integer supplier_id){
         return productController.editGeneralProductSupplierPrice(gpID, new_supplier_price, supplier_id);
     }
-    public Result editGeneralProduct_retail_price(Integer gpID, Float new_retail_price){
+    public Result editGeneralProductRetailPrice(Integer gpID, Float new_retail_price){
         return productController.editGeneralProductRetailPrice(gpID, new_retail_price);
 
     }
-    public Result editGeneralProduct_quantity(Integer gpID, Integer new_quantity){
+    public Result editGeneralProductQuantity(Integer gpID, Integer new_quantity){
         return productController.editGeneralProductQuantity(gpID, new_quantity);
     }
-    public Result editGeneralProduct_min_quantity(Integer gpID, Integer new_min_quantity){
+    public Result editGeneralProductMinQuantity(Integer gpID, Integer new_min_quantity){
         return productController.editGeneralProductMinQuantity(gpID, new_min_quantity);
 
     }

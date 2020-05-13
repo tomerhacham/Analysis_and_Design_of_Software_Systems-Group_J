@@ -197,7 +197,7 @@ public class CLController {
                     System.out.println(details);
                     param = getInputParserbyComma(sc);
                     if(param.length==2) {
-                        result = inv.editGeneralProduct_name(param[0], param[1]);
+                        result = inv.editGeneralProductName(param[0], param[1]);
                         System.out.println(result.getMessage());
                     }
                     else{
@@ -209,7 +209,7 @@ public class CLController {
                     System.out.println(details);
                     param = getInputParserbyComma(sc);
                     if(param.length==2) {
-                        result = inv.editGeneralProduct_supplier_price(param[0], Float.parseFloat(param[1]));
+                        result = inv.editGeneralProductSupplierPrice(param[0], Float.parseFloat(param[1]));
                         System.out.println(result.getMessage());
                     }
                     else{
@@ -221,7 +221,7 @@ public class CLController {
                     System.out.println(details);
                     param=getInputParserbyComma(sc);
                     if(param.length==2) {
-                        result = inv.editGeneralProduct_retail_price(param[0], Float.parseFloat(param[1]));
+                        result = inv.editGeneralProductRetailPrice(param[0], Float.parseFloat(param[1]));
                         System.out.println(result.getMessage());
                     }
                     else{
@@ -233,7 +233,7 @@ public class CLController {
                     System.out.println(details);
                     param = getInputParserbyComma(sc);
                     if(param.length==2) {
-                        result=inv.editGeneralProduct_quantity(param[0], Integer.parseInt(param[1]));
+                        result=inv.editGeneralProductQuantity(param[0], Integer.parseInt(param[1]));
                         System.out.println(result.getMessage());
                     }
                     else{
@@ -245,7 +245,7 @@ public class CLController {
                     System.out.println(details);
                     param = getInputParserbyComma(sc);
                     if(param.length==2) {
-                        result=inv.editGeneralProduct_min_quantity(param[0], Integer.parseInt(param[1]));
+                        result=inv.editGeneralProductMinQuantity(param[0], Integer.parseInt(param[1]));
                         System.out.println(result.getMessage());
                     }
                     else{

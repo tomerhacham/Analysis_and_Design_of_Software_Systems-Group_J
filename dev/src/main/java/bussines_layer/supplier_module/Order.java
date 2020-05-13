@@ -174,7 +174,7 @@ public class Order {
 //        boolean exists= false;
 //        for (Integer supplier:supplierAndProduct.keySet()) {
 //            for (GeneralProduct p: supplierAndProduct.get(supplier) ) {
-//                if (p.getProductID() == productid) {
+//                if (p.getGpID() == productid) {
 //                    supId = supplier;
 //                    exists = true;
 //                    break;
@@ -187,7 +187,7 @@ public class Order {
 //            int i = 0;
 //            LinkedList<GeneralProduct> oldSupprod = supplierAndProduct.get(supId);
 //            for (GeneralProduct p:oldSupprod) {
-//                if (p.getProductID() == productid){
+//                if (p.getGpID() == productid){
 //                    break;
 //                }
 //                i++;
