@@ -83,7 +83,7 @@ public class SupplierController {
      */
     public Result ChangeSupplierName(Integer id , String newName){
         Result result;
-        if ( !isExist(id)){
+        if ( !isExist(id).isOK()){
             result=new Result(false,null, String.format("Could not find supplier with ID %d",id ));
         }
         else {
@@ -102,7 +102,7 @@ public class SupplierController {
      */
     public Result ChangeAddress(Integer id ,String newAddress){
         Result result;
-        if ( !isExist(id)){
+        if ( !isExist(id).isOK()){
             result=new Result(false,null, String.format("Could not find supplier with ID %d",id ));
         }
         else {
@@ -121,7 +121,7 @@ public class SupplierController {
      */
     public Result ChangeEmail(Integer id , String newEmail){
         Result result;
-        if ( !isExist(id)){
+        if ( !isExist(id).isOK()){
             result=new Result(false,null, String.format("Could not find supplier with ID %d",id ));
         }
         else {
@@ -140,7 +140,7 @@ public class SupplierController {
      */
     public Result ChangePhoneNumber(Integer id, String newPhoneNum){
         Result result;
-        if ( !isExist(id)){
+        if ( !isExist(id).isOK()){
             result=new Result(false,null, String.format("Could not find supplier with ID %d",id ));
         }
         else {
@@ -159,7 +159,7 @@ public class SupplierController {
      */
     public Result ChangeBankAccount(Integer id, String newBankAccount){
         Result result;
-        if ( !isExist(id)){
+        if ( !isExist(id).isOK()){
             result=new Result(false,null, String.format("Could not find supplier with ID %d",id ));
         }
         else {
@@ -178,7 +178,7 @@ public class SupplierController {
      */
     public Result ChangePayment(Integer id ,String newPayment){
         Result result;
-        if ( !isExist(id)){
+        if ( !isExist(id).isOK()){
             result=new Result(false,null, String.format("Could not find supplier with ID %d",id ));
         }
         else {
@@ -197,7 +197,7 @@ public class SupplierController {
      */
     public Result DeleteContactName(Integer id , String name2Delete){
         Result result;
-        if ( !isExist(id)){
+        if ( !isExist(id).isOK()){
             result=new Result(false,null, String.format("Could not find supplier with ID %d",id ));
         }
         else {
@@ -214,7 +214,7 @@ public class SupplierController {
      */
     public Result AddContactName(Integer id ,LinkedList<String> contactsName){
         Result result;
-        if ( ! isExist(id)){
+        if ( ! isExist(id).isOK()){
             result=new Result(false,id, String.format("Could not find supplier ID:%d", id));
         }
         else{
@@ -232,7 +232,7 @@ public class SupplierController {
      */
     public Result ChangeSupplierKind(Integer id ,supplierType type){
         Result result;
-        if ( ! isExist(id)){
+        if ( ! isExist(id).isOK()){
             result=new Result(false,id, String.format("Could not find supplier ID:%d", id));
         }
         else{
@@ -252,7 +252,7 @@ public class SupplierController {
      */
     public Result getSupplierCardByID (Integer id){
         Result result;
-        if ( !isExist(id)){
+        if ( !isExist(id).isOK()){
             result= new Result(false,null, String.format("There is not supplier with ID %d",id ));
         }
         else{
@@ -284,12 +284,20 @@ public class SupplierController {
         return result;
     }
 
-    public boolean isExist (Integer id){
+    /**
+     * checks if the supplier exist
+     * @param id
+     * @return
+     */
+    public Result isExist (Integer id){
+        Result result;
         if ( ! suppliers.containsKey(id)){
-            //sz_Result.setMsg("There's No Such Supplier in the System");  //TODO RESULT
-            return false;
+            result=new Result(false,id, String.format("here's No Such Supplie with ID:%d in the System", id));
         }
-        return true;
+        else{
+            result=new Result(true, id,"Supplier found");
+        }
+        return result;
     }
 
     public HashMap<Integer, SupplierCard> getSuppliers() {

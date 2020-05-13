@@ -25,43 +25,43 @@ public class BranchController {
         supplierController.ChangeSupplierName(supid , supplierName);
     }
 
-    public void ChangeAddress(int supid, String address) {
-        supplierController.ChangeAddress(supid , address);
+    public Result ChangeAddress(int supid, String address) {
+        return supplierController.ChangeAddress(supid , address);
     }
 
-    public void ChangeEmail(int supid, String email) {
-        supplierController.ChangeEmail(supid , email);
+    public Result ChangeEmail(int supid, String email) {
+        return supplierController.ChangeEmail(supid , email);
     }
 
-    public void ChangePhoneNumber(int supid, String phoneNumber) {
-        supplierController.ChangePhoneNumber(supid , phoneNumber);
+    public Result ChangePhoneNumber(int supid, String phoneNumber) {
+        return supplierController.ChangePhoneNumber(supid , phoneNumber);
     }
 
-    public void ChangeBankAccount(int supid, String bankAccountNum) {
-        supplierController.ChangeBankAccount(supid , bankAccountNum);
+    public Result ChangeBankAccount(int supid, String bankAccountNum) {
+        return supplierController.ChangeBankAccount(supid , bankAccountNum);
     }
 
-    public void ChangePayment(int supid, String payment) {
-        supplierController.ChangePayment(supid , payment);
+    public Result ChangePayment(int supid, String payment) {
+        return supplierController.ChangePayment(supid , payment);
     }
 
-    public void AddContactName(int supid, LinkedList<String> contactsName) {
-        supplierController.AddContactName(supid , contactsName);
+    public Result AddContactName(int supid, LinkedList<String> contactsName) {
+       return supplierController.AddContactName(supid , contactsName);
     }
 
-    public void DeleteContactName(int supid, String contactName) {
-        supplierController.DeleteContactName(supid , contactName);
+    public Result DeleteContactName(int supid, String contactName) {
+        return supplierController.DeleteContactName(supid , contactName);
     }
 
-    public void ChangeSupplierType(int supid, supplierType type) {
-        supplierController.ChangeSupplierKind(supid , type);
+    public Result ChangeSupplierType(int supid, supplierType type) {
+       return supplierController.ChangeSupplierKind(supid , type);
     }
 
-    public boolean isExistSupplier(int supid) {
+    public Result isExistSupplier(int supid) {
         return supplierController.isExist(supid);
     }
 
-    public LinkedList<String> printallsuppliers() {
+    public Result printallsuppliers() {
         return supplierController.printallsuppliers();
     }
 
