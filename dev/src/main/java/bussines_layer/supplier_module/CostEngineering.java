@@ -65,7 +65,7 @@ public class CostEngineering {
         return result;
     }
 
-    public Result getUpdatePrice (Integer catalogId , Integer quantity){
+    public Result<Float> getUpdatePrice (Integer catalogId , Integer quantity){
         Result result;
         Float price = (float)-1;
         if (minQuntity.containsKey(catalogId)) {
@@ -73,10 +73,10 @@ public class CostEngineering {
             if (quantity >= min) {
                 price = newPrice.get(catalogId);
             }
-            result=new Result(true, price, String.format("Relevant price for CatalogID:%d", catalogId));
+            result=new Result<>(true, price, String.format("Relevant price for CatalogID:%d", catalogId));
         }
         else{
-            result = new Result(false, catalogId, String.format("Could not find CatalogID:%d in cost engineering", catalogId));
+            result = new Result<>(false, null, String.format("Could not find CatalogID:%d in cost engineering", catalogId));
         }
         return result;
     }

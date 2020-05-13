@@ -28,7 +28,7 @@ public class ContractController {
      * @return Result with contract, if found
      */
     public Result<Contract> findContract(Integer supplierID) {
-        Result result=null;
+        Result<Contract> result=null;
         for (Contract c : contracts) {
             if (c.getSupplierID() == supplierID) {
                 result = new Result<>(true, c, "contract has been found");
@@ -97,122 +97,126 @@ public class ContractController {
         return new Result<>(true, c, String.format("Product %s added to contract", product));
     }
 
-    public void removeProductFromContract(Integer supplierID, CatalogProduct product) {
+    /**
+     * remove product from contract with supplier
+     * @param supplierID - ID of supplier
+     * @param product - product to remove
+     * @return Result with Catalog Product if successful
+     */
+    public Result removeProductFromContract(Integer supplierID, CatalogProduct product) {
 
-        if (findContract(supplierID) == null) {
-            //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
-            return;
+        if (findContract(supplierID).getData() == null) {
+            return new Result<>(false, null, String.format("Contract with supplier (ID: %d) not found", supplierID));
         }
-        findContract(supplierID).removeProduct(product);
+        return findContract(supplierID).getData().removeProduct(product);
         //remove product from supplier hash map
-        //supplierProducts.get(supplierID).remove(product);
+        //supplierProducts.get(supplierID).remove(product);     //TODO check
+
     }
 
-    public LinkedList<CatalogProduct> getAllSupplierProducts (Integer supplierID){
-        if (findContract(supplierID) == null) {
-            //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
-            return null;
+    public Result<LinkedList<CatalogProduct>> getAllSupplierProducts (Integer supplierID){
+        if (findContract(supplierID).getData() == null) {
+            return new Result<>(false, null, String.format("Contract with supplier (ID: %d) not found", supplierID));
         }
-        return findContract(supplierID).getProducts();
+        return findContract(supplierID).getData().getProducts();
     }
 
-
-    public Pair getBestSupplierForProduct(Integer productID , Integer quantity){
-        float price = Integer.MAX_VALUE;
+    public Pair<Contract,Float> getBestSupplierForProduct(Integer productID , Integer quantity){
+        Float price = (float) Integer.MAX_VALUE;
         Contract contract = null;
 
         for (Contract c: contracts) {
             if(c.isProductExist(productID , false)){
                 if(c.isCostEngExist()){
-                    float priceFromCostEng = c.getCostEngineering().getUpdatePrice(c.getProductCatalogID(productID) , quantity);
+                    Float priceFromCostEng = c.getCostEngineering().getUpdatePrice(c.getProductCatalogID(productID) , quantity).getData();
                     if((priceFromCostEng != -1) && (priceFromCostEng < price)){
                         price = priceFromCostEng;
                         contract = c;
                     }
                 }
-                else if (c.getProductPrice(productID) < price){
-                    price = c.getProductPrice(productID);
+                else if (c.getProductPrice(productID).getData() < price){
+                    price = c.getProductPrice(productID).getData();
                     contract = c;
                 }
             }
         }
-        return new Pair(contract, price);
+        return new Pair<>(contract, price);
     }
 
     //endregion
 
-    //#region Category
+    //region Category
 
-    public void addCategory (Integer supplierID, String category){
-        if (findContract(supplierID) == null) {
-            //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
-            return;
+    public Result addCategory (Integer supplierID, String category){
+        Result<Contract> res = findContract(supplierID);
+        if (res == null) {
+            return res;
         }
-        findContract(supplierID).addCategory(category);
+        return res.getData().addCategory(category);
     }
 
-    public void removeCategory (Integer supplierID, String category){
-        if (findContract(supplierID) == null) {
-            //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
-            return;
+    public Result removeCategory (Integer supplierID, String category){
+        Result<Contract> res = findContract(supplierID);
+        if (res.getData() == null) {
+            return res;
         }
-        findContract(supplierID).removeCategory(category);
+        return res.getData().removeCategory(category);
     }
 
-    //#endregion
+    //endregion
 
-    //#region CostEngineering
+    //region CostEngineering
 
     //create cost engineering
-    public void addCostEngineering(Integer supplierID){
-        if (findContract(supplierID) == null) {
-            //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
-            return;
+    public Result addCostEngineering(Integer supplierID){
+        Result<Contract> res = findContract(supplierID);
+        if (res.getData() == null) {
+            return res;
         }
-        findContract(supplierID).addCostEngineering();
+        return res.getData().addCostEngineering();
     }
 
-    public void removeCostEngineering (Integer supplierID){
-        if (findContract(supplierID) == null) {
-            //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
-            return;
+    public Result removeCostEngineering (Integer supplierID){
+        Result<Contract> res = findContract(supplierID);
+        if (res.getData() == null) {
+            return res;
         }
-        findContract(supplierID).removeCostEngineering();
+        return res.getData().removeCostEngineering();
     }
 
-    public void updateMinQuantity(Integer supplierID , int catalogID , int minQuantity){
-        if (findContract(supplierID) == null) {
-            //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
-            return;
+    public Result updateMinQuantity(Integer supplierID , Integer catalogID , Integer minQuantity){
+        Result<Contract> res = findContract(supplierID);
+        if (res.getData() == null) {
+            return res;
         }
-        findContract(supplierID).updateMinQuantity(catalogID, minQuantity);
+        return res.getData().updateMinQuantity(catalogID, minQuantity);
     }
 
-    public void updatePriceAfterSale(Integer supplierID , int catalogID , int price){
-        if (findContract(supplierID) == null) {
-            //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
-            return;
+    public Result updatePriceAfterSale(Integer supplierID , Integer catalogID , Float price){
+        Result<Contract> res = findContract(supplierID);
+        if (res.getData() == null) {
+            return res;
         }
-        findContract(supplierID).updatePriceAfterSale(catalogID, price);
+        return res.getData().updatePriceAfterSale(catalogID, price);
     }
 
-    public void addProductToCostEng(Integer supplierID , int catalogID , int minQuantity , int price){
-        if (findContract(supplierID) == null) {
-            //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
-            return;
+    public Result addProductToCostEng(Integer supplierID , Integer catalogID , Integer minQuantity , Float price){
+        Result<Contract> res = findContract(supplierID);
+        if (res.getData() == null) {
+            return res;
         }
-        findContract(supplierID).addProductToCostEng(catalogID , minQuantity, price);
+        return res.getData().addProductToCostEng(catalogID , minQuantity, price);
     }
 
-    public void removeProductFromCostEng(Integer supplierID , int catalogID){
-        if (findContract(supplierID) == null) {
-            //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
-            return;
+    public Result removeProductFromCostEng(Integer supplierID , Integer catalogID){
+        Result<Contract> res = findContract(supplierID);
+        if (res.getData() == null) {
+            return res;
         }
-        findContract(supplierID).removeProductFromCostEng(catalogID);
+        return res.getData().removeProductFromCostEng(catalogID);
     }
 
-    //#endregion
+    //endregion
 
 
 }
