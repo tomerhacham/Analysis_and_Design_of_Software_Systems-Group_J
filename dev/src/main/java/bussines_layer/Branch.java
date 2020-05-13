@@ -3,10 +3,11 @@ package bussines_layer;
 import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.inventory_module.GeneralProduct;
 import bussines_layer.inventory_module.Inventory;
-import bussines_layer.inventory_module.discountType;
+import bussines_layer.inventory_module.Report;
 import bussines_layer.supplier_module.SupplierModule;
 
 import java.util.Date;
+import java.util.LinkedList;
 
 public class Branch {
     //fields:
@@ -61,7 +62,7 @@ public class Branch {
     public Result editGeneralProductMinQuantity(Integer gpID, Integer new_min_quantity){
         return inventory.editGeneralProductMinQuantity(gpID, new_min_quantity);
     }
-    public Result<GeneralProduct> searchGeneralProductByGpID(Integer gpID){
+    private Result<GeneralProduct> searchGeneralProductByGpID(Integer gpID){
         return inventory.searchGeneralProductByGpID(gpID);
     }
     //endregion
@@ -128,18 +129,56 @@ public class Branch {
     public Result addProductToContract(Integer supplierID, Integer catalogID, Integer gpID, Float supplier_price, Integer supplier_id, String supplier_category , String name){
         GeneralProduct gp = searchGeneralProductByGpID(gpID).getData();
         if (gp == null){
-            //TODO check if GP created here
+            //TODO check where GP will be created
+            return new Result<>(false, null, String.format("General Product with ID %d does not exist", gpID));
         }
         Result<CatalogProduct> res = gp.addCatalogProduct(catalogID, gpID, supplier_price, supplier_id, supplier_category, name);
         return supplierModule.addProductToContract(supplierID, res.getData());
     }
-
+    public Result removeProductFromContract(Integer supplierID, Integer gpID){
+        GeneralProduct gp = searchGeneralProductByGpID(gpID).getData();
+        CatalogProduct toRemove = gp.getSupplierCatalogProduct(supplierID);
+        if (toRemove == null){
+            return new Result<>(false, null, String.format("Catalog Product of gpID: %d and supplier ID: %d not found", gpID, supplierID));
+        }
+        return supplierModule.removeProductFromContract(supplierID, toRemove);
+    }
+    public Result addCategory(Integer supplierID, String category){
+        return supplierModule.addCategory(supplierID, category);
+    }
+    public Result removeCategory (Integer supplierID, String category){
+        return supplierModule.removeCategory(supplierID, category);
+    }
     //endregion
 
     //region Cost Engineering
+    public Result addProductToCostEng(Integer supid, Integer catalogid, Integer minQuantity, int price) {
+        return supplierModule.addProductToCostEng(supid , catalogid , minQuantity , price);
+    }
+    public Result removeProductCostEng(Integer supid, Integer catalogid2delete) {
+        return supplierModule.removeProductCostEng(supid, catalogid2delete);
+    }
+    public Result updateMinQuantity(Integer supid, Integer catalogid, Integer minQuantity) {
+        return supplierModule.updateMinQuantity(supid , catalogid , minQuantity);
+    }
+    public Result updatePriceAfterSale(Integer supid, Integer catalogid, Integer price) {
+        return supplierModule.updatePriceAfterSale(supid , catalogid , price);
+    }
+    public Result<LinkedList<CatalogProduct>> getAllSupplierProducts(Integer supId) {
+        return supplierModule.getAllSupplierProducts(supId);
+    }
+    public Result addCostEng(Integer supid) {
+        return supplierModule.addCostEng(supid);
+    }
+    public Result removeCostEng(Integer supid) {
+        return supplierModule.removeCostEng(supid);
+    }
     //endregion
 
     //region Orders
+    public Result generateOrderFromReport(Report report){
+        return supplierModule.generateOrdersFromReport(report);
+    }
     //endregion
 
     //endregion
