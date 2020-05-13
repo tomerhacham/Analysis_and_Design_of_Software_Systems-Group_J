@@ -26,10 +26,10 @@ public class Order {
     private OrderType type; //TODO
     private Status status;
     private HashMap<CatalogProduct, Integer> productsAndQuantity; // <product , quantity>
-    private HashMap<CatalogProduct , Integer> productsAndPrice; //<product, price>
+    private HashMap<CatalogProduct , Float> productsAndPrice; //<product, price>
 
 
-    public Order(int orderID , int supplierID , OrderType type){
+    public Order(int orderID , Integer supplierID , OrderType type){
         this.orderID = orderID;
         productsAndQuantity = new HashMap<>();
         this.supplierID = supplierID;
@@ -69,7 +69,7 @@ public class Order {
     }
     public  HashMap<CatalogProduct, Integer> getProductsAndQuantity() {return productsAndQuantity;}
 
-    public void addProduct(CatalogProduct product , Integer quantity , Integer price){
+    public void addProduct(CatalogProduct product , Integer quantity , Float price){
 
         if (productsAndQuantity.containsKey(product)){
             //sz_Result ( "Product Already Exists In The Order" ); //TODO RESULT
@@ -110,10 +110,10 @@ public class Order {
         return toDisplay;
     }
 
-    public Double getTotalAmount (){
-        Double total = 0.0;
+    public Float getTotalAmount (){
+        Float total = new Float(0);
         int quantity;
-        Integer price;
+        Float price;
 
         for (CatalogProduct cp :productsAndQuantity.keySet()) {
             quantity = productsAndQuantity.get(cp);

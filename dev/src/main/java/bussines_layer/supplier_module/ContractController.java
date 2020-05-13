@@ -126,9 +126,9 @@ public class ContractController {
         return findContract(supplierID).getData().getProducts();
     }
 
-    public Pair<Contract,Float> getBestSupplierForProduct(Integer productID , Integer quantity){
+    public Pair<SupplierCard,Float> getBestSupplierForProduct(Integer productID , Integer quantity){
         Float price = (float) Integer.MAX_VALUE;
-        Contract contract = null;
+        SupplierCard supplierCard = null;
 
         for (Contract c: contracts) {
             if(c.isProductExist(productID , false)){
@@ -136,16 +136,16 @@ public class ContractController {
                     Float priceFromCostEng = c.getCostEngineering().getUpdatePrice(c.getProductCatalogID(productID) , quantity).getData();
                     if((priceFromCostEng != -1) && (priceFromCostEng < price)){
                         price = priceFromCostEng;
-                        contract = c;
+                        supplierCard = c.getSupplierCard();
                     }
                 }
                 else if (c.getProductPrice(productID).getData() < price){
                     price = c.getProductPrice(productID).getData();
-                    contract = c;
+                    supplierCard = c.getSupplierCard();
                 }
             }
         }
-        return new Pair<>(contract, price);
+        return new Pair<>(supplierCard, price);
     }
 
     //endregion

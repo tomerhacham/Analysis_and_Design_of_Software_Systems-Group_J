@@ -5,6 +5,7 @@ import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.inventory_module.GeneralProduct;
 import bussines_layer.inventory_module.Report;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -110,22 +111,34 @@ public class SupplierModule {
 
     //region Order Controller
 
-        public Result DueToLackOrder(Report report){
+        public Result createOutOfStockOrder(Report report){
+            return prepareOutOfStockBeforeIssue(report.getProducts() , OrderType.OutOfStockOrder);
+        }
 
-            HashMap<Contract , LinkedList<Pair<CatalogProduct , Integer>>> productsForEachSupplier = new HashMap<>();
+        public Result createPeriodicOrder(LinkedList<Pair<GeneralProduct , Integer>> productsAndQuantity , Date date , int option){
+            ordersController.createOrder()
 
-            for (GeneralProduct product: report.getProducts() ) {
-                Pair<Contract, Integer> supplierAndPrice = contractController.getBestSupplierForProduct(product.getGpID() , product.quantityToOrder());
-                Contract contract = supplierAndPrice.getKey();
+        return preparePeriodicOrderBeforeIssue(periodicOrder.getProductsAndQuantity() , OrderType.OutOfStockOrder);
+        }
 
-                if(contract != null){
-                    if(productsForEachSupplier.containsKey(contract)){
-                        productsForEachSupplier.get(contract).add( new Pair<>(product.getSupplierCatalogProduct(contract.getSupplierID()) , supplierAndPrice.getValue()));
+        public Result preparePeriodicOrderBeforeIssue (HashMap<CatalogProduct, Integer> productsAndQuantity , OrderType orderType){
+
+            //HashMap<SupplierCard , LinkedList<CatalogProduct , Price>>
+            HashMap<SupplierCard , LinkedList<Pair<CatalogProduct , Float>>> productsForEachSupplier = new HashMap<>();
+
+            for (CatalogProduct product: productsAndQuantity.keySet()) {
+                //Pair<SupplierCard , Price> //TODO - change the function getBestSupplier in ContracController (return supplierCArd and not contract)
+                Pair<SupplierCard, Float> supplierAndPrice = contractController.getBestSupplierForProduct(product.getGpID() , productsAndQuantity.get(product));
+                SupplierCard supplierCard = supplierAndPrice.getKey();
+
+                if(supplierCard != null){
+                    if(productsForEachSupplier.containsKey(supplierCard)){
+                        productsForEachSupplier.get(supplierCard).add( new Pair<>(product , supplierAndPrice.getValue()));
                     }
                     else{
-                        LinkedList<Pair<CatalogProduct , Integer>> productsAndPrice = new LinkedList<>();
-                        productsAndPrice.add(new Pair<>(product.getSupplierCatalogProduct(contract.getSupplierID()) , supplierAndPrice.getValue()));
-                        productsForEachSupplier.put(contract , productsAndPrice);
+                        LinkedList<Pair<CatalogProduct , Float>> productsAndPrice = new LinkedList<>();
+                        productsAndPrice.add(new Pair<>(product, supplierAndPrice.getValue()));
+                        productsForEachSupplier.put(supplierCard , productsAndPrice);
                     }
                 }
                 else{
@@ -133,40 +146,69 @@ public class SupplierModule {
                 }
             }
 
-            List<GeneralProduct> reportProducts = report.getProducts();
+            //for each supplier(contract) get its catalog product and check the quantity needed throw the General Product
+            for (SupplierCard supplierCard: productsForEachSupplier.keySet()) {
+                int orderid = ordersController.createOrder(supplierCard.getId() , orderType);//(contract.getSupplierID() , productsForEachSupplier.get(contract));
+
+                LinkedList<Pair<CatalogProduct , Float>> cpPrice = productsForEachSupplier.get(supplierCard);
+
+                for (Pair<CatalogProduct , Float> pair : cpPrice){
+                    for (CatalogProduct catalogProduct :productsAndQuantity.keySet() ) {
+                        ordersController.addProductToOrder(orderid, catalogProduct , productsAndQuantity.get(catalogProduct) , pair.getValue());
+                    }
+                }
+            }
+            return new Result<>(true, productsAndQuantity, String.format("Orders been generated from the product list successfully: %s", productsAndQuantity));
+        }
+
+        public Result prepareOutOfStockBeforeIssue(List<GeneralProduct> generalProductList , OrderType orderType){
+
+            //HashMap<SupplierCard , LinkedList<CatalogProduct , Price>>
+            HashMap<SupplierCard , LinkedList<Pair<CatalogProduct , Float>>> productsForEachSupplier = new HashMap<>();
+
+            for (GeneralProduct product: generalProductList) {
+                //Pair<SupplierCard , Price> //TODO - change the function getBestSupplier in ContracController (return supplierCArd and not contract)
+                Pair<SupplierCard, Float> supplierAndPrice = contractController.getBestSupplierForProduct(product.getGpID() , product.quantityToOrder());
+                SupplierCard supplierCard = supplierAndPrice.getKey();
+
+                if(supplierCard != null){
+                    if(productsForEachSupplier.containsKey(supplierCard)){
+                        productsForEachSupplier.get(supplierCard).add( new Pair<>(product.getSupplierCatalogProduct(supplierCard.getId()) , supplierAndPrice.getValue()));
+                    }
+                    else{
+                        LinkedList<Pair<CatalogProduct , Float>> productsAndPrice = new LinkedList<>();
+                        productsAndPrice.add(new Pair<>(product.getSupplierCatalogProduct(supplierCard.getId()) , supplierAndPrice.getValue()));
+                        productsForEachSupplier.put(supplierCard , productsAndPrice);
+                    }
+                }
+                else{
+                    return new Result<>(false, null, String.format("There is no supplier with product: %s", product));
+                }
+            }
 
             //for each supplier(contract) get its catalog product and check the quantity needed throw the General Product
-            for (Contract contract: productsForEachSupplier.keySet()) {
-                int orderid = ordersController.createOrder(contract.getSupplierID() , OrderType.OutOfStockOrder);//(contract.getSupplierID() , productsForEachSupplier.get(contract));
+            for (SupplierCard supplierCard: productsForEachSupplier.keySet()) {
+                int orderid = ordersController.createOrder(supplierCard.getId() , orderType);//(contract.getSupplierID() , productsForEachSupplier.get(contract));
 
-                LinkedList<Pair<CatalogProduct , Integer>> cpPrice = productsForEachSupplier.get(contract);
+                LinkedList<Pair<CatalogProduct , Float>> cpPrice = productsForEachSupplier.get(supplierCard);
 
-                for (Pair<CatalogProduct , Integer> pair : cpPrice){
-                    for (GeneralProduct gp:reportProducts ) {
-                        if(gp.getCatalogID(contract.getSupplierID()).equals(pair.getKey().getCatalogID())){
+                for (Pair<CatalogProduct , Float> pair : cpPrice){
+                    for (GeneralProduct gp:generalProductList ) {
+                        if(gp.getCatalogID(supplierCard.getId()).equals(pair.getKey().getCatalogID())){
                             ordersController.addProductToOrder(orderid , pair.getKey() , gp.quantityToOrder() , pair.getValue());
                         }
                     }
                 }
             }
-            return new Result<>(true, report, String.format("Orders been generated from report successfully: %s", report));
+            return new Result<>(true, generalProductList, String.format("Orders been generated from the product list successfully: %s", generalProductList));
         }
 
-        //return the order id
-        public int createOrder(Integer supplierID) {
-            return ordersController.createOrder(supplierID , OrderType.OutOfStockOrder);
-        }
-
-        //a periodic order is for one supplier
-        public int createPeriodicOrder(Integer supplierID) {
-            return ordersController.createOrder(supplierID , OrderType.PeriodicOrder);
-        }
 
         public void addProductToPeriodicOrder(Integer orderId , CatalogProduct product , Integer quantity){
 
             Order order = ordersController.getOrder(orderId);
-            float price = contractController.findContract(order.getSupplierID()).getData().getProductPrice(product.getGpID()).getData();
-            ordersController.addProductToOrder(orderId , product , quantity , (int)price);
+            Float price = contractController.findContract(order.getSupplierID()).getData().getProductPrice(product.getGpID()).getData();
+            ordersController.addProductToOrder(orderId , product , quantity , price);
         }
 
         public void removeProductFromPeriodicOrder(Integer orderId , CatalogProduct product){

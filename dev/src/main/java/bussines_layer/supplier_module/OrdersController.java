@@ -1,7 +1,9 @@
 package bussines_layer.supplier_module;
 import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.inventory_module.GeneralProduct;
+import javafx.util.Pair;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -37,9 +39,16 @@ public class OrdersController {
         return instance;
     }
 
-    public int createOrder(int supplierID , OrderType status){
+    public int createOrder(int supplierID , OrderType type){
         orderidCounter++;
-        orders.add(new Order(orderidCounter  , supplierID , status));
+        orders.add(new Order(orderidCounter  , supplierID , type));
+        return orderidCounter;
+    }
+
+    public int createPeriodicOrder(LinkedList<Pair<CatalogProduct , Integer>> productsAndQuantity, Date date , int option){
+        orderidCounter++;
+        orders.add(new Order(orderidCounter , null ,OrderType.PeriodicOrder ));
+        getOrder(orderidCounter).
         return orderidCounter;
     }
 
@@ -56,7 +65,7 @@ public class OrdersController {
 
     public LinkedList<Order> getAllOrders() { return this.orders;}
 
-    public void addProductToOrder(int orderID , CatalogProduct product , Integer quantity , Integer price){
+    public void addProductToOrder(int orderID , CatalogProduct product , Integer quantity , Float price){
         getOrder(orderID).addProduct(product , quantity , price);
     }
 
@@ -80,15 +89,15 @@ public class OrdersController {
     }
 
     //get total price of an order
-    public Double getTotalPrice (int orderID){
+    public Float getTotalPrice (int orderID){
         for (Order o : orders){
             if (o.getOrderID() == orderID)
                 return o.getTotalAmount();
         }
-        return -1.0;
+        return new Float(-1.0);
     }
 
-    public Double getTotalAmountLastOrder (){
+    public Float getTotalAmountLastOrder (){
         return orders.getLast().getTotalAmount();
     }
 
