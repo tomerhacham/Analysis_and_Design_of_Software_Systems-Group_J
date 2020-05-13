@@ -1,5 +1,6 @@
 package bussines_layer.supplier_module;
 
+import bussines_layer.Result;
 import bussines_layer.SupplierCard;
 import bussines_layer.inventory_module.CatalogProduct;
 import javafx.util.Pair;
@@ -19,18 +20,29 @@ public class ContractController {
         this.branchID = branchID;
     }
 
-//#region Contract
+    //#region Contract
 
-    public Contract findContract(Integer supplierID) {
-        for (Contract c : contracts) {
-            if (c.getSupplierID() == supplierID) {
-                return c;
+    /**
+     * return the contract by its associate suplier id
+     * @param supplierID - Allocated by the SupplierController
+     * @return
+     */
+    public Result findContract(Integer supplierID) {
+        Result result=null;
+            for (Contract c : contracts) {
+                if (c.getSupplierID() == supplierID) {
+                    result = new Result(true, c, "contract has been found");
+                    break;
+                }
             }
+            if(result.equals(null)){
+                result=new Result(false, null, String.format("Could not find contract for supplier %d", supplierID));
+            }
+            return result;
         }
-        return null;
-    }
 
     public void addContract(SupplierCard supplier) {
+        Result result=null;
         if (findContract(supplier.getId()) != null) {
             //sz_Result ( "Contract Already exist" ); //TODO RESULT
             return;
@@ -40,154 +52,152 @@ public class ContractController {
         contractidCounter++;
         supplier.incNumOfContract();
         contracts.add(c);
-        //add supplier to hashMap
-       // supplierProducts.put(supplier.getId(), new LinkedList<>());
     }
 
     public void removeContract(SupplierCard supplier) {
-        Contract toRemove = findContract(supplier.getId());
+            Contract toRemove = findContract(supplier.getId());
 
-        if (toRemove == null) {
-            //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
-            return;
+            if (toRemove == null) {
+                //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
+                return;
+            }
+            contracts.remove(toRemove);
+            supplier.decNumOfContract();
+            //remove from product list
+           // supplierProducts.remove(supplier.getId());
         }
-        contracts.remove(toRemove);
-        supplier.decNumOfContract();
-        //remove from product list
-       // supplierProducts.remove(supplier.getId());
-    }
 
-//#endregion
+    //#endregion
 
-//#region Products
+    //#region Products
 
-    public void addProductToContract(Integer supplierID, CatalogProduct product) {
-        // Notice : we checked that the products category is in the Suppliers list inside the contract
-        if (findContract(supplierID) == null) {
-            //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
-            return;
+        public void addProductToContract(Integer supplierID, CatalogProduct product) {
+            // Notice : we checked that the products category is in the Suppliers list inside the contract
+            if (findContract(supplierID) == null) {
+                //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
+                return;
+            }
+            findContract(supplierID).addProduct(product);
+            //add to supplier product list
+            //supplierProducts.get(supplierID).add(product);
         }
-        findContract(supplierID).addProduct(product);
-        //add to supplier product list
-        //supplierProducts.get(supplierID).add(product);
-    }
 
-    public void removeProductFromContract(Integer supplierID, CatalogProduct product) {
+        public void removeProductFromContract(Integer supplierID, CatalogProduct product) {
 
-        if (findContract(supplierID) == null) {
-            //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
-            return;
+            if (findContract(supplierID) == null) {
+                //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
+                return;
+            }
+            findContract(supplierID).removeProduct(product);
+            //remove product from supplier hash map
+            //supplierProducts.get(supplierID).remove(product);
         }
-        findContract(supplierID).removeProduct(product);
-        //remove product from supplier hash map
-        //supplierProducts.get(supplierID).remove(product);
-    }
 
-    public LinkedList<CatalogProduct> getAllSupplierProducts (Integer supplierID){
-        if (findContract(supplierID) == null) {
-            //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
-            return null;
+        public LinkedList<CatalogProduct> getAllSupplierProducts (Integer supplierID){
+            if (findContract(supplierID) == null) {
+                //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
+                return null;
+            }
+            return findContract(supplierID).getProducts();
         }
-        return findContract(supplierID).getProducts();
-    }
 
 
-    public Pair getBestSupplierForProduct(Integer productID , Integer quantity){
-        float price = Integer.MAX_VALUE;
-        Contract contract = null;
+        public Pair getBestSupplierForProduct(Integer productID , Integer quantity){
+            float price = Integer.MAX_VALUE;
+            Contract contract = null;
 
-        for (Contract c: contracts) {
-            if(c.isProductExist(productID , false)){
-                if(c.isCostEngExist()){
-                    float priceFromCostEng = c.getCostEngineering().getUpdatePrice(c.getProductCatalogID(productID) , quantity);
-                    if((priceFromCostEng != -1) && (priceFromCostEng < price)){
-                        price = priceFromCostEng;
+            for (Contract c: contracts) {
+                if(c.isProductExist(productID , false)){
+                    if(c.isCostEngExist()){
+                        float priceFromCostEng = c.getCostEngineering().getUpdatePrice(c.getProductCatalogID(productID) , quantity);
+                        if((priceFromCostEng != -1) && (priceFromCostEng < price)){
+                            price = priceFromCostEng;
+                            contract = c;
+                        }
+                    }
+                    else if (c.getProductPrice(productID) < price){
+                        price = c.getProductPrice(productID);
                         contract = c;
                     }
                 }
-                else if (c.getProductPrice(productID) < price){
-                    price = c.getProductPrice(productID);
-                    contract = c;
-                }
             }
+            return new Pair(contract, price);
         }
-        return new Pair(contract, price);
-    }
 
-//#endregion
+    //#endregion
 
-//#region Category
+    //#region Category
 
-    public void addCategory (Integer supplierID, String category){
-        if (findContract(supplierID) == null) {
-            //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
-            return;
+        public void addCategory (Integer supplierID, String category){
+            if (findContract(supplierID) == null) {
+                //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
+                return;
+            }
+            findContract(supplierID).addCategory(category);
         }
-        findContract(supplierID).addCategory(category);
-    }
 
-    public void removeCategory (Integer supplierID, String category){
-        if (findContract(supplierID) == null) {
-            //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
-            return;
+        public void removeCategory (Integer supplierID, String category){
+            if (findContract(supplierID) == null) {
+                //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
+                return;
+            }
+            findContract(supplierID).removeCategory(category);
         }
-        findContract(supplierID).removeCategory(category);
-    }
 
-//#endregion
+    //#endregion
 
-//#region CostEngineering
+    //#region CostEngineering
 
-    //create cost engineering
-    public void addCostEngineering(Integer supplierID){
-        if (findContract(supplierID) == null) {
-            //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
-            return;
+        //create cost engineering
+        public void addCostEngineering(Integer supplierID){
+            if (findContract(supplierID) == null) {
+                //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
+                return;
+            }
+            findContract(supplierID).addCostEngineering();
         }
-        findContract(supplierID).addCostEngineering();
-    }
 
-    public void removeCostEngineering (Integer supplierID){
-        if (findContract(supplierID) == null) {
-            //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
-            return;
+        public void removeCostEngineering (Integer supplierID){
+            if (findContract(supplierID) == null) {
+                //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
+                return;
+            }
+            findContract(supplierID).removeCostEngineering();
         }
-        findContract(supplierID).removeCostEngineering();
-    }
 
-    public void updateMinQuantity(Integer supplierID , int catalogID , int minQuantity){
-        if (findContract(supplierID) == null) {
-            //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
-            return;
+        public void updateMinQuantity(Integer supplierID , int catalogID , int minQuantity){
+            if (findContract(supplierID) == null) {
+                //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
+                return;
+            }
+            findContract(supplierID).updateMinQuantity(catalogID, minQuantity);
         }
-        findContract(supplierID).updateMinQuantity(catalogID, minQuantity);
-    }
 
-    public void updatePriceAfterSale(Integer supplierID , int catalogID , int price){
-        if (findContract(supplierID) == null) {
-            //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
-            return;
+        public void updatePriceAfterSale(Integer supplierID , int catalogID , int price){
+            if (findContract(supplierID) == null) {
+                //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
+                return;
+            }
+            findContract(supplierID).updatePriceAfterSale(catalogID, price);
         }
-        findContract(supplierID).updatePriceAfterSale(catalogID, price);
-    }
 
-    public void addProductToCostEng(Integer supplierID , int catalogID , int minQuantity , int price){
-        if (findContract(supplierID) == null) {
-            //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
-            return;
+        public void addProductToCostEng(Integer supplierID , int catalogID , int minQuantity , int price){
+            if (findContract(supplierID) == null) {
+                //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
+                return;
+            }
+            findContract(supplierID).addProductToCostEng(catalogID , minQuantity, price);
         }
-        findContract(supplierID).addProductToCostEng(catalogID , minQuantity, price);
-    }
 
-    public void removeProductFromCostEng(Integer supplierID , int catalogID){
-        if (findContract(supplierID) == null) {
-            //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
-            return;
+        public void removeProductFromCostEng(Integer supplierID , int catalogID){
+            if (findContract(supplierID) == null) {
+                //sz_Result ( "There's No Contract with the Supplier" ); //TODO RESULT
+                return;
+            }
+            findContract(supplierID).removeProductFromCostEng(catalogID);
         }
-        findContract(supplierID).removeProductFromCostEng(catalogID);
-    }
 
-//#endregion
+    //#endregion
 
 
 }

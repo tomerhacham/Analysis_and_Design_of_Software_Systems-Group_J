@@ -1,6 +1,6 @@
-package persistence_layer;
+package data_access_layer;
 
-import persistence_layer.DTO.*;
+import data_access_layer.DTO.*;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;

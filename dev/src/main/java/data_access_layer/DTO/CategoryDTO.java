@@ -1,4 +1,4 @@
-package persistence_layer.DTO;
+package data_access_layer.DTO;
 
 import bussines_layer.inventory_module.Category;
 import bussines_layer.inventory_module.GeneralProduct;

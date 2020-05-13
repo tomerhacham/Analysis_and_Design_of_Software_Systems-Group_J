@@ -25,8 +25,6 @@ public class SupplierCard {
     private int numOfContract;
     private supplierType type;
 
-    //private CostEngineering costEngineering;
-
     public SupplierCard(String SupplierName , String Address , String Email , String PhoneNumber ,
                         int id , String BankAccountNum , String Payment , LinkedList<String> ContactsName, supplierType type){
 
@@ -40,9 +38,6 @@ public class SupplierCard {
         this.ContactsName = ContactsName;
         this.numOfContract =0;
         this.type = type;
-
-        //this.contract = contract;
-        //costEngineering = null;
     }
 
 //#region getters_setters
@@ -120,8 +115,9 @@ public class SupplierCard {
 
 //#endregion
 
-    public void deleteContactName(String contactName){
 
+    public Result deleteContactName(String contactName){
+    Result result;
         int i = 0;
         boolean foundName = false;
         for (String cn:ContactsName) {
@@ -135,21 +131,35 @@ public class SupplierCard {
         }
         if(foundName){
             ContactsName.remove(i);
+            result=new Result(true, this, String.format("Contact name has been removed from supplier %d", this.getId()));
         }
         else{
-            //sz_Result.setMsg("The Name Is Not In The Contact List");   //TODO - RESULT
+            result = new Result(false, this, String.format("name: %s does not exist in the contact list of supplier %d", contactName,this.getId()) );
         }
+        return result;
     }
 
-    public void addContactName (String contactName){
+    public Result addContactName (String contactName){
         ContactsName.add(contactName);
+        return new Result(true, this, String.format("%s has been added to contact list of supplier %d", contactName,this.getId()));
     }
 
+    @Override
+    public String toString() {
+        return "" +
+                "SupplierName:'" + SupplierName + '\'' +
+                ", Address:'" + Address + '\'' +
+                ", Email:'" + Email + '\'' +
+                ", PhoneNumber:'" + PhoneNumber + '\'' +
+                ", id:" + id +
+                ", BankAccountNum:'" + BankAccountNum + '\'' +
+                ", Payment:'" + Payment + '\'' +
+                ", ContactsName:" + ContactsName +
+                ", numOfContract:" + numOfContract +
+                ", type=" + type;
+    }
 
-
-
-
-  /*  public Contract getContract() {
+    /*  public Contract getContract() {
         return contract;
     }
 

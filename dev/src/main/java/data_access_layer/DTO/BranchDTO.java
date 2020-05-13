@@ -1,4 +1,4 @@
-package persistence_layer.DTO;
+package data_access_layer.DTO;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
