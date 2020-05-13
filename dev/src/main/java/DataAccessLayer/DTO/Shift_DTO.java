@@ -22,5 +22,42 @@ public class Shift_DTO {
     @ForeignCollectionField(eager = false)
     private ForeignCollection<Driver_DTO> scheduledDrivers;
 
-    public Shift_DTO(){}
+    public Shift_DTO(ForeignCollection<Occupation_DTO> Occupation, Date Date, int partOfDay, ForeignCollection<Driver_DTO> drivers){
+        occupation = Occupation;
+        date = Date;
+        timeOfDay = partOfDay;
+        scheduledDrivers = drivers;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public ForeignCollection<Driver_DTO> getScheduledDrivers() {
+        return scheduledDrivers;
+    }
+
+    public ForeignCollection<Occupation_DTO> getOccupation() {
+        return occupation;
+    }
+
+    public int getTimeOfDay() {
+        return timeOfDay;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public void setOccupation(ForeignCollection<Occupation_DTO> occupation) {
+        this.occupation = occupation;
+    }
+
+    public void setScheduledDrivers(ForeignCollection<Driver_DTO> scheduledDrivers) {
+        this.scheduledDrivers = scheduledDrivers;
+    }
+
+    public void setTimeOfDay(int timeOfDay) {
+        this.timeOfDay = timeOfDay;
+    }
 }

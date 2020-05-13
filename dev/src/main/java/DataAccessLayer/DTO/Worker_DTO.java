@@ -25,5 +25,46 @@ public class Worker_DTO {
     @ForeignCollectionField(eager = false)
     private ForeignCollection<Position_DTO> positions;
 
-    public Worker_DTO(){}
+    public Worker_DTO(String id, String Name, Date startDate, Double Salary){
+        workerID = id;
+        name = Name;
+        start_Date = startDate;
+        salary = Salary;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Date getStart_Date() {
+        return start_Date;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+
+    public ForeignCollection<Position_DTO> getPositions() {
+        return positions;
+    }
+
+    public String getWorkerID() {
+        return workerID;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setStart_Date(Date start_Date) {
+        this.start_Date = start_Date;
+    }
+
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
+
+    public void setPositions(ForeignCollection<Position_DTO> positions) {
+        this.positions = positions;
+    }
 }
