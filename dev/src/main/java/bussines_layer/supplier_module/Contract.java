@@ -211,27 +211,26 @@ public class Contract {
 
     //#region CostEngineering
 
-        //TODo - update the changes
-        private boolean isProductExist (Integer id , boolean isCatalogid){
-            if(isCatalogid){
-                for (Integer pid : products.keySet()){
-                    if (products.get(pid).getCatalogID().equals(id)){
-                        return true;
-                    }
+    private boolean isProductExist (Integer id , boolean isCatalogid){
+        if(isCatalogid){
+            for (Integer pid : products.keySet()){
+                if (products.get(pid).getCatalogID().equals(id)){
+                    return true;
                 }
-                return false;
-            }
-
-            if(products.containsKey(id)){
-                return true;
             }
             return false;
         }
 
-        public int getProductCatalogID(Integer productID){
-
-            return products.get(productID).getCatalogID();
+        if(products.containsKey(id)){
+            return true;
         }
+        return false;
+    }
+
+    public int getProductCatalogID(Integer productID){
+
+        return products.get(productID).getCatalogID();
+    }
 
     /**
      * add cost engineering to this contract
