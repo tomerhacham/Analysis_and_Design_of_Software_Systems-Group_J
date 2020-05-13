@@ -110,17 +110,17 @@ public class Contract {
      * reutrn all the catalogProduct under this contract
      * @return
      */
-    public Result getProducts() {
-        Result result;
+    public Result<LinkedList<CatalogProduct>> getProducts() {
+        Result<LinkedList<CatalogProduct>> result;
             if (products.isEmpty()){
-                result = new Result(false,null, String.format("There is no catalog product under contract %d", this.contractID));
+                result = new Result<>(false,null, String.format("There is no catalog product under contract %d", this.contractID));
             }
             else {
                 LinkedList<CatalogProduct> listP = new LinkedList<>();
                 for (Integer i : products.keySet()) {
                     listP.add(products.get(i));
                 }
-                result=new Result(true, listP, String.format("List of all the catalog product under contract ID: %d", this.contractID));
+                result=new Result<>(true, listP, String.format("List of all the catalog product under contract ID: %d", this.contractID));
             }
             return result;
         }

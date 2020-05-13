@@ -114,6 +114,11 @@ public class ContractController {
 
     }
 
+    /**
+     * Get all supplier products
+     * @param supplierID
+     * @return Result with LinkedList of all supplier's products, if successful
+     */
     public Result<LinkedList<CatalogProduct>> getAllSupplierProducts (Integer supplierID){
         if (findContract(supplierID).getData() == null) {
             return new Result<>(false, null, String.format("Contract with supplier (ID: %d) not found", supplierID));
