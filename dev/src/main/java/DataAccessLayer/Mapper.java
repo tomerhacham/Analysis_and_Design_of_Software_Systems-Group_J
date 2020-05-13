@@ -9,6 +9,7 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import java.util.Date;
 
+
 //singleton
 public class Mapper {
     private static Mapper instance = null;
@@ -79,7 +80,7 @@ public class Mapper {
         worker_DAO = DaoManager.createDao(conn, Worker_DTO.class);
     }
 
-    private void CloseConnetion() throws Exception{
+    public void CloseConnetion() throws Exception{
         try {
             conn.close();
         }catch (Exception e)

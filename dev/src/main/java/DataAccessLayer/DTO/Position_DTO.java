@@ -12,5 +12,24 @@ public class Position_DTO {
     @DatabaseField(columnName = "position", id = true)
     private String position;
 
-    public Position_DTO(){}
+    public Position_DTO(String workerID, String position){
+        this.workerID=workerID;
+        this.position=position;
+    }
+
+    public void setWorkerID(String workerID) {
+        this.workerID = workerID;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getWorkerID() {
+        return workerID;
+    }
+
+    public String getPosition() {
+        return position;
+    }
 }

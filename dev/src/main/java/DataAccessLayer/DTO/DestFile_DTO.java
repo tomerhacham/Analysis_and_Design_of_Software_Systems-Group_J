@@ -15,5 +15,33 @@ public class DestFile_DTO {
     @DatabaseField(columnName = "siteID", id = true, foreign = true, foreignColumnName = "siteID")
     private int siteID;
 
-    public DestFile_DTO(){}
+    public DestFile_DTO(int transportID, int productFileID, int siteID){
+        this.transportID=transportID;
+        this.productFileID=productFileID;
+        this.siteID=siteID;
+    }
+
+    public int getProductFileID() {
+        return productFileID;
+    }
+
+    public int getSiteID() {
+        return siteID;
+    }
+
+    public int getTransportID() {
+        return transportID;
+    }
+
+    public void setProductFileID(int productFileID) {
+        this.productFileID = productFileID;
+    }
+
+    public void setSiteID(int siteID) {
+        this.siteID = siteID;
+    }
+
+    public void setTransportID(int transportID) {
+        this.transportID = transportID;
+    }
 }

@@ -20,5 +20,42 @@ public class Occupation_DTO {
     @DatabaseField(columnName = "partOfDay", id = true, foreign = true, foreignColumnName = "partOfDay")
     private int partOfDay;
 
-    public Occupation_DTO(){}
+    public Occupation_DTO(String position, String workerID, Date shiftDate, int partOfDay){
+        this.position=position;
+        this.workerID=workerID;
+        this.shiftDate=shiftDate;
+        this.partOfDay=partOfDay;
+    }
+
+    public Date getShiftDate() {
+        return shiftDate;
+    }
+
+    public int getPartOfDay() {
+        return partOfDay;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public String getWorkerID() {
+        return workerID;
+    }
+
+    public void setPartOfDay(int partOfDay) {
+        this.partOfDay = partOfDay;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public void setShiftDate(Date shiftDate) {
+        this.shiftDate = shiftDate;
+    }
+
+    public void setWorkerID(String workerID) {
+        this.workerID = workerID;
+    }
 }

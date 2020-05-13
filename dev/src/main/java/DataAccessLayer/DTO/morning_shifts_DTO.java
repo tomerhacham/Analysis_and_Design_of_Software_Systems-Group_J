@@ -14,5 +14,24 @@ public class morning_shifts_DTO {
     @DatabaseField(columnName = "truckID", id = true, foreign = true, foreignColumnName = "truckID")
     private int truckID;
 
-    public morning_shifts_DTO(){}
+    public morning_shifts_DTO(Date date, int truckID){
+        this.date=date;
+        this.truckID=truckID;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public int getTruckID() {
+        return truckID;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public void setTruckID(int truckID) {
+        this.truckID = truckID;
+    }
 }
