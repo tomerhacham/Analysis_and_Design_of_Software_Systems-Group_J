@@ -17,12 +17,12 @@ public class BranchController {
 
 //#region Supplier Controller
 
-    public void createSupplierCard (String supplierName, String address, String email, String phoneNumber, int id, String bankAccountNum, String payment, LinkedList<String> contactsName, supplierType type) {
-        supplierController.createSupplierCard(supplierName , address , email , phoneNumber , id , bankAccountNum , payment , contactsName, type);
+    public Result createSupplierCard (String supplierName, String address, String email, String phoneNumber, int id, String bankAccountNum, String payment, LinkedList<String> contactsName, supplierType type) {
+        return supplierController.createSupplierCard(supplierName , address , email , phoneNumber , id , bankAccountNum , payment , contactsName, type);
     }
 
-    public void ChangeSupplierName(int supid, String supplierName) {
-        supplierController.ChangeSupplierName(supid , supplierName);
+    public Result ChangeSupplierName(int supid, String supplierName) {
+        return supplierController.ChangeSupplierName(supid , supplierName);
     }
 
     public Result ChangeAddress(int supid, String address) {
