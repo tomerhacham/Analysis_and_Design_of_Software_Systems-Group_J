@@ -1,5 +1,7 @@
 package bussines_layer.supplier_module;
 
+import bussines_layer.Result;
+
 import java.util.HashMap;
 
 /**
@@ -12,70 +14,71 @@ import java.util.HashMap;
 public class CostEngineering {
 
     private HashMap<Integer , Integer> minQuntity; // <catalogid , quantity>
-    private HashMap<Integer , Integer> newPrice; // <catalogid , newPrice>
+    private HashMap<Integer , Float> newPrice; // <catalogid , newPrice>
 
     public CostEngineering(){
         minQuntity = new HashMap<Integer, Integer>();
-        newPrice = new HashMap<Integer, Integer>();
+        newPrice = new HashMap<Integer, Float>();
     }
 
     public HashMap<Integer, Integer> getMinQuntity() {
         return minQuntity;
     }
 
-    public HashMap<Integer, Integer> getNewPrice() {
+    public HashMap<Integer, Float> getNewPrice() {
         return newPrice;
     }
 
-    public void updateMinQuantity(int catalogid , int newQuantity){
+    public Result updateMinQuantity(Integer catalogid , Integer newQuantity){
         minQuntity.replace(catalogid , minQuntity.get(catalogid) , newQuantity);
+        return new Result(true,newQuantity, String.format("CatalogID:%s min quantity has been change to:%d", catalogid,newQuantity));
     }
 
-    public void updatePriceAfterSale(int protuctid , int newp){
-        newPrice.replace(protuctid , newPrice.get(protuctid) , newp);
+    public Result updatePriceAfterSale(Integer catalogid , Float newp){
+        newPrice.replace(catalogid , newPrice.get(catalogid) , newp);
+        return new Result(true,newp, String.format("CatalogID:%s price has been change to:%d", catalogid,newp));
     }
 
-    public void removeProduct(int catalogid){
+    public Result removeProduct(Integer catalogid){
+        Result result;
         if (minQuntity.containsKey(catalogid)){
             minQuntity.remove(catalogid);
-        }
-        else{
-           // sz_Result.setMsg("The Product Is Not In The Cost Engineering"); //TODO result
-            return;
-        }
-        if (newPrice.containsKey(catalogid)) {
             newPrice.remove(catalogid);
+            result=new Result(true, catalogid, String.format("CatalogID:%d has been removed", catalogid));
         }
         else{
-            //sz_Result.setMsg("The Product Is Not In The Cost Engineering"); //TODO result
+            result=new Result(false,catalogid, String.format("Could not find CatalogID:%d in the cost engineering", catalogid));
         }
+        return result;
     }
 
-    public void addProduct(int catalogid , int quantity , int price){
-
+    public Result addProduct(Integer catalogid , Integer quantity , Float price){
+        Result result;
         if (minQuntity.containsKey(catalogid) || (newPrice.containsKey(catalogid))){
-            //sz_Result.setMsg("Product Already exist, You Can Update the Quantity or the Price on main Menu."); //TODO result
-            return;
+            result=new Result(false, catalogid, String.format("CatalogId:%d already exist",catalogid ));
         }
-        if (!(minQuntity.containsKey(catalogid))){
-            minQuntity.put(catalogid ,quantity );
+        else {
+            minQuntity.put(catalogid, quantity);
+            newPrice.put(catalogid, price);
+            result= new Result(true, catalogid, String.format("Catalog Product:%d has been added",catalogid ));
         }
-        if (!(newPrice.containsKey(catalogid))) {
-            newPrice.put(catalogid , price);
-        }
+        return result;
     }
 
-    public float getUpdatePrice (int catalogId , int quantity){
-        float price = -1;
+    public Result getUpdatePrice (Integer catalogId , Integer quantity){
+        Result result;
+        Float price = (float)-1;
         if (minQuntity.containsKey(catalogId)) {
             int min = minQuntity.get(catalogId);
-
             if (quantity >= min) {
                 price = newPrice.get(catalogId);
             }
+            result=new Result(true, price, String.format("Relevant price for CatalogID:%d", catalogId));
         }
-
-        return price;
+        else{
+            result = new Result(false, catalogId, String.format("Could not find CatalogID:%d in cost engineering", catalogId));
+        }
+        return result;
     }
 
 

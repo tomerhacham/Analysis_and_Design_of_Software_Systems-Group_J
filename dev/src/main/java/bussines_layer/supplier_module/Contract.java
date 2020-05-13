@@ -264,40 +264,62 @@ public class Contract {
             return costEngineering;
         }
 
-        //update min quantity
-        public void updateMinQuantity(int catalogid , int minQuantity){
-            if (!isProductExist(catalogid , true)){
-                //sz_Result ("Product does not exist in the Contract" )  //TODO result
-            }
-           costEngineering.updateMinQuantity(catalogid , minQuantity);
+    /**
+     * update min quantity of product in cost engineering
+     * @param catalogid
+     * @param minQuantity
+     * @return
+     */
+    public Result updateMinQuantity(Integer catalogid , Integer minQuantity){
+        Result result;
+        if (!isProductExist(catalogid , true)){
+            result=new Result(false,catalogid, String.format("Could not find CatalogID:%d under contarct ID:%d", catalogid,contractID));
         }
-
-        //update new price with sale
-        public void updatePriceAfterSale(int catalogid , int price){
-            costEngineering.updatePriceAfterSale(catalogid , price);
+        else {
+            result=costEngineering.updateMinQuantity(catalogid, minQuantity);
         }
+        return result;
+    }
 
-        //add product to cost engineering
-        public void addProductToCostEng(int catalogid , int minQuantity , int price){
-            //check if the product is in the suppliers product list
-            if(isProductExist(catalogid , true)){
-                costEngineering.addProduct(catalogid , minQuantity , price);
-            }
-            else{
-                //sz_Result.setMsg("The Product Is Not In The Product list");   //TODO result
-            }
+    /**
+     * update price of catalog product in ost engineering
+     * @param catalogid
+     * @param price
+     */
+    public Result updatePriceAfterSale(Integer catalogid , Float price){
+        return costEngineering.updatePriceAfterSale(catalogid , price);
+    }
+
+    /**
+     * add product to cost engineering
+     * @param catalogid
+     * @param minQuantity
+     * @param price
+     * @return
+     */
+    public Result addProductToCostEng(Integer catalogid , Integer minQuantity , Float price){
+        Result result;
+        if(isProductExist(catalogid , true)){
+            result = costEngineering.addProduct(catalogid , minQuantity , price);
         }
-
-        //delete product from cost engineering
-        public void removeProductFromCostEng(int catalogid){
-            costEngineering.removeProduct(catalogid);
+        else{
+            result=new Result(false,catalogid, String.format("Could not find CatalogID:%d under contract ID:%d", catalogid,contractID));
         }
+        return result;
+    }
 
+    /**
+     * delete product from cost engineering
+     * @param catalogid
+     * @return
+     */
+    public Result removeProductFromCostEng(Integer catalogid){
+        return costEngineering.removeProduct(catalogid);
+    }
 
-        public boolean isCostEngExist(){
-            return costEngineering!=null;
-        }
-
+    public boolean isCostEngExist(){
+        return costEngineering!=null;
+    }
 
     //#endregion
 
