@@ -10,14 +10,14 @@ public class BranchController {
 
     private HashMap<Integer, Branch> branches;      //<Id,Branch>
     private SupplierController supplierController;
-    private Branch curr;        //current branch active
+    private Branch currBranch;        //current branch active
     private Integer next_id;    //next id available for new branch
     public static Date system_curr_date;
 
     public BranchController (){
         branches= new HashMap<>();
         supplierController = SupplierController.getInstance();
-        curr = null;
+        currBranch = null;
         next_id = 1;
         system_curr_date = new Date();
     }
@@ -84,14 +84,14 @@ public class BranchController {
 
     public Result switchBranch(Integer branch_id){
         if (checkBranchExists(branch_id)){
-            curr = branches.get(branch_id);
-            return new Result<>(true, curr, String.format("Switched to Branch %d successfully", curr.getBranchId()));
+            currBranch = branches.get(branch_id);
+            return new Result<>(true, currBranch, String.format("Switched to Branch %d successfully", currBranch.getBranchId()));
         }
         return new Result<>(false, null, String.format("Branch with ID %d not found", branch_id));
     }
 
     public Result removeBranch(Integer branch_id){
-        if (curr.getBranchId().equals(branch_id)){
+        if (currBranch.getBranchId().equals(branch_id)){
             return new Result<>(false, null, String.format("Can not delete current branch (ID: %d), switch and try again.", branch_id));
         }
         if (!checkBranchExists(branch_id)){
@@ -115,93 +115,93 @@ public class BranchController {
     //region Inventory Module
     //region Categories
     public Result addMainCategory(String name){
-        return curr.addMainCategory(name);
+        return currBranch.addMainCategory(name);
     }
 
     public Result addSubCategory(Integer predecessor_cat_id, String name){
-        return curr.addSubCategory(predecessor_cat_id, name);
+        return currBranch.addSubCategory(predecessor_cat_id, name);
     }
 
     public Result removeCategory(Integer category_id){
-        return curr.removeCategory(category_id);
+        return currBranch.removeCategory(category_id);
     }
 
     public Result editCategoryName(Integer category_id, String name){
-        return curr.editCategoryName(category_id, name);
+        return currBranch.editCategoryName(category_id, name);
     }
     //endregion
 
     //region General Products
     public Result addGeneralProduct(Integer category_id, String manufacture, String name, Float supplier_price, Float retail_price,
                                     Integer min_quantity, Integer catalogID, Integer gpID, Integer supplier_id, String supplier_category){
-        return curr.addGeneralProduct(category_id, manufacture, name, supplier_price, retail_price, min_quantity, catalogID, gpID, supplier_id, supplier_category);
+        return currBranch.addGeneralProduct(category_id, manufacture, name, supplier_price, retail_price, min_quantity, catalogID, gpID, supplier_id, supplier_category);
     }
     public Result removeGeneralProduct(Integer category_id, Integer gpID) {
-        return curr.removeGeneralProduct(category_id, gpID);
+        return currBranch.removeGeneralProduct(category_id, gpID);
     }
     public Result editGeneralProductName(Integer gpID, String new_name){
-        return curr.editGeneralProductName(gpID, new_name);
+        return currBranch.editGeneralProductName(gpID, new_name);
     }
     public Result editGeneralProductSupplierPrice(Integer gpID, Float new_supplier_price, Integer supplier_id){
-        return curr.editGeneralProductSupplierPrice(gpID, new_supplier_price, supplier_id);
+        return currBranch.editGeneralProductSupplierPrice(gpID, new_supplier_price, supplier_id);
     }
     public Result editGeneralProductRetailPrice(Integer gpID, Float new_retail_price){
-        return curr.editGeneralProductRetailPrice(gpID, new_retail_price);
+        return currBranch.editGeneralProductRetailPrice(gpID, new_retail_price);
 
     }
     public Result editGeneralProductQuantity(Integer gpID, Integer new_quantity){
-        return curr.editGeneralProductQuantity(gpID, new_quantity);
+        return currBranch.editGeneralProductQuantity(gpID, new_quantity);
     }
     public Result editGeneralProductMinQuantity(Integer gpID, Integer new_min_quantity){
-        return curr.editGeneralProductMinQuantity(gpID, new_min_quantity);
+        return currBranch.editGeneralProductMinQuantity(gpID, new_min_quantity);
     }
     //endregion
 
     //region Specific Products
     public Result addSpecificProduct(Integer gpID, Date expiration_date, Integer quantity){
-        return curr.addSpecificProduct(gpID, expiration_date, quantity);
+        return currBranch.addSpecificProduct(gpID, expiration_date, quantity);
     }
     public Result removeSpecificProduct(Integer specific_product_id){
-        return curr.removeSpecificProduct(specific_product_id);
+        return currBranch.removeSpecificProduct(specific_product_id);
     }
     public Result markAsFlaw(Integer specific_product_id){
-        return curr.markAsFlaw(specific_product_id);
+        return currBranch.markAsFlaw(specific_product_id);
     }
     public Result moveLocation(Integer specific_product_id){
-        return curr.moveLocation(specific_product_id);
+        return currBranch.moveLocation(specific_product_id);
     }
     //endregion
 
     //region Sales
     public Result addSaleByGeneralProduct(Integer gpID, String stype, Float amount){
-        return curr.addSaleByGeneralProduct(gpID, stype, amount);
+        return currBranch.addSaleByGeneralProduct(gpID, stype, amount);
     }
     public Result addSaleByGeneralProduct(Integer gpID, String stype, Float amount, Date start, Date end){
-        return curr.addSaleByGeneralProduct(gpID, stype, amount, start, end);
+        return currBranch.addSaleByGeneralProduct(gpID, stype, amount, start, end);
     }
     public Result addSaleByCategory(Integer category_id, String stype, Float amount){
-        return curr.addSaleByCategory(category_id, stype, amount);
+        return currBranch.addSaleByCategory(category_id, stype, amount);
     }
     public Result addSaleByCategory(Integer category_id, String stype, Float amount, Date start, Date end){
-        return curr.addSaleByCategory(category_id, stype, amount, start, end);
+        return currBranch.addSaleByCategory(category_id, stype, amount, start, end);
     }
     public Result removeSale(Integer sale_id){
-        return curr.removeSale(sale_id);
+        return currBranch.removeSale(sale_id);
     }
     public Result CheckSalesStatus(){
-        return curr.CheckSalesStatus();
+        return currBranch.CheckSalesStatus();
     }
     //endregion
 
     //region Debug tools
     public String mapAllCategories(){
-        return curr.mapAllCategories();
+        return currBranch.mapAllCategories();
     }
     public String mapAllGeneralProducts(){
-        return curr.mapAllGeneralProducts();
+        return currBranch.mapAllGeneralProducts();
     }
     public String mapAllSales(){
-        return curr.mapAllSales();
+        return currBranch.mapAllSales();
     }
     //endregion
 
@@ -209,93 +209,93 @@ public class BranchController {
 
     //region Supplier Module
     public Result addContract(SupplierCard supplier){
-        return curr.addContract(supplier);
+        return currBranch.addContract(supplier);
     }
     public Result removeContract(SupplierCard supplier){
-        return curr.removeContract(supplier);
+        return currBranch.removeContract(supplier);
     }
     public Result addProductToContract(Integer supplierID, Integer catalogID, Integer gpID, Float supplier_price, Integer supplier_id, String supplier_category , String name){
-        return curr.addProductToContract(supplierID, catalogID, gpID, supplier_price, supplier_id, supplier_category, name);
+        return currBranch.addProductToContract(supplierID, catalogID, gpID, supplier_price, supplier_id, supplier_category, name);
     }
     public Result removeProductFromContract(Integer supplierID, Integer gpID){
-        return curr.removeProductFromContract(supplierID, gpID);
+        return currBranch.removeProductFromContract(supplierID, gpID);
     }
     public Result addCategory(Integer supplierID, String category){
-        return curr.addCategory(supplierID, category);
+        return currBranch.addCategory(supplierID, category);
     }
     public Result removeCategory (Integer supplierID, String category){
-        return curr.removeCategory(supplierID, category);
+        return currBranch.removeCategory(supplierID, category);
     }
     //endregion
 
     //region Cost Engineering
     public Result addProductToCostEng(Integer supid, Integer catalogid, Integer minQuantity, Float price) {
-        return curr.addProductToCostEng(supid , catalogid , minQuantity , price);
+        return currBranch.addProductToCostEng(supid , catalogid , minQuantity , price);
     }
     public Result removeProductCostEng(Integer supid, Integer catalogid2delete) {
-        return curr.removeProductCostEng(supid, catalogid2delete);
+        return currBranch.removeProductCostEng(supid, catalogid2delete);
     }
     public Result updateMinQuantity(Integer supid, Integer catalogid, Integer minQuantity) {
-        return curr.updateMinQuantity(supid , catalogid , minQuantity);
+        return currBranch.updateMinQuantity(supid , catalogid , minQuantity);
     }
     public Result updatePriceAfterSale(Integer supid, Integer catalogid, Float price) {
-        return curr.updatePriceAfterSale(supid , catalogid , price);
+        return currBranch.updatePriceAfterSale(supid , catalogid , price);
     }
     public Result<LinkedList<CatalogProduct>> getAllSupplierProducts(Integer supId) {
-        return curr.getAllSupplierProducts(supId);
+        return currBranch.getAllSupplierProducts(supId);
     }
     public Result addCostEng(Integer supid) {
-        return curr.addCostEng(supid);
+        return currBranch.addCostEng(supid);
     }
     public Result removeCostEng(Integer supid) {
-        return curr.removeCostEng(supid);
+        return currBranch.removeCostEng(supid);
     }
     //endregion
 
     //region Orders
 
     public Result acceptOrder (Integer orderID){
-        return curr.acceptOrder(orderID);
+        return currBranch.acceptOrder(orderID);
     }
 
     public Result makeOutOfStockReportByCategory(Integer categoryID , String type){
-        return curr.makeOutOfStockReportByCategory(categoryID,type);
+        return currBranch.makeOutOfStockReportByCategory(categoryID,type);
     }
 
     public Result makeOutOfStockReportByGeneralProduct(Integer gpID , String type){
-        return curr.makeOutOfStockReportByGeneralProduct(gpID, type);
+        return currBranch.makeOutOfStockReportByGeneralProduct(gpID, type);
     }
 
-    public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<GeneralProduct, Integer>> productsAndQuantity , Integer date){
-        return curr.createPeriodicOrder(supplierID, productsAndQuantity,date);
+    public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<Integer, Integer>> productsAndQuantity , Integer date){
+        return currBranch.createPeriodicOrder(supplierID, productsAndQuantity,date);
     }
 
     public Result removePeriodicOrder(Integer orderId){
-        return curr.removePeriodicOrder((orderId));
+        return currBranch.removePeriodicOrder((orderId));
     }
 
-    public Result<Float> addProductToPeriodicOrder(Integer orderId , CatalogProduct product , Integer quantity){
-        return curr.addProductToPeriodicOrder(orderId,product,quantity);
+    public Result addProductToPeriodicOrder(Integer orderId , Integer gpID , Integer quantity){
+        return currBranch.addProductToPeriodicOrder(orderId,gpID,quantity);
     }
 
-    public Result updateProductQuantityInPeriodicOrder(Integer orderId , CatalogProduct product , Integer newQuantity){
-        return curr.updateProductQuantityInPeriodicOrder(orderId,product,newQuantity);
+    public Result updateProductQuantityInPeriodicOrder(Integer orderId , Integer gpID , Integer newQuantity){
+        return currBranch.updateProductQuantityInPeriodicOrder(orderId,gpID,newQuantity);
     }
 
-    public Result removeProductFromPeriodicOrder(Integer orderId , CatalogProduct product){
-        return curr.removeProductFromPeriodicOrder(orderId , product);
+    public Result removeProductFromPeriodicOrder(Integer orderId , Integer gpID){
+        return currBranch.removeProductFromPeriodicOrder(orderId , gpID);
     }
 
     public Result updateSupplierToPeriodicOrder (Integer orderID, Integer supplierID){
-        return curr.updateSupplierToPeriodicOrder(orderID,supplierID);
+        return currBranch.updateSupplierToPeriodicOrder(orderID,supplierID);
     }
 
     public Result<LinkedList<String>> displayAllOrders(){
-        return curr.displayAllOrders();
+        return currBranch.displayAllOrders();
     }
 
     public Result<LinkedList<String>> displayAllSupplierOrders(Integer supId){
-        return curr.displayAllSupplierOrders(supId);
+        return currBranch.displayAllSupplierOrders(supId);
     }
 
     public Result<LinkedList<String>> issuePeriodicOrder(){
@@ -317,13 +317,13 @@ public class BranchController {
 
     //endregion
 
-    //region Getters
+    //region Getters & Setters
     public HashMap<Integer, Branch> getBranches() {
         return branches;
     }
 
-    public Branch getCurr() {
-        return curr;
+    public Branch getCurrBranch() {
+        return currBranch;
     }
     //endregion
 
@@ -347,6 +347,15 @@ public class BranchController {
 
         //after changing the day - check if there are periodic orders to send
         issuePeriodicOrder();
+    }
+
+    @Override
+    public String toString() {
+        String toReturn = "";
+        for (Branch b : branches.values()){
+            toReturn = toReturn.concat(b.toString()+"\n");
+        }
+        return toReturn;
     }
     //endregion
 }
