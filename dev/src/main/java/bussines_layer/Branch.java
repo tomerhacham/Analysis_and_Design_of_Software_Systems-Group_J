@@ -225,6 +225,20 @@ public class Branch {
         return supplierModule.updateSupplierToPeriodicOrder(orderID,supplierID);
     }
 
+    public Result<LinkedList<String>> issuePeriodicOrder(){
+
+        Result<LinkedList<String>> result = supplierModule.issuePeriodicOrder();
+
+        if(!result.isOK()) {
+            return result;
+        }
+        LinkedList<String> branchPeriodicOrders = new LinkedList<>();
+        branchPeriodicOrders.add("-------------------Branch : "+name+"-------------------\n");
+        branchPeriodicOrders.addAll(result.getData());
+        branchPeriodicOrders.add("-------------------------------------------------------\n");
+        return new Result(true,branchPeriodicOrders, String.format("All periodic orders with %d as their delivery day had been sent to order", BranchController.system_curr_date.getDay()));
+    }
+
     public Result<LinkedList<String>> displayAllOrders(){
         return supplierModule.displayAllOrders();
     }
