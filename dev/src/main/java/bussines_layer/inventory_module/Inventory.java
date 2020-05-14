@@ -1,10 +1,9 @@
 package bussines_layer.inventory_module;
 
 import bussines_layer.Result;
+import bussines_layer.supplier_module.Order;
 
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Inventory {
     //fields
@@ -21,8 +20,19 @@ public class Inventory {
         this.reportController = new ReportController();
         this.saleController=new SaleController();
     }
-
     //region Methods
+
+    public Result AcceptOrder(HashMap<CatalogProduct, Integer> product_received){
+        String msg="";
+        for (CatalogProduct catalogProduct: product_received.keySet()) {
+            GeneralProduct generalProduct = productController.searchGeneralProductByGpID(catalogProduct.getGpID());
+            Date expiration_date = SimulateExpirationDate();
+            Result res = addSpecificProduct(generalProduct.getGpID(),expiration_date,product_received.get(catalogProduct));
+            msg=msg.concat(res.getMessage().concat("\n"));
+        }
+        return new Result(true,product_received.keySet(), msg);
+
+    }
 
     //region Categories Management
     public Result addMainCategory(String name){
@@ -181,6 +191,14 @@ public class Inventory {
     }
     public String mapAllSales(){
         return saleController.toString();
+    }
+    public Date SimulateExpirationDate(){
+        Random ran = new Random();
+        Integer days = ran.nextInt(7)+1;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DATE, days); //minus number would decrement the days
+        return cal.getTime();
     }
 
     //endregion

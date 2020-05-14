@@ -143,7 +143,7 @@ public class ProductController {
             }
             result.setMessage(msg);
         } else {
-            result = new Result<Integer>(false, gpID, "Could not find general product with the same catalog ID");
+            result = new Result<Integer>(false, gpID, String.format("Could not find general product %d",gpID));
         }
         return result;
     }
