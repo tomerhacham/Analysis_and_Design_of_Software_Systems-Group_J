@@ -8,13 +8,13 @@ import java.util.Date;
 @DatabaseTable(tableName = "DestFile")
 public class DestFile_DTO {
 
-    @DatabaseField(columnName = "transportID", foreign = true, foreignColumnName = "transportID", uniqueCombo = true)
+    @DatabaseField(columnName = "transportID", foreign = true, foreignColumnName = "transportID", uniqueCombo = true, canBeNull = false)
     private Transport_DTO transportID;
 
-    @DatabaseField(columnName = "productFileID",  foreign = true, foreignColumnName = "fileID" , uniqueCombo = true)
+    @DatabaseField(columnName = "productFileID",  foreign = true, foreignColumnName = "fileID" , uniqueCombo = true, canBeNull = false)
     private ProductFile_DTO productFileID;
 
-    @DatabaseField(columnName = "siteID", foreign = true, foreignColumnName = "siteID", uniqueCombo = true)
+    @DatabaseField(columnName = "siteID", foreign = true, foreignColumnName = "siteID", uniqueCombo = true, canBeNull = false)
     private Site_DTO siteID;
 
     public DestFile_DTO(Transport_DTO transportID, ProductFile_DTO productFileID, Site_DTO siteID){

@@ -10,10 +10,10 @@ import java.util.Date;
 @DatabaseTable(tableName = "morningShifts")
 public class morning_shifts_DTO {
 
-    @DatabaseField(columnName = "date", uniqueCombo = true, dataType = DataType.DATE_STRING, format = "dd/MM/yyy")
+    @DatabaseField(columnName = "date", uniqueCombo = true, dataType = DataType.DATE_STRING, format = "dd/MM/yyy", canBeNull = false)
     private Date date;
 
-    @DatabaseField(columnName = "truckID", foreign = true, foreignColumnName = "truckID", uniqueCombo = true)
+    @DatabaseField(columnName = "truckID", foreign = true, foreignColumnName = "truckID", uniqueCombo = true, canBeNull = false)
     private Truck_DTO truckID;
 
     public morning_shifts_DTO(Date date, Truck_DTO truckID){

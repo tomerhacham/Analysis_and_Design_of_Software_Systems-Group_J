@@ -11,16 +11,16 @@ import java.util.Date;
 @DatabaseTable(tableName = "Worker")
 public class Worker_DTO {
 
-    @DatabaseField(columnName = "workerID", id = true)
+    @DatabaseField(columnName = "workerID", id = true, canBeNull = false)
     private String workerID;
 
-    @DatabaseField(columnName = "name")
+    @DatabaseField(columnName = "name", canBeNull = false)
     private String name;
 
-    @DatabaseField(columnName = "startDate", dataType = DataType.DATE_STRING, format = "dd/MM/yyy")
+    @DatabaseField(columnName = "startDate", dataType = DataType.DATE_STRING, format = "dd/MM/yyy", canBeNull = false)
     private Date start_Date;
 
-    @DatabaseField(columnName = "salary")
+    @DatabaseField(columnName = "salary", canBeNull = false)
     private double salary;
 
     @ForeignCollectionField(eager = false)

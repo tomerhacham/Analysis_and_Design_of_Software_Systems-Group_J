@@ -6,10 +6,10 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "Log")
 public class log_DTO {
 
-    @DatabaseField(columnName = "message")
+    @DatabaseField(columnName = "message", uniqueCombo = true, canBeNull = false)
     private String message;
 
-    @DatabaseField(columnName = "transportID",foreign = true, foreignColumnName = "transportID")
+    @DatabaseField(columnName = "transportID",foreign = true, foreignColumnName = "transportID", uniqueCombo = true, canBeNull = false)
     private Transport_DTO transportID;
 
     public log_DTO(String message, Transport_DTO transportID){

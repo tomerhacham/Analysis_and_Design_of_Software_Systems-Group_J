@@ -10,10 +10,8 @@ import java.util.HashMap;
 public class Transport {
     private int ID;
     private Date Date;
-    private LocalTime Time;
     private boolean Shift; //in which shift is the transport
     private Truck Truck;
-    //private BusinessLayer.Workers.Driver Driver;
     private String driverId;
     private String driverName;
     private Site Source;
@@ -31,13 +29,8 @@ public class Transport {
 
     public Date getDate() { return Date;}
 
-    public LocalTime getTime() {
-        return Time;
-    }
-
-    public void setDateTime(Date date,LocalTime time ,boolean shift) {
+    public void setDateTime(Date date,boolean shift) {
         Date = date;
-        Time = time;
         Shift = shift;
     }
 
@@ -123,7 +116,7 @@ public class Transport {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
         String s = "Transport Details:\n" + "id: " + ID + "\tDate: " + formatter.format(Date) +
-                " \tTruckNumber: " + Truck.getLicense_plate() +"\n\t\tLeaving time: " + Time.format(dtf) +
+                " \tTruckNumber: " + Truck.getLicense_plate() +
                 " \tDriver: " + driverName + "\n"
                 +"\tSource details:\n" + Source.toString() + "\n";
         if(DestFiles.size()>0) {

@@ -12,13 +12,13 @@ import java.util.Date;
 @DatabaseTable(tableName = "Shift")
 public class Shift_DTO {
 
-    @DatabaseField (columnName = "ShiftID", id = true)
+    @DatabaseField (columnName = "ShiftID", id = true, canBeNull = false)
     String ShiftID;
 
-    @DatabaseField(columnName = "date", uniqueCombo = true, index = true, dataType = DataType.DATE_STRING, format = "dd/MM/yyy")
+    @DatabaseField(columnName = "date", uniqueCombo = true, index = true, dataType = DataType.DATE_STRING, format = "dd/MM/yyy", canBeNull = false)
     private Date date;
 
-    @DatabaseField(columnName = "partOfDay", uniqueCombo = true, index = true)
+    @DatabaseField(columnName = "partOfDay", uniqueCombo = true, index = true, canBeNull = false)
     private int timeOfDay;
 
     @ForeignCollectionField(eager = false)

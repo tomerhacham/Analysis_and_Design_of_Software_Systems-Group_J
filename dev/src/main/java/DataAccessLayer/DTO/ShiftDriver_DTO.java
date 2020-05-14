@@ -9,10 +9,10 @@ import java.util.Date;
 public class ShiftDriver_DTO {
 
     //driverId==WorkerID
-    @DatabaseField(columnName = "driverID", foreign = true, foreignColumnName = "WorkerID", uniqueCombo = true)
+    @DatabaseField(columnName = "driverID", foreign = true, foreignColumnName = "WorkerID", uniqueCombo = true, canBeNull = false)
     private Worker_DTO driverID;
 
-    @DatabaseField(columnName = "ShiftID", foreign = true, foreignColumnName = "ShiftID", uniqueCombo = true)
+    @DatabaseField(columnName = "ShiftID", foreign = true, foreignColumnName = "ShiftID", uniqueCombo = true, canBeNull = false)
     private Shift_DTO shiftID;
 
 

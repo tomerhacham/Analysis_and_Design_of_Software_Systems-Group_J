@@ -116,13 +116,15 @@ public class Mapper {
         }
     }
 
-    //TODO::deleteWorker=>need to run once
     public void deleteWorker(String workerId)
     {
         try {
+            deleteShiftAvailableWorkers(workerId);
             Worker_DTO worker_dto = worker_DAO.queryForId(workerId);
             ForeignCollection<Position_DTO> position_dtos = worker_dto.getPositions();
-            position_DAO.delete(position_dtos);
+            for (Position_DTO p: position_dtos){
+                deletePosition(p.getPosition(), workerId);
+            }
             worker_DAO.delete(worker_dto);
         }catch (Exception e)
         {
@@ -156,7 +158,6 @@ public class Mapper {
         }
     }
 
-    //TODO::deleteDriver=>need to run once
     public void deleteDriver(String driverID)
     {
         try {
@@ -169,7 +170,6 @@ public class Mapper {
     }
 
     //Positions
-    //TODO::addPosition =>need to run once
     private void addPosition(String position, Worker_DTO worker_dto)
     {
         try {
@@ -181,20 +181,18 @@ public class Mapper {
         }
     }
 
-    //TODO::deletePosition=>need to run once
     public void deletePosition(String position, String WorkerId)
     {
         try
         {
-            position_DAO.executeRaw("DELETE FROM positions WHERE workerID="+WorkerId+"AND position="+position);
+            position_DAO.executeRaw("DELETE FROM positions WHERE workerID='"+WorkerId+"' AND position='"+position + "'");
         }catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
     //Shift
-    //TODO::addShift=>need to run once
-/*    public void addShift(Shift shift)
+    public void addShift(Shift shift)
     {
         try {
             //creating the shifts in the DB
@@ -220,7 +218,7 @@ public class Mapper {
             for (String position : Occupation.keySet()) {
                 for (Worker w :Occupation.get(position))
                 {
-                    addOccupation(shift.getID(),position,w.getId());
+                    addOccupation(shift.getId(),position,w.getId());
                 }
             }
 
@@ -232,22 +230,20 @@ public class Mapper {
             System.out.println(e.getMessage());
         }
     }
-*/
-    //TODO::deleteShift=>need to run once
+
     public void deleteShift(String shiftID)
     {
         try {
             Shift_DTO shift_dto = Shift_DAO.queryForId(shiftID);
 
-
             ForeignCollection<ShiftDriver_DTO> scheduledDrivers =shift_dto.getDrivers_in_shift();
             for (ShiftDriver_DTO shiftDriver_dto : scheduledDrivers) {
-                Shift_Driver_DAO.delete(shiftDriver_dto);
+                deleteShiftDriver(shiftDriver_dto.getDriverID().getWorkerID(), shiftID);
             }
 
             ForeignCollection<Occupation_DTO> occupation =shift_dto.getOccupation();
             for (Occupation_DTO occupation_dto : occupation) {
-                Occupation_DAO.delete(occupation_dto);
+                deleteOccupation(shiftID, occupation_dto.getPosition(), occupation_dto.getWorkerID().getWorkerID());
             }
 
             Shift_DAO.delete(shift_dto);
@@ -259,7 +255,6 @@ public class Mapper {
     }
 
     //Occupation
-    //TODO::addOccupation =>need to run once
     public void addOccupation(String shiftId, String position, String WorkerID )
     {
         try {
@@ -273,19 +268,17 @@ public class Mapper {
         }
     }
 
-    //TODO::deleteOccupation=>need to run once
     public void deleteOccupation(String shiftId, String position, String WorkerID )
     {
         try
         {
-            Occupation_DAO.executeRaw("DELETE FROM Occupation WHERE position="+position+" AND workerID="+WorkerID+"AND ShiftID="+shiftId);
+            Occupation_DAO.executeRaw("DELETE FROM Occupation WHERE position='"+position+"' AND workerID='"+WorkerID+"' AND ShiftID='"+shiftId + "'");
         }catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
     //Shift Available Workers
-    //TODO::addShiftAvailableWorkers=>need to run once
     public void addShiftAvailableWorkers(String workerID, Date date, boolean timeOfDay)
     {
         int part_of_day;
@@ -306,7 +299,7 @@ public class Mapper {
         }
     }
 
-    //TODO::deleteShiftAvailableWorkers=>need to run once
+    // delete specific row
     public void deleteShiftAvailableWorkers(String WorkerId, Date date, boolean timeOfDay)
     {
         int part_of_day;
@@ -319,15 +312,23 @@ public class Mapper {
         }
         try
         {
-            Shift_availableWorkers_DAO.executeRaw("DELETE FROM Shift_availableWorkers WHERE workerID="+WorkerId+" AND ShiftDate="+formatter.format(date)+" And partOfDay="+part_of_day);
+            Shift_availableWorkers_DAO.executeRaw("DELETE FROM Shift_availableWorkers WHERE workerID='"+WorkerId+"' AND ShiftDate='"+formatter.format(date)+"' And partOfDay="+part_of_day);
         }catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
+    // delete all rows with specified ID
+    public void deleteShiftAvailableWorkers(String workerId){
+        try{
+            Shift_availableWorkers_DAO.executeRaw("DELETE FROM Shift_availableWorkers WHERE workerID='"+workerId + "'");
+        }catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
 
     //Shift Drivers
-    //TODO::addShiftDriver=>need to run once
     public void addShiftDriver(String driverID, String shiftID)
     {
         try {
@@ -341,7 +342,6 @@ public class Mapper {
         }
     }
 
-    //TODO::deleteShiftDriver=>need to run once
     public void deleteShiftDriver(String driverID, String shiftID)
     {
         try
@@ -354,7 +354,19 @@ public class Mapper {
 
 
     //Transport
-    //TODO::addTransport=>need to run once
+    public void updateTransportDriver(int transport, String newDriverID, String newDriverName){
+        try {
+            Transport_DTO transport_dto = transport_DAO.queryForId(transport);
+            Worker_DTO driver = worker_DAO.queryForId(newDriverID);
+            transport_dto.setDriverName(newDriverName);
+            transport_dto.setDriverId(driver);
+            transport_DAO.update(transport_dto);
+        }catch(Exception e )
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+
     public void addTransport(Transport transport)
     {
         try {
@@ -370,7 +382,7 @@ public class Mapper {
             Worker_DTO driver_in_transport=worker_DAO.queryForId(transport.getDriverId());
             Site_DTO source = site_DAO.queryForId(transport.getSource().getId());
             Truck_DTO truck = truck_DAO.queryForId(transport.getTruck().getId());
-            Transport_DTO transport_dto = new Transport_DTO(transport.getID(),transport.getDate(),transport.getTime(),
+            Transport_DTO transport_dto = new Transport_DTO(transport.getID(),transport.getDate(),
                     part_of_day, truck, driver_in_transport,transport.getDriverName(),source,transport.getTotalWeight());
             transport_DAO.create(transport_dto);
 
@@ -395,20 +407,16 @@ public class Mapper {
         }
     }
 
-    //TODO::deleteTransport=>need to run once
     public void deleteTransport(int transportID)
     {
         try
         {
             Transport_DTO transport_dto = transport_DAO.queryForId(transportID);
             ForeignCollection<DestFile_DTO> destFile_dtos = transport_dto.getDestFiles();
-            for (DestFile_DTO dest:destFile_dtos) {
-                DestFile_DAO.delete(destFile_dtos);
+            for (DestFile_DTO df: destFile_dtos) {
+                deleteDestFile(transportID, df.getSiteID().getId(), df.getProductFileID().getFileID());
             }
-            ForeignCollection<log_DTO> log_dtos =transport_dto.getLog();
-            for (log_DTO log:log_dtos) {
-                log_DAO.delete(log);
-            }
+            delete_from_log(transportID);
             transport_DAO.delete(transport_dto);
         }catch (Exception e) {
             System.out.println(e.getMessage());
@@ -453,18 +461,17 @@ public class Mapper {
 
     }
 
-    //TODO::deleteTruck=>need to run once
     public void deleteTruck(int truckID)
     {
         try {
             Truck_DTO truck_dto = truck_DAO.queryForId(truckID);
             ForeignCollection<morning_shifts_DTO> morning_shifts_dtos =truck_dto.getMorning_shifts();
-            for (morning_shifts_DTO m:morning_shifts_dtos) {
-                morning_shifts_DAO.delete(m);
+            for (morning_shifts_DTO ms: morning_shifts_dtos) {
+                delete_MorningShift(ms.getDate(), truckID);
             }
             ForeignCollection<night_shifts_DTO> night_shifts_dtos= truck_dto.getNight_shifts();
-            for (night_shifts_DTO n:night_shifts_dtos) {
-                night_shifts_DAO.delete(n);
+            for (night_shifts_DTO ns: night_shifts_dtos) {
+                deleteNightShift(ns.getDate(),truckID);
             }
             truck_DAO.delete(truck_dto);
         }catch (Exception e)
@@ -475,7 +482,6 @@ public class Mapper {
     }
 
     //Morning Shifts - Truck
-    //TODO::addMorningShift=>need to run once
     public void addMorningShift(int truckID,Date date)
     {
         try {
@@ -488,18 +494,16 @@ public class Mapper {
         }
     }
 
-    //TODO::delete_MorningShift=>need to run once
     public void delete_MorningShift(Date date, int truckID)
     {
         try {
-            morning_shifts_DAO.executeRaw("DELETE FROM morningShifts WHERE date=" + formatter.format(date) + " AND truckID=" + truckID);
+            morning_shifts_DAO.executeRaw("DELETE FROM morningShifts WHERE date='" + formatter.format(date) + "' AND truckID=" + truckID);
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
     }
 
     //Night Shifts - Truck
-    //TODO::addNightShift=>need to run once
     public void addNightShift(int truckID,Date date)
     {
         try {
@@ -512,11 +516,10 @@ public class Mapper {
         }
     }
 
-    //TODO::deleteNightShift=>need to run once
     public void deleteNightShift(Date date, int truckID)
     {
         try {
-            night_shifts_DAO.executeRaw("DELETE FROM nightShifts WHERE date=" + formatter.format(date) + " AND truckID=" + truckID);
+            night_shifts_DAO.executeRaw("DELETE FROM nightShifts WHERE date='" + formatter.format(date) + "' AND truckID=" + truckID);
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
@@ -581,7 +584,6 @@ public class Mapper {
     }
 
     //DestFile
-    //TODO:: add destFile => need to run once
     public void addDestFile(int site_id, int productFile_id ,int transportID)
     {
         try {
@@ -596,12 +598,12 @@ public class Mapper {
         }
     }
 
-    //TODO::deleteDestFile  =>need to run once
     public void deleteDestFile(int transportID, int siteID, int productFileID)
     {
         try
         {
-            DestFile_DAO.executeRaw("DELETE FROM DestFile WHERE transportID="+transportID+" AND siteID="+siteID+" productFileID="+productFileID);
+            deleteProductFile(productFileID);
+            DestFile_DAO.executeRaw("DELETE FROM DestFile WHERE transportID="+transportID+" AND siteID="+siteID+" AND productFileID="+productFileID);
         }catch (Exception e)
         {
             System.out.println(e.getMessage());
@@ -609,7 +611,6 @@ public class Mapper {
     }
 
     //Log
-    //TODO::add_to_log=>need to run once
     public void add_to_log(int transportID, String message)
     {
         try {
@@ -622,7 +623,6 @@ public class Mapper {
         }
     }
 
-    //TODO::delete_from_log =>need to run once - only when transport deleted
     private void delete_from_log(int transportID)
     {
         try{

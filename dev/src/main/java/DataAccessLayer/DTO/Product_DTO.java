@@ -6,19 +6,19 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "Product")
 public class Product_DTO {
 
-    @DatabaseField(columnName = "productID", id = true)
+    @DatabaseField(columnName = "productID", id = true, canBeNull = false)
     private int ID;
 
-    @DatabaseField(columnName = "fileID", foreign = true, foreignColumnName = "fileID")
+    @DatabaseField(columnName = "fileID", foreign = true, foreignColumnName = "fileID", canBeNull = false)
     private ProductFile_DTO fileID;
 
-    @DatabaseField(columnName = "name")
+    @DatabaseField(columnName = "name", canBeNull = false)
     private String name;
 
-    @DatabaseField(columnName = "weight")
+    @DatabaseField(columnName = "weight", canBeNull = false)
     private float weight;
 
-    @DatabaseField(columnName = "quantity")
+    @DatabaseField(columnName = "quantity", canBeNull = false)
     private int quantity;
 
     public Product_DTO(int id, ProductFile_DTO fileID, String name, float weight, int quantity){

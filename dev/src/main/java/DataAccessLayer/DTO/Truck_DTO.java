@@ -8,22 +8,22 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "Truck")
 public class Truck_DTO {
 
-    @DatabaseField(columnName = "truckID", id = true)
+    @DatabaseField(columnName = "truckID", id = true, canBeNull = false)
     private Integer id;
 
-    @DatabaseField(columnName = "licensePlate")
+    @DatabaseField(columnName = "licensePlate", canBeNull = false)
     private String license_plate;
 
-    @DatabaseField(columnName = "model")
+    @DatabaseField(columnName = "model", canBeNull = false)
     private String model;
 
-    @DatabaseField(columnName = "netWeight")
+    @DatabaseField(columnName = "netWeight", canBeNull = false)
     private float net_weight;
 
-    @DatabaseField(columnName = "maxWeight")
+    @DatabaseField(columnName = "maxWeight", canBeNull = false)
     private float max_weight;
 
-    @DatabaseField(columnName = "driversLicense")
+    @DatabaseField(columnName = "driversLicense", canBeNull = false)
     private String drivers_license;
 
     @ForeignCollectionField(eager = false)

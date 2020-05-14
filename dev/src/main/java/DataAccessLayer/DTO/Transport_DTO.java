@@ -12,32 +12,29 @@ import java.util.Date;
 @DatabaseTable(tableName = "Transport")
 public class Transport_DTO {
 
-    @DatabaseField(columnName = "transportID", id = true)
+    @DatabaseField(columnName = "transportID", id = true, canBeNull = false)
     private int transportID;
 
-    @DatabaseField(columnName = "truckID",foreign = true, foreignColumnName = "truckID")
+    @DatabaseField(columnName = "truckID",foreign = true, foreignColumnName = "truckID", canBeNull = false)
     private Truck_DTO Truck;
 
-    @DatabaseField(columnName = "sourceID",foreign = true, foreignColumnName = "siteID")
+    @DatabaseField(columnName = "sourceID",foreign = true, foreignColumnName = "siteID", canBeNull = false)
     private Site_DTO Source;
 
     //driverId==WorkerID
-    @DatabaseField(columnName = "driverID", foreign = true, foreignColumnName = "workerID")
+    @DatabaseField(columnName = "driverID", foreign = true, foreignColumnName = "workerID", canBeNull = false)
     private Worker_DTO driverId;
 
-    @DatabaseField(columnName = "driverName")
+    @DatabaseField(columnName = "driverName", canBeNull = false)
     private String driverName;
 
-    @DatabaseField(columnName = "Date",  dataType = DataType.DATE_STRING, format = "dd/MM/yyy")
+    @DatabaseField(columnName = "Date",  dataType = DataType.DATE_STRING, format = "dd/MM/yyy", canBeNull = false)
     private Date Date;
 
-    @DatabaseField(columnName = "Time", dataType = DataType.DATE_TIME, format = "HH:mm")
-    private LocalTime Time;
-
-    @DatabaseField(columnName = "Shift")
+    @DatabaseField(columnName = "Shift", canBeNull = false)
     private int Shift; //in which shift is the transport
 
-    @DatabaseField(columnName = "TotalWeight")
+    @DatabaseField(columnName = "TotalWeight", canBeNull = false)
     private float TotalWeight;
 
     @ForeignCollectionField(eager = false)
@@ -46,11 +43,10 @@ public class Transport_DTO {
     @ForeignCollectionField(eager = false)
     private ForeignCollection<log_DTO> log;
 
-    public Transport_DTO(int id, Date date, LocalTime time, int partOfDay,Truck_DTO truck, Worker_DTO driver_id, String driver_name, Site_DTO source,
+    public Transport_DTO(int id, Date date, int partOfDay,Truck_DTO truck, Worker_DTO driver_id, String driver_name, Site_DTO source,
                          float totalWeight){
         transportID = id;
         Date = date;
-        Time = time;
         Shift = partOfDay;
         Truck = truck;
         driverId = driver_id;
@@ -81,10 +77,6 @@ public class Transport_DTO {
         return Shift;
     }
 
-    public LocalTime getTime() {
-        return Time;
-    }
-
     public Truck_DTO getTruck() {
         return Truck;
     }
@@ -111,10 +103,6 @@ public class Transport_DTO {
 
     public void setDriverName(String driverName) {
         this.driverName = driverName;
-    }
-
-    public void setTime(LocalTime time) {
-        Time = time;
     }
 
     public void setDate(java.util.Date date) {

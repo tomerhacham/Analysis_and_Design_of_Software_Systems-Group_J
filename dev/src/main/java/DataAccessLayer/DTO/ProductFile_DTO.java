@@ -9,10 +9,10 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "ProductFile")
 public class ProductFile_DTO {
 
-    @DatabaseField(columnName = "fileID", id = true)
+    @DatabaseField(columnName = "fileID", id = true, canBeNull = false)
     private int fileID;
 
-    @DatabaseField(columnName = "totalWeight")
+    @DatabaseField(columnName = "totalWeight", canBeNull = false)
     private float totalWeight;
 
     @ForeignCollectionField(eager = false)

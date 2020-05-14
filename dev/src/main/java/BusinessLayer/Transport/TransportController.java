@@ -82,7 +82,7 @@ public class TransportController {
             shift = true;
         }
         if(transports.containsKey(id)) {
-            transports.get(id).setDateTime(transportDate, transportTime, shift);
+            transports.get(id).setDateTime(transportDate, shift);
             return true;
         }
         return false;
@@ -260,11 +260,7 @@ public class TransportController {
 
     public boolean getTransportShift(int transportID)
     {
-        if(transports.containsKey(transportID))
-        {
-            return transports.get(transportID).getShift();
-        }
-        return false; //TODO::exception? false can be a night shift
+        return transports.get(transportID).getShift();
     }
 
     public void changeDriverInTransport(String prevDriverId, String newDriverId, Date date, Boolean shift, String newDriverName)

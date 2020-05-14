@@ -8,10 +8,10 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "positions")
 public class Position_DTO {
 
-    @DatabaseField(columnName = "workerID",foreign = true, foreignColumnName = "workerID", uniqueCombo = true)
+    @DatabaseField(columnName = "workerID",foreign = true, foreignColumnName = "workerID", uniqueCombo = true, canBeNull = false)
     private Worker_DTO workerID;
 
-    @DatabaseField(columnName = "position", uniqueCombo = true)
+    @DatabaseField(columnName = "position", uniqueCombo = true, canBeNull = false)
     private String position;
 
     public Position_DTO(Worker_DTO workerID, String position){

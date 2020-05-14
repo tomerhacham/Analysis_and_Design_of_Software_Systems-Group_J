@@ -9,13 +9,13 @@ import java.util.Date;
 @DatabaseTable(tableName = "Occupation")
 public class Occupation_DTO {
 
-    @DatabaseField(columnName = "position", uniqueCombo = true)
+    @DatabaseField(columnName = "position", uniqueCombo = true, canBeNull = false)
     private String position;
 
-    @DatabaseField(columnName = "workerID", foreign = true, foreignColumnName = "workerID", uniqueCombo = true)
+    @DatabaseField(columnName = "workerID", foreign = true, foreignColumnName = "workerID", uniqueCombo = true, canBeNull = false)
     private Worker_DTO workerID;
 
-    @DatabaseField(columnName = "ShiftID", foreign = true, foreignColumnName = "ShiftID", uniqueCombo = true)
+    @DatabaseField(columnName = "ShiftID", foreign = true, foreignColumnName = "ShiftID", uniqueCombo = true, canBeNull = false)
     private Shift_DTO ShiftID;
 
 

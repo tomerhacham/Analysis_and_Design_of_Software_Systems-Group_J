@@ -9,13 +9,13 @@ import java.util.Date;
 @DatabaseTable(tableName = "Shift_availableWorkers")
 public class Shift_availableWorkers_DTO {
 
-    @DatabaseField(columnName = "workerID", foreign = true, foreignColumnName = "workerID", uniqueCombo = true)
+    @DatabaseField(columnName = "workerID", foreign = true, foreignColumnName = "workerID", uniqueCombo = true, canBeNull = false)
     private Worker_DTO workerID;
 
-    @DatabaseField(columnName = "date", uniqueCombo = true, index = true, dataType = DataType.DATE_STRING, format = "dd/MM/yyy")
+    @DatabaseField(columnName = "shiftDate", uniqueCombo = true, index = true, dataType = DataType.DATE_STRING, format = "dd/MM/yyy", canBeNull = false)
     private Date date;
 
-    @DatabaseField(columnName = "partOfDay", uniqueCombo = true, index = true)
+    @DatabaseField(columnName = "partOfDay", uniqueCombo = true, index = true, canBeNull = false)
     private int timeOfDay;
 
     public Shift_availableWorkers_DTO(Worker_DTO workerID, Date date, int timeOfDay ) {

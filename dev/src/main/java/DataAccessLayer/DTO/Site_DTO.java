@@ -6,19 +6,19 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "Site")
 public class Site_DTO {
 
-    @DatabaseField(columnName = "siteID", id = true)
+    @DatabaseField(columnName = "siteID", id = true, canBeNull = false)
     private int id;
 
-    @DatabaseField(columnName = "address")
+    @DatabaseField(columnName = "address", canBeNull = false)
     private String address;
 
-    @DatabaseField(columnName = "phoneNumber")
+    @DatabaseField(columnName = "phoneNumber", canBeNull = false)
     private String phone_number;
 
-    @DatabaseField(columnName = "contact")
+    @DatabaseField(columnName = "contact", canBeNull = false)
     private String contact;
 
-    @DatabaseField(columnName = "shippingArea")
+    @DatabaseField(columnName = "shippingArea", canBeNull = false)
     private int shipping_area;
 
     public Site_DTO(int ID, String Address, String phoneNumber, String Contact, int ShippingArea){

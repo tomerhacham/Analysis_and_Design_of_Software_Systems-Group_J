@@ -6,10 +6,10 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "Driver")
 public class Driver_DTO {
 
-    @DatabaseField(columnName = "driverID", foreign = true, foreignColumnName = "workerID")
+    @DatabaseField(columnName = "driverID", foreign = true, foreignColumnName = "workerID", canBeNull = false)
     private Worker_DTO driverID;
 
-    @DatabaseField(columnName = "license")
+    @DatabaseField(columnName = "license", canBeNull = false)
     private String license;
 
     public Driver_DTO(Worker_DTO driverID, String license){
