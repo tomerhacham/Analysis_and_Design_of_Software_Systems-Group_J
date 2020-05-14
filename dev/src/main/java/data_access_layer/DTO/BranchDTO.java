@@ -1,4 +1,4 @@
-package data_access_layer.DTO;
+package DTO;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -6,22 +6,18 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "Branch")
 public class BranchDTO {
     //fields:
-    @DatabaseField(id = true, columnName = "branch_id")
+    @DatabaseField(id=true)
     Integer branch_id;
 
     //Constructor
     public BranchDTO(Integer branch_id) {
         this.branch_id = branch_id;
     }
-    public BranchDTO() {    }
+    public BranchDTO() {}
 
-    //region Getters and Setters
+    //region Methods
     public Integer getBranch_id() {
         return branch_id;
-    }
-
-    public void setBranch_id(Integer branch_id) {
-        this.branch_id = branch_id;
     }
     //endregion
 }
