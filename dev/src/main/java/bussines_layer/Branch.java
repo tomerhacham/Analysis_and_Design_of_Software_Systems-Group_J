@@ -5,6 +5,7 @@ import bussines_layer.inventory_module.GeneralProduct;
 import bussines_layer.inventory_module.Inventory;
 import bussines_layer.inventory_module.Report;
 import bussines_layer.supplier_module.SupplierModule;
+import javafx.util.Pair;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -201,7 +202,17 @@ public class Branch {
         return supplierModule.createOutOfStockOrder(reportResult.getData());
     }
 
+    public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<GeneralProduct , Integer>> productsAndQuantity , Integer date){
+        return supplierModule.createPeriodicOrder(supplierID, productsAndQuantity, date);
+    }
 
+    public Result removePeriodicOrder(Integer orderId){
+        return supplierModule.removePeriodicOrder((orderId));
+    }
+
+    public Result<Float> addProductToPeriodicOrder(Integer orderId , CatalogProduct product , Integer quantity){
+        return supplierModule.addProductToPeriodicOrder(orderId,product,quantity);
+    }
 
     //endregion
 

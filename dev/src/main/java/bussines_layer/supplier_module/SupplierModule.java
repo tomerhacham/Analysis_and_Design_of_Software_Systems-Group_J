@@ -165,7 +165,7 @@ public class SupplierModule {
 
     //region PeriodicOrder
     //TODO - date !!
-    public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<GeneralProduct , Integer>> productsAndQuantity , Date date , int option){
+    public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<GeneralProduct , Integer>> productsAndQuantity , Integer date){
         int orderID = ordersController.createPeriodicOrder(supplierID).getData();
         Result<Order> resultOrder = ordersController.getOrder(orderID);
         if (!resultOrder.isOK()){return new Result<>(false, null, String.format("Order %d does not exist", orderID));}

@@ -147,7 +147,7 @@ public class OrdersController {
             return getOrder(orderID).getData().removeProductFromPeriodicOrder(product);
         }
 
-        return new Result(false,product, String.format("The order : %d is not a periodic order , therefore the product %s can not be removed", product.getName() , orderID));
+        return new Result<>(false,product, String.format("The order : %d is not a periodic order , therefore the product %s can not be removed", product.getName() , orderID));
     }
 
     public Result updateProductQuantityInPeriodicOrder(Integer orderId , CatalogProduct product , Integer newQuantity , Float newPrice){
@@ -155,16 +155,16 @@ public class OrdersController {
             return getOrder(orderId).getData().updateProductQuantityInPeriodicOrder(product , newQuantity , newPrice);
         }
 
-        return new Result(false,orderId, String.format("The order %d is not a periodic order therefore can not be modified " , orderId));
+        return new Result<>(false,orderId, String.format("The order %d is not a periodic order therefore can not be modified " , orderId));
 
     }
 
     public Result removePeriodicOrder (Integer orderId){
         if (getOrder(orderId).getData().getType() != OrderType.PeriodicOrder){
-            return new Result(false,orderId, String.format("The order : %d is not a periodic order , therefore the order can not be removed", orderId));
+            return new Result<>(false,orderId, String.format("The order : %d is not a periodic order , therefore the order can not be removed", orderId));
         }
         orders.remove(getOrder(orderId));
-        return new Result(true,orderId, String.format("The periodic order : %d has been removed", orderId));
+        return new Result<>(true,orderId, String.format("The periodic order : %d has been removed", orderId));
     }
 
 
