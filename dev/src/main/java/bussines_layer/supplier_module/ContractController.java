@@ -55,7 +55,7 @@ public class ContractController {
      * @param supplier - the supplier to create contract with
      * @return Result with supplier
      */
-    public Result addContract(SupplierCard supplier) {
+    public Result<SupplierCard> addContract(SupplierCard supplier) {
         if (findContract(supplier.getId()).getData() != null) {
             return new Result<>(false, supplier, String.format("Contract for supplier %s already exists", supplier));
         }

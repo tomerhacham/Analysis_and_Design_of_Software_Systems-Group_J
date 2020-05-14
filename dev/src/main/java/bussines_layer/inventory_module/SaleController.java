@@ -115,14 +115,14 @@ public class SaleController {
      * iterate on each sale and modify the activity flag in condition of the date
      * @return
      */
-    public Result CheckSalesStatus(){
+    public Result<List<Sale>> CheckSalesStatus(){
         List<Sale> active_sales= new LinkedList<>();
         for(Sale sale:sales){
             if (sale.isActive()){
                 active_sales.add(sale);
             }
         }
-        return new Result<List<Sale>>(true,active_sales,"Checked sales activation status");
+        return new Result<>(true,active_sales,"Checked sales activation status");
     }
     /**
      * allocate the free next id available

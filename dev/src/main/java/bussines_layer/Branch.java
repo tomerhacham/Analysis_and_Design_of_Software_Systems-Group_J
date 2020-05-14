@@ -1,15 +1,13 @@
 package bussines_layer;
 
-import bussines_layer.inventory_module.CatalogProduct;
-import bussines_layer.inventory_module.GeneralProduct;
-import bussines_layer.inventory_module.Inventory;
-import bussines_layer.inventory_module.Report;
+import bussines_layer.inventory_module.*;
 import bussines_layer.supplier_module.SupplierModule;
 import javafx.util.Pair;
 
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Branch {
     //fields:
@@ -87,6 +85,25 @@ public class Branch {
     }
     //endregion
 
+    //region Reports
+    public Result makeReportByGeneralProduct(Integer gpID, String type){
+        Result<Report> reportResult = inventory.makeReportByCategory(gpID,type);
+        if (!reportResult.isOK()) {return reportResult;}
+        if (type.equals("outofstock")){
+            return createOutOfStockOrder(reportResult.getData());
+        }
+        return inventory.makeReportByGeneralProduct(gpID, type);
+    }
+    public Result makeReportByCategory(Integer category_id, String type){
+        Result<Report> reportResult = inventory.makeReportByCategory(category_id,type);
+        if (!reportResult.isOK()) {return reportResult;}
+        if (type.equals("outofstock")){
+            return createOutOfStockOrder(reportResult.getData());
+        }
+        return inventory.makeReportByCategory(category_id, type);
+    }
+    //endregion
+
     //region Sales
     public Result addSaleByGeneralProduct(Integer gpID, String stype, Float amount){
         return inventory.addSaleByGeneralProduct(gpID, stype, amount);
@@ -103,7 +120,7 @@ public class Branch {
     public Result removeSale(Integer sale_id){
         return inventory.removeSale(sale_id);
     }
-    public Result CheckSalesStatus(){
+    public Result<List<Sale>> CheckSalesStatus(){
         return inventory.CheckSalesStatus();
     }
     //endregion
@@ -189,16 +206,8 @@ public class Branch {
         return inventory.updateInventory(products);
     }
 
-    public Result makeOutOfStockReportByCategory(Integer categoryID , String type){
-        Result<Report> reportResult = inventory.makeReportByCategory(categoryID,type);
-        if (!reportResult.isOK()) {return reportResult;}
-        return supplierModule.createOutOfStockOrder(reportResult.getData());
-    }
-
-    public Result makeOutOfStockReportByGeneralProduct(Integer gpID , String type){
-        Result<Report> reportResult = inventory.makeReportByGeneralProduct(gpID,type);
-        if (!reportResult.isOK()) {return reportResult;}
-        return supplierModule.createOutOfStockOrder(reportResult.getData());
+    public Result createOutOfStockOrder(Report report){
+        return supplierModule.createOutOfStockOrder(report);
     }
 
     public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<Integer , Integer>> productsAndQuantity , Integer date){
