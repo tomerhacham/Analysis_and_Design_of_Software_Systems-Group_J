@@ -83,6 +83,25 @@ public class GeneralProduct {
         this.min_quantity = min_quantity;
     }
 
+    public Float getRetail_price() {
+        return retail_price;
+    }
+
+    public Float getSale_price() {
+        return sale_price;
+    }
+
+    public Integer getMin_quantity() {
+        return min_quantity;
+    }
+
+    public List<SpecificProduct> getProducts() {
+        return products;
+    }
+
+    public List<CatalogProduct> getCatalog_products() {
+        return catalog_products;
+    }
     //endregion
 
     //region Methods
