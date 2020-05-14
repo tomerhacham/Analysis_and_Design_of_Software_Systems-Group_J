@@ -2,6 +2,8 @@ package bussines_layer;
 
 import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.inventory_module.GeneralProduct;
+import bussines_layer.inventory_module.Report;
+import bussines_layer.inventory_module.Sale;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -172,6 +174,15 @@ public class BranchController {
     }
     //endregion
 
+    //region Reports
+    public Result makeReportByGeneralProduct(Integer gpID, String type){
+        return currBranch.makeReportByGeneralProduct(gpID, type);
+    }
+    public Result makeReportByCategory(Integer category_id, String type){
+        return currBranch.makeReportByCategory(category_id, type);
+    }
+    //endregion
+
     //region Sales
     public Result addSaleByGeneralProduct(Integer gpID, String stype, Float amount){
         return currBranch.addSaleByGeneralProduct(gpID, stype, amount);
@@ -188,7 +199,7 @@ public class BranchController {
     public Result removeSale(Integer sale_id){
         return currBranch.removeSale(sale_id);
     }
-    public Result CheckSalesStatus(){
+    public Result<List<Sale>> CheckSalesStatus(){
         return currBranch.CheckSalesStatus();
     }
     //endregion
@@ -208,11 +219,19 @@ public class BranchController {
     //endregion
 
     //region Supplier Module
-    public Result addContract(SupplierCard supplier){
-        return currBranch.addContract(supplier);
+    public Result addContract(Integer supplier_id){
+        Result<SupplierCard> result = supplierController.getSupplierCardByID(supplier_id);
+        if(!result.isOK()) {
+            return result;
+        }
+        return currBranch.addContract(result.getData());
     }
-    public Result removeContract(SupplierCard supplier){
-        return currBranch.removeContract(supplier);
+    public Result removeContract(Integer supplier_id){
+        Result<SupplierCard> result = supplierController.getSupplierCardByID(supplier_id);
+        if(!result.isOK()) {
+            return result;
+        }
+        return currBranch.removeContract(result.getData());
     }
     public Result addProductToContract(Integer supplierID, Integer catalogID, Integer gpID, Float supplier_price, Integer supplier_id, String supplier_category , String name){
         return currBranch.addProductToContract(supplierID, catalogID, gpID, supplier_price, supplier_id, supplier_category, name);
@@ -256,14 +275,6 @@ public class BranchController {
 
     public Result acceptOrder (Integer orderID){
         return currBranch.acceptOrder(orderID);
-    }
-
-    public Result makeOutOfStockReportByCategory(Integer categoryID , String type){
-        return currBranch.makeOutOfStockReportByCategory(categoryID,type);
-    }
-
-    public Result makeOutOfStockReportByGeneralProduct(Integer gpID , String type){
-        return currBranch.makeOutOfStockReportByGeneralProduct(gpID, type);
     }
 
     public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<Integer, Integer>> productsAndQuantity , Integer date){

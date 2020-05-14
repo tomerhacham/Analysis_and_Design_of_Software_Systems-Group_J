@@ -115,14 +115,14 @@ public class Inventory {
     //endregion
 
     //region Report Management
-    public Result<Report> makeReportByGeneralProduct(Integer gpID, String stype){
+    public Result<Report> makeReportByGeneralProduct(Integer gpID, String type){
 
         GeneralProduct generalProduct = productController.searchGeneralProductByGpID(gpID);
         List<GeneralProduct> dummy_list = new LinkedList<>();
         dummy_list.add(generalProduct);
-        return reportController.makeReport(dummy_list, convertStringToReportType(stype));
+        return reportController.makeReport(dummy_list, convertStringToReportType(type));
     }
-    public Result<Report> makeReportByCategory(Integer category_id, String stype){
+    public Result<Report> makeReportByCategory(Integer category_id, String type){
         Category category;
         if(category_id==0){
             category=categoryController.superCategory();
@@ -131,7 +131,7 @@ public class Inventory {
             category = categoryController.searchCategorybyId(category_id);
         }
         List general_products = category.getAllGeneralProduct();
-        return reportController.makeReport(general_products, convertStringToReportType(stype));
+        return reportController.makeReport(general_products, convertStringToReportType(type));
     }
     private ReportType convertStringToReportType(String stype){
         switch(stype){
@@ -167,7 +167,7 @@ public class Inventory {
     public Result removeSale(Integer sale_id){
         return saleController.removeSale(sale_id);
     }
-    public Result CheckSalesStatus(){
+    public Result<List<Sale>> CheckSalesStatus(){
         return saleController.CheckSalesStatus();
     }
     private discountType convertStringToDiscountType(String stype){

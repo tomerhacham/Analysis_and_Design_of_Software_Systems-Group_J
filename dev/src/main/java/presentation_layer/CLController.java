@@ -203,6 +203,289 @@ public class CLController {
         }
     }
 
+    //region Supplier Contracts management
+    private static void printSupplierContractsMenu() {
+        String menu = "";
+        menu=menu.concat("Choose one of the options:\n");
+        menu=menu.concat("1) Add contract\n");
+        menu=menu.concat("2) Remove contract\n");
+        menu=menu.concat("3) Add product to contract\n");
+        menu=menu.concat("4) Remove product from contract\n");
+        menu=menu.concat("5) Add category to contract\n");
+        menu=menu.concat("6) Remove category from contract\n");
+        menu=menu.concat("7) Cost Engineering\n");
+        menu=menu.concat("8) Return\n");
+        menu=menu.concat("9) Exit\n");
+        while(true) {
+            System.out.println(menu);
+            Integer option = getNextInt(sc);
+            switch (option) {
+                case 1:
+                    printAddContract();
+                    break;
+                case 2:
+                    printRemoveContract();
+                    break;
+                case 3:
+                    printAddProductToContract();
+                    break;
+                case 4:
+                    printRemoveProductFromContract();
+                    break;
+                case 5:
+                    printAddCategoryToContract();
+                    break;
+                case 6:
+                    printRemoveCategoryFromContract();
+                    break;
+                case 7:
+                    printCostEngineeringMenu();
+                    break;
+                case 8:
+                    return;
+                case 9:
+                    Exit();
+                default:
+                    System.out.println("Option not valid, please retype");
+            }
+        }
+
+    }
+
+    private static void printCostEngineeringMenu() {
+        String menu = "";
+        menu=menu.concat("Choose one of the options:\n");
+        menu=menu.concat("1) Add cost engineering\n");
+        menu=menu.concat("2) Remove cost engineering\n");
+        menu=menu.concat("3) Add product\n");
+        menu=menu.concat("4) Remove product\n");
+        menu=menu.concat("5) Update minimum quantity\n");
+        menu=menu.concat("6) Update sale price\n");
+        menu=menu.concat("7) Return\n");
+        menu=menu.concat("8) Exit\n");
+        while(true) {
+            System.out.println(menu);
+            Integer option = getNextInt(sc);
+            switch (option) {
+                case 1:
+                    printAddCostEng();
+                    break;
+                case 2:
+                    printRemoveCostEng();
+                    break;
+                case 3:
+                    printAddProductToCostEng();
+                    break;
+                case 4:
+                    printRemoveProductFromCostEng();
+                    break;
+                case 5:
+                    printUpdateMinQuantityCostEng();
+                    break;
+                case 6:
+                    printUpdateSalePriceCostEng();
+                    break;
+                case 7:
+                    return;
+                case 8:
+                    Exit();
+                default:
+                    System.out.println("Option not valid, please retype");
+            }
+        }
+    }
+
+    private static void printUpdateSalePriceCostEng() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID],[catalogID],[price]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 3) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            Integer catalogID = Integer.getInteger(param[1]);
+            Float price = Float.parseFloat(param[2]);
+            result = branchController.updatePriceAfterSale(supplierID,catalogID,price);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printUpdateMinQuantityCostEng() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID],[catalogID],[minQuantity]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 3) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            Integer catalogID = Integer.getInteger(param[1]);
+            Integer minQuan = Integer.getInteger(param[2]);
+            result = branchController.updateMinQuantity(supplierID,catalogID,minQuan);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printRemoveProductFromCostEng() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID],[catalogID]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 2) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            Integer catalogID = Integer.getInteger(param[1]);
+            result = branchController.removeProductCostEng(supplierID,catalogID);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printAddProductToCostEng() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID],[catalogID],[minQuantity],[price]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 4) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            Integer catalogID = Integer.getInteger(param[1]);
+            Integer minQuan = Integer.getInteger(param[2]);
+            Float price = Float.parseFloat(param[3]);
+            result = branchController.addProductToCostEng(supplierID,catalogID,minQuan,price);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printRemoveCostEng() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 1) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            result = branchController.removeCostEng(supplierID);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printAddCostEng() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 1) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            result = branchController.addCostEng(supplierID);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printRemoveCategoryFromContract() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID],[categoryName]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 2) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            result = branchController.removeCategory(supplierID, param[1]);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printAddCategoryToContract() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID],[categoryName]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 2) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            result = branchController.addCategory(supplierID,param[1]);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printRemoveProductFromContract() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID],[gpID]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 2) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            Integer gpID = Integer.getInteger(param[1]);
+            result = branchController.removeProductFromContract(supplierID,gpID);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printAddProductToContract() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID],[catalogID],[gpID],[supplier_price],[supplier_id],[supplier_category],[name]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 7) {
+            result = branchController.addProductToContract(Integer.getInteger(param[0]), Integer.getInteger(param[1]),Integer.getInteger(param[2]),Float.parseFloat(param[3]),Integer.getInteger(param[4]),param[5],param[6]);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printRemoveContract() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 1) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            result = branchController.removeContract(supplierID);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printAddContract() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 1) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            result = branchController.addContract(supplierID);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    //endregion
+
+    //region Orders Management
     private static void printOrdersMenu() {
         String menu = "";
         menu=menu.concat("Choose one of the options:\n");
@@ -388,47 +671,37 @@ public class CLController {
         }
 
     }
+    //endregion
+
 
     //region Products Management
     static private void printProductMenu() {
         String menu = "Products management\n";
-        //menu=menu.concat("1) Add new general product\n");
-        menu=menu.concat("2) Edit general product\n");
-       // menu=menu.concat("3) Remove general product\n");
-        //menu=menu.concat("4) Add specific product\n");
-        menu=menu.concat("5) Remove specific product\n");
-        menu=menu.concat("6) Mark flaw specific product\n");
-        menu=menu.concat("7) Change location of specific product\n");
-        menu=menu.concat("8) Return\n");
-        menu=menu.concat("9) exit\n\n");
+        menu=menu.concat("1) Edit general product\n");
+        menu=menu.concat("2) Remove specific product\n");
+        menu=menu.concat("3) Mark flaw specific product\n");
+        menu=menu.concat("4 Change location of specific product\n");
+        menu=menu.concat("5) Return\n");
+        menu=menu.concat("6) exit\n\n");
         while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
-                    printAddGeneralProductMenu();
-                    break;
-                case (2):
-                    printEditGeneralProductMenu();
-                    break;
-                case (3):
-                    printRemoveGeneralProductMenu();
-                    break;
-                case (4):
                     printAddSpecificProductMenu();
                     break;
-                case (5):
+                case (2):
                     printRemoveSpecificProductMenu();
                     break;
-                case (6):
+                case (3):
                     printMarkAsFlawtMenu();
                     break;
-                case (7):
+                case (4):
                     printMoveLocationtMenu();
                     break;
-                case (8):
+                case (5):
                     return;
-                case (9):
+                case (6):
                     Exit();
                 default:
                     System.out.println("Option not valid, please retype");
@@ -437,36 +710,36 @@ public class CLController {
     }
 
     //region General Product
-    static private void printAddGeneralProductMenu() {
-        Result result;
-        String menu = "Please enter the following details\n";
-        menu=menu.concat("[CategoryID],[Manufacture],[CatalogID],[Name],[Supplier price],[Retail price],[Minimum quantity]");
-        System.out.println(menu);
-        String[] param = getInputParserbyComma(sc);
-        if (param.length==7){
-            result=inv.addGeneralProduct(Integer.parseInt(param[0]),param[1],param[2],param[3],
-                    Float.parseFloat(param[4]),Float.parseFloat(param[5]),Integer.parseInt(param[6]));
-            System.out.println(result.getMessage());
-        }
-        else{
-            System.out.println("Invalid number of parameters");
-        }
-    }
+//    static private void printAddGeneralProductMenu() {
+//        Result result;
+//        String menu = "Please enter the following details\n";
+//        menu=menu.concat("[CategoryID],[Manufacture],[CatalogID],[Name],[Supplier price],[Retail price],[Minimum quantity]");
+//        System.out.println(menu);
+//        String[] param = getInputParserbyComma(sc);
+//        if (param.length==7){
+//            result=branchController.addGeneralProduct(Integer.parseInt(param[0]),param[1],param[2],param[3],
+//                    Float.parseFloat(param[4]),Float.parseFloat(param[5]),Integer.parseInt(param[6]));
+//            System.out.println(result.getMessage());
+//        }
+//        else{
+//            System.out.println("Invalid number of parameters");
+//        }
+//    }
 
-    static private void printRemoveGeneralProductMenu() {
-        Result result;
-        String menu = "Please enter the following details\n";
-        menu=menu.concat("[CategoryID],[CatalogID]");
-        System.out.println(menu);
-        String[] param = getInputParserbyComma(sc);
-        if(param.length==2){
-            result=inv.removeGeneralProduct(Integer.parseInt(param[0]),param[1]);
-            System.out.println(result.getMessage());
-        }
-        else{
-            System.out.println("Invalid number of parameters");
-        }
-    }
+//    static private void printRemoveGeneralProductMenu() {
+//        Result result;
+//        String menu = "Please enter the following details\n";
+//        menu=menu.concat("[CategoryID],[CatalogID]");
+//        System.out.println(menu);
+//        String[] param = getInputParserbyComma(sc);
+//        if(param.length==2){
+//            result=branchController.removeGeneralProduct(Integer.parseInt(param[0]),param[1]);
+//            System.out.println(result.getMessage());
+//        }
+//        else{
+//            System.out.println("Invalid number of parameters");
+//        }
+//    }
 
     static private void printEditGeneralProductMenu() {
         Result result;
@@ -491,7 +764,7 @@ public class CLController {
                     param = getInputParserbyComma(sc);
                     //TODO convert param[0] to Integer
                     if(param.length==2) {
-                        result = branchController.editGeneralProductName(param[0], param[1]);
+                        result = branchController.editGeneralProductName(Integer.getInteger(param[0]), param[1]);
                         System.out.println(result.getMessage());
                     }
                     else{
@@ -499,11 +772,11 @@ public class CLController {
                     }
                     break;
                 case (2):
-                    details=details.concat("[CatalogID],[New supplier price]");
+                    details=details.concat("[CatalogID],[New supplier price],[supplierID]");
                     System.out.println(details);
                     param = getInputParserbyComma(sc);
-                    if(param.length==2) {
-                        result = branchController.editGeneralProductSupplierPrice(param[0], Float.parseFloat(param[1]));
+                    if(param.length==3) {
+                        result = branchController.editGeneralProductSupplierPrice(Integer.getInteger(param[0]), Float.parseFloat(param[1]),Integer.getInteger(param[2]));
                         System.out.println(result.getMessage());
                     }
                     else{
@@ -515,7 +788,7 @@ public class CLController {
                     System.out.println(details);
                     param=getInputParserbyComma(sc);
                     if(param.length==2) {
-                        result = branchController.editGeneralProductRetailPrice(param[0], Float.parseFloat(param[1]));
+                        result = branchController.editGeneralProductRetailPrice(Integer.getInteger(param[0]), Float.parseFloat(param[1]));
                         System.out.println(result.getMessage());
                     }
                     else{
@@ -527,7 +800,7 @@ public class CLController {
                     System.out.println(details);
                     param = getInputParserbyComma(sc);
                     if(param.length==2) {
-                        result=branchController.editGeneralProductQuantity(param[0], Integer.parseInt(param[1]));
+                        result=branchController.editGeneralProductQuantity(Integer.getInteger(param[0]), Integer.parseInt(param[1]));
                         System.out.println(result.getMessage());
                     }
                     else{
@@ -539,7 +812,7 @@ public class CLController {
                     System.out.println(details);
                     param = getInputParserbyComma(sc);
                     if(param.length==2) {
-                        result=branchController.editGeneralProductMinQuantity(param[0], Integer.parseInt(param[1]));
+                        result=branchController.editGeneralProductMinQuantity(Integer.getInteger(param[0]), Integer.parseInt(param[1]));
                         System.out.println(result.getMessage());
                     }
                     else{
@@ -566,7 +839,7 @@ public class CLController {
         if(param.length==3) {
             Date date =convertStringToDate(param[1]);
             if (date!=null){
-                result = inv.addSpecificProduct(param[0],date,Integer.parseInt(param[2]));
+                result = branchController.addSpecificProduct(Integer.getInteger(param[0]),date,Integer.parseInt(param[2]));
                 System.out.println(result.getMessage());
             }
             else{
@@ -725,7 +998,7 @@ public class CLController {
     //endregion
 
     //region Report Management
-    static private void printReportMenu(Scanner sc, Inventory inv) {
+    static private void printReportMenu() {
         String menu = "Report management\n";
         menu=menu.concat("1) Issue out of stock report\n");
         menu=menu.concat("2) Issue in-stock report\n");
@@ -737,13 +1010,13 @@ public class CLController {
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
-                    printOutOfStockReportMenu(sc,inv);
+                    printOutOfStockReportMenu();
                     break;
                 case (2):
-                    printInStockReportMenu(sc,inv);
+                    printInStockReportMenu();
                     break;
                 case (3):
-                    printDNEReportMenu(sc,inv);
+                    printDNEReportMenu();
                     break;
                 case (4):
                     return;
@@ -755,7 +1028,7 @@ public class CLController {
         }
     }
     //region Out of Stock Report
-    static private void printOutOfStockReportMenu(Scanner sc, Inventory inv) {
+    static private void printOutOfStockReportMenu() {
         String menu = "Choose one of the options\n";
         menu=menu.concat("1) By category\n");
         menu=menu.concat("2) By general product\n");
@@ -766,10 +1039,10 @@ public class CLController {
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
-                    printOutOfStockReportByCategoryMenu(sc,inv);
+                    printOutOfStockReportByCategoryMenu();
                     break;
                 case (2):
-                    printOutOfStockReportByGeneralProductMenu(sc,inv);
+                    printOutOfStockReportByGeneralProductMenu();
                     break;
                 case (3):
                     return;
@@ -781,7 +1054,7 @@ public class CLController {
         }
     }
 
-    static private void printOutOfStockReportByCategoryMenu(Scanner sc, Inventory inv) {
+    static private void printOutOfStockReportByCategoryMenu() {
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[CategoryID]\n");
@@ -790,10 +1063,10 @@ public class CLController {
         String[] param = getInputParserbyComma(sc);
         if (param.length==1) {
             if(param[0].equals("all")){
-                result = inv.makeReportByCategory(0, "outofstock");
+                result = branchController.makeReportByCategory(0, "outofstock");
             }
             else{
-                result = inv.makeReportByCategory(Integer.parseInt(param[0]), "outofstock");
+                result = branchController.makeReportByCategory(Integer.parseInt(param[0]), "outofstock");
             }
             System.out.println(result.getMessage());
         }
@@ -802,14 +1075,14 @@ public class CLController {
         }
     }
 
-    static private void printOutOfStockReportByGeneralProductMenu(Scanner sc, Inventory inv){
+    static private void printOutOfStockReportByGeneralProductMenu(){
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[CatalogID]");
         System.out.println(menu);
         String[] param=getInputParserbyComma(sc);
         if(param.length==1) {
-            result = inv.makeReportByGeneralProduct(param[0], "outofstock");
+            result = branchController.makeReportByGeneralProduct(Integer.getInteger(param[0]), "outofstock");
             System.out.println(result.getMessage());
         }
         else{
@@ -819,7 +1092,7 @@ public class CLController {
     //endregion
 
     //region In-Stock Report
-    static private void printInStockReportMenu(Scanner sc,Inventory inv) {
+    static private void printInStockReportMenu() {
         String menu = "Choose one of the options\n";
         menu=menu.concat("1) By category\n");
         menu=menu.concat("2) By general product\n");
@@ -830,10 +1103,10 @@ public class CLController {
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
-                    printInStocReportByCategoryMenu(sc,inv);
+                    printInStocReportByCategoryMenu();
                     break;
                 case (2):
-                    printInStocReportByGeneralProductMenu(sc,inv);
+                    printInStocReportByGeneralProductMenu();
                     break;
                 case (3):
                     return;
@@ -845,7 +1118,7 @@ public class CLController {
         }
     }
 
-    static private void printInStocReportByCategoryMenu(Scanner sc,Inventory inv) {
+    static private void printInStocReportByCategoryMenu() {
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[CategoryID]\n");
@@ -854,23 +1127,23 @@ public class CLController {
         String[] param = getInputParserbyComma(sc);
         if (param.length==1) {
             if(param[0].equals("all")){
-                result = inv.makeReportByCategory(0, "instock");
+                result = branchController.makeReportByCategory(0, "instock");
             }
             else{
-                result = inv.makeReportByCategory(Integer.parseInt(param[0]), "instock");
+                result = branchController.makeReportByCategory(Integer.getInteger(param[0]), "instock");
             }
             System.out.println(result.getMessage());
         }
     }
 
-    static private void printInStocReportByGeneralProductMenu(Scanner sc,Inventory inv){
+    static private void printInStocReportByGeneralProductMenu(){
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[CatalogID]");
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if(param.length==1) {
-            result = inv.makeReportByGeneralProduct(param[0], "instock");
+            result = branchController.makeReportByGeneralProduct(Integer.getInteger(param[0]), "instock");
             System.out.println(result.getMessage());
         }
         else{
@@ -880,7 +1153,7 @@ public class CLController {
     //endregion
 
     //region Damaged and Expired Report
-    static private void printDNEReportMenu(Scanner sc,Inventory inv) {
+    static private void printDNEReportMenu() {
         String menu = "Choose one of the options\n";
         menu=menu.concat("1) By category\n");
         menu=menu.concat("2) By general product\n");
@@ -891,10 +1164,10 @@ public class CLController {
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
-                    printDNEReportByCategoryMenu(sc,inv);
+                    printDNEReportByCategoryMenu();
                     break;
                 case (2):
-                    printDNEReportByGeneralProductMenu(sc,inv);
+                    printDNEReportByGeneralProductMenu();
                     break;
                 case (3):
                     return;
@@ -906,7 +1179,7 @@ public class CLController {
         }
     }
 
-    static private void printDNEReportByCategoryMenu(Scanner sc, Inventory inv) {
+    static private void printDNEReportByCategoryMenu() {
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[CategoryID]\n");
@@ -915,23 +1188,23 @@ public class CLController {
         String[] param = getInputParserbyComma(sc);
         if (param.length==1) {
             if(param[0].equals("all")){
-                result = inv.makeReportByCategory(0, "dne");
+                result = branchController.makeReportByCategory(0, "dne");
             }
             else{
-                result = inv.makeReportByCategory(Integer.parseInt(param[0]), "dne");
+                result = branchController.makeReportByCategory(Integer.getInteger(param[0]), "dne");
             }
             System.out.println(result.getMessage());
         }
     }
 
-    static private void printDNEReportByGeneralProductMenu(Scanner sc,Inventory inv){
+    static private void printDNEReportByGeneralProductMenu(){
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[CatalogID]");
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if(param.length==1) {
-            result = inv.makeReportByGeneralProduct(param[0], "dne");
+            result = branchController.makeReportByGeneralProduct(Integer.getInteger(param[0]), "dne");
             System.out.println(result.getMessage());
         }
         else{
@@ -943,7 +1216,7 @@ public class CLController {
     //endregion
 
     //region Sale Management
-    static private void printSaleMenu(Scanner sc,Inventory inv) {
+    static private void printSaleMenu() {
         String menu = "Sales management\n";
         menu=menu.concat("1) Add new sale\n");
         menu=menu.concat("2) Cancel sale\n");
@@ -955,13 +1228,13 @@ public class CLController {
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
-                    printAddSaleMenu(sc, inv);
+                    printAddSaleMenu();
                     break;
                 case (2):
-                    printRemoveSaleMenu(sc, inv);
+                    printRemoveSaleMenu();
                     break;
                 case (3):
-                    checkSaleSatus(inv);
+                    checkSaleSatus();
                     break;
                 case (4):
                     return;
@@ -974,7 +1247,7 @@ public class CLController {
     }
 
     //region Add Sale
-    static private void printAddSaleMenu(Scanner sc,Inventory inv) {
+    static private void printAddSaleMenu() {
         String menu = "Choose one of the options\n";
         menu=menu.concat("1) By category\n");
         menu=menu.concat("2) By general product\n");
@@ -985,10 +1258,10 @@ public class CLController {
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
-                    printAddNewSaleByCategoryMenu(sc,inv);
+                    printAddNewSaleByCategoryMenu();
                     break;
                 case (2):
-                    printAddNewSaleByGeneralProductMenu(sc,inv);
+                    printAddNewSaleByGeneralProductMenu();
                     break;
                 case (3):
                     return;
@@ -999,7 +1272,7 @@ public class CLController {
             }
         }     }
 
-    static private void printAddNewSaleByCategoryMenu(Scanner sc,Inventory inv){
+    static private void printAddNewSaleByCategoryMenu(){
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[CategoryID],[Discount percentage\\Fixed price],[Optional: %],[Optional: Start date (dd/mm/YYYY)],[Must if apply 'Start date': End date (dd/mm/YYYY)]\n");
@@ -1007,18 +1280,18 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if(param.length==2) {
-            result = inv.addSaleByCategory(Integer.parseInt(param[0]),"fix",Float.parseFloat(param[1]));
+            result = branchController.addSaleByCategory(Integer.parseInt(param[0]),"fix",Float.parseFloat(param[1]));
             System.out.println(result.getMessage());
         }
         else if(param.length==3){
-            result = inv.addSaleByCategory(Integer.parseInt(param[0]),"percentage",Float.parseFloat(param[1]));
+            result = branchController.addSaleByCategory(Integer.parseInt(param[0]),"percentage",Float.parseFloat(param[1]));
             System.out.println(result.getMessage());
         }
         else if(param.length==4){
             Date start_date=convertStringToDate(param[2]);
             Date end_date =convertStringToDate(param[3]);
             if(start_date!=null && end_date!=null){
-                result = inv.addSaleByCategory(Integer.parseInt(param[0]),"fix",Float.parseFloat(param[1]),start_date,end_date);
+                result = branchController.addSaleByCategory(Integer.parseInt(param[0]),"fix",Float.parseFloat(param[1]),start_date,end_date);
                 System.out.println(result.getMessage());
             }
             else{
@@ -1029,7 +1302,7 @@ public class CLController {
             Date start_date=convertStringToDate(param[3]);
             Date end_date =convertStringToDate(param[4]);
             if(start_date!=null && end_date!=null && param[2].equals("%")){
-                result = inv.addSaleByCategory(Integer.parseInt(param[0]),"percentage",Float.parseFloat(param[1]),start_date,end_date);
+                result = branchController.addSaleByCategory(Integer.parseInt(param[0]),"percentage",Float.parseFloat(param[1]),start_date,end_date);
                 System.out.println(result.getMessage());
             }
             else{
@@ -1040,7 +1313,7 @@ public class CLController {
             System.out.println("Invalid number of parameters");
         }
     }
-    static private void printAddNewSaleByGeneralProductMenu(Scanner sc,Inventory inv){
+    static private void printAddNewSaleByGeneralProductMenu(){
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[CatalogID],[Discount percentage\\Fixed price],[Optional: %],[Optional: Start date (dd/mm/YYYY)],[Must if apply 'Start date': End date (dd/mm/YYYY)]\n");
@@ -1048,18 +1321,18 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if(param.length==2) {
-            result = inv.addSaleByGeneralProduct(param[0],"fix",Float.parseFloat(param[1]));
+            result = branchController.addSaleByGeneralProduct(Integer.getInteger(param[0]),"fix",Float.parseFloat(param[1]));
             System.out.println(result.getMessage());
         }
         else if(param.length==3){
-            result = inv.addSaleByGeneralProduct(param[0],"percentage",Float.parseFloat(param[1]));
+            result = branchController.addSaleByGeneralProduct(Integer.getInteger(param[0]),"percentage",Float.parseFloat(param[1]));
             System.out.println(result.getMessage());
         }
         else if(param.length==4){
             Date start_date=convertStringToDate(param[2]);
             Date end_date =convertStringToDate(param[3]);
             if(start_date!=null && end_date!=null){
-                result = inv.addSaleByGeneralProduct(param[0],"fix",Float.parseFloat(param[1]),start_date,end_date);
+                result = branchController.addSaleByGeneralProduct(Integer.getInteger(param[0]),"fix",Float.parseFloat(param[1]),start_date,end_date);
                 System.out.println(result.getMessage());
             }
             else{
@@ -1070,7 +1343,7 @@ public class CLController {
             Date start_date=convertStringToDate(param[3]);
             Date end_date =convertStringToDate(param[4]);
             if(start_date!=null && end_date!=null && param[2].equals("%")){
-                result = inv.addSaleByGeneralProduct(param[0],"percentage",Float.parseFloat(param[1]),start_date,end_date);
+                result = branchController.addSaleByGeneralProduct(Integer.getInteger(param[0]),"percentage",Float.parseFloat(param[1]),start_date,end_date);
                 System.out.println(result.getMessage());
             }
             else{
@@ -1083,14 +1356,14 @@ public class CLController {
     }
     //endregion
     //region Remove Sale
-    static private void printRemoveSaleMenu(Scanner sc,Inventory inv){
+    static private void printRemoveSaleMenu(){
         Result result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[SaleID]");
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if(param.length==1){
-            result=inv.removeSale(Integer.parseInt(param[0]));
+            result=branchController.removeSale(Integer.parseInt(param[0]));
             System.out.println(result.getMessage());
         }
         else{
@@ -1099,11 +1372,11 @@ public class CLController {
     }
     //endregion
     //region Check Sales Status
-    static private void checkSaleSatus(Inventory inv){
-        Result result = inv.CheckSalesStatus();
+    static private void checkSaleSatus(){
+        Result<List<Sale>> result = branchController.CheckSalesStatus();
         System.out.println(result.getMessage());
         System.out.println("Active sales:");
-        List<Sale> active_sales = (LinkedList)result.getData();
+        List<Sale> active_sales = result.getData();
         for(Sale sale:active_sales){
             System.out.println(sale.toString());
         }
@@ -1114,7 +1387,7 @@ public class CLController {
     //endregion
 
     //region Data mapping
-    private static void printDataMapperMenu(Scanner sc,Inventory inv){
+    private static void printDataMapperMenu(){
         String menu = "Data:\n";
         menu=menu.concat("1) Print all categories\n");
         menu=menu.concat("2) Print all general products\n");
@@ -1126,13 +1399,13 @@ public class CLController {
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
-                    printAllCategories(inv);
+                    printAllCategories();
                     break;
                 case (2):
-                    printAllGeneralProducts(inv);
+                    printAllGeneralProducts();
                     break;
                 case (3):
-                    printAllSales(inv);
+                    printAllSales();
                     break;
                 case (4):
                     return;
@@ -1144,14 +1417,14 @@ public class CLController {
         }
 
     }
-    private static void printAllCategories(Inventory inv){
-        System.out.println(inv.mapAllCategories());
+    private static void printAllCategories(){
+        System.out.println(branchController.mapAllCategories());
     }
-    private static void printAllGeneralProducts(Inventory inv){
-        System.out.println(inv.mapAllGeneralProducts());
+    private static void printAllGeneralProducts(){
+        System.out.println(branchController.mapAllGeneralProducts());
     }
-    private static void printAllSales(Inventory inv){
-        System.out.println(inv.mapAllSales());
+    private static void printAllSales(){
+        System.out.println(branchController.mapAllSales());
     }
     private static void printAllBranches(){
         System.out.println(branchController.toString());

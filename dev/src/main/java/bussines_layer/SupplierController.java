@@ -249,14 +249,14 @@ public class SupplierController {
      * @param id
      * @return
      */
-    public Result getSupplierCardByID (Integer id){
+    public Result<SupplierCard> getSupplierCardByID (Integer id){
         Result result;
         if ( !isExist(id).isOK()){
-            result= new Result(false,null, String.format("There is not supplier with ID %d",id ));
+            result= new Result<>(false,null, String.format("There is not supplier with ID %d",id ));
         }
         else{
             SupplierCard supplier =suppliers.get(id);
-            result = new Result(true, supplier, String.format("Supplier %s has been found",supplier ));
+            result = new Result<>(true, supplier, String.format("Supplier %s has been found",supplier ));
         }
         return result;
     }
