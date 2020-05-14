@@ -44,27 +44,35 @@ public class OrdersController {
     }
 
     //get specific order from the systems order list
-    public Order getOrder(int orderid){
-        for (Order or:orders) {
-            if(or.getOrderID() == orderid){
-                return or;
+    public Result<Order> getOrder(int orderid){
+        for (Order order:orders) {
+            if(order.getOrderID() == orderid){
+                return new Result<>(true, order, String.format("Find order"));
             }
         }
-        //sz_Result ( "No Such Order ID" ); //TODO RESULT
-        return null;
+        return new Result<Order>(false, null, String.format(" The Order does not exist"));
+
     }
 
     public LinkedList<Order> getAllOrders() { return this.orders;}
 
     public Result addProductToOrder(int orderID , CatalogProduct product , Integer quantity , Float price){
-        return getOrder(orderID).addProduct(product , quantity , price);
+        Result<Order> result = getOrder(orderID);
+        if (result.isOK()){
+            return result.getData().addProduct(product, quantity, price);
+        }
+        return result;
     }
 
     //get total price of an order
-    public Result<Float> getTotalPrice (int orderID){
+    public Result<Float> getTotalPrice (Integer orderID){
         for (Order o : orders){
-            if (o.getOrderID() == orderID)
-                return o.getTotalAmount();
+            if (o.getOrderID() == orderID) {
+                Result<Order> result = getOrder(orderID);
+                if (result.isOK()) {
+                    return result.getData().getTotalAmount();
+                }
+            }
         }
         return new Result<>(true, new Float(-1), String.format(" The Order : %d dose not exist", orderID));
     }
@@ -99,6 +107,23 @@ public class OrdersController {
         return new Result(true,toDisplay, String.format("Display all Orders"));
     }
 
+    public Result acceptOrder(Integer orderID) {
+        for (Order order: orders){
+            if (order.getOrderID() == orderID && order.getStatus()== OrderStatus.sent){
+                if (order.getStatus()== OrderStatus.sent){
+                    return new Result(true,order.getProductsAndQuantity(), String.format("Order %d has been received", orderID));
+                }
+                else if(order.getStatus()== OrderStatus.inProcess){
+                    return new Result(false,null, String.format("Order %d hasn't been sent", orderID));
+                }
+                else if (order.getStatus()== OrderStatus.received){
+                    return new Result(false,null, String.format("Order %d already received", orderID));
+                }
+            }
+        }
+        return new Result(false,null, String.format("Order %d does not exist", orderID));
+    }
+
     //endregion
 
     //region OutOfStockOrder
@@ -118,16 +143,16 @@ public class OrdersController {
     }
 
     public Result removeProductFromPeriodicOrder(Integer orderID , CatalogProduct product) {
-        if(getOrder(orderID).getType() == OrderType.PeriodicOrder){
-            return getOrder(orderID).removeProductFromPeriodicOrder(product);
+        if(getOrder(orderID).getData().getType() == OrderType.PeriodicOrder){
+            return getOrder(orderID).getData().removeProductFromPeriodicOrder(product);
         }
 
         return new Result(false,product, String.format("The order : %d is not a periodic order , therefore the product %s can not be removed", product.getName() , orderID));
     }
 
     public Result updateProductQuantityInPeriodicOrder(Integer orderId , CatalogProduct product , Integer newQuantity , Float newPrice){
-        if(getOrder(orderId).getType() == OrderType.PeriodicOrder){
-            return getOrder(orderId).updateProductQuantityInPeriodicOrder(product , newQuantity , newPrice);
+        if(getOrder(orderId).getData().getType() == OrderType.PeriodicOrder){
+            return getOrder(orderId).getData().updateProductQuantityInPeriodicOrder(product , newQuantity , newPrice);
         }
 
         return new Result(false,orderId, String.format("The order %d is not a periodic order therefore can not be modified " , orderId));
@@ -135,12 +160,13 @@ public class OrdersController {
     }
 
     public Result removePeriodicOrder (Integer orderId){
-        if (getOrder(orderId).getType() != OrderType.PeriodicOrder){
+        if (getOrder(orderId).getData().getType() != OrderType.PeriodicOrder){
             return new Result(false,orderId, String.format("The order : %d is not a periodic order , therefore the order can not be removed", orderId));
         }
         orders.remove(getOrder(orderId));
         return new Result(true,orderId, String.format("The periodic order : %d has been removed", orderId));
     }
+
 
     //endregion
 

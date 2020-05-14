@@ -41,6 +41,15 @@ public class ContractController {
         return result;
     }
 
+    public boolean isExistSupplier (Integer supplierID){
+        for (Contract c : contracts) {
+            if (c.getSupplierID() == supplierID) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Add contract with supplier
      * @param supplier - the supplier to create contract with
