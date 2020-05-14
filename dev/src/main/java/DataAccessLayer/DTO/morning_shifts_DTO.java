@@ -1,29 +1,32 @@
 package DataAccessLayer.DTO;
 
+import DataAccessLayer.Mapper;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.Date;
 
-@DatabaseTable(tableName = "Driver")
+@DatabaseTable(tableName = "morningShifts")
 public class morning_shifts_DTO {
 
-    @DatabaseField(columnName = "date", id = true)
+    @DatabaseField(columnName = "date", uniqueCombo = true)
     private Date date;
 
-    @DatabaseField(columnName = "truckID", id = true, foreign = true, foreignColumnName = "truckID")
-    private int truckID;
+    @DatabaseField(columnName = "truckID", foreign = true, foreignColumnName = "truckID", uniqueCombo = true)
+    private Truck_DTO truckID;
 
-    public morning_shifts_DTO(Date date, int truckID){
+    public morning_shifts_DTO(Date date, Truck_DTO truckID){
         this.date=date;
         this.truckID=truckID;
     }
+
+    public morning_shifts_DTO(){}
 
     public Date getDate() {
         return date;
     }
 
-    public int getTruckID() {
+    public Truck_DTO getTruckID() {
         return truckID;
     }
 
@@ -31,7 +34,7 @@ public class morning_shifts_DTO {
         this.date = date;
     }
 
-    public void setTruckID(int truckID) {
+    public void setTruckID(Truck_DTO truckID) {
         this.truckID = truckID;
     }
 }

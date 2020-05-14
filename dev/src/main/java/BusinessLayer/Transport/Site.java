@@ -37,5 +37,17 @@ public class Site {
        return s;
     }
 
+    public String getPhone_number() {
+        return phone_number;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
 }
 

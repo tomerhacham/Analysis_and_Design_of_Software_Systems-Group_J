@@ -1,5 +1,6 @@
 package DataAccessLayer.DTO;
 
+import BusinessLayer.Workers.Shift;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
@@ -10,31 +11,31 @@ import java.util.Date;
 @DatabaseTable(tableName = "Shift")
 public class Shift_DTO {
 
-    @ForeignCollectionField(eager = false)
-    private ForeignCollection<Occupation_DTO> occupation;
+    @DatabaseField (columnName = "ShiftID", id = true)
+    int ShiftID;
 
-    @DatabaseField(columnName = "date")
+    @DatabaseField(columnName = "date", uniqueCombo = true, index = true)
     private Date date;
 
-    @DatabaseField(columnName = "partOfDay")
+    @DatabaseField(columnName = "partOfDay", uniqueCombo = true, index = true)
     private int timeOfDay;
 
     @ForeignCollectionField(eager = false)
-    private ForeignCollection<Driver_DTO> scheduledDrivers;
+    private ForeignCollection<Occupation_DTO> occupation;
 
-    public Shift_DTO(ForeignCollection<Occupation_DTO> Occupation, Date Date, int partOfDay, ForeignCollection<Driver_DTO> drivers){
-        occupation = Occupation;
+    @ForeignCollectionField(eager = false)
+    private ForeignCollection<ShiftDriver_DTO> drivers_in_shift;
+
+    public Shift_DTO(int shiftID, Date Date, int partOfDay){
+        ShiftID=shiftID;
         date = Date;
         timeOfDay = partOfDay;
-        scheduledDrivers = drivers;
     }
+
+    public Shift_DTO(){}
 
     public Date getDate() {
         return date;
-    }
-
-    public ForeignCollection<Driver_DTO> getScheduledDrivers() {
-        return scheduledDrivers;
     }
 
     public ForeignCollection<Occupation_DTO> getOccupation() {
@@ -53,11 +54,23 @@ public class Shift_DTO {
         this.occupation = occupation;
     }
 
-    public void setScheduledDrivers(ForeignCollection<Driver_DTO> scheduledDrivers) {
-        this.scheduledDrivers = scheduledDrivers;
-    }
-
     public void setTimeOfDay(int timeOfDay) {
         this.timeOfDay = timeOfDay;
+    }
+
+    public int getShiftID() {
+        return ShiftID;
+    }
+
+    public void setShiftID(int shiftID) {
+        ShiftID = shiftID;
+    }
+
+    public ForeignCollection<ShiftDriver_DTO> getDrivers_in_shift() {
+        return drivers_in_shift;
+    }
+
+    public void setDrivers_in_shift(ForeignCollection<ShiftDriver_DTO> drivers_in_shift) {
+        this.drivers_in_shift = drivers_in_shift;
     }
 }

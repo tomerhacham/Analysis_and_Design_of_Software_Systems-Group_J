@@ -10,7 +10,7 @@ public class Product_DTO {
     private int ID;
 
     @DatabaseField(columnName = "fileID", foreign = true, foreignColumnName = "fileID")
-    private int fileID;
+    private ProductFile_DTO fileID;
 
     @DatabaseField(columnName = "name")
     private String name;
@@ -21,13 +21,15 @@ public class Product_DTO {
     @DatabaseField(columnName = "quantity")
     private int quantity;
 
-    public Product_DTO(int id, int fileID, String name, float weight, int quantity){
+    public Product_DTO(int id, ProductFile_DTO fileID, String name, float weight, int quantity){
         this.ID=id;
         this.fileID=fileID;
         this.name=name;
         this.weight=weight;
         this.quantity=quantity;
     }
+
+    public Product_DTO(){}
 
     public String getName() {
         return name;
@@ -37,7 +39,7 @@ public class Product_DTO {
         return weight;
     }
 
-    public int getFileID() {
+    public ProductFile_DTO getFileID() {
         return fileID;
     }
 
@@ -49,7 +51,7 @@ public class Product_DTO {
         return quantity;
     }
 
-    public void setFileID(int fileID) {
+    public void setFileID(ProductFile_DTO fileID) {
         this.fileID = fileID;
     }
 

@@ -1,47 +1,42 @@
 package DataAccessLayer.DTO;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.Date;
 
+@DatabaseTable(tableName = "Shift_Driver")
 public class ShiftDriver_DTO {
 
-    @DatabaseField(columnName = "driverID", id = true, foreign = true, foreignColumnName = "driverID")
-    private String driverID;
+    //driverId==WorkerID
+    @DatabaseField(columnName = "driverID", foreign = true, foreignColumnName = "WorkerID", uniqueCombo = true)
+    private Worker_DTO driverID;
 
-    @DatabaseField(columnName = "shiftDate", id = true, foreign = true, foreignColumnName = "driverID")
-    private Date shiftDate;
+    @DatabaseField(columnName = "ShiftID", foreign = true, foreignColumnName = "ShiftID", uniqueCombo = true)
+    private Shift_DTO shiftID;
 
-    @DatabaseField(columnName = "partOfDay", id = true, foreign = true, foreignColumnName = "driverID")
-    private int partOfDay;
 
-    public ShiftDriver_DTO(String driver_id, Date date, int part_of_day){
+    public ShiftDriver_DTO(Worker_DTO driver_id,Shift_DTO shift_ID){
         driverID = driver_id;
-        shiftDate = date;
-        partOfDay = part_of_day;
+        shiftID=shift_ID;
     }
 
-    public Date getShiftDate() {
-        return shiftDate;
+    public ShiftDriver_DTO(){}
+
+    public Shift_DTO getShiftID() {
+        return shiftID;
     }
 
-    public int getPartOfDay() {
-        return partOfDay;
-    }
-
-    public String getDriverID() {
+    public Worker_DTO getDriverID() {
         return driverID;
     }
 
-    public void setPartOfDay(int partOfDay) {
-        this.partOfDay = partOfDay;
-    }
 
-    public void setDriverID(String driverID) {
+    public void setDriverID(Worker_DTO driverID) {
         this.driverID = driverID;
     }
 
-    public void setShiftDate(Date shiftDate) {
-        this.shiftDate = shiftDate;
+    public void setShiftID(Shift_DTO shiftID) {
+        this.shiftID = shiftID;
     }
 }

@@ -1,6 +1,7 @@
 package DataAccessLayer.DTO;
 
 import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -16,7 +17,7 @@ public class Worker_DTO {
     @DatabaseField(columnName = "name")
     private String name;
 
-    @DatabaseField(columnName = "startDate")
+    @DatabaseField(columnName = "startDate", dataType = DataType.DATE)
     private Date start_Date;
 
     @DatabaseField(columnName = "salary")
@@ -31,6 +32,10 @@ public class Worker_DTO {
         start_Date = startDate;
         salary = Salary;
     }
+
+
+
+    public Worker_DTO(){}
 
     public String getName() {
         return name;
