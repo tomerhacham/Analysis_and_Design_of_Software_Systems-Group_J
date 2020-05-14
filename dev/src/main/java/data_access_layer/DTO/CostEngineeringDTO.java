@@ -11,14 +11,14 @@ public class CostEngineeringDTO {
     @DatabaseField(foreign = true, foreignColumnName = "branch_id", foreignAutoRefresh = true, columnName = "branch_id")
     BranchDTO branch;
     @DatabaseField(columnName = "catalog_id")
-    String catalog_id;
+    Integer catalog_id;
     @DatabaseField(columnName = "min_quantity")
     Integer min_quantity;
     @DatabaseField(columnName = "discount_price")
     Float discount_price;
 
     //Constructor
-    public CostEngineeringDTO(ContractDTO contract, String catalog_id, Integer min_quantity, Float discount_price) {
+    public CostEngineeringDTO(ContractDTO contract, Integer catalog_id, Integer min_quantity, Float discount_price) {
         this.contract = contract;
         this.branch=contract.getBranch();
         this.catalog_id = catalog_id;
@@ -37,7 +37,7 @@ public class CostEngineeringDTO {
         return branch;
     }
 
-    public String getCatalog_id() {
+    public Integer getCatalog_id() {
         return catalog_id;
     }
 

@@ -238,8 +238,20 @@ public class Mapper {
                 throwables.printStackTrace();
             }
         }
-        LinkedList<CostEngineeringDTO> costEngineeringDTOS = new
         //todo: create DTO for each costEngineering product;
+        LinkedList<CostEngineeringDTO> costEngineeringDTOS = new LinkedList<>();
+        for(Integer catalogId:contract.getCostEngineering().getMinQuntity().keySet()){
+            Integer min_quantity = contract.getCostEngineering().getMinQuntity().get(catalogId);
+            Float newPrice = contract.getCostEngineering().getNewPrice().get(catalogId);
+            costEngineeringDTOS.add(new CostEngineeringDTO(contractDTO,catalogId,min_quantity,newPrice));
+        }
+        try{
+            contract_dao.create(contractDTO);
+            categories_in_contract_dao.create(categories);
+            catalog_product_in_contract_dao.create(catalog_products);
+            cost_engineering_dao.create(costEngineeringDTOS);
+        }
+        catch(Exception e){e.printStackTrace();}
     }
     public void create(Order order){
         //todo:create DTO for Order
