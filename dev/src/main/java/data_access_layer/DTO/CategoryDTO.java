@@ -1,5 +1,6 @@
-package DTO;
+package data_access_layer.DTO;
 
+import bussines_layer.inventory_module.Category;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
@@ -28,8 +29,21 @@ public class CategoryDTO {
         this.level = level;
         this.super_category=super_category;
     }
+    public CategoryDTO(CategoryDTO super_category, Category category){
+        this.super_category=super_category;
+        this.name=category.getName();
+        this.id=category.getId();
+        this.level=category.getLevel();
+    }
+    public CategoryDTO(Category category){
+        this.super_category=null;
+        this.name=category.getName();
+        this.id=category.getId();
+        this.level=category.getLevel();
+    }
     public CategoryDTO() {
     }
+
 
     //region Methods
 

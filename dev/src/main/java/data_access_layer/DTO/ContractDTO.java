@@ -1,5 +1,7 @@
-package DTO;
+package data_access_layer.DTO;
 
+
+import bussines_layer.supplier_module.Contract;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
@@ -26,6 +28,12 @@ public class ContractDTO {
         this.contract_id = contract_id;
         this.branch = branch;
         this.supplier = supplier;
+    }
+    public ContractDTO(Contract contract){
+        this.contract_id=contract.getContractID();
+        this.branch = new BranchDTO(contract.getBranchID());
+        this.supplier = new SupplierDTO(contract.getSupplier());
+
     }
     public ContractDTO() {}
 

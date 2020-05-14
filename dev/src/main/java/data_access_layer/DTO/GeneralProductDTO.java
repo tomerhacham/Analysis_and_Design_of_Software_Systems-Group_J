@@ -1,4 +1,6 @@
-package DTO;
+package data_access_layer.DTO;
+
+import bussines_layer.inventory_module.GeneralProduct;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
@@ -22,7 +24,7 @@ public class GeneralProductDTO {
     @DatabaseField(columnName = "min_quantity")
     Integer min_quantity;
     @DatabaseField(columnName = "sale_price")
-    Integer sale_price;
+    Float sale_price;
     @DatabaseField(foreign = true,foreignAutoRefresh = true,foreignColumnName = "category_id",columnName = "category_id")
     CategoryDTO category_id;
     @DatabaseField(columnName = "retail_price")
@@ -33,7 +35,7 @@ public class GeneralProductDTO {
     //Constructor
     public GeneralProductDTO(Integer GPID, BranchDTO branch_id, CategoryDTO category,String manufacture,
                              String name, Float retail_price, Integer quantity, Integer min_quantity,
-                             Integer sale_price) {
+                             Float sale_price) {
         this.GPID = GPID;
         this.branch_id = branch_id;
         this.manufacture = manufacture;
@@ -43,6 +45,17 @@ public class GeneralProductDTO {
         this.sale_price = sale_price;
         this.retail_price=retail_price;
         this.category_id = category;
+    }
+    public GeneralProductDTO(GeneralProduct generalProduct){
+        this.GPID = generalProduct.getGpID();
+        this.branch_id = new BranchDTO(generalProduct.getBranch_id());
+        this.manufacture = generalProduct.getManufacture();
+        this.name = generalProduct.getName();
+        this.quantity = generalProduct.getQuantity();
+        this.min_quantity = generalProduct.getMinQuantity();
+        this.sale_price = generalProduct.getSale_price();
+        this.retail_price=generalProduct.getRetailPrice();
+        this.category_id = getCategory_id();
     }
     public GeneralProductDTO() {}
 
@@ -73,7 +86,7 @@ public class GeneralProductDTO {
         return min_quantity;
     }
 
-    public Integer getSale_price() {
+    public Float getSale_price() {
         return sale_price;
     }
 

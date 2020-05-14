@@ -1,5 +1,7 @@
-package DTO;
+package data_access_layer.DTO;
 
+
+import bussines_layer.SupplierCard;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
@@ -44,6 +46,17 @@ public class SupplierDTO {
         this.bank_account_number = bank_account_number;
         this.payment_kind = payment_kind;
         this.delivery = delivery;
+        this.type=convertEnumTString(type);
+    }
+    public SupplierDTO(SupplierCard supplierCard){
+        this.supplier_id = supplierCard.getId();
+        this.supplier_name = supplierCard.getSupplierName();
+        this.address = supplierCard.getAddress();
+        this.email = supplierCard.getEmail();
+        this.phone_number = supplierCard.getPhoneNumber();
+        this.bank_account_number = supplierCard.getBankAccountNum();
+        this.payment_kind = supplierCard.getPayment();
+        this.delivery = supplierCard.;
         this.type=convertEnumTString(type);
     }
     public SupplierDTO() {

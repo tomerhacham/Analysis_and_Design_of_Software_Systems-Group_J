@@ -10,11 +10,13 @@ public class SaleController {
     //fields
     private Integer next_id;
     private List<Sale> sales;
+    private Integer branchId;
 
     //Constructor
-    public SaleController() {
+    public SaleController(Integer branchId) {
         this.next_id=1;
         this.sales =new LinkedList<>();
+        this.branchId = branchId;
     }
 
     /**
@@ -27,7 +29,7 @@ public class SaleController {
     public Result addSale(Category category, discountType type, Float amount){
         if(category!=null){
         List list = category.getAllGeneralProduct();
-        Sale new_sale = new Sale(getNext_id(),list, type);
+        Sale new_sale = new Sale(getNext_id(),list, type , branchId);
         sales.add(new_sale);
         return new_sale.setDiscount(amount);
         }
@@ -46,7 +48,7 @@ public class SaleController {
         if(generalProduct!=null) {
             List<GeneralProduct> dummy_list = new LinkedList<>();
             dummy_list.add(generalProduct);
-            Sale new_sale = new Sale(getNext_id(), dummy_list, type);
+            Sale new_sale = new Sale(getNext_id(), dummy_list, type , branchId);
             sales.add(new_sale);
             return new_sale.setDiscount(amount);
         }
@@ -66,7 +68,7 @@ public class SaleController {
     public Result addSale(Category category, discountType type, Float amount, Date start, Date end){
         if(category!=null) {
             List list = category.getAllGeneralProduct();
-            Sale new_sale = new Sale(getNext_id(), list, type, start, end);
+            Sale new_sale = new Sale(getNext_id(), list, type, start, end , branchId);
             sales.add(new_sale);
             return new_sale.setDiscount(amount);
         }
@@ -87,7 +89,7 @@ public class SaleController {
         if(generalProduct!=null) {
             List<GeneralProduct> dummy_list = new LinkedList<>();
             dummy_list.add(generalProduct);
-            Sale new_sale = new Sale(getNext_id(), dummy_list, type, start, end);
+            Sale new_sale = new Sale(getNext_id(), dummy_list, type, start, end , branchId);
             sales.add(new_sale);
             return new_sale.setDiscount(amount);
         }
@@ -144,6 +146,9 @@ public class SaleController {
         }
         return null;
     }
+
+    public Integer getBranch_id() { return branchId;}
+
 
 
     @Override

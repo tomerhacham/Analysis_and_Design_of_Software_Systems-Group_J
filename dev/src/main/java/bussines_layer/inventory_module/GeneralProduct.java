@@ -17,11 +17,12 @@ public class GeneralProduct {
     private Integer min_quantity;
     private List<SpecificProduct> products;
     private List<CatalogProduct> catalog_products;
+    private Integer branchId;
 
     //Constructor
     public GeneralProduct(String manufacture, String name, Float supplier_price,
                             Float retail_price, Integer min_quantity, Integer catalogID,
-                            Integer gpID, Integer supplier_id, String supplier_category)
+                            Integer gpID, Integer supplier_id, String supplier_category , Integer branchId)
     {
         this.manufacture = manufacture;
         this.name = name;
@@ -32,6 +33,7 @@ public class GeneralProduct {
         this.products = new LinkedList<>();
         this.gpID = gpID;
         this.catalog_products = new LinkedList<>();
+        this.branchId = branchId;
         addCatalogProduct(catalogID, gpID, supplier_price, supplier_id, supplier_category , name);
     }
 
@@ -42,6 +44,10 @@ public class GeneralProduct {
     }
 
     public Integer getGpID() {return this.gpID;}
+
+    public Integer getBranch_id(){
+        return branchId;
+    }
 
     /*public void setManufacture(String manufacture) {
         this.manufacture = manufacture;
@@ -83,6 +89,25 @@ public class GeneralProduct {
         this.min_quantity = min_quantity;
     }
 
+    public Float getRetail_price() {
+        return retail_price;
+    }
+
+    public Float getSale_price() {
+        return sale_price;
+    }
+
+    public Integer getMin_quantity() {
+        return min_quantity;
+    }
+
+    public List<SpecificProduct> getProducts() {
+        return products;
+    }
+
+    public List<CatalogProduct> getCatalog_products() {
+        return catalog_products;
+    }
     //endregion
 
     //region Methods
