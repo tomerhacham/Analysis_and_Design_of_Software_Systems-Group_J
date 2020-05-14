@@ -14,19 +14,19 @@ public class ReportController {
      * @param type - type of the  {OutOfStock,InStock,ExpiredDamaged}
      * @return - Result object that hold the Report object
      */
-    public Result makeReport(List<GeneralProduct> generalProducts, ReportType type){
+    public Result<Report> makeReport(List<GeneralProduct> generalProducts, ReportType type){
         if (generalProducts!=null && !generalProducts.isEmpty()){
             for (GeneralProduct product:generalProducts){
                 if (product==null){
-                    return new Result<Boolean>(false,false,"One of the general product cannot be found");
+                    return new Result<>(false,null,"One of the general product cannot be found");
 
                 }
             }
             Report report = new Report(generalProducts,type);
-            return new Result<Report>(true, report,report.getReport());
+            return new Result<>(true, report,report.getReport());
         }
         else{
-            return new Result<Boolean>(false,false,"No general product has been provided to the report");
+            return new Result<>(false,null,"No general product has been provided to the report");
         }
     }
 }

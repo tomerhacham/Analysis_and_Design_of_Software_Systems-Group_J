@@ -8,6 +8,7 @@ import bussines_layer.supplier_module.SupplierModule;
 
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.HashMap;
 
 public class Branch {
     //fields:
@@ -15,6 +16,7 @@ public class Branch {
     private Integer branch_id;
     private Inventory inventory;
     private SupplierModule supplierModule;
+    private Object HashMap;
 
     //Constructor
     public Branch(Integer branch_id, String name) {
@@ -177,8 +179,30 @@ public class Branch {
     }
     //endregion
 
-    //TODO orders
     //region Orders
+
+    public Result acceptOrder (Integer orderID){
+        Result<HashMap<CatalogProduct, Integer>> productsResult = supplierModule.getProductsToAcceptOrder(orderID);
+        if (!productsResult.isOK()) {return productsResult;}
+        HashMap<CatalogProduct, Integer> products = productsResult.getData();
+
+        return inventory.updateInventory(products);
+    }
+
+    public Result makeOutOfStockReportByCategory(Integer categoryID , String type){
+        Result<Report> reportResult = inventory.makeReportByCategory(categoryID,type);
+        if (!reportResult.isOK()) {return reportResult;}
+        return supplierModule.createOutOfStockOrder(reportResult.getData());
+    }
+
+    public Result makeOutOfStockReportByGeneralProduct(Integer gpID , String type){
+        Result<Report> reportResult = inventory.makeReportByGeneralProduct(gpID,type);
+        if (!reportResult.isOK()) {return reportResult;}
+        return supplierModule.createOutOfStockOrder(reportResult.getData());
+    }
+
+
+
     //endregion
 
     //endregion

@@ -109,8 +109,8 @@ public class SupplierModule {
         return order.display();
     }
 
-    public Result acceptOrder (Integer orderID){
-        return OrdersController.getInstance().acceptOrder(orderID);
+    public Result<HashMap<CatalogProduct, Integer>> getProductsToAcceptOrder(Integer orderID){
+        return OrdersController.getInstance().getProductsToAcceptOrder(orderID);
     }
 
     //region OutOfStockOrder

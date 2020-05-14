@@ -22,7 +22,7 @@ public class Inventory {
     }
     //region Methods
 
-    public Result acceptOrder(HashMap<CatalogProduct, Integer> product_received){
+    public Result updateInventory(HashMap<CatalogProduct, Integer> product_received){
         String msg="";
         for (CatalogProduct catalogProduct: product_received.keySet()) {
             GeneralProduct generalProduct = productController.searchGeneralProductByGpID(catalogProduct.getGpID());
@@ -30,7 +30,7 @@ public class Inventory {
             Result res = addSpecificProduct(generalProduct.getGpID(),expiration_date,product_received.get(catalogProduct));
             msg=msg.concat(res.getMessage().concat("\n"));
         }
-        return new Result(true,product_received.keySet(), msg);
+        return new Result<>(true,product_received.keySet(), msg);
 
     }
 
@@ -115,14 +115,14 @@ public class Inventory {
     //endregion
 
     //region Report Management
-    public Result makeReportByGeneralProduct(Integer gpID, String stype){
+    public Result<Report> makeReportByGeneralProduct(Integer gpID, String stype){
 
         GeneralProduct generalProduct = productController.searchGeneralProductByGpID(gpID);
         List<GeneralProduct> dummy_list = new LinkedList<>();
         dummy_list.add(generalProduct);
         return reportController.makeReport(dummy_list, convertStringToReportType(stype));
     }
-    public Result makeReportByCategory(Integer category_id, String stype){
+    public Result<Report> makeReportByCategory(Integer category_id, String stype){
         Category category;
         if(category_id==0){
             category=categoryController.superCategory();

@@ -107,21 +107,21 @@ public class OrdersController {
         return new Result(true,toDisplay, String.format("Display all Orders"));
     }
 
-    public Result acceptOrder(Integer orderID) {
+    public Result<HashMap<CatalogProduct, Integer>> getProductsToAcceptOrder(Integer orderID) {
         for (Order order: orders){
             if (order.getOrderID() == orderID && order.getStatus()== OrderStatus.sent){
                 if (order.getStatus()== OrderStatus.sent){
-                    return new Result(true,order.getProductsAndQuantity(), String.format("Order %d has been received", orderID));
+                    return new Result<>(true,order.getProductsAndQuantity(), String.format("Order %d has been received", orderID));
                 }
                 else if(order.getStatus()== OrderStatus.inProcess){
-                    return new Result(false,null, String.format("Order %d hasn't been sent", orderID));
+                    return new Result<>(false,null, String.format("Order %d hasn't been sent", orderID));
                 }
                 else if (order.getStatus()== OrderStatus.received){
-                    return new Result(false,null, String.format("Order %d already received", orderID));
+                    return new Result<>(false,null, String.format("Order %d already received", orderID));
                 }
             }
         }
-        return new Result(false,null, String.format("Order %d does not exist", orderID));
+        return new Result<>(false,null, String.format("Order %d does not exist", orderID));
     }
 
     //endregion
