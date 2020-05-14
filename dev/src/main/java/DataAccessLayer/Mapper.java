@@ -194,7 +194,7 @@ public class Mapper {
 
     //Shift
     //TODO::addShift=>need to run once
-    public void addShift(Shift shift)
+/*    public void addShift(Shift shift)
     {
         try {
             //creating the shifts in the DB
@@ -232,7 +232,7 @@ public class Mapper {
             System.out.println(e.getMessage());
         }
     }
-
+*/
     //TODO::deleteShift=>need to run once
     public void deleteShift(String shiftID)
     {
@@ -369,8 +369,9 @@ public class Mapper {
             }
             Worker_DTO driver_in_transport=worker_DAO.queryForId(transport.getDriverId());
             Site_DTO source = site_DAO.queryForId(transport.getSource().getId());
+            Truck_DTO truck = truck_DAO.queryForId(transport.getTruck().getId());
             Transport_DTO transport_dto = new Transport_DTO(transport.getID(),transport.getDate(),transport.getTime(),
-                    part_of_day,driver_in_transport,transport.getDriverName(),source,transport.getTotalWeight());
+                    part_of_day, truck, driver_in_transport,transport.getDriverName(),source,transport.getTotalWeight());
             transport_DAO.create(transport_dto);
 
             //creating the transport destFile in the DB
