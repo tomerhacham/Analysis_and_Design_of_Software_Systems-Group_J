@@ -17,17 +17,20 @@ public class Sale {
     private Date end;
     private discountType type;
     private Boolean active;
+    private Integer branchId;
+
 
     //Constructor
-    public Sale(Integer sale_id, List<GeneralProduct> products_on_sale,discountType type) {
+    public Sale(Integer sale_id, List<GeneralProduct> products_on_sale,discountType type , Integer branchId) {
         this.sale_id=sale_id;
         this.products_on_sale = products_on_sale;
         this.type=type;
         this.start=null;
         this.end=null;
         active = true;
+        this.branchId = branchId;
     }
-    public Sale(Integer sale_id, List<GeneralProduct> products_on_sale, discountType type,Date start, Date end) {
+    public Sale(Integer sale_id, List<GeneralProduct> products_on_sale, discountType type,Date start, Date end  , Integer branchId) {
         if(start.before(end)) {
             this.sale_id=sale_id;
             this.type=type;
@@ -35,6 +38,7 @@ public class Sale {
             this.start = start;
             this.end = end;
             active = true;
+            this.branchId = branchId;
         }
     }
 
@@ -67,6 +71,7 @@ public class Sale {
         active = false;
         return result;
     }
+
     public boolean isActive() {
         if (end != null) {
             Date current = BranchController.system_curr_date;
@@ -74,6 +79,11 @@ public class Sale {
         }
         return active;
     }
+
+    public Integer getBranch_id(){
+        return branchId;
+    }
+
 
     @Override
     public String toString() {
