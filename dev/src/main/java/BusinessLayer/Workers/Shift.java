@@ -8,6 +8,7 @@ public class Shift {
     private HashMap<String, FixedSizeList<Worker>> occupation;
     private Date date;
     private boolean timeOfDay;
+    private String id;
     private List<Worker> availableWorkers;
     private List<Driver> scheduledDrivers;
 
@@ -15,8 +16,9 @@ public class Shift {
         this.timeOfDay = timeOfDay;
     }
 
-    public Shift(List<Worker>availableWorkers, Date date, boolean timeOfday)
+    public Shift(List<Worker>availableWorkers, Date date, boolean timeOfday, String id)
     {
+        this.id=id;
         scheduledDrivers=new ArrayList<>();
         this.timeOfDay=timeOfday;
         this.date=date;
@@ -27,19 +29,27 @@ public class Shift {
 
     public Shift(Shift other)
     {
-        this.timeOfDay=other.timeOfDay;
-        this.date=other.date;
-        this.availableWorkers=new ArrayList<>();
-        this.availableWorkers.addAll(other.availableWorkers);
-        scheduledDrivers=new ArrayList<>();
-        scheduledDrivers.addAll(other.scheduledDrivers);
-        occupation=new HashMap<>();
-        for(String pos:other.occupation.keySet())
-        {
-            FixedSizeList<Worker> temp=new FixedSizeList<>(other.occupation.get(pos).capacity());
-            temp.addAll(other.occupation.get(pos));
-            this.occupation.put(pos,temp);
+        if (other!=null){
+            this.id = other.id;
+            this.timeOfDay=other.timeOfDay;
+            this.date=other.date;
+            this.availableWorkers=new ArrayList<>();
+            this.availableWorkers.addAll(other.availableWorkers);
+            scheduledDrivers=new ArrayList<>();
+            scheduledDrivers.addAll(other.scheduledDrivers);
+            occupation=new HashMap<>();
+            for(String pos:other.occupation.keySet())
+            {
+                FixedSizeList<Worker> temp=new FixedSizeList<>(other.occupation.get(pos).capacity());
+                temp.addAll(other.occupation.get(pos));
+                this.occupation.put(pos,temp);
+            }
         }
+        else
+        {
+            //TODO::...
+        }
+
     }
 
     public List<Worker> getAvailableWorkers() {
