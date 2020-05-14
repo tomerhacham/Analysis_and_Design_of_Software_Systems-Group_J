@@ -5,6 +5,7 @@ import bussines_layer.inventory_module.GeneralProduct;
 import bussines_layer.inventory_module.Inventory;
 import bussines_layer.inventory_module.Report;
 import bussines_layer.supplier_module.SupplierModule;
+import javafx.util.Pair;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -201,7 +202,50 @@ public class Branch {
         return supplierModule.createOutOfStockOrder(reportResult.getData());
     }
 
+    public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<GeneralProduct , Integer>> productsAndQuantity , Integer date){
+        return supplierModule.createPeriodicOrder(supplierID, productsAndQuantity, date);
+    }
 
+    public Result removePeriodicOrder(Integer orderId){
+        return supplierModule.removePeriodicOrder((orderId));
+    }
+
+    public Result<Float> addProductToPeriodicOrder(Integer orderId , CatalogProduct product , Integer quantity){
+        return supplierModule.addProductToPeriodicOrder(orderId,product,quantity);
+    }
+    public Result updateProductQuantityInPeriodicOrder(Integer orderId , CatalogProduct product , Integer newQuantity){
+        return supplierModule.updateProductQuantityInPeriodicOrder(orderId,product,newQuantity);
+    }
+
+    public Result removeProductFromPeriodicOrder(Integer orderId , CatalogProduct product){
+        return supplierModule.removeProductFromPeriodicOrder(orderId , product);
+    }
+
+    public Result updateSupplierToPeriodicOrder (Integer orderID, Integer supplierID){
+        return supplierModule.updateSupplierToPeriodicOrder(orderID,supplierID);
+    }
+
+    public Result<LinkedList<String>> issuePeriodicOrder(){
+
+        Result<LinkedList<String>> result = supplierModule.issuePeriodicOrder();
+
+        if(!result.isOK()) {
+            return result;
+        }
+        LinkedList<String> branchPeriodicOrders = new LinkedList<>();
+        branchPeriodicOrders.add("-------------------Branch : "+name+"-------------------\n");
+        branchPeriodicOrders.addAll(result.getData());
+        branchPeriodicOrders.add("-------------------------------------------------------\n");
+        return new Result(true,branchPeriodicOrders, String.format("All periodic orders with %d as their delivery day had been sent to order", BranchController.system_curr_date.getDay()));
+    }
+
+    public Result<LinkedList<String>> displayAllOrders(){
+        return supplierModule.displayAllOrders();
+    }
+
+    public Result<LinkedList<String>> displayAllSupplierOrders(Integer supId){
+        return supplierModule.displayAllSupplierOrders(supId);
+    }
 
     //endregion
 

@@ -1,4 +1,6 @@
 package bussines_layer.supplier_module;
+import bussines_layer.Branch;
+import bussines_layer.BranchController;
 import bussines_layer.Result;
 import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.inventory_module.GeneralProduct;
@@ -77,6 +79,10 @@ public class OrdersController {
         return new Result<>(true, new Float(-1), String.format(" The Order : %d dose not exist", orderID));
     }
 
+    public Result<String> issueOrder (Order order){
+        return order.display();
+    }
+
     public Result<LinkedList<String>> displayAllSupplierOrders(int supId) {
         LinkedList<String> toDisplay = new LinkedList<>();
 
@@ -147,7 +153,7 @@ public class OrdersController {
             return getOrder(orderID).getData().removeProductFromPeriodicOrder(product);
         }
 
-        return new Result(false,product, String.format("The order : %d is not a periodic order , therefore the product %s can not be removed", product.getName() , orderID));
+        return new Result<>(false,product, String.format("The order : %d is not a periodic order , therefore the product %s can not be removed", product.getName() , orderID));
     }
 
     public Result updateProductQuantityInPeriodicOrder(Integer orderId , CatalogProduct product , Integer newQuantity , Float newPrice){
@@ -155,18 +161,38 @@ public class OrdersController {
             return getOrder(orderId).getData().updateProductQuantityInPeriodicOrder(product , newQuantity , newPrice);
         }
 
-        return new Result(false,orderId, String.format("The order %d is not a periodic order therefore can not be modified " , orderId));
+        return new Result<>(false,orderId, String.format("The order %d is not a periodic order therefore can not be modified " , orderId));
 
     }
 
     public Result removePeriodicOrder (Integer orderId){
         if (getOrder(orderId).getData().getType() != OrderType.PeriodicOrder){
-            return new Result(false,orderId, String.format("The order : %d is not a periodic order , therefore the order can not be removed", orderId));
+            return new Result<>(false,orderId, String.format("The order : %d is not a periodic order , therefore the order can not be removed", orderId));
         }
         orders.remove(getOrder(orderId));
-        return new Result(true,orderId, String.format("The periodic order : %d has been removed", orderId));
+        return new Result<>(true,orderId, String.format("The periodic order : %d has been removed", orderId));
     }
 
+    public Result updateDayToDeliver(Integer orderid , Integer dayToDeliver){
+        return getOrder(orderid).getData().updateDayToDeliver(dayToDeliver);
+    }
+
+    public Result<LinkedList<String>> issuePeriodicOrder(){
+
+        Integer day = BranchController.system_curr_date.getDay();
+        LinkedList<String> periodicOrdersToIsuue = new LinkedList<>();
+
+        for (Order order : orders) {
+            if ((order.getType()== OrderType.PeriodicOrder) && order.getDayToDeliver().getData()==day){
+                periodicOrdersToIsuue.add(issueOrder(order).getData());
+            }
+        }
+
+        if(periodicOrdersToIsuue.size()>0){
+            return new Result(true,periodicOrdersToIsuue, String.format("All periodic orders with %d as their delivery day had been sent to order", day));
+        }
+        return new Result(false,null, String.format("There are no periodic orders with %d as their delivery day ",day));
+    }
 
     //endregion
 

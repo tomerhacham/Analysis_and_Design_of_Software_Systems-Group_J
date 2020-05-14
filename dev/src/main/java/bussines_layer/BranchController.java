@@ -1,6 +1,8 @@
 package bussines_layer;
 
 import bussines_layer.inventory_module.CatalogProduct;
+import bussines_layer.inventory_module.GeneralProduct;
+import javafx.util.Pair;
 
 import java.util.*;
 
@@ -79,6 +81,7 @@ public class BranchController {
         branches.put(toAdd.getBranchId(), toAdd);
         return new Result<>(true, toAdd, String.format("New branch (ID: %d) created successfully", toAdd.getBranchId()));
     }
+
     public Result switchBranch(Integer branch_id){
         if (checkBranchExists(branch_id)){
             curr = branches.get(branch_id);
@@ -86,6 +89,7 @@ public class BranchController {
         }
         return new Result<>(false, null, String.format("Branch with ID %d not found", branch_id));
     }
+
     public Result removeBranch(Integer branch_id){
         if (curr.getBranchId().equals(branch_id)){
             return new Result<>(false, null, String.format("Can not delete current branch (ID: %d), switch and try again.", branch_id));
@@ -96,6 +100,7 @@ public class BranchController {
         branches.remove(branch_id);
         return new Result<>(true, branch_id, String.format("Branch (ID: %d) removed successfully", branch_id));
     }
+
     public Result editName(Integer branch_id, String newName){
         if (checkBranchExists(branch_id)){
             Branch b = branches.get(branch_id);
@@ -112,12 +117,15 @@ public class BranchController {
     public Result addMainCategory(String name){
         return curr.addMainCategory(name);
     }
+
     public Result addSubCategory(Integer predecessor_cat_id, String name){
         return curr.addSubCategory(predecessor_cat_id, name);
     }
+
     public Result removeCategory(Integer category_id){
         return curr.removeCategory(category_id);
     }
+
     public Result editCategoryName(Integer category_id, String name){
         return curr.editCategoryName(category_id, name);
     }
@@ -244,11 +252,80 @@ public class BranchController {
     }
     //endregion
 
-    //TODO orders
     //region Orders
+
+    public Result acceptOrder (Integer orderID){
+        return curr.acceptOrder(orderID);
+    }
+
+    public Result makeOutOfStockReportByCategory(Integer categoryID , String type){
+        return curr.makeOutOfStockReportByCategory(categoryID,type);
+    }
+
+    public Result makeOutOfStockReportByGeneralProduct(Integer gpID , String type){
+        return curr.makeOutOfStockReportByGeneralProduct(gpID, type);
+    }
+
+    public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<GeneralProduct, Integer>> productsAndQuantity , Integer date){
+        return curr.createPeriodicOrder(supplierID, productsAndQuantity,date);
+    }
+
+    public Result removePeriodicOrder(Integer orderId){
+        return curr.removePeriodicOrder((orderId));
+    }
+
+    public Result<Float> addProductToPeriodicOrder(Integer orderId , CatalogProduct product , Integer quantity){
+        return curr.addProductToPeriodicOrder(orderId,product,quantity);
+    }
+
+    public Result updateProductQuantityInPeriodicOrder(Integer orderId , CatalogProduct product , Integer newQuantity){
+        return curr.updateProductQuantityInPeriodicOrder(orderId,product,newQuantity);
+    }
+
+    public Result removeProductFromPeriodicOrder(Integer orderId , CatalogProduct product){
+        return curr.removeProductFromPeriodicOrder(orderId , product);
+    }
+
+    public Result updateSupplierToPeriodicOrder (Integer orderID, Integer supplierID){
+        return curr.updateSupplierToPeriodicOrder(orderID,supplierID);
+    }
+
+    public Result<LinkedList<String>> displayAllOrders(){
+        return curr.displayAllOrders();
+    }
+
+    public Result<LinkedList<String>> displayAllSupplierOrders(Integer supId){
+        return curr.displayAllSupplierOrders(supId);
+    }
+
+    public Result<LinkedList<String>> issuePeriodicOrder(){
+        LinkedList<String> allPeriodicOrdersFromAllBranches = new LinkedList<>();
+        for (Integer branchid : branches.keySet()) {
+            LinkedList<String> periodicOrderFromBranch = branches.get(branchid).issuePeriodicOrder().getData();
+            if(periodicOrderFromBranch!=null){ // the list can be null only if for this branch there are no periodic orders to send at this day
+                for (String periodicOrder :periodicOrderFromBranch) {
+                    allPeriodicOrdersFromAllBranches.add(periodicOrder);
+                }
+            }
+        }
+
+        if(allPeriodicOrdersFromAllBranches.size()>0){
+            return new Result(true,allPeriodicOrdersFromAllBranches, String.format("All periodic orders with %d as their delivery day had been sent to order", system_curr_date.getDay()));
+        }
+        return new Result(false,null, String.format("There are no periodic orders with %d as their delivery day ",system_curr_date.getDay()));
+    }
 
     //endregion
 
+    //region Getters
+    public HashMap<Integer, Branch> getBranches() {
+        return branches;
+    }
+
+    public Branch getCurr() {
+        return curr;
+    }
+    //endregion
 
     //region Utilities
 
@@ -267,6 +344,9 @@ public class BranchController {
         cal.setTime(system_curr_date);
         cal.add(Calendar.DATE, 1);
         system_curr_date = cal.getTime();
+
+        //after changing the day - check if there are periodic orders to send
+        issuePeriodicOrder();
     }
     //endregion
 }

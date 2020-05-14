@@ -105,12 +105,20 @@ public class SupplierModule {
 
     //region Order Controller
 
-    public Result IssueOrder (Order order){
-        return order.display();
+    public Result issueOrder (Order order){
+        return ordersController.issueOrder(order);
     }
 
     public Result<HashMap<CatalogProduct, Integer>> getProductsToAcceptOrder(Integer orderID){
         return OrdersController.getInstance().getProductsToAcceptOrder(orderID);
+    }
+
+    public Result<LinkedList<String>> displayAllOrders(){
+        return ordersController.displayAllOrders();
+    }
+
+    public Result<LinkedList<String>> displayAllSupplierOrders(Integer supId) {
+        return ordersController.displayAllSupplierOrders(supId);
     }
 
     //region OutOfStockOrder
@@ -156,7 +164,7 @@ public class SupplierModule {
 
             Result<Order> resultOrder =ordersController.getOrder(orderid);
             if (!resultOrder.isOK()) { return new Result<>(false, null, String.format("Order %d does not exist", orderid));}
-            IssueOrder(resultOrder.getData());
+            issueOrder(resultOrder.getData());
         }
         return new Result<>(true, report, String.format("All orders had been generated from the report successfully: %s", report));
     }
@@ -164,8 +172,8 @@ public class SupplierModule {
     //endregion
 
     //region PeriodicOrder
-    //TODO - date !!
-    public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<GeneralProduct , Integer>> productsAndQuantity , Date date , int option){
+
+    public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<GeneralProduct , Integer>> productsAndQuantity , Integer date){
         int orderID = ordersController.createPeriodicOrder(supplierID).getData();
         Result<Order> resultOrder = ordersController.getOrder(orderID);
         if (!resultOrder.isOK()){return new Result<>(false, null, String.format("Order %d does not exist", orderID));}
@@ -244,15 +252,12 @@ public class SupplierModule {
         return new Result<>(true , periodicOrder , String.format("Order %d updated successfully", orderID));
     }
 
+    public Result<LinkedList<String>> issuePeriodicOrder(){
+        return ordersController.issuePeriodicOrder();
+    }
+
     //endregion
 
-    public Result<LinkedList<String>> displayAllOrders(){
-        return ordersController.displayAllOrders();
-    }
-
-    public Result<LinkedList<String>> displayAllSupplierOrders(Integer supId) {
-        return ordersController.displayAllSupplierOrders(supId);
-    }
 
     //endregion
 
