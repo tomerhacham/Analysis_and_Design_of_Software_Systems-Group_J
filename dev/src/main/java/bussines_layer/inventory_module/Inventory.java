@@ -1,7 +1,7 @@
 package bussines_layer.inventory_module;
 
+import bussines_layer.BranchController;
 import bussines_layer.Result;
-import bussines_layer.supplier_module.Order;
 
 import java.util.*;
 
@@ -196,7 +196,7 @@ public class Inventory {
         Random ran = new Random();
         Integer days = ran.nextInt(7)+1;
         Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
+        cal.setTime(BranchController.system_curr_date);
         cal.add(Calendar.DATE, days); //minus number would decrement the days
         return cal.getTime();
     }

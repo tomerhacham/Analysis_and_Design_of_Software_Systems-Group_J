@@ -1,4 +1,6 @@
 package bussines_layer.inventory_module;
+import bussines_layer.BranchController;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -58,7 +60,8 @@ public class SpecificProduct {
     }
 
     public boolean isExpired(){
-        return expiration_date.before(new Date());
+        return expiration_date.before(BranchController.system_curr_date);
+
     }
     public boolean isFlaw(){
         return getFlaw_flag();

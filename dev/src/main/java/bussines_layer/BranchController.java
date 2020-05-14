@@ -2,10 +2,7 @@ package bussines_layer;
 
 import bussines_layer.inventory_module.CatalogProduct;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class BranchController {
 
@@ -13,12 +10,14 @@ public class BranchController {
     private SupplierController supplierController;
     private Branch curr;        //current branch active
     private Integer next_id;    //next id available for new branch
+    public static Date system_curr_date;
 
     public BranchController (){
         branches= new HashMap<>();
         supplierController = SupplierController.getInstance();
         curr = null;
         next_id = 1;
+        system_curr_date = new Date();
     }
 
     //region Supplier Controller
@@ -262,6 +261,12 @@ public class BranchController {
     }
     private boolean checkBranchExists(Integer branch_id){
         return branches.containsKey(branch_id);
+    }
+    private void simulateNextDay(){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(system_curr_date);
+        cal.add(Calendar.DATE, 1);
+        system_curr_date = cal.getTime();
     }
     //endregion
 }

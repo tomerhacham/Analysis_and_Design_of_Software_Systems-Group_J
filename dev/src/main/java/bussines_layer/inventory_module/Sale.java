@@ -1,5 +1,6 @@
 package bussines_layer.inventory_module;
 
+import bussines_layer.BranchController;
 import bussines_layer.Result;
 
 import java.util.Date;
@@ -68,7 +69,7 @@ public class Sale {
     }
     public boolean isActive() {
         if (end != null) {
-            Date current = new Date();
+            Date current = BranchController.system_curr_date;
             active = current.before(end);
         }
         return active;

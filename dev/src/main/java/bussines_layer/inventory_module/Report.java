@@ -1,5 +1,7 @@
 package bussines_layer.inventory_module;
 
+import bussines_layer.BranchController;
+
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +19,7 @@ public class Report {
     public Report(List<GeneralProduct> products,ReportType type) {
         this.type = type;
         this.products = products;
-        creation_date = new Date();
+        creation_date = BranchController.system_curr_date;
         this.report="\n"+type.name().concat("\n");
         arrangeReport();
     }
