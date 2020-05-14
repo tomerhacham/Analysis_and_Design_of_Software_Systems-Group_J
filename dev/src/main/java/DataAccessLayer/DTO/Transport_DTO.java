@@ -15,17 +15,11 @@ public class Transport_DTO {
     @DatabaseField(columnName = "transportID", id = true)
     private int transportID;
 
-    @DatabaseField(columnName = "Date",  dataType = DataType.DATE_STRING)
-    private Date Date;
-
-    @DatabaseField(columnName = "Time", dataType = DataType.DATE_TIME)
-    private LocalTime Time;
-
-    @DatabaseField(columnName = "Shift")
-    private int Shift; //in which shift is the transport
-
     @DatabaseField(columnName = "truckID",foreign = true, foreignColumnName = "truckID")
     private Truck_DTO Truck;
+
+    @DatabaseField(columnName = "sourceID",foreign = true, foreignColumnName = "siteID")
+    private Site_DTO Source;
 
     //driverId==WorkerID
     @DatabaseField(columnName = "driverID", foreign = true, foreignColumnName = "workerID")
@@ -34,8 +28,14 @@ public class Transport_DTO {
     @DatabaseField(columnName = "driverName")
     private String driverName;
 
-    @DatabaseField(columnName = "sourceID",foreign = true, foreignColumnName = "siteID")
-    private Site_DTO Source;
+    @DatabaseField(columnName = "Date",  dataType = DataType.DATE_STRING, format = "dd/MM/yyy")
+    private Date Date;
+
+    @DatabaseField(columnName = "Time", dataType = DataType.DATE_TIME, format = "HH:mm")
+    private LocalTime Time;
+
+    @DatabaseField(columnName = "Shift")
+    private int Shift; //in which shift is the transport
 
     @DatabaseField(columnName = "TotalWeight")
     private float TotalWeight;
@@ -46,12 +46,13 @@ public class Transport_DTO {
     @ForeignCollectionField(eager = false)
     private ForeignCollection<log_DTO> log;
 
-    public Transport_DTO(int id, Date date, LocalTime time, int partOfDay, Worker_DTO driver_id, String driver_name, Site_DTO source,
+    public Transport_DTO(int id, Date date, LocalTime time, int partOfDay,Truck_DTO truck, Worker_DTO driver_id, String driver_name, Site_DTO source,
                          float totalWeight){
         transportID = id;
         Date = date;
         Time = time;
         Shift = partOfDay;
+        Truck = truck;
         driverId = driver_id;
         driverName = driver_name;
         Source = source;
