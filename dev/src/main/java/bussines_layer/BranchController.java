@@ -317,6 +317,15 @@ public class BranchController {
 
     //endregion
 
+    //region Getters
+    public HashMap<Integer, Branch> getBranches() {
+        return branches;
+    }
+
+    public Branch getCurr() {
+        return curr;
+    }
+    //endregion
 
     //region Utilities
 
