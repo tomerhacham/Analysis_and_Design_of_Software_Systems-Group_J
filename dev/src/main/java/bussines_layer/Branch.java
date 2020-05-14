@@ -11,15 +11,17 @@ import java.util.LinkedList;
 
 public class Branch {
     //fields:
+    private String name;
     private Integer branch_id;
     private Inventory inventory;
     private SupplierModule supplierModule;
 
     //Constructor
-    public Branch(Integer branch_id) {
+    public Branch(Integer branch_id, String name) {
         this.branch_id = branch_id;
         inventory = new Inventory();
         supplierModule = SupplierModule.getInstance(branch_id);
+        this.name = name;
     }
 
     //region Inventory Module
@@ -152,7 +154,7 @@ public class Branch {
     //endregion
 
     //region Cost Engineering
-    public Result addProductToCostEng(Integer supid, Integer catalogid, Integer minQuantity, int price) {
+    public Result addProductToCostEng(Integer supid, Integer catalogid, Integer minQuantity, Float price) {
         return supplierModule.addProductToCostEng(supid , catalogid , minQuantity , price);
     }
     public Result removeProductCostEng(Integer supid, Integer catalogid2delete) {
@@ -161,7 +163,7 @@ public class Branch {
     public Result updateMinQuantity(Integer supid, Integer catalogid, Integer minQuantity) {
         return supplierModule.updateMinQuantity(supid , catalogid , minQuantity);
     }
-    public Result updatePriceAfterSale(Integer supid, Integer catalogid, Integer price) {
+    public Result updatePriceAfterSale(Integer supid, Integer catalogid, Float price) {
         return supplierModule.updatePriceAfterSale(supid , catalogid , price);
     }
     public Result<LinkedList<CatalogProduct>> getAllSupplierProducts(Integer supId) {
@@ -187,6 +189,13 @@ public class Branch {
         return branch_id;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
     //endregion
 }
 

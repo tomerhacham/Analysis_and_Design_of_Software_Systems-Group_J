@@ -75,17 +75,35 @@ public class BranchController {
     //endregion
 
     //region Branch
-    public Result createNewBranch(){
-        Branch toAdd = new Branch(getNextId());
+    public Result createNewBranch(String name){
+        Branch toAdd = new Branch(getNextId(), name);
         branches.put(toAdd.getBranchId(), toAdd);
         return new Result<>(true, toAdd, String.format("New branch (ID: %d) created successfully", toAdd.getBranchId()));
     }
     public Result switchBranch(Integer branch_id){
-        if (branches.containsKey(branch_id)){
+        if (checkBranchExists(branch_id)){
             curr = branches.get(branch_id);
             return new Result<>(true, curr, String.format("Switched to Branch %d successfully", curr.getBranchId()));
         }
         return new Result<>(false, null, String.format("Branch with ID %d not found", branch_id));
+    }
+    public Result removeBranch(Integer branch_id){
+        if (curr.getBranchId().equals(branch_id)){
+            return new Result<>(false, null, String.format("Can not delete current branch (ID: %d), switch and try again.", branch_id));
+        }
+        if (!checkBranchExists(branch_id)){
+            return new Result<>(false, null, String.format("Branch with ID %d not found", branch_id));
+        }
+        branches.remove(branch_id);
+        return new Result<>(true, branch_id, String.format("Branch (ID: %d) removed successfully", branch_id));
+    }
+    public Result editName(Integer branc_id, String newName){
+        if (checkBranchExists(branc_id)){
+            Branch b = branches.get(branc_id);
+            b.setName(newName);
+            return new Result<>(true, b, String.format("Branch (ID: %d) name changed successfully to: %s", branc_id, newName));
+        }
+        return new Result<>(false, null, String.format("Branch with ID %d not found", branc_id));
     }
 
     //endregion
@@ -204,7 +222,7 @@ public class BranchController {
     //endregion
 
     //region Cost Engineering
-    public Result addProductToCostEng(Integer supid, Integer catalogid, Integer minQuantity, int price) {
+    public Result addProductToCostEng(Integer supid, Integer catalogid, Integer minQuantity, Float price) {
         return curr.addProductToCostEng(supid , catalogid , minQuantity , price);
     }
     public Result removeProductCostEng(Integer supid, Integer catalogid2delete) {
@@ -213,7 +231,7 @@ public class BranchController {
     public Result updateMinQuantity(Integer supid, Integer catalogid, Integer minQuantity) {
         return curr.updateMinQuantity(supid , catalogid , minQuantity);
     }
-    public Result updatePriceAfterSale(Integer supid, Integer catalogid, Integer price) {
+    public Result updatePriceAfterSale(Integer supid, Integer catalogid, Float price) {
         return curr.updatePriceAfterSale(supid , catalogid , price);
     }
     public Result<LinkedList<CatalogProduct>> getAllSupplierProducts(Integer supId) {
@@ -241,6 +259,9 @@ public class BranchController {
      */
     private Integer getNextId() {
         return next_id++;
+    }
+    private boolean checkBranchExists(Integer branch_id){
+        return branches.containsKey(branch_id);
     }
     //endregion
 }
