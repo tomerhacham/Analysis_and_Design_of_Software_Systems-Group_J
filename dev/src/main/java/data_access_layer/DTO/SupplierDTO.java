@@ -27,8 +27,6 @@ public class SupplierDTO {
     String bank_account_number;
     @DatabaseField(columnName = "payment_kind")
     String payment_kind;
-    @DatabaseField(columnName = "delivery")
-    String delivery;
     @DatabaseField(columnName = "type",dataType = DataType.ENUM_TO_STRING)
     supplierType type;
     @ForeignCollectionField(eager=false)
@@ -37,7 +35,7 @@ public class SupplierDTO {
     //Constructor
     public SupplierDTO(Integer supplier_id, String supplier_name, String address,
                        String email, String phone_number, String bank_account_number,
-                       String payment_kind, String delivery,String type) {
+                       String payment_kind,String type) {
         this.supplier_id = supplier_id;
         this.supplier_name = supplier_name;
         this.address = address;
@@ -45,7 +43,6 @@ public class SupplierDTO {
         this.phone_number = phone_number;
         this.bank_account_number = bank_account_number;
         this.payment_kind = payment_kind;
-        this.delivery = delivery;
         this.type=convertEnumTString(type);
     }
     public SupplierDTO(SupplierCard supplierCard){
@@ -56,8 +53,7 @@ public class SupplierDTO {
         this.phone_number = supplierCard.getPhoneNumber();
         this.bank_account_number = supplierCard.getBankAccountNum();
         this.payment_kind = supplierCard.getPayment();
-        this.delivery = supplierCard.;
-        this.type=convertEnumTString(type);
+        this.type=convertEnumTString(supplierCard.getType().name());
     }
     public SupplierDTO() {
     }
@@ -89,10 +85,6 @@ public class SupplierDTO {
 
     public String getPayment_kind() {
         return payment_kind;
-    }
-
-    public String getDelivery() {
-        return delivery;
     }
 
     public supplierType getType() {

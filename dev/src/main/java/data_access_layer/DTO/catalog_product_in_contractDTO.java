@@ -1,5 +1,6 @@
 package data_access_layer.DTO;
 
+import bussines_layer.inventory_module.CatalogProduct;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -9,7 +10,7 @@ public class catalog_product_in_contractDTO {
     @DatabaseField(foreign = true,foreignColumnName ="contract_id",foreignAutoRefresh = true,columnName = "contract_id")
     ContractDTO contract;
     @DatabaseField(columnName = "catalog_id")
-    String catalog_id;
+    Integer catalog_id;
     @DatabaseField(foreign = true, foreignColumnName = "branch_id", foreignAutoRefresh = true, columnName = "branch_id")
     BranchDTO branch;
     @DatabaseField(foreign = true, foreignColumnName = "GPID", foreignAutoRefresh = true, columnName = "GPID")
@@ -20,13 +21,21 @@ public class catalog_product_in_contractDTO {
     String category;
 
     //Constructor
-    public catalog_product_in_contractDTO(ContractDTO contract, String catalog_id, String category,BranchDTO branch, GeneralProductDTO generalProduct, Float supplier_price) {
+    public catalog_product_in_contractDTO(ContractDTO contract, Integer catalog_id, String category,BranchDTO branch, GeneralProductDTO generalProduct, Float supplier_price) {
         this.contract = contract;
         this.catalog_id = catalog_id;
         this.category=category;
         this.branch = branch;
         this.generalProduct = generalProduct;
         this.supplier_price = supplier_price;
+    }
+    public catalog_product_in_contractDTO(ContractDTO contract, CatalogProduct catalogProduct, GeneralProductDTO generalProduct){
+        this.contract=contract;
+        this.catalog_id=catalogProduct.getCatalogID();
+        this.category=catalogProduct.getSupplierCategory();
+        this.branch=contract.getBranch();
+        this.generalProduct=generalProduct;
+        this.supplier_price=catalogProduct.getSupplierPrice();
     }
     public catalog_product_in_contractDTO(){
     }
@@ -37,7 +46,7 @@ public class catalog_product_in_contractDTO {
         return contract;
     }
 
-    public String getCatalog_id() {
+    public Integer getCatalog_id() {
         return catalog_id;
     }
 

@@ -24,8 +24,6 @@ public class SupplierCard {
     private LinkedList<String> ContactsName;
     private int numOfContract;
     private supplierType type;
-    private String delivery;
-    //todo: add delivery to constructors
     public SupplierCard(String SupplierName , String Address , String Email , String PhoneNumber ,
                         int id , String BankAccountNum , String Payment , LinkedList<String> ContactsName, supplierType type){
 
@@ -111,15 +109,7 @@ public class SupplierCard {
         this.numOfContract = numOfContract;
     }
 
-    public String getDelivery() {
-        return delivery;
-    }
-
-    public void setDelivery(String delivery) {
-        this.delivery = delivery;
-    }
-
-    public supplierType getType () { return type; }
+    public Enum<supplierType> getType () { return type; }
 
     public void setType (supplierType type) {this.type =type; }
 
