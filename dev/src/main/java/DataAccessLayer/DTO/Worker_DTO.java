@@ -17,7 +17,7 @@ public class Worker_DTO {
     @DatabaseField(columnName = "name")
     private String name;
 
-    @DatabaseField(columnName = "startDate", dataType = DataType.DATE)
+    @DatabaseField(columnName = "startDate", dataType = DataType.DATE_STRING, format = "dd/MM/yyy")
     private Date start_Date;
 
     @DatabaseField(columnName = "salary")

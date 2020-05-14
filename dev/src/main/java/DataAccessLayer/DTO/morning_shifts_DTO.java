@@ -1,6 +1,7 @@
 package DataAccessLayer.DTO;
 
 import DataAccessLayer.Mapper;
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -9,7 +10,7 @@ import java.util.Date;
 @DatabaseTable(tableName = "morningShifts")
 public class morning_shifts_DTO {
 
-    @DatabaseField(columnName = "date", uniqueCombo = true)
+    @DatabaseField(columnName = "date", uniqueCombo = true, dataType = DataType.DATE_STRING, format = "dd/MM/yyy")
     private Date date;
 
     @DatabaseField(columnName = "truckID", foreign = true, foreignColumnName = "truckID", uniqueCombo = true)

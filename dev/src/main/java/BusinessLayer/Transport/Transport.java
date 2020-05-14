@@ -120,7 +120,7 @@ public class Transport {
 
     @Override
     public String toString() {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
         String s = "Transport Details:\n" + "id: " + ID + "\tDate: " + formatter.format(Date) +
                 " \tTruckNumber: " + Truck.getLicense_plate() +"\n\t\tLeaving time: " + Time.format(dtf) +

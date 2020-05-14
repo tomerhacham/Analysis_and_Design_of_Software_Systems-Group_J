@@ -63,7 +63,7 @@ public class TransportController {
 
     //set a transport date - check if its valid and throw an exception according to the problem
     public boolean setTransportDateTime(String date, String time, int id) throws Exception {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         Date transportDate;
         try {
             transportDate = formatter.parse(date);
