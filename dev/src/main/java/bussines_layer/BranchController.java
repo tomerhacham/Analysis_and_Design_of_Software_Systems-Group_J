@@ -274,6 +274,30 @@ public class BranchController {
         return curr.removePeriodicOrder((orderId));
     }
 
+    public Result<Float> addProductToPeriodicOrder(Integer orderId , CatalogProduct product , Integer quantity){
+        return curr.addProductToPeriodicOrder(orderId,product,quantity);
+    }
+
+    public Result updateProductQuantityInPeriodicOrder(Integer orderId , CatalogProduct product , Integer newQuantity){
+        return curr.updateProductQuantityInPeriodicOrder(orderId,product,newQuantity);
+    }
+
+    public Result removeProductFromPeriodicOrder(Integer orderId , CatalogProduct product){
+        return curr.removeProductFromPeriodicOrder(orderId , product);
+    }
+
+    public Result updateSupplierToPeriodicOrder (Integer orderID, Integer supplierID){
+        return curr.updateSupplierToPeriodicOrder(orderID,supplierID);
+    }
+
+    public Result<LinkedList<String>> displayAllOrders(){
+        return curr.displayAllOrders();
+    }
+
+    public Result<LinkedList<String>> displayAllSupplierOrders(Integer supId){
+        return curr.displayAllSupplierOrders(supId);
+    }
+
     //endregion
 
 

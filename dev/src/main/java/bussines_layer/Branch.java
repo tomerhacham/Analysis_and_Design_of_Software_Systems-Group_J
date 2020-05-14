@@ -213,6 +213,25 @@ public class Branch {
     public Result<Float> addProductToPeriodicOrder(Integer orderId , CatalogProduct product , Integer quantity){
         return supplierModule.addProductToPeriodicOrder(orderId,product,quantity);
     }
+    public Result updateProductQuantityInPeriodicOrder(Integer orderId , CatalogProduct product , Integer newQuantity){
+        return supplierModule.updateProductQuantityInPeriodicOrder(orderId,product,newQuantity);
+    }
+
+    public Result removeProductFromPeriodicOrder(Integer orderId , CatalogProduct product){
+        return supplierModule.removeProductFromPeriodicOrder(orderId , product);
+    }
+
+    public Result updateSupplierToPeriodicOrder (Integer orderID, Integer supplierID){
+        return supplierModule.updateSupplierToPeriodicOrder(orderID,supplierID);
+    }
+
+    public Result<LinkedList<String>> displayAllOrders(){
+        return supplierModule.displayAllOrders();
+    }
+
+    public Result<LinkedList<String>> displayAllSupplierOrders(Integer supId){
+        return supplierModule.displayAllSupplierOrders(supId);
+    }
 
     //endregion
 
