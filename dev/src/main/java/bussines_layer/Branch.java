@@ -201,23 +201,39 @@ public class Branch {
         return supplierModule.createOutOfStockOrder(reportResult.getData());
     }
 
-    public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<GeneralProduct , Integer>> productsAndQuantity , Integer date){
-        return supplierModule.createPeriodicOrder(supplierID, productsAndQuantity, date);
+    public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<Integer , Integer>> productsAndQuantity , Integer date){
+        LinkedList<Pair<GeneralProduct,Integer>> products = new LinkedList<>();
+        for (Pair<Integer,Integer> p : productsAndQuantity){
+            Result<GeneralProduct> result = inventory.searchGeneralProductByGpID(p.getKey());
+            if (!result.isOK()){
+                return result;
+            }
+            products.add(new Pair<>(result.getData(),p.getValue()));
+        }
+        return supplierModule.createPeriodicOrder(supplierID, products, date);
     }
 
     public Result removePeriodicOrder(Integer orderId){
         return supplierModule.removePeriodicOrder((orderId));
     }
 
-    public Result<Float> addProductToPeriodicOrder(Integer orderId , CatalogProduct product , Integer quantity){
-        return supplierModule.addProductToPeriodicOrder(orderId,product,quantity);
+    public Result addProductToPeriodicOrder(Integer orderId , Integer gpID , Integer quantity){
+        Result<GeneralProduct> result = searchGeneralProductByGpID(gpID);
+        if (!result.isOK()){
+            return result;
+        }
+        return supplierModule.addProductToPeriodicOrder(orderId, result.getData(),quantity);
     }
     public Result updateProductQuantityInPeriodicOrder(Integer orderId , CatalogProduct product , Integer newQuantity){
         return supplierModule.updateProductQuantityInPeriodicOrder(orderId,product,newQuantity);
     }
 
-    public Result removeProductFromPeriodicOrder(Integer orderId , CatalogProduct product){
-        return supplierModule.removeProductFromPeriodicOrder(orderId , product);
+    public Result removeProductFromPeriodicOrder(Integer orderId , Integer gpID){
+        Result<GeneralProduct> result = searchGeneralProductByGpID(gpID);
+        if (!result.isOK()){
+            return result;
+        }
+        return supplierModule.removeProductFromPeriodicOrder(orderId , result.getData());
     }
 
     public Result updateSupplierToPeriodicOrder (Integer orderID, Integer supplierID){
