@@ -79,9 +79,7 @@ public class ContractController {
         }
         contracts.remove(toRemove);
         supplier.decNumOfContract();
-        //remove from product list
-        // supplierProducts.remove(supplier.getId());   //TODO check
-        return new Result<>(true, supplier, String.format("Contract with supplier %s removed successfully", supplier));
+        return new Result<>(true, supplier, String.format("Contract with supplier %s removed successfully \n NOTICE - All periodic orders with this suppliers had been deleted except for those who are expected to be delivered tomorrow  ", supplier));
     }
 
     //endregion
@@ -100,10 +98,7 @@ public class ContractController {
         if (c == null) {
             return new Result<>(false, null, String.format("No contract found for supplier %d", supplierID));
         }
-        c.addProduct(product);
-        //add to supplier product list
-        //supplierProducts.get(supplierID).add(product);        //TODO check
-        return new Result<>(true, c, String.format("Product %s added to contract", product));
+        return c.addProduct(product);
     }
 
     /**
@@ -118,9 +113,6 @@ public class ContractController {
             return new Result<>(false, null, String.format("Contract with supplier (ID: %d) not found", supplierID));
         }
         return findContract(supplierID).getData().removeProduct(product);
-        //remove product from supplier hash map
-        //supplierProducts.get(supplierID).remove(product);     //TODO check
-
     }
 
     /**

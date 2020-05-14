@@ -235,8 +235,9 @@ public class GeneralProduct {
     private boolean lowBoundCheck(){
         return products.size()==min_quantity;
     }
+
     public int quantityToOrder(){
-        return (Math.abs(min_quantity-quantity)+5); //TODO !!!!
+        return (Math.abs(min_quantity-quantity)+5);
     }
 
     /**

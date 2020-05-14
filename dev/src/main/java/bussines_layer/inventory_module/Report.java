@@ -29,16 +29,18 @@ public class Report {
             report=report.concat(generalProduct.report(type));
         }
     }
+
+    public List<GeneralProduct> getProducts() {
+        return products;
+    }
+
     @Override
     public String toString(){
         return report;
     }
+
     public String getReport() {
         return report;
     }
 
-    //TODO - zoe added this function
-    public List<GeneralProduct> getProducts() {
-        return products;
-    }
 }
