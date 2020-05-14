@@ -649,24 +649,27 @@ public class Mapper {
 
     //-----------------------dummy methods------------------------------------------------//
     public List<Worker> getAvailableWorkers(Date date, boolean partOfDay) {
-        throw new NotImplementedException();
+        //@TODO:implement this
     }
 
     public void updateWorker(Worker searched) {
-        throw new NotImplementedException();
+        //@TODO:implement this
     }
 
     public Worker getWorker(String id) {
-        throw new NotImplementedException();
+        //@TODO:implement this
+        return null;
     }
 
     public void updateShift(Shift currentEditedShift) {
-        throw new NotImplementedException();
+        //@TODO:implement this
+
     }
 
 
     public Shift getShift(Date date, boolean timeOfDay) {
-        throw new NotImplementedException();
+        //@TODO:implement this
+        return null;
     }
 
 
