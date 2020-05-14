@@ -26,7 +26,7 @@ class SchedulerTest {
     {
         worker1=new Worker("Gil","1",startDate,16);
         worker2=new Worker("Sharon","2",startDate,15);
-        scheduler =new Scheduler();
+        scheduler =Scheduler.getInstance();
         Roster.getInstance().getWorkers().add(worker1);
         Roster.getInstance().getWorkers().add(worker2);
         scheduler.addAvailableWorker(dateOfShift,morning,"1");

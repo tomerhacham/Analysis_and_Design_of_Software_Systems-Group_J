@@ -1,7 +1,6 @@
 package BusinessLayer.Workers;
 
 import BusinessLayer.Transport.TransportController;
-import javafx.util.Pair;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -12,13 +11,21 @@ public class Scheduler {
     private static final boolean night=false;
     private HashMap<Date, Pair<List<Worker>,List<Worker>>> availableWorkers;
     private Shift currentEditedShift;
+    private static Scheduler scheduler;
 
 
-    public Scheduler() {
+    private Scheduler() {
         schedule=new TreeSet<>((a,b)-> {
             return a.dayStart.compareTo(b.dayStart);
         } );
         availableWorkers=new HashMap<>();
+    }
+
+    public static Scheduler getInstance()
+    {
+        if(scheduler==null)
+            scheduler=new Scheduler();
+        return scheduler;
     }
 
     public void setAvailableWorkers(HashMap<Date, Pair<List<Worker>, List<Worker>>> availableWorkers) {
@@ -128,8 +135,6 @@ public class Scheduler {
     {
         if(date==null)
             return "Invalid date";
-        currentEditedShift.setDate(date);
-        currentEditedShift.setTimeOfDay(timeOfDay);
         if(!availableWorkers.containsKey(date))
             return "No Available workers were marked for this shift";
         List<Worker> check = null;
@@ -142,6 +147,8 @@ public class Scheduler {
         List<Worker>cloned =new ArrayList<>();
         cloned.addAll(check);
         currentEditedShift=new Shift(cloned,date,timeOfDay);
+        currentEditedShift.setDate(date);
+        currentEditedShift.setTimeOfDay(timeOfDay);
         return null;
     }
 
@@ -149,8 +156,6 @@ public class Scheduler {
     {
         if(date==null)
             return "Invalid date";
-        currentEditedShift.setDate(date);
-        currentEditedShift.setTimeOfDay(timeOfDay);
         if(!availableWorkers.containsKey(date))
             return "No Available workers were marked for this shift";
         List<Worker> check = null;
@@ -163,6 +168,8 @@ public class Scheduler {
         List<Worker>cloned =new ArrayList<>();
         cloned.addAll(check);
         currentEditedShift=new Shift(findShift(date,timeOfDay));
+        currentEditedShift.setDate(date);
+        currentEditedShift.setTimeOfDay(timeOfDay);
         filterAvailableWorkers(cloned,currentEditedShift.getOccupation());
         currentEditedShift.setAvailableWorkers(cloned);
         return null;
@@ -210,6 +217,37 @@ public class Scheduler {
             return day.getNightShift();
     }
 
+    public String removeWorkerFromRoster(String id)
+    {
+        Worker w=Roster.getInstance().findWorker(id);
+        if(w==null)
+            return "No such worker is in the system";
+        List<Shift> scheduledShifts = isWorkerScheduled(w);
+        String output="";
+        for(Shift shift:scheduledShifts) {
+            output+= getShiftSimpleTime(shift)+", ";
+        }
+        if(output.length()>0)
+            return "Can not remove worker as they are already scheduled to work on the following shifts:\n"+
+                    output;
+        Roster.getInstance().removeWorker(id);
+        removeAvailableWorker(w);
+        return null;
+    }
+
+    private String getShiftSimpleTime(Shift shift) {
+        String output="";
+        SimpleDateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String DateString = myFormat.format(shift.getDate());
+        String timeOfDay = null;
+        if (shift.getTimeOfDay() == morning)
+            timeOfDay = " morning shift";
+        else
+            timeOfDay = " night shift";
+        output = DateString + timeOfDay;
+        return output;
+    }
+
     public String addAvailableWorker(Date date,boolean partOfDay,String id)
     {
         if(date==null)
@@ -233,62 +271,69 @@ public class Scheduler {
         return null;
     }
 
-    public String removeWorkerFromRoster(String id)
-    {
-        Worker w=Roster.getInstance().findWorker(id);
-        if(w==null)
-            return "No such worker is in the system";
-        String output="";
+    public String removeAvailableWorker(Date date,boolean partOfDay,String id) {
+        if (availableWorkers.containsKey(date)) {
+            List<Worker> check = null;
+            if (partOfDay == morning)
+            {
+                check = availableWorkers.get(date).getKey();
+            }
+            else
+                check = availableWorkers.get(date).getValue();
+            Worker worker=getWorkerById(id);
+            if (worker==null)
+                return  "Invalid worker id";
+            if(isWorkerScheduled(worker,date,partOfDay))
+                return "Unable to remove availability because the worker is already scheduled for this shift";
+            if (check.remove(worker))
+                return null;
+        }
+        return "The worker is not available for this shift";
+    }
+
+    private void removeAvailableWorker(Worker w) {
+        for(Pair<List<Worker>,List<Worker>> p:availableWorkers.values())
+        {
+            p.getValue().remove(w);
+            p.getKey().remove(w);
+        }
+    }
+
+    /*returns a list of every shift to which the worker is scheduled */
+    private List<Shift> isWorkerScheduled(Worker w) {
+        List<Shift> output=new ArrayList<>();
         Date currentDate=new Date();
         for(WeeklySchedule ws:schedule)
         {
             for(Shift shift:ws.getShifts())
             {
                 if(shift.getDate().after(currentDate))
-                for(List<Worker> workers:shift.getOccupation().values())
-                {
-                    if(workers.contains(w)) {
-                        SimpleDateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy");
-                        String DateString = myFormat.format(shift.getDate());
-                        String timeOfDay=null;
-                        if(shift.getTimeOfDay()==morning)
-                            timeOfDay=" morning shift";
-                        else
-                            timeOfDay=" night shift";
-                        output += DateString+timeOfDay+", ";
-                    }
+                    for(List<Worker> workers:shift.getOccupation().values())
+                    {
+                        if(workers.contains(w)) {
+                            output.add(shift);
+                        }
 
-                }
+                    }
             }
         }
-        if(output.length()>0)
-            return "Can not remove worker because they are already scheduled to work on the following shifts:\n"+
-                    output;
-        Roster.getInstance().removeWorker(id);
-        for(Pair<List<Worker>,List<Worker>> p:availableWorkers.values())
+        return output;
+    }
+    /*returns a string of every shift to which the worker is scheduled for the specific position.
+    * returns null if none.*/
+    public String isWorkerScheduled(Worker w, String pos)
+    {
+        String output="";
+        List<Shift> scheduledShifts = isWorkerScheduled(w);
+        for (Shift shift: scheduledShifts)
         {
-            p.getValue().remove(w);
-            p.getKey().remove(w);
+            if(shift.getOccupation().containsKey(pos) &&
+                shift.getOccupation().get(pos).contains(w))
+                output+= getShiftSimpleTime(shift)+", ";
         }
-        return null;
+        return output;
     }
-
-    public String removeAvailableWorker(Date date,boolean partOfDay,String id) {
-        if (availableWorkers.containsKey(date)) {
-            List<Worker> check = null;
-            if (partOfDay == morning) {
-                check = availableWorkers.get(date).getKey();
-            } else
-                check = availableWorkers.get(date).getValue();
-            Worker worker=getWorkerById(id);
-            if(isWorkerScheduled(worker,date,partOfDay))
-                return "Unable to remove availability because the worker is already scheduled for this shift";
-            if (check.remove(worker))
-                return null;
-        }
-            return "The worker is not available for this shift";
-    }
-
+    /*returns true if the worker is scheduled for the specific shift */
     private boolean isWorkerScheduled(Worker worker,Date date,boolean partOfDay) {
         Shift shift=findShift(date,partOfDay);
         if(shift==null)

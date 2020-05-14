@@ -20,7 +20,7 @@ public class ScheduleController {
     private FacadeController facade=FacadeController.getInstance();
 
     private ScheduleController() {
-        scheduler=new Scheduler();
+        scheduler=Scheduler.getInstance();
     }
 
     public static ScheduleController getInstance(){

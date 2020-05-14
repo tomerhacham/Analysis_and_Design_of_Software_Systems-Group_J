@@ -56,7 +56,4 @@ public class RosterController {
         return roster.removeWorker(id);
     }
 
-    public String changeLicencse(String license,String id) {
-        return roster.changeLicencse(license,id);
-    }
 }

@@ -216,4 +216,5 @@ public class Shift {
     public void setDate(Date date) {
         this.date = date;
     }
+
 }

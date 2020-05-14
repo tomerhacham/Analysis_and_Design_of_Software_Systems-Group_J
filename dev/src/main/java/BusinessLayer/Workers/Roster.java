@@ -13,7 +13,8 @@ public class Roster {
         workers=new ArrayList<>();
     }
 
-    public static Roster getInstance(){
+    public static Roster getInstance()
+    {
       if(roster==null)
           roster=new Roster();
       return roster;
@@ -22,7 +23,7 @@ public class Roster {
     public String addDriver(String name, double salary, Date startDate,String license)
     {
         UUID uuid = UUID.randomUUID();
-        String output = checkNewWorkerInputValdity(name, salary, startDate);
+        String output = checkNewWorkerInputValidity(name, salary, startDate);
         if (output != null) return output;
         workers.add(new Driver(uuid.toString(),license,name,startDate,salary));
         return null;
@@ -31,7 +32,7 @@ public class Roster {
     public String addWorker(String name, double salary, Date startDate, List<String> positions)
     {
         UUID uuid = UUID.randomUUID();
-        String output = checkNewWorkerInputValdity(name, salary, startDate);
+        String output = checkNewWorkerInputValidity(name, salary, startDate);
         if (output != null) return output;
         Worker w=new Worker(name,uuid.toString(),startDate,salary);
         workers.add(w);
@@ -44,7 +45,8 @@ public class Roster {
         return null;
     }
 
-    private String checkNewWorkerInputValdity(String name, double salary, Date startDate) {
+    private String checkNewWorkerInputValidity(String name, double salary, Date startDate)
+    {
         if(name==null||name.length()==0)
             return "Illegal name";
         if(salary<0)
@@ -108,19 +110,25 @@ public class Roster {
         return null;
     }
      
-    public String removePosition(String pos, String id){
+    public String removePosition(String pos, String id)
+    {
         if(id==null)
             return "Invalid ID";
         if(pos==null||pos.length()==0)
             return "Invalid Position";
-        Worker searched = findWorker(id);
-        if(searched==null)
+        Worker worker = findWorker(id);
+        if(worker==null)
             return "The worker does not exist";
-        searched.removePosition(pos.toLowerCase());
+        String position = pos.toLowerCase();
+        String output=Scheduler.getInstance().isWorkerScheduled(worker,position);
+        if(output.length()>0)
+            return  "unable to remove the position because the worker is scheduled to fill it on:\n"+output+"\n";
+        worker.removePosition(position);
         return null;
     }
      
-    public Worker findWorker(String id) {
+    public Worker findWorker(String id)
+    {
         Worker searched=null;
         for(Worker w:workers)
         {

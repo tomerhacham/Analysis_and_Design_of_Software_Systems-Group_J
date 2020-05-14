@@ -5,8 +5,9 @@ import org.junit.jupiter.api.parallel.Execution;
 public class Main {
 
     public static void main(String[] args) {
-    //    IO io = IO.getInstance();
-    //    io.SystemActivation();
+        IO io = IO.getInstance();
+       io.SystemActivation();
+        /*
         Mapper m = Mapper.getInstance();
         System.out.println(m==null);
         try {
@@ -14,6 +15,6 @@ public class Main {
         }
         catch(Exception e){
             System.out.println(e.getMessage());
-        }
+        }*/
     }
 }
