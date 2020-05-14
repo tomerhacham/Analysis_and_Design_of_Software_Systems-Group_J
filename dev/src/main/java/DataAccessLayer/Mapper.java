@@ -180,6 +180,17 @@ public class Mapper {
             System.out.println(e.getMessage());
         }
     }
+    public void addPosition(String position, String workerID) //TODO:rquires testing
+    {
+        try {
+            Worker_DTO worker_dto = worker_DAO.queryForId(workerID);
+            Position_DTO position_dto = new Position_DTO(worker_dto, position);
+            position_DAO.create(position_dto);
+        }catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
 
     public void deletePosition(String position, String WorkerId)
     {
@@ -632,5 +643,31 @@ public class Mapper {
             System.out.println(e.getMessage());
         }
     }
+
+
+
+
+    //-----------------------dummy methods------------------------------------------------//
+    public List<Worker> getAvailableWorkers(Date date, boolean partOfDay) {
+        throw new NotImplementedException();
+    }
+
+    public void updateWorker(Worker searched) {
+        throw new NotImplementedException();
+    }
+
+    public Worker getWorker(String id) {
+        throw new NotImplementedException();
+    }
+
+    public void updateShift(Shift currentEditedShift) {
+        throw new NotImplementedException();
+    }
+
+
+    public Shift getShift(Date date, boolean timeOfDay) {
+        throw new NotImplementedException();
+    }
+
 
 }

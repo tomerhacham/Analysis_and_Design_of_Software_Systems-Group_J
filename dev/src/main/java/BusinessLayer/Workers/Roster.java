@@ -1,5 +1,8 @@
 package BusinessLayer.Workers;
 
+import DataAccessLayer.DTO.Worker_DTO;
+import DataAccessLayer.Mapper;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,6 +11,7 @@ import java.util.UUID;
 public class Roster {
     private List<Worker>workers;
     private static Roster roster;
+    private Mapper mapper = Mapper.getInstance();
 
     private Roster() {
         workers=new ArrayList<>();
@@ -20,12 +24,15 @@ public class Roster {
       return roster;
     }
 
-    public String addDriver(String name, double salary, Date startDate,String license)//TODO:Mapper-write to "Workers" table
+    public String addDriver(String name, double salary, Date startDate,String license)//TODO:Mapper-write to "Driver" table
     {
         UUID uuid = UUID.randomUUID();
         String output = checkNewWorkerInputValidity(name, salary, startDate);
-        if (output != null) return output;
-        workers.add(new Driver(uuid.toString(),license,name,startDate,salary));
+        if (output != null)
+            return output;
+        Driver driver= new Driver(uuid.toString(),license,name,startDate,salary);
+        workers.add(driver);
+        Mapper.getInstance().addDriver(driver);
         return null;
     }
 
@@ -42,6 +49,7 @@ public class Roster {
                     w.addPosition(pos);
             }
         }
+        mapper.addWorker(w);
         return null;
     }
 
@@ -64,6 +72,8 @@ public class Roster {
         if(searched==null)
             return "The worker does not exist";
         workers.remove(searched);
+        mapper.deleteWorker(searched.getId());
+        // TODO:see if there is a need to remove each position or is it Cascade
         return null;
     }
      
@@ -71,7 +81,7 @@ public class Roster {
         return workers;
     }
 
-    public String editName(String newName, String id)//TODO:Mapper-write to "Workers" table
+    public String editName(String newName, String id)//TODO:Mapper-update to "Workers" table
     {
         if(id==null)
             return "Invalid ID";
@@ -81,10 +91,11 @@ public class Roster {
         if(searched==null)
             return "The worker does not exist";
         searched.setName(newName);
+        mapper.updateWorker(searched);
         return null;
     }
      
-    public String editSalary(double newSalary, String id)//TODO:Mapper-write to "Workers" table
+    public String editSalary(double newSalary, String id)//TODO:Mapper-update to "Workers" table
     {
         if(id==null)
             return "Invalid ID";
@@ -94,6 +105,7 @@ public class Roster {
         if(searched==null)
             return "The worker does not exist";
         searched.setSalary(newSalary);
+        mapper.updateWorker(searched);
         return null;
     }
      
@@ -107,6 +119,7 @@ public class Roster {
         if(searched==null)
             return "The worker does not exist";
         searched.addPosition(pos);
+        mapper.addPosition(pos,searched.getId());
         return null;
     }
      
@@ -124,9 +137,10 @@ public class Roster {
         if(output.length()>0)
             return  "unable to remove the position because the worker is scheduled to fill it on:\n"+output+"\n";
         worker.removePosition(position);
+        mapper.deletePosition(pos,worker.getId());
         return null;
     }
-     
+
     public Worker findWorker(String id)//TODO:Mapper-pull from "Workers" table
     {
         Worker searched=null;
@@ -136,6 +150,14 @@ public class Roster {
             {
                 searched=w;
                 break;
+            }
+        }
+        if(searched==null)
+        {
+            searched=mapper.getWorker(id);
+            //TODO: make sure Mapper->getWorker returns null if not found;
+            if (searched!=null) {
+                workers.add(searched);
             }
         }
         return searched;
