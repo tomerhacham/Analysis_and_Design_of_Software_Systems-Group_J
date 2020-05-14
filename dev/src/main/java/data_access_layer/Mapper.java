@@ -9,10 +9,8 @@ import data_access_layer.DTO.*;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import com.j256.ormlite.stmt.PreparedUpdate;
 import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
-import data_access_layer.DTO.*;
 
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -22,6 +20,7 @@ public class Mapper {
     //fields:
     private ConnectionSource conn;
 
+    private Dao<CatalogProductDTO,Integer> catalog_product_dao;
     private Dao<GeneralProductDTO,Integer> general_product_dao;
     private Dao<SpecificProductDTO,Integer> specific_product_dao;
     private Dao<CategoryDTO,Integer> category_dao;
@@ -32,12 +31,13 @@ public class Mapper {
     private Dao<BranchDTO,Integer> branch_dao;
 
     private Dao<general_product_on_saleDTO,Void> general_product_on_sale_dao;           //will not support cache
-    private Dao<general_product_in_orderDTO,Void> general_product_in_order_dao;         //will not support cache
+    private Dao<catalog_product_in_orderDTO,Void> catalog_product_in_order_dao;         //will not support cache
     private Dao<CostEngineeringDTO,Void> cost_engineering_dao;                          //will not support cache
     private Dao<catalog_product_in_contractDTO,Void> catalog_product_in_contract_dao;   //will not support cache
     private Dao<IDsDTO,Void> ids_dao;                                                   //will not support cache
     private Dao<categories_in_contractDTO,Void> categories_in_contract_dao;             //will not support cache
     private Dao<catalog_product_in_general_productDTO,Void> catalog_product_in_general_products_dao;
+    private Dao<contact_of_supplierDTO,Void> contacts_of_supplier_dao;
 
     //Constructor
     public Mapper() {
@@ -45,6 +45,9 @@ public class Mapper {
         try (ConnectionSource conn = new JdbcConnectionSource(databaseUrl)) {
             this.conn=conn;
             //region setting up DAOs with cache functionality
+            this.catalog_product_dao=DaoManager.createDao(conn,CatalogProductDTO.class);
+            this.catalog_product_dao.setObjectCache(true);
+
             this.general_product_dao = DaoManager.createDao(conn,GeneralProductDTO.class);
             this.general_product_dao.setObjectCache(true);
 
@@ -71,12 +74,13 @@ public class Mapper {
             //endregion
             //region setting up DAOs without cache functionality
             this.general_product_on_sale_dao = DaoManager.createDao(conn,general_product_on_saleDTO.class);
-            this.general_product_in_order_dao = DaoManager.createDao(conn,general_product_in_orderDTO.class);
+            this.catalog_product_in_order_dao = DaoManager.createDao(conn, catalog_product_in_orderDTO.class);
             this.cost_engineering_dao=DaoManager.createDao(conn,CostEngineeringDTO.class);
             this.catalog_product_in_contract_dao=DaoManager.createDao(conn,catalog_product_in_contractDTO.class);
             this.ids_dao = DaoManager.createDao(conn,IDsDTO.class);
             this.categories_in_contract_dao = DaoManager.createDao(conn,categories_in_contractDTO.class);
             this.catalog_product_in_general_products_dao=DaoManager.createDao(conn,catalog_product_in_general_productDTO.class);
+            this.contacts_of_supplier_dao = DaoManager.createDao(conn,contact_of_supplierDTO.class);
             //endregion
         }
         catch (Exception e) {
@@ -112,15 +116,107 @@ public class Mapper {
 
     }
     /**
-     * write general product and all associate objects to DB
+     * write general product to the DB
      * @param generalProduct
      */
     public void create(GeneralProduct generalProduct){
-        GeneralProductDTO generalProductDTO = new
+        GeneralProductDTO generalProductDTO = new GeneralProductDTO(generalProduct);
+        try {
+            general_product_dao.create(generalProductDTO);
+            System.err.println(String.format("[Writing] %s", generalProductDTO));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
 
     }
-
+    /**
+     * write contract to the DB
+     * @param contract
+     */
     public void create(Contract contract){
+        ContractDTO contractDTO = new ContractDTO(contract);
+        try {
+            contract_dao.create(contractDTO);
+            System.err.println(String.format("[Writing] %s", contractDTO));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+    /**
+     * write single order and it associate classes to the DB
+     * @param order
+     */
+    public void create(Order order){
+        OrderDTO orderDTO = new OrderDTO(order);
+        LinkedList<catalog_product_in_orderDTO> catalog_product_in_order = new LinkedList<>();
+        for(CatalogProduct product:order.getProductsAndPrice().keySet()){
+            catalog_product_in_order.add(new catalog_product_in_orderDTO(orderDTO,product));
+        }
+        try {
+            order_dao.create(orderDTO);
+            System.err.println(String.format("[Writing] %s", orderDTO));
+            catalog_product_in_order_dao.create(catalog_product_in_order);
+            System.err.println(String.format("[Writing] %s", concatObjectList(catalog_product_in_order)));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+    /**
+     * writing supplierCard  and all its contactList to the DB
+     * @param supplier
+     */
+    public void create(SupplierCard supplier){
+        SupplierDTO supplierDTO = new SupplierDTO(supplier);
+        List<String> contactList = supplier.getContactsName();
+        LinkedList<contact_of_supplierDTO> contact_of_supplierDTOS = new LinkedList<>();
+        for(String contact:contactList){contact_of_supplierDTOS.add(new contact_of_supplierDTO(supplierDTO,contact));}
+        try {
+            supplier_dao.create(supplierDTO);
+            System.err.println(String.format("[Writing] %s", supplierDTO));
+            contacts_of_supplier_dao.create(contact_of_supplierDTOS);
+            System.err.println(String.format("[Writing] %s", concatObjectList(contact_of_supplierDTOS)));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+    /**
+     * write Sale object to the DB and all its general product associate to is
+     * @param sale
+     */
+    public void create(Sale sale) {
+        SaleDTO saleDTO = new SaleDTO(sale);
+        LinkedList<general_product_on_saleDTO> general_product_on_sale = new LinkedList<>();
+        for (GeneralProduct generalProduct : sale.getProducts_on_sale()) {
+            general_product_on_sale.add(new general_product_on_saleDTO(saleDTO, generalProduct));}
+            try {
+                sale_dao.create(saleDTO);
+                System.err.println(String.format("[Writing] %s", saleDTO));
+                general_product_on_sale_dao.create(general_product_on_sale);
+                System.err.println(String.format("[Writing] %s", concatObjectList(general_product_on_sale)));
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+
+    //region Not Active Function
+    /*public void createNOTACTIVE(GeneralProduct generalProduct){
+        GeneralProductDTO generalProductDTO = new GeneralProductDTO(generalProduct);
+        LinkedList<SpecificProductDTO> specific_products=new LinkedList<>();
+        for(SpecificProduct specificProduct:generalProduct.getProducts()){
+            specific_products.add(new SpecificProductDTO(generalProductDTO,specificProduct));
+        }
+        LinkedList<catalog_product_in_general_productDTO> catalog_products=new LinkedList<>();
+        for(CatalogProduct catalogProduct:generalProduct.getCatalog_products()){
+            catalog_products.add(new catalog_product_in_general_productDTO(generalProductDTO,catalogProduct));
+        }
+        try{
+            general_product_dao.create(generalProductDTO);
+            specific_product_dao.create(specific_products);
+            catalog_product_in_general_products_dao.create(catalog_products);
+        }
+        catch(Exception e){e.printStackTrace();}
+    }
+    public void createNOTACTIVE(Contract contract){
         //todo: create DTO for contract
         ContractDTO contractDTO = new ContractDTO(contract);
         //todo:create DTO for each category in contract
@@ -152,53 +248,8 @@ public class Mapper {
             cost_engineering_dao.create(costEngineeringDTOS);
         }
         catch(Exception e){e.printStackTrace();}
-    }
-    public void create(Order order){
-        //todo:create DTO for Order
-        //todo:for each catalogProduct in productlist find the generalProduct DTO (using Doa).
-        //todo: create general_product_in_orderDTO for each generalProductDTO that has been found
-
-    }
-    public void create(SupplierCard supplier){
-        //todo:create DTO for supplier
-        //todo: for each contact name in ContactName create contact_of_supplierDTO
-    }
-    /**
-     * write Sale object to the DB and all its general product associate to is
-     * @param sale
-     */
-    public void create(Sale sale){
-        BranchDTO branchDTO= new BranchDTO(sale.getBranch_id());
-        SaleDTO saleDTO = new SaleDTO(branchDTO,sale);
-        LinkedList<general_product_on_saleDTO> general_product_on_sale = new LinkedList<>();
-        if(!sale.getProducts_on_sale().isEmpty()){
-            for(GeneralProduct generalProduct:sale.getProducts_on_sale()){
-                general_product_on_sale.add(new general_product_on_saleDTO(new GeneralProductDTO(generalProduct),saleDTO));
-            }
-        }
-        try{
-            sale_dao.create(saleDTO);
-            general_product_on_sale_dao.create(general_product_on_sale);
-        }
-        catch(Exception e){e.printStackTrace();}
-    }
-    public void createNOACTIVE(GeneralProduct generalProduct){
-        GeneralProductDTO generalProductDTO = new GeneralProductDTO(generalProduct);
-        LinkedList<SpecificProductDTO> specific_products=new LinkedList<>();
-        for(SpecificProduct specificProduct:generalProduct.getProducts()){
-            specific_products.add(new SpecificProductDTO(generalProductDTO,specificProduct));
-        }
-        LinkedList<catalog_product_in_general_productDTO> catalog_products=new LinkedList<>();
-        for(CatalogProduct catalogProduct:generalProduct.getCatalog_products()){
-            catalog_products.add(new catalog_product_in_general_productDTO(generalProductDTO,catalogProduct));
-        }
-        try{
-            general_product_dao.create(generalProductDTO);
-            specific_product_dao.create(specific_products);
-            catalog_product_in_general_products_dao.create(catalog_products);
-        }
-        catch(Exception e){e.printStackTrace();}
-    }
+    }*/
+    //endregion
     //endregion
 
     //region Updates
@@ -210,8 +261,7 @@ public class Mapper {
     }
     public void update(Sale sale){
         try{
-            BranchDTO branchDTO= new BranchDTO(sale.getBranch_id());
-            SaleDTO saleDTO = new SaleDTO(branchDTO,sale);
+            SaleDTO saleDTO = new SaleDTO(sale);
             sale_dao.update(saleDTO);
         }catch (Exception e){e.printStackTrace();}
     }
@@ -231,16 +281,16 @@ public class Mapper {
                 SpecificProductDTO spDTO = new SpecificProductDTO(generalProductDTO,specificProduct);
                 specific_product_dao.update(spDTO);
             }
-
             for(CatalogProduct catalogProduct:generalProduct.getCatalog_products()){
-                UpdateBuilder<catalog_product_in_general_productDTO,Void> updateBuilder = catalog_product_in_general_products_dao.updateBuilder();
+                catalog_product_in_general_products_dao.update(new catalog_product_in_general_productDTO(generalProductDTO,catalogProduct));
+                /*UpdateBuilder<catalog_product_in_general_productDTO,Void> updateBuilder = catalog_product_in_general_products_dao.updateBuilder();
                 // set the criteria like you would a QueryBuilder
                 updateBuilder.where().eq("catalogID", catalogProduct.getCatalogID()).and().eq("branch_id" , generalProduct.getBranch_id());
                 // update the value of your field(s)
                 updateBuilder.updateColumnValue("name" ,catalogProduct.getName());
                 updateBuilder.updateColumnValue("supplier_price" , catalogProduct.getSupplierPrice());
                 updateBuilder.updateColumnValue("supplier_category" , catalogProduct.getSupplierCategory());
-                updateBuilder.update();
+                updateBuilder.update();*/
             }
         }catch (Exception e){e.printStackTrace();}
     }
@@ -248,7 +298,15 @@ public class Mapper {
 
     //endregion
 
+    //region Utilities
+    private String concatObjectList(List list){
+        String string="";
+        for (Object object:list){string=string.concat(object.toString().concat("\n"));}
+        return string;
+    }
+    //endregion
 
 }
+
 
 

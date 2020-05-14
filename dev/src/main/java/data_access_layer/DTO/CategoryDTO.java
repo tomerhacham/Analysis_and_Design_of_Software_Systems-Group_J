@@ -43,6 +43,13 @@ public class CategoryDTO {
         this.id=category.getId();
         this.level=category.getLevel();
     }
+    //for UPDATE situation
+    public CategoryDTO(Category category){
+        this.super_category=null;
+        this.name=category.getName();
+        this.id=category.getId();
+        this.level=category.getLevel();
+    }
     public CategoryDTO() {
     }
 

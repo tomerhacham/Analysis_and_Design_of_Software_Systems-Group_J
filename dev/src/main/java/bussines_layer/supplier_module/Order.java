@@ -60,11 +60,19 @@ public class Order {
         return orderID;
     }
 
+    public SupplierCard getSupplier() {
+        return supplier;
+    }
+
+    public Date getIssuedDate() {
+        return issuedDate;
+    }
+
     public Integer getSupplierID() {
         return supplier.getId();
     }
 
-    public OrderStatus getStatus() {
+    public Enum<OrderStatus> getStatus() {
         return status;
     }
 
@@ -74,7 +82,7 @@ public class Order {
 
     public void setIssuedDate (Date date){this.issuedDate = date;}
 
-    public OrderType getType() {
+    public Enum<OrderType> getType() {
         return type;
     }
 
