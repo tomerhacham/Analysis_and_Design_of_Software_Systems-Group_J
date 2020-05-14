@@ -197,6 +197,11 @@ public class Mapper {
                 throwables.printStackTrace();
             }
         }
+        //TODO:1. create catalog_product_in_contract
+        //TODO:2. create catalog_product_in_generalProduct
+        //TODO:3. create categories_in_contract
+        //TODO:4. create CostEngineering
+        //TODO:5. create ID's
 
     //region Not Active Function
     /*public void createNOTACTIVE(GeneralProduct generalProduct){
