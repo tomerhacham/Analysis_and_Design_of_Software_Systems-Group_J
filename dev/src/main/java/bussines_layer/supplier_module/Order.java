@@ -28,8 +28,10 @@ public class Order {
     private OrderStatus status;
     private HashMap<CatalogProduct, Integer> productsAndQuantity; // <product , quantity>
     private HashMap<CatalogProduct , Float> productsAndPrice; //<product, price>
+    private Integer dayToDeliver;
 
 
+    //constructor to out of stock order
     public Order(int orderID , Integer supplierID , OrderType type){
         this.orderID = orderID;
         productsAndQuantity = new HashMap<>();
@@ -37,6 +39,18 @@ public class Order {
         productsAndPrice = new HashMap<>();
         this.type = type;
         this.status=OrderStatus.inProcess;
+        this.dayToDeliver = null;
+    }
+
+    //constructor to periodic order
+    public Order(int orderID , Integer supplierID , OrderType type , Integer dayToDeliver){
+        this.orderID = orderID;
+        productsAndQuantity = new HashMap<>();
+        this.supplierID = supplierID;
+        productsAndPrice = new HashMap<>();
+        this.type = type;
+        this.status=OrderStatus.inProcess;
+        this.dayToDeliver = dayToDeliver;
     }
 
     public int getOrderID() {
@@ -62,11 +76,24 @@ public class Order {
     public void setType(OrderType type) {
         this.type = type;
     }
+
     public void setSupplierID (Integer supplierID){ this.supplierID = supplierID;}
 
     public  HashMap<CatalogProduct, Float> getProductsAndPrice() {return productsAndPrice;}
 
     public  HashMap<CatalogProduct, Integer> getProductsAndQuantity() {return productsAndQuantity;}
+
+    public Result updateDayToDeliver(Integer dayToDeliver) {
+        if(this.type != OrderType.PeriodicOrder){
+            return new Result(false,null, String.format("The delivery day has NOT been updated to %d in the order:%d because it is not a periodic order", dayToDeliver , getOrderID()));
+        }
+        this.dayToDeliver = dayToDeliver;
+        return new Result(true,dayToDeliver, String.format("The delivery day has been updated to %d in the order:%d", dayToDeliver , getOrderID()));
+    }
+
+    public Result getDayToDeliver() {
+        return new Result(true,dayToDeliver, String.format("The delivery day it %d in the order:%d", dayToDeliver , getOrderID()));
+    }
 
     public Result addProduct(CatalogProduct product , Integer quantity , Float price){
 
