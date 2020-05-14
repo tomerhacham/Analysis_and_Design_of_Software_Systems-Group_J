@@ -1,11 +1,14 @@
 package data_access_layer;
+
 import bussines_layer.Branch;
 import bussines_layer.inventory_module.*;
-import data_access_layer.DTO.*;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.stmt.PreparedUpdate;
+import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
+import data_access_layer.DTO.*;
 
 import java.util.LinkedList;
 
@@ -101,6 +104,30 @@ public class Mapper {
         catch(Exception e){e.printStackTrace();}
     }
 
+    public void update(GeneralProduct generalProduct){
+        try{
+            GeneralProductDTO generalProductDTO = new GeneralProductDTO(generalProduct);
+            LinkedList<SpecificProductDTO> specific_products=new LinkedList<>();
+            general_product_dao.update(generalProductDTO);
+
+            for(SpecificProduct specificProduct:generalProduct.getProducts()){
+                SpecificProductDTO spDTO = new SpecificProductDTO(generalProductDTO,specificProduct);
+                specific_product_dao.update(spDTO);
+            }
+
+            for(CatalogProduct catalogProduct:generalProduct.getCatalog_products()){
+                UpdateBuilder<catalog_product_in_general_productDTO,Void> updateBuilder = catalog_product_in_general_products_dao.updateBuilder();
+                // set the criteria like you would a QueryBuilder
+                updateBuilder.where().eq("catalogID", catalogProduct.getCatalogID()).and().eq("branch_id" , generalProduct.getBranch_id());
+                // update the value of your field(s)
+                updateBuilder.updateColumnValue("name" ,catalogProduct.getName());
+                updateBuilder.updateColumnValue("supplier_price" , catalogProduct.getSupplierPrice());
+                updateBuilder.updateColumnValue("supplier_category" , catalogProduct.getSupplierCategory());
+                updateBuilder.update();
+            }
+        }catch (Exception e){e.printStackTrace();}
+    }
+
     /**
      * save main category ONLY; in order to the regular category you need to provide the super_category
      * @param category
@@ -108,10 +135,19 @@ public class Mapper {
     public void create(Category category){
         //todo: create DTO for category
         CategoryDTO categoryDTO=new CategoryDTO(category);
-        for (Category sub_category:category.getSub_categories()){create(categoryDTO,sub_category);}
+        for (Category sub_category:category.getSub_categories()){
+            create(categoryDTO,sub_category);
+        }
         //todo:create DTO for each sub_category
         //todo: create GeneralProductDTO for each generalProduct in generalproduct list
 
+    }
+
+    public void update(Category category){
+        try{
+            CategoryDTO categoryDTO=new CategoryDTO(category);
+            category_dao.update(categoryDTO);
+        }catch (Exception e){e.printStackTrace();}
     }
 
     /**
@@ -146,8 +182,20 @@ public class Mapper {
                 general_product_on_sale.add(new general_product_on_saleDTO(new GeneralProductDTO(generalProduct),saleDTO));
             }
         }
+        try{
+            sale_dao.create(saleDTO);
+            general_product_on_sale_dao.create(general_product_on_sale);
+        }
         try{sale_dao.create(saleDTO); general_product_on_sale_dao.create(general_product_on_sale);}
         catch(Exception e){e.printStackTrace();}
+    }
+
+    public void update(Sale sale){
+        try{
+            BranchDTO branchDTO= new BranchDTO(sale.getBranch_id());
+            SaleDTO saleDTO = new SaleDTO(branchDTO,sale);
+            sale_dao.update(saleDTO);
+        }catch (Exception e){e.printStackTrace();}
     }
 
     /**
@@ -159,6 +207,14 @@ public class Mapper {
         try{branch_dao.create(branchDTO);}
         catch(Exception e){e.printStackTrace();}
     }
+
+    public void update(Branch branch){
+        try{
+            BranchDTO branchDTO=new BranchDTO(branch);
+            branch_dao.update(branchDTO);
+        }catch (Exception e){e.printStackTrace();}
+    }
+
     public void create(Contract contract){
         //todo: create DTO for contract
         //todo:create DTO for each category in contract
