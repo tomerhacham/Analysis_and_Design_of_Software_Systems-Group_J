@@ -16,7 +16,9 @@ import static java.lang.System.exit;
 
 public class CLController {
 
-    public static void main(String[] args) {
+    public CLController(){}
+
+    public static void displayMenu() {
         Inventory inventory=new Inventory();
         Scanner sc = new Scanner(System.in);    //System.in is a standard input stream
         printLogo();
