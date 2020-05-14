@@ -196,17 +196,6 @@ public class OrdersController {
 
     //endregion
 
-
-
-
-//    //changeSupplierForProduct //TODO - not relevant eny more
-//    public void changeSupplierForProductInOrder(int orderid , Integer supplierId , int productid ,int catalogid, Integer quantity){
-//        Order o = getOrder(orderid);
-//        o.changeSupplierForProduct(supplierId , productid , catalogid , quantity);
-//    }
-
-
-
 }
 
 

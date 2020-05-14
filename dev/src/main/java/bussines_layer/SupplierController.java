@@ -53,7 +53,6 @@ public class SupplierController {
         SupplierCard supplierCard = new SupplierCard(SupplierName, Address, Email, PhoneNumber,
                 id ,BankAccountNum ,Payment ,ContactsName, type);
         return addSupplierCardToList(supplierCard);
-       // contract.addSpplierToProductController(supplierCard);     //TODO check
     }
 
     /**
