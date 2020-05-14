@@ -22,11 +22,11 @@ public class Inventory {
     }
     //region Methods
 
-    public Result AcceptOrder(HashMap<CatalogProduct, Integer> product_received){
+    public Result acceptOrder(HashMap<CatalogProduct, Integer> product_received){
         String msg="";
         for (CatalogProduct catalogProduct: product_received.keySet()) {
             GeneralProduct generalProduct = productController.searchGeneralProductByGpID(catalogProduct.getGpID());
-            Date expiration_date = SimulateExpirationDate();
+            Date expiration_date = simulateExpirationDate();
             Result res = addSpecificProduct(generalProduct.getGpID(),expiration_date,product_received.get(catalogProduct));
             msg=msg.concat(res.getMessage().concat("\n"));
         }
@@ -192,7 +192,7 @@ public class Inventory {
     public String mapAllSales(){
         return saleController.toString();
     }
-    public Date SimulateExpirationDate(){
+    public Date simulateExpirationDate(){
         Random ran = new Random();
         Integer days = ran.nextInt(7)+1;
         Calendar cal = Calendar.getInstance();
