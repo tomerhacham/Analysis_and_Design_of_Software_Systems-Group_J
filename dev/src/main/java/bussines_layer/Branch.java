@@ -22,7 +22,7 @@ public class Branch {
     //Constructor
     public Branch(Integer branch_id, String name) {
         this.branch_id = branch_id;
-        inventory = new Inventory();
+        inventory = new Inventory(branch_id);
         supplierModule = SupplierModule.getInstance(branch_id);
         this.name = name;
     }
@@ -224,8 +224,12 @@ public class Branch {
         }
         return supplierModule.addProductToPeriodicOrder(orderId, result.getData(),quantity);
     }
-    public Result updateProductQuantityInPeriodicOrder(Integer orderId , CatalogProduct product , Integer newQuantity){
-        return supplierModule.updateProductQuantityInPeriodicOrder(orderId,product,newQuantity);
+    public Result updateProductQuantityInPeriodicOrder(Integer orderId , Integer gpID , Integer newQuantity){
+        Result<GeneralProduct> result = searchGeneralProductByGpID(gpID);
+        if (!result.isOK()){
+            return result;
+        }
+        return supplierModule.updateProductQuantityInPeriodicOrder(orderId, result.getData(),newQuantity);
     }
 
     public Result removeProductFromPeriodicOrder(Integer orderId , Integer gpID){

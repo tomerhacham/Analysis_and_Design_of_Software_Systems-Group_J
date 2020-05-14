@@ -278,8 +278,8 @@ public class BranchController {
         return currBranch.addProductToPeriodicOrder(orderId,gpID,quantity);
     }
 
-    public Result updateProductQuantityInPeriodicOrder(Integer orderId , CatalogProduct product , Integer newQuantity){
-        return currBranch.updateProductQuantityInPeriodicOrder(orderId,product,newQuantity);
+    public Result updateProductQuantityInPeriodicOrder(Integer orderId , Integer gpID , Integer newQuantity){
+        return currBranch.updateProductQuantityInPeriodicOrder(orderId,gpID,newQuantity);
     }
 
     public Result removeProductFromPeriodicOrder(Integer orderId , Integer gpID){

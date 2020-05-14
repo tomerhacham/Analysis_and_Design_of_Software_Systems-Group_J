@@ -251,6 +251,25 @@ public class CLController {
 
     }
 
+    private static void printDisplayOrders() {
+        branchController.displayAllOrders();
+    }
+
+    private static void printUpdateProductQuantity() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[orderID,gpID,newQuantity]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 3) {
+            Integer orderID = Integer.getInteger(param[0]);
+            Integer gpID = Integer.getInteger(param[1]);
+            Integer newQuantity = Integer.getInteger(param[2]);
+            result = branchController.updateProductQuantityInPeriodicOrder(orderID, gpID, newQuantity);
+            System.out.println(result.getMessage());
+        }
+    }
+
     private static void printRemoveProductPOrder() {
         Result result;
         String menu = "Please enter the following details\n";
