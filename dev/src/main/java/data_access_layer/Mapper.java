@@ -1,6 +1,7 @@
 package data_access_layer;
 import bussines_layer.Branch;
 import bussines_layer.inventory_module.*;
+import bussines_layer.supplier_module.Contract;
 import data_access_layer.DTO.*;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
@@ -160,6 +161,7 @@ public class Mapper {
         catch(Exception e){e.printStackTrace();}
     }
     public void create(Contract contract){
+        ContractDTO contractDTO = new ContractDTO(contract);
         //todo: create DTO for contract
         //todo:create DTO for each category in contract
         //todo: create DT for each catalog product in category
