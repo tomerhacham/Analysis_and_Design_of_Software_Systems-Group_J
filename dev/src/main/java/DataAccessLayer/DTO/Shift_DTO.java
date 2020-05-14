@@ -2,6 +2,7 @@ package DataAccessLayer.DTO;
 
 import BusinessLayer.Workers.Shift;
 import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -14,7 +15,7 @@ public class Shift_DTO {
     @DatabaseField (columnName = "ShiftID", id = true)
     int ShiftID;
 
-    @DatabaseField(columnName = "date", uniqueCombo = true, index = true)
+    @DatabaseField(columnName = "date", uniqueCombo = true, index = true, dataType = DataType.DATE_STRING, format = "dd/MM/yyy")
     private Date date;
 
     @DatabaseField(columnName = "partOfDay", uniqueCombo = true, index = true)

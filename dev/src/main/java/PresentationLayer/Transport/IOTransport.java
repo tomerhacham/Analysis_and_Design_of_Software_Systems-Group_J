@@ -255,7 +255,7 @@ public class IOTransport {
 
     private int chooseDateAndTime(int transportID)
     {
-        System.out.println("Please enter a date in the format dd-mm-yyyy");
+        System.out.println("Please enter a date in the format dd/mm/yyyy");
         String date;
         String time;
         while (true){
