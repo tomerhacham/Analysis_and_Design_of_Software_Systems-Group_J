@@ -14,11 +14,11 @@ public class Inventory {
 
 
     //Constructors
-    public Inventory() {
+    public Inventory(Integer branchId) {
         this.categoryController=new CategoryController();
-        this.productController = new ProductController();
+        this.productController = new ProductController(branchId);
         this.reportController = new ReportController();
-        this.saleController=new SaleController();
+        this.saleController=new SaleController(branchId);
     }
     //region Methods
 

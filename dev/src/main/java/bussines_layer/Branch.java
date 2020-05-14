@@ -134,7 +134,6 @@ public class Branch {
     public Result addProductToContract(Integer supplierID, Integer catalogID, Integer gpID, Float supplier_price, Integer supplier_id, String supplier_category , String name){
         GeneralProduct gp = searchGeneralProductByGpID(gpID).getData();
         if (gp == null){
-            //TODO check where GP will be created
             return new Result<>(false, null, String.format("General Product with ID %d does not exist", gpID));
         }
         Result<CatalogProduct> res = gp.addCatalogProduct(catalogID, gpID, supplier_price, supplier_id, supplier_category, name);
@@ -265,6 +264,14 @@ public class Branch {
         this.name = name;
     }
     //endregion
+
+
+    @Override
+    public String toString() {
+        return "" +
+                "Name:'" + name +
+                ", ID:" + branch_id;
+    }
 }
 
 

@@ -48,6 +48,13 @@ public class SupplierModule {
         }
 
         public Result removeContract(SupplierCard supplier){
+
+            //before removing this suppliers contract from the branch , check first if there are any periodic orders with this suppliers id
+            for (Order order : ordersController.getAllOrders()) {
+                if((order.getType()==OrderType.PeriodicOrder) && (order.getSupplierID() == supplier.getId())){
+                    ordersController.removePeriodicOrder(order.getOrderID());
+                }
+            }
             return contractController.removeContract(supplier);
         }
 

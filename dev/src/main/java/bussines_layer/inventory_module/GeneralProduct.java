@@ -17,11 +17,12 @@ public class GeneralProduct {
     private Integer min_quantity;
     private List<SpecificProduct> products;
     private List<CatalogProduct> catalog_products;
+    private Integer branchId;
 
     //Constructor
     public GeneralProduct(String manufacture, String name, Float supplier_price,
                             Float retail_price, Integer min_quantity, Integer catalogID,
-                            Integer gpID, Integer supplier_id, String supplier_category)
+                            Integer gpID, Integer supplier_id, String supplier_category , Integer branchId)
     {
         this.manufacture = manufacture;
         this.name = name;
@@ -32,6 +33,7 @@ public class GeneralProduct {
         this.products = new LinkedList<>();
         this.gpID = gpID;
         this.catalog_products = new LinkedList<>();
+        this.branchId = branchId;
         addCatalogProduct(catalogID, gpID, supplier_price, supplier_id, supplier_category , name);
     }
 
@@ -42,6 +44,10 @@ public class GeneralProduct {
     }
 
     public Integer getGpID() {return this.gpID;}
+
+    public Integer getBranch_id(){
+        return branchId;
+    }
 
     /*public void setManufacture(String manufacture) {
         this.manufacture = manufacture;
@@ -254,8 +260,9 @@ public class GeneralProduct {
     private boolean lowBoundCheck(){
         return products.size()==min_quantity;
     }
+
     public int quantityToOrder(){
-        return (Math.abs(min_quantity-quantity)+5); //TODO !!!!
+        return (Math.abs(min_quantity-quantity)+5);
     }
 
     /**
