@@ -85,124 +85,8 @@ public class Mapper {
     }
 
     //region Methods
-    //TODO: generate DTO from provided class
-    //TODO: load cross-referenced data (e.g catalog product in order)
 
-    /**
-     * write general product and all associate objects to DB
-     * @param generalProduct
-     */
-    public void create(GeneralProduct generalProduct){
-        GeneralProductDTO generalProductDTO = new GeneralProductDTO(generalProduct);
-        LinkedList<SpecificProductDTO> specific_products=new LinkedList<>();
-        for(SpecificProduct specificProduct:generalProduct.getProducts()){
-            specific_products.add(new SpecificProductDTO(generalProductDTO,specificProduct));
-        }
-        LinkedList<catalog_product_in_general_productDTO> catalog_products=new LinkedList<>();
-        for(CatalogProduct catalogProduct:generalProduct.getCatalog_products()){
-            catalog_products.add(new catalog_product_in_general_productDTO(generalProductDTO,catalogProduct));
-        }
-        try{
-            general_product_dao.create(generalProductDTO);
-            specific_product_dao.create(specific_products);
-            catalog_product_in_general_products_dao.create(catalog_products);
-        }
-        catch(Exception e){e.printStackTrace();}
-    }
-
-    public void update(GeneralProduct generalProduct){
-        try{
-            GeneralProductDTO generalProductDTO = new GeneralProductDTO(generalProduct);
-            LinkedList<SpecificProductDTO> specific_products=new LinkedList<>();
-            general_product_dao.update(generalProductDTO);
-
-            for(SpecificProduct specificProduct:generalProduct.getProducts()){
-                SpecificProductDTO spDTO = new SpecificProductDTO(generalProductDTO,specificProduct);
-                specific_product_dao.update(spDTO);
-            }
-
-            for(CatalogProduct catalogProduct:generalProduct.getCatalog_products()){
-                UpdateBuilder<catalog_product_in_general_productDTO,Void> updateBuilder = catalog_product_in_general_products_dao.updateBuilder();
-                // set the criteria like you would a QueryBuilder
-                updateBuilder.where().eq("catalogID", catalogProduct.getCatalogID()).and().eq("branch_id" , generalProduct.getBranch_id());
-                // update the value of your field(s)
-                updateBuilder.updateColumnValue("name" ,catalogProduct.getName());
-                updateBuilder.updateColumnValue("supplier_price" , catalogProduct.getSupplierPrice());
-                updateBuilder.updateColumnValue("supplier_category" , catalogProduct.getSupplierCategory());
-                updateBuilder.update();
-            }
-        }catch (Exception e){e.printStackTrace();}
-    }
-
-    /**
-     * save main category ONLY; in order to the regular category you need to provide the super_category
-     * @param category
-     */
-    public void create(Category category){
-        //todo: create DTO for category
-        CategoryDTO categoryDTO=new CategoryDTO(category);
-        for (Category sub_category:category.getSub_categories()){
-            create(categoryDTO,sub_category);
-        }
-        //todo:create DTO for each sub_category
-        //todo: create GeneralProductDTO for each generalProduct in generalproduct list
-
-    }
-
-    public void update(Category category){
-        try{
-            CategoryDTO categoryDTO=new CategoryDTO(category);
-            category_dao.update(categoryDTO);
-        }catch (Exception e){e.printStackTrace();}
-    }
-
-    /**
-     * recursive function to the all sub-categories and its associate classes
-     * @param super_category - DTO class of the super category
-     * @param category
-     */
-    private void create(CategoryDTO super_category, Category category){
-        CategoryDTO categoryDTO = new CategoryDTO(super_category,category);
-        for (Category sub_category:category.getSub_categories()){
-            create(categoryDTO,category);
-        }
-        if (!category.getAllGeneralProduct().isEmpty()){
-            for (GeneralProduct generalProduct:category.getAllGeneralProduct()){
-                create(generalProduct);
-            }
-        }
-        try {category_dao.create(categoryDTO);}
-        catch(Exception e){e.printStackTrace();}
-    }
-
-    /**
-     * write Sale object to the DB and all its general product associate to is
-     * @param sale
-     */
-    public void create(Sale sale){
-        BranchDTO branchDTO= new BranchDTO(sale.getBranch_id());
-        SaleDTO saleDTO = new SaleDTO(branchDTO,sale);
-        LinkedList<general_product_on_saleDTO> general_product_on_sale = new LinkedList<>();
-        if(!sale.getProducts_on_sale().isEmpty()){
-            for(GeneralProduct generalProduct:sale.getProducts_on_sale()){
-                general_product_on_sale.add(new general_product_on_saleDTO(new GeneralProductDTO(generalProduct),saleDTO));
-            }
-        }
-        try{
-            sale_dao.create(saleDTO);
-            general_product_on_sale_dao.create(general_product_on_sale);
-        }
-        catch(Exception e){e.printStackTrace();}
-    }
-
-    public void update(Sale sale){
-        try{
-            BranchDTO branchDTO= new BranchDTO(sale.getBranch_id());
-            SaleDTO saleDTO = new SaleDTO(branchDTO,sale);
-            sale_dao.update(saleDTO);
-        }catch (Exception e){e.printStackTrace();}
-    }
-
+    //region Creates
     /**
      * write Branch to the DB
      * @param branch
@@ -212,12 +96,28 @@ public class Mapper {
         try{branch_dao.create(branchDTO);}
         catch(Exception e){e.printStackTrace();}
     }
+    /**
+     * writing the provided category to the DB
+     * @param category
+     * @param super_category_id
+     */
+    public void create(Category category,Integer super_category_id){
+        CategoryDTO categoryDTO = new CategoryDTO(category,super_category_id);
+        try {
+            category_dao.create(categoryDTO);
+            System.err.println(String.format("[Writing] %s", categoryDTO));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
 
-    public void update(Branch branch){
-        try{
-            BranchDTO branchDTO=new BranchDTO(branch);
-            branch_dao.update(branchDTO);
-        }catch (Exception e){e.printStackTrace();}
+    }
+    /**
+     * write general product and all associate objects to DB
+     * @param generalProduct
+     */
+    public void create(GeneralProduct generalProduct){
+        GeneralProductDTO generalProductDTO = new
+
     }
 
     public void create(Contract contract){
@@ -263,6 +163,89 @@ public class Mapper {
         //todo:create DTO for supplier
         //todo: for each contact name in ContactName create contact_of_supplierDTO
     }
+    /**
+     * write Sale object to the DB and all its general product associate to is
+     * @param sale
+     */
+    public void create(Sale sale){
+        BranchDTO branchDTO= new BranchDTO(sale.getBranch_id());
+        SaleDTO saleDTO = new SaleDTO(branchDTO,sale);
+        LinkedList<general_product_on_saleDTO> general_product_on_sale = new LinkedList<>();
+        if(!sale.getProducts_on_sale().isEmpty()){
+            for(GeneralProduct generalProduct:sale.getProducts_on_sale()){
+                general_product_on_sale.add(new general_product_on_saleDTO(new GeneralProductDTO(generalProduct),saleDTO));
+            }
+        }
+        try{
+            sale_dao.create(saleDTO);
+            general_product_on_sale_dao.create(general_product_on_sale);
+        }
+        catch(Exception e){e.printStackTrace();}
+    }
+    public void createNOACTIVE(GeneralProduct generalProduct){
+        GeneralProductDTO generalProductDTO = new GeneralProductDTO(generalProduct);
+        LinkedList<SpecificProductDTO> specific_products=new LinkedList<>();
+        for(SpecificProduct specificProduct:generalProduct.getProducts()){
+            specific_products.add(new SpecificProductDTO(generalProductDTO,specificProduct));
+        }
+        LinkedList<catalog_product_in_general_productDTO> catalog_products=new LinkedList<>();
+        for(CatalogProduct catalogProduct:generalProduct.getCatalog_products()){
+            catalog_products.add(new catalog_product_in_general_productDTO(generalProductDTO,catalogProduct));
+        }
+        try{
+            general_product_dao.create(generalProductDTO);
+            specific_product_dao.create(specific_products);
+            catalog_product_in_general_products_dao.create(catalog_products);
+        }
+        catch(Exception e){e.printStackTrace();}
+    }
+    //endregion
+
+    //region Updates
+    public void update(Branch branch){
+        try{
+            BranchDTO branchDTO=new BranchDTO(branch);
+            branch_dao.update(branchDTO);
+        }catch (Exception e){e.printStackTrace();}
+    }
+    public void update(Sale sale){
+        try{
+            BranchDTO branchDTO= new BranchDTO(sale.getBranch_id());
+            SaleDTO saleDTO = new SaleDTO(branchDTO,sale);
+            sale_dao.update(saleDTO);
+        }catch (Exception e){e.printStackTrace();}
+    }
+    public void update(Category category){
+        try{
+            CategoryDTO categoryDTO=new CategoryDTO(category);
+            category_dao.update(categoryDTO);
+        }catch (Exception e){e.printStackTrace();}
+    }
+    public void update(GeneralProduct generalProduct){
+        try{
+            GeneralProductDTO generalProductDTO = new GeneralProductDTO(generalProduct);
+            LinkedList<SpecificProductDTO> specific_products=new LinkedList<>();
+            general_product_dao.update(generalProductDTO);
+
+            for(SpecificProduct specificProduct:generalProduct.getProducts()){
+                SpecificProductDTO spDTO = new SpecificProductDTO(generalProductDTO,specificProduct);
+                specific_product_dao.update(spDTO);
+            }
+
+            for(CatalogProduct catalogProduct:generalProduct.getCatalog_products()){
+                UpdateBuilder<catalog_product_in_general_productDTO,Void> updateBuilder = catalog_product_in_general_products_dao.updateBuilder();
+                // set the criteria like you would a QueryBuilder
+                updateBuilder.where().eq("catalogID", catalogProduct.getCatalogID()).and().eq("branch_id" , generalProduct.getBranch_id());
+                // update the value of your field(s)
+                updateBuilder.updateColumnValue("name" ,catalogProduct.getName());
+                updateBuilder.updateColumnValue("supplier_price" , catalogProduct.getSupplierPrice());
+                updateBuilder.updateColumnValue("supplier_category" , catalogProduct.getSupplierCategory());
+                updateBuilder.update();
+            }
+        }catch (Exception e){e.printStackTrace();}
+    }
+    //endregion
+
     //endregion
 
 
