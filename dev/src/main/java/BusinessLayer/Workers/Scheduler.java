@@ -1,8 +1,6 @@
 package BusinessLayer.Workers;
 
-import BusinessLayer.Transport.TransportController;
 import DataAccessLayer.Mapper;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -352,9 +350,9 @@ public class Scheduler {
 
                 Pair pair = availableWorkers.get(date);
                 if(partOfDay==morning)
-                    pair.setKey(new Pair<>(workerList,null));
+                    pair.setKey(workerList);
                 else
-                    pair.setValue(new Pair<>(null,workerList));
+                    pair.setValue(workerList);
             }
         }
         return workerList;

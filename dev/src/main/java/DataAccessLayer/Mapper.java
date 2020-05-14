@@ -650,6 +650,7 @@ public class Mapper {
     //-----------------------dummy methods------------------------------------------------//
     public List<Worker> getAvailableWorkers(Date date, boolean partOfDay) {
         //@TODO:implement this
+        return null;
     }
 
     public void updateWorker(Worker searched) {

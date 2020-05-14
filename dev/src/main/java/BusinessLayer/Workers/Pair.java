@@ -5,13 +5,9 @@ public class Pair<K, V> {
     private  K key;
     private  V val;
 
-    public static <K, V> Pair<K, V> createPair(K element0, V element1) {
-        return new Pair<K, V>(element0, element1);
-    }
-
-    public Pair(K element0, V element1) {
-        this.key = element0;
-        this.val = element1;
+    public Pair(K keyElement, V valElement) {
+        this.key = keyElement;
+        this.val = valElement;
     }
 
     public K getKey() {
