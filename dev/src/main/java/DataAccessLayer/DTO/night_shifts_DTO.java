@@ -5,21 +5,23 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.Date;
 
-@DatabaseTable(tableName = "Driver")
+@DatabaseTable(tableName = "nightShifts")
 public class night_shifts_DTO {
 
-    @DatabaseField(columnName = "date", id = true)
+    @DatabaseField(columnName = "date", uniqueCombo = true)
     private Date date;
 
-    @DatabaseField(columnName = "truckID", id = true, foreign = true, foreignColumnName = "truckID")
-    private int truckID;
+    @DatabaseField(columnName = "truckID", foreign = true, foreignColumnName = "truckID",  uniqueCombo = true)
+    private Truck_DTO truckID;
 
-    public night_shifts_DTO(Date date, int truckID){
+    public night_shifts_DTO(Date date, Truck_DTO truckID){
         this.date=date;
         this.truckID=truckID;
     }
 
-    public int getTruckID() {
+    public night_shifts_DTO(){}
+
+    public Truck_DTO getTruckID() {
         return truckID;
     }
 
@@ -27,7 +29,7 @@ public class night_shifts_DTO {
         return date;
     }
 
-    public void setTruckID(int truckID) {
+    public void setTruckID(Truck_DTO truckID) {
         this.truckID = truckID;
     }
 

@@ -149,4 +149,18 @@ public class Transport {
     }
 
     public boolean getShift(){return Shift;}
+
+    public ArrayList<String> getLog() {
+        return log;
+    }
+
+    public Site getSource() {
+        return Source;
+    }
+
+    public String getDriverName() {
+        return driverName;
+    }
+
+
 }

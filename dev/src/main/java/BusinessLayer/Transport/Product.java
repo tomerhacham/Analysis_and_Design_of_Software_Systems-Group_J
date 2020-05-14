@@ -19,6 +19,10 @@ public class Product {
         return weight;
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
     public String toString() {
         return "product id: "+ID+ " product name: "+name+" product weight: "+weight;

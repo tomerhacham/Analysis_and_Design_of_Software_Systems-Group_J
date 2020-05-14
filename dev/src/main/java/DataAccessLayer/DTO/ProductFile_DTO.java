@@ -18,9 +18,40 @@ public class ProductFile_DTO {
     @ForeignCollectionField(eager = false)
     private ForeignCollection<Product_DTO> products;
 
+    public ProductFile_DTO(int fileID, float totalWeight){
+        this.fileID=fileID;
+        this.totalWeight=totalWeight;
+    }
+
     public ProductFile_DTO(int fileID, float totalWeight, ForeignCollection<Product_DTO> products){
         this.fileID=fileID;
         this.totalWeight=totalWeight;
         this.products=products;
+    }
+
+    public ProductFile_DTO(){}
+
+    public int getFileID() {
+        return fileID;
+    }
+
+    public float getTotalWeight() {
+        return totalWeight;
+    }
+
+    public ForeignCollection<Product_DTO> getProducts() {
+        return products;
+    }
+
+    public void setFileID(int fileID) {
+        this.fileID = fileID;
+    }
+
+    public void setProducts(ForeignCollection<Product_DTO> products) {
+        this.products = products;
+    }
+
+    public void setTotalWeight(float totalWeight) {
+        this.totalWeight = totalWeight;
     }
 }

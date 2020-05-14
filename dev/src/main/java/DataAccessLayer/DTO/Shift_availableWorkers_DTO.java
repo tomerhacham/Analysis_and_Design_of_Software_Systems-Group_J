@@ -8,42 +8,33 @@ import java.util.Date;
 @DatabaseTable(tableName = "Shift_availableWorkers")
 public class Shift_availableWorkers_DTO {
 
-    @DatabaseField(columnName = "workerID", id = true, foreign = true, foreignColumnName = "workerID")
-    private String workerID;
+    @DatabaseField(columnName = "workerID", foreign = true, foreignColumnName = "workerID", uniqueCombo = true)
+    private Worker_DTO workerID;
 
-    @DatabaseField(columnName = "shiftDate", id = true)
-    private Date shiftDate;
+    @DatabaseField(columnName = "ShiftID", foreign = true, foreignColumnName = "ShiftID", uniqueCombo = true)
+    private Shift_DTO shiftID;
 
-    @DatabaseField(columnName = "partOfDay", id = true)
-    private int partOfDay;
-
-    public Shift_availableWorkers_DTO(String workerID, Date shiftDate, int partOfDay){
-        this.partOfDay=partOfDay;
-        this.workerID=workerID;
-        this.shiftDate=shiftDate;
+    public Shift_availableWorkers_DTO(Worker_DTO workerID, Shift_DTO Shift_id) {
+        this.workerID = workerID;
+        this.shiftID = Shift_id;
     }
 
-    public String getWorkerID() {
+    public Shift_availableWorkers_DTO() {
+    }
+
+    public Shift_DTO getShiftID() {
+        return shiftID;
+    }
+
+    public Worker_DTO getWorkerID() {
         return workerID;
     }
 
-    public int getPartOfDay() {
-        return partOfDay;
+    public void setShiftID(Shift_DTO shiftID) {
+        this.shiftID = shiftID;
     }
 
-    public Date getShiftDate() {
-        return shiftDate;
-    }
-
-    public void setWorkerID(String workerID) {
+    public void setWorkerID(Worker_DTO workerID) {
         this.workerID = workerID;
-    }
-
-    public void setShiftDate(Date shiftDate) {
-        this.shiftDate = shiftDate;
-    }
-
-    public void setPartOfDay(int partOfDay) {
-        this.partOfDay = partOfDay;
     }
 }

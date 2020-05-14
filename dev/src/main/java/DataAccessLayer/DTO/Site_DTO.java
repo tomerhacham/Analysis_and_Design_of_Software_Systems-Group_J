@@ -29,6 +29,8 @@ public class Site_DTO {
         shipping_area = ShippingArea;
     }
 
+    public Site_DTO(){}
+
     public int getId() {
         return id;
     }

@@ -1,23 +1,35 @@
 package DataAccessLayer.DTO;
 
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "positions")
 public class Position_DTO {
 
-    @DatabaseField(columnName = "workerID", id = true, foreign = true, foreignColumnName = "workerID")
-    private String workerID;
+    @DatabaseField(columnName = "workerID",foreign = true, foreignColumnName = "workerID", uniqueCombo = true)
+    private Worker_DTO workerID;
 
-    @DatabaseField(columnName = "position", id = true)
+    @DatabaseField(columnName = "position", uniqueCombo = true)
     private String position;
 
-    public Position_DTO(String workerID, String position){
+    public Position_DTO(Worker_DTO workerID, String position){
         this.workerID=workerID;
         this.position=position;
     }
 
-    public void setWorkerID(String workerID) {
+    public Position_DTO(){}
+
+    public Worker_DTO getWorkerID() {
+        return workerID;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setWorkerID(Worker_DTO workerID) {
         this.workerID = workerID;
     }
 
@@ -25,11 +37,4 @@ public class Position_DTO {
         this.position = position;
     }
 
-    public String getWorkerID() {
-        return workerID;
-    }
-
-    public String getPosition() {
-        return position;
-    }
 }

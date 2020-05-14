@@ -1,5 +1,6 @@
 package DataAccessLayer.DTO;
 
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
@@ -14,10 +15,10 @@ public class Transport_DTO {
     @DatabaseField(columnName = "transportID", id = true)
     private int transportID;
 
-    @DatabaseField(columnName = "Date")
+    @DatabaseField(columnName = "Date",  dataType = DataType.DATE_STRING)
     private Date Date;
 
-    @DatabaseField(columnName = "Time")
+    @DatabaseField(columnName = "Time", dataType = DataType.DATE_TIME)
     private LocalTime Time;
 
     @DatabaseField(columnName = "Shift")
@@ -26,8 +27,9 @@ public class Transport_DTO {
     @DatabaseField(columnName = "truckID",foreign = true, foreignColumnName = "truckID")
     private Truck_DTO Truck;
 
-    @DatabaseField(columnName = "driverID", foreign = true, foreignColumnName = "driverID")
-    private String driverId;
+    //driverId==WorkerID
+    @DatabaseField(columnName = "driverID", foreign = true, foreignColumnName = "workerID")
+    private Worker_DTO driverId;
 
     @DatabaseField(columnName = "driverName")
     private String driverName;
@@ -35,17 +37,17 @@ public class Transport_DTO {
     @DatabaseField(columnName = "sourceID",foreign = true, foreignColumnName = "siteID")
     private Site_DTO Source;
 
-    @ForeignCollectionField(eager = false)
-    private ForeignCollection<DestFile_DTO> DestFiles;
-
     @DatabaseField(columnName = "TotalWeight")
     private float TotalWeight;
 
     @ForeignCollectionField(eager = false)
+    private ForeignCollection<DestFile_DTO> DestFiles;
+
+    @ForeignCollectionField(eager = false)
     private ForeignCollection<log_DTO> log;
 
-    public Transport_DTO(int id, Date date, LocalTime time, int partOfDay, String driver_id, String driver_name, Site_DTO source,
-                         float totalWeight, ForeignCollection<DestFile_DTO> destFiles, ForeignCollection<log_DTO> Log){
+    public Transport_DTO(int id, Date date, LocalTime time, int partOfDay, Worker_DTO driver_id, String driver_name, Site_DTO source,
+                         float totalWeight){
         transportID = id;
         Date = date;
         Time = time;
@@ -54,9 +56,9 @@ public class Transport_DTO {
         driverName = driver_name;
         Source = source;
         TotalWeight = totalWeight;
-        DestFiles = destFiles;
-        log = Log;
     }
+
+    public Transport_DTO(){}
 
     public int getTransportID() {
         return transportID;
@@ -86,7 +88,7 @@ public class Transport_DTO {
         return Truck;
     }
 
-    public String getDriverId() {
+    public Worker_DTO getDriverId() {
         return driverId;
     }
 
@@ -118,7 +120,7 @@ public class Transport_DTO {
         Date = date;
     }
 
-    public void setDriverId(String driverId) {
+    public void setDriverId(Worker_DTO driverId) {
         this.driverId = driverId;
     }
 

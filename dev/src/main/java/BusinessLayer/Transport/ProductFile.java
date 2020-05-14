@@ -52,4 +52,9 @@ public class ProductFile {
         }
         return s;
     }
+
+    public HashMap<Product, Integer> getProducts() {
+        return products;
+    }
+
 }

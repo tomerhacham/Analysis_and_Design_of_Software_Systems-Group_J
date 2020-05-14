@@ -5,7 +5,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(tableName = "Worker")
+@DatabaseTable(tableName = "Truck")
 public class Truck_DTO {
 
     @DatabaseField(columnName = "truckID", id = true)
@@ -40,6 +40,18 @@ public class Truck_DTO {
         max_weight = maxWeight;
         drivers_license = driversLicense;
     }
+    public Truck_DTO(int ID, String licensePlate, String Model, float netWeight, float maxWeight, String driversLicense,
+                     ForeignCollection<night_shifts_DTO> night_shifts, ForeignCollection<morning_shifts_DTO> morning_shifts){
+        id = ID;
+        license_plate = licensePlate;
+        model = Model;
+        net_weight = netWeight;
+        max_weight = maxWeight;
+        drivers_license = driversLicense;
+        this.night_shifts=night_shifts;
+        this.morning_shifts=morning_shifts;
+    }
+    public Truck_DTO(){}
 
     public Integer getId() {
         return id;
