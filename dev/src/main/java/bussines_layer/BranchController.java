@@ -97,13 +97,13 @@ public class BranchController {
         branches.remove(branch_id);
         return new Result<>(true, branch_id, String.format("Branch (ID: %d) removed successfully", branch_id));
     }
-    public Result editName(Integer branc_id, String newName){
-        if (checkBranchExists(branc_id)){
-            Branch b = branches.get(branc_id);
+    public Result editName(Integer branch_id, String newName){
+        if (checkBranchExists(branch_id)){
+            Branch b = branches.get(branch_id);
             b.setName(newName);
-            return new Result<>(true, b, String.format("Branch (ID: %d) name changed successfully to: %s", branc_id, newName));
+            return new Result<>(true, b, String.format("Branch (ID: %d) name changed successfully to: %s", branch_id, newName));
         }
-        return new Result<>(false, null, String.format("Branch with ID %d not found", branc_id));
+        return new Result<>(false, null, String.format("Branch with ID %d not found", branch_id));
     }
 
     //endregion
