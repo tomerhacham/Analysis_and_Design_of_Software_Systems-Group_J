@@ -1,8 +1,5 @@
 package data_access_layer;
-import bussines_layer.inventory_module.CatalogProduct;
-import bussines_layer.inventory_module.Category;
-import bussines_layer.inventory_module.GeneralProduct;
-import bussines_layer.inventory_module.SpecificProduct;
+import bussines_layer.inventory_module.*;
 import data_access_layer.DTO.*;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
@@ -134,10 +131,24 @@ public class Mapper {
         try {category_dao.create(categoryDTO);}
         catch(Exception e){e.printStackTrace();}
     }
+
+    /**
+     * write Sale object to the DB and all its general product associate to is
+     * @param sale
+     */
     public void create(Sale sale){
-        //todo:create DTO for sale
-        //todo: create GeneralProductDTO for each products_on_sale
+        BranchDTO branchDTO= new BranchDTO(sale.getBranch_id());
+        SaleDTO saleDTO = new SaleDTO(branchDTO,sale);
+        LinkedList<general_product_on_saleDTO> general_product_on_sale = new LinkedList<>();
+        if(!sale.getProducts_on_sale().isEmpty()){
+            for(GeneralProduct generalProduct:sale.getProducts_on_sale()){
+                general_product_on_sale.add(new general_product_on_saleDTO(new GeneralProductDTO(generalProduct),saleDTO));
+            }
+        }
+        try{sale_dao.create(saleDTO); general_product_on_sale_dao.create(general_product_on_sale);}
+        catch(Exception e){e.printStackTrace();}
     }
+
     public void create(Branch branch){
         //todo:creat DTO for branch;
     }

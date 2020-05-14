@@ -75,6 +75,54 @@ public class Sale {
         return active;
     }
 
+    //region Getters and Setters
+
+    public void setSale_id(Integer sale_id) {
+        this.sale_id = sale_id;
+    }
+
+    public List<GeneralProduct> getProducts_on_sale() {
+        return products_on_sale;
+    }
+
+    public void setProducts_on_sale(List<GeneralProduct> products_on_sale) {
+        this.products_on_sale = products_on_sale;
+    }
+
+    public Date getStart() {
+        return start;
+    }
+
+    public void setStart(Date start) {
+        this.start = start;
+    }
+
+    public Date getEnd() {
+        return end;
+    }
+
+    public void setEnd(Date end) {
+        this.end = end;
+    }
+
+    public Enum<discountType> getType() {
+        return type;
+    }
+
+    public void setType(discountType type) {
+        this.type = type;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    //endregion
+
     @Override
     public String toString() {
         String toReturn= ""+
