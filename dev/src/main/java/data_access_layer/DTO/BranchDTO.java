@@ -1,5 +1,6 @@
 package data_access_layer.DTO;
 
+import bussines_layer.Branch;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -13,6 +14,7 @@ public class BranchDTO {
     public BranchDTO(Integer branch_id) {
         this.branch_id = branch_id;
     }
+    public BranchDTO(Branch branch){this.branch_id=branch.getBranchId();}
     public BranchDTO() {}
 
     //region Methods

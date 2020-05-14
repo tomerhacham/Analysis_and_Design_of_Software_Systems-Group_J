@@ -48,7 +48,7 @@ public class GeneralProductDTO {
     }
     public GeneralProductDTO(GeneralProduct generalProduct){
         this.GPID = generalProduct.getGpID();
-        this.branch_id = generalProduct.getBranch_id();
+        this.branch_id = new BranchDTO(generalProduct.getBranch_id());
         this.manufacture = generalProduct.getManufacture();
         this.name = generalProduct.getName();
         this.quantity = generalProduct.getQuantity();
@@ -86,7 +86,7 @@ public class GeneralProductDTO {
         return min_quantity;
     }
 
-    public Integer getSale_price() {
+    public Float getSale_price() {
         return sale_price;
     }
 

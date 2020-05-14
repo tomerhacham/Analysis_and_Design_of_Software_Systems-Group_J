@@ -84,6 +84,29 @@ public class Sale {
         return branchId;
     }
 
+    public List<GeneralProduct> getProducts_on_sale() {
+        return products_on_sale;
+    }
+
+    public Date getStart() {
+        return start;
+    }
+
+    public Date getEnd() {
+        return end;
+    }
+
+    public Enum<discountType> getType() {
+        return type;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public Integer getBranchId() {
+        return branchId;
+    }
 
     @Override
     public String toString() {

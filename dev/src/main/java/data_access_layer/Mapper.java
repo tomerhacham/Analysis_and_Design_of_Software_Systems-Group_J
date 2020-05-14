@@ -1,4 +1,5 @@
 package data_access_layer;
+import bussines_layer.Branch;
 import bussines_layer.inventory_module.*;
 import data_access_layer.DTO.*;
 import com.j256.ormlite.dao.Dao;
@@ -149,8 +150,14 @@ public class Mapper {
         catch(Exception e){e.printStackTrace();}
     }
 
+    /**
+     * write Branch to the DB
+     * @param branch
+     */
     public void create(Branch branch){
-        //todo:creat DTO for branch;
+        BranchDTO branchDTO=new BranchDTO(branch);
+        try{branch_dao.create(branchDTO);}
+        catch(Exception e){e.printStackTrace();}
     }
     public void create(Contract contract){
         //todo: create DTO for contract
