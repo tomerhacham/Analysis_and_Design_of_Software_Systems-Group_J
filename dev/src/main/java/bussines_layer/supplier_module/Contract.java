@@ -181,12 +181,12 @@ public class Contract {
      * @param product
      * @return
      */
-    public Result isProductExist(CatalogProduct product){
+    public Result<CatalogProduct> isProductExist(CatalogProduct product){
         Result result;
         if (products.containsKey(product.getGpID()))
-            result=new Result(true, product, String.format("Found %s", product));
+            result=new Result<>(true, product, String.format("Found %s", product));
         else
-            result=new Result(false,product, String.format("Could not find %s under contract ID:%d", product,contractID));
+            result=new Result<>(false,product, String.format("Could not find %s under contract ID:%d", product,contractID));
         return result;
     }
 
@@ -199,10 +199,10 @@ public class Contract {
         Result<Float> result;
         if (products.containsKey(productID)){
             Float supplier_price=products.get(productID).getSupplierPrice();
-            result=new Result(true,supplier_price, String.format("Supplier price for catalog product:%d", productID));
+            result=new Result<>(true,supplier_price, String.format("Supplier price for catalog product:%d", productID));
         }
         else{
-            result=new Result(false, null, String.format("Could not find product:%d under contract ID:%d", productID,contractID));
+            result=new Result<>(false, null, String.format("Could not find product:%d under contract ID:%d", productID,contractID));
         }
         return result;
     }
@@ -214,16 +214,16 @@ public class Contract {
                 result = costEngineering.getUpdatePrice( products.get(productID).getCatalogID() , quantity);
                 if (result.getData() == -1){
                     Float supplier_price=products.get(productID).getSupplierPrice();
-                    result=new Result(true,supplier_price, String.format("Supplier price for catalog product:%d", productID));
+                    result=new Result<>(true,supplier_price, String.format("Supplier price for catalog product:%d", productID));
                 }
             }
             else{
                 Float supplier_price=products.get(productID).getSupplierPrice();
-                result=new Result(true,supplier_price, String.format("Supplier price for catalog product:%d", productID));
+                result=new Result<>(true,supplier_price, String.format("Supplier price for catalog product:%d", productID));
             }
         }
         else{
-            result=new Result(false, null, String.format("Could not find product:%d under contract ID:%d", productID,contractID));
+            result=new Result<>(false, null, String.format("Could not find product:%d under contract ID:%d", productID,contractID));
         }
         return result;
     }

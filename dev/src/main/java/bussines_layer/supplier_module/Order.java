@@ -17,7 +17,7 @@ import java.util.LinkedList;
 enum OrderType
 {PeriodicOrder,OutOfStockOrder;}
 
-enum Status
+enum OrderStatus
 {received,inProcess , sent}
 
 public class Order {
@@ -25,7 +25,7 @@ public class Order {
     private Integer orderID;
     private Integer supplierID;
     private OrderType type;
-    private Status status;
+    private OrderStatus status;
     private HashMap<CatalogProduct, Integer> productsAndQuantity; // <product , quantity>
     private HashMap<CatalogProduct , Float> productsAndPrice; //<product, price>
 
@@ -36,7 +36,7 @@ public class Order {
         this.supplierID = supplierID;
         productsAndPrice = new HashMap<>();
         this.type = type;
-        this.status=Status.inProcess;
+        this.status=OrderStatus.inProcess;
     }
 
     public int getOrderID() {
@@ -47,11 +47,11 @@ public class Order {
         return supplierID;
     }
 
-    public Status getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(OrderStatus status) {
         this.status = status;
     }
 
@@ -62,22 +62,25 @@ public class Order {
     public void setType(OrderType type) {
         this.type = type;
     }
+    public void setSupplierID (Integer supplierID){ this.supplierID = supplierID;}
+
+    public  HashMap<CatalogProduct, Float> getProductsAndPrice() {return productsAndPrice;}
 
     public  HashMap<CatalogProduct, Integer> getProductsAndQuantity() {return productsAndQuantity;}
 
     public Result addProduct(CatalogProduct product , Integer quantity , Float price){
 
         if (productsAndQuantity.containsKey(product)){
-            return new Result(false,product, String.format("The product %s is already in the order:%d . Therefore it is not possible to add the product (only possible is to change the quantity)", product.getName() , getOrderID()));
+            return new Result<>(false,product, String.format("The product %s is already in the order:%d . Therefore it is not possible to add the product (only possible is to change the quantity)", product.getName() , getOrderID()));
         }
         productsAndQuantity.put(product , quantity);
         productsAndPrice.put(product , price);
-        return new Result(true,product, String.format("The product %s has been added to the order:%d", product.getName() , getOrderID()));
+        return new Result<>(true,product, String.format("The product %s has been added to the order:%d", product.getName() , getOrderID()));
     }
 
     public Result removeProductFromPeriodicOrder(CatalogProduct product){
         if (!(productsAndQuantity.containsKey(product))){
-            return new Result(false,product, String.format("The product %s is not in the order:%d , therefore can not be removed", product.getName() , getOrderID()));
+            return new Result<>(false,product, String.format("The product %s is not in the order:%d , therefore can not be removed", product.getName() , getOrderID()));
         }
         productsAndQuantity.remove(product);
         productsAndPrice.remove(product);
@@ -95,7 +98,7 @@ public class Order {
     }
 
     public Result<String> display() {
-        status = Status.sent;
+        status = OrderStatus.sent;
         String toDisplay = "Order id : "+'\t'+this.orderID.toString() +'\t'+"Supplier id : "+this.supplierID+ '\n';
         toDisplay = toDisplay+ "Product"+'\t'+'\t'+"Quantity" + '\n';
 
