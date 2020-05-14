@@ -194,16 +194,15 @@ public class SupplierModule {
         return ordersController.removePeriodicOrder(orderId);
     }
 
-    public Result<Float> addProductToPeriodicOrder(Integer orderId , CatalogProduct product , Integer quantity){
-
+    public Result addProductToPeriodicOrder(Integer orderId , GeneralProduct gp , Integer quantity){
         Order order = ordersController.getOrder(orderId).getData();
         if (order == null){return new Result<>(false, null, String.format("Order %d does not exist", orderId));}
 
         if(order.getType() != OrderType.PeriodicOrder){
-            return new Result(false,order, String.format("The order %d is not a periodic order therefore can not be modified " , orderId));
+            return new Result<>(false,null, String.format("The order %d is not a periodic order therefore can not be modified " , orderId));
         }
+        CatalogProduct product = gp.getSupplierCatalogProduct(order.getSupplierID());
         Result<Float> price = contractController.findContract(order.getSupplierID()).getData().getProductPriceConsideringQuantity(product.getGpID() , quantity);
-
         if(price.getData() == null ){
             return price; // return the false result
         }
@@ -212,16 +211,17 @@ public class SupplierModule {
             return new Result(false,product, String.format("The order %d already has this product in the order , it is only possible to update the quantity " , orderId));
         }
         ordersController.addProductToOrder(orderId , product , quantity , price.getData());
-        return new Result(true,product, String.format("The product %s has been added to the order:%d", product.getName() , orderId));
+        return new Result<>(true,product, String.format("The product %s has been added to the order:%d", product.getName() , orderId));
     }
 
-    public Result updateProductQuantityInPeriodicOrder(Integer orderId , CatalogProduct product , Integer newQuantity){
+    public Result updateProductQuantityInPeriodicOrder(Integer orderId , GeneralProduct gp , Integer newQuantity){
         Order order = ordersController.getOrder(orderId).getData();
         if (order == null){return new Result<>(false, null, String.format("Order %d does not exist", orderId));}
 
         if(order.getType() != OrderType.PeriodicOrder){
             return new Result<>(false,order, String.format("The order %d is not a periodic order therefore can not be modified " , orderId));
         }
+        CatalogProduct product = gp.getSupplierCatalogProduct(order.getSupplierID());
         Result<Float> price = contractController.findContract(order.getSupplierID()).getData().getProductPriceConsideringQuantity(product.getGpID() , newQuantity);
 
         if(price.getData() == null ){
@@ -230,7 +230,8 @@ public class SupplierModule {
         return ordersController.updateProductQuantityInPeriodicOrder(orderId , product , newQuantity , price.getData());
     }
 
-    public Result removeProductFromPeriodicOrder(Integer orderId , CatalogProduct product){
+    public Result removeProductFromPeriodicOrder(Integer orderId , GeneralProduct gp){
+        CatalogProduct product = gp.getSupplierCatalogProduct(orderId);
         return ordersController.removeProductFromPeriodicOrder(orderId , product);
     }
 

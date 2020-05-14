@@ -125,8 +125,7 @@ public class Order {
     }
 
     public Result<String> display() {
-        status = OrderStatus.sent;
-        String toDisplay = "Order id : "+'\t'+this.orderID.toString() +'\t'+"Supplier id : "+this.supplierID+ '\n';
+        String toDisplay = "Order id : "+'\t'+this.orderID.toString() +'\t'+ "Type : "+ type + '\t' +"Supplier id : "+this.supplierID+ '\n';
         toDisplay = toDisplay+ "Product"+'\t'+'\t'+"Quantity" + '\n';
 
         for (CatalogProduct p : productsAndQuantity.keySet()){

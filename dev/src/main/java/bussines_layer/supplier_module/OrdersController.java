@@ -80,6 +80,7 @@ public class OrdersController {
     }
 
     public Result<String> issueOrder (Order order){
+        order.setStatus(OrderStatus.sent);
         return order.display();
     }
 
@@ -104,13 +105,13 @@ public class OrdersController {
 
         if(orders.isEmpty()){
             toDisplay.add("There Are No Orders In The System"+'\n');
-            return new Result(false,toDisplay, String.format("There Are No Orders In The System\n"));
+            return new Result<>(false,toDisplay, String.format("There Are No Orders In The System\n"));
         }
 
         for (Order o: orders){
             toDisplay.add(o.display().getData());
         }
-        return new Result(true,toDisplay, String.format("Display all Orders"));
+        return new Result<>(true,toDisplay, String.format("Display all Orders"));
     }
 
     public Result<HashMap<CatalogProduct, Integer>> getProductsToAcceptOrder(Integer orderID) {

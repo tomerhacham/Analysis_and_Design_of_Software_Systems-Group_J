@@ -24,7 +24,6 @@ public class SupplierCard {
     private LinkedList<String> ContactsName;
     private int numOfContract;
     private supplierType type;
-
     public SupplierCard(String SupplierName , String Address , String Email , String PhoneNumber ,
                         int id , String BankAccountNum , String Payment , LinkedList<String> ContactsName, supplierType type){
 
@@ -102,7 +101,15 @@ public class SupplierCard {
         ContactsName = contactsName;
     }
 
-    public supplierType getType () { return type; }
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setNumOfContract(int numOfContract) {
+        this.numOfContract = numOfContract;
+    }
+
+    public Enum<supplierType> getType () { return type; }
 
     public void setType (supplierType type) {this.type =type; }
 

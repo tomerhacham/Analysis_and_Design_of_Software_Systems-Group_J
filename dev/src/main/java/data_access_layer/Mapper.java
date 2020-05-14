@@ -1,7 +1,11 @@
 package data_access_layer;
 
 import bussines_layer.Branch;
+import bussines_layer.SupplierCard;
 import bussines_layer.inventory_module.*;
+import bussines_layer.supplier_module.Contract;
+import bussines_layer.supplier_module.Order;
+import data_access_layer.DTO.*;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
@@ -10,7 +14,9 @@ import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import data_access_layer.DTO.*;
 
+import java.sql.SQLException;
 import java.util.LinkedList;
+import java.util.List;
 
 public class Mapper {
     //fields:
@@ -186,7 +192,6 @@ public class Mapper {
             sale_dao.create(saleDTO);
             general_product_on_sale_dao.create(general_product_on_sale);
         }
-        try{sale_dao.create(saleDTO); general_product_on_sale_dao.create(general_product_on_sale);}
         catch(Exception e){e.printStackTrace();}
     }
 
@@ -217,8 +222,23 @@ public class Mapper {
 
     public void create(Contract contract){
         //todo: create DTO for contract
+        ContractDTO contractDTO = new ContractDTO(contract);
         //todo:create DTO for each category in contract
+        LinkedList<categories_in_contractDTO> categories = new LinkedList<>();
+        for(String category:contract.getCategories()){
+            categories.add(new categories_in_contractDTO(contractDTO,category));
+        }
         //todo: create DT for each catalog product in category
+        LinkedList<catalog_product_in_contractDTO> catalog_products = new LinkedList<>();
+        for(CatalogProduct catalogProduct: contract.getProducts().getData()){
+            try {
+                List<GeneralProductDTO> generalProduct =  general_product_dao.queryBuilder().where().eq("GPID",catalogProduct.getGpID()).and().eq("branch_id",contract.getBranchID()).query();
+                catalog_products.add(new catalog_product_in_contractDTO(contractDTO,catalogProduct,generalProduct.get(0)));
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        LinkedList<CostEngineeringDTO> costEngineeringDTOS = new
         //todo: create DTO for each costEngineering product;
     }
     public void create(Order order){

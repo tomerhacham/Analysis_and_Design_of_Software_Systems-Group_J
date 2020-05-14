@@ -38,6 +38,23 @@ public class Contract {
 
     public SupplierCard getSupplierCard() {return supplier; }
 
+    //region Getters
+    public LinkedList<String> getCategories() {
+        return categories;
+    }
+
+    public SupplierCard getSupplier() {
+        return supplier;
+    }
+
+    public int getContractID() {
+        return contractID;
+    }
+
+    public int getBranchID() {
+        return branchID;
+    }
+    //endregion
 
     //#region Categories
     public LinkedList<String> getCategory() {
