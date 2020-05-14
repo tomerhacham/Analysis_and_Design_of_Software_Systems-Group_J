@@ -265,6 +265,14 @@ public class Branch {
         this.name = name;
     }
     //endregion
+
+
+    @Override
+    public String toString() {
+        return "" +
+                "Name:'" + name +
+                ", ID:" + branch_id;
+    }
 }
 
 
