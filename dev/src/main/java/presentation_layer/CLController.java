@@ -47,6 +47,8 @@ public class CLController {
 
                 case 4:
                     Exit();
+                default:
+                    System.out.println("Option not valid, please retype");
             }
         }
     }
@@ -126,6 +128,8 @@ public class CLController {
                     return;
                 case 6:
                     Exit();
+                default:
+                    System.out.println("Option not valid, please retype");
             }
         }
     }
@@ -219,6 +223,8 @@ public class CLController {
                     return;
                 case 4:
                     Exit();
+                default:
+                    System.out.println("Option not valid, please retype");
             }
         }
     }
@@ -489,7 +495,7 @@ public class CLController {
         menu=menu.concat("1) Edit general product\n");
         menu=menu.concat("2) Remove specific product\n");
         menu=menu.concat("3) Mark flaw specific product\n");
-        menu=menu.concat("4 Change location of specific product\n");
+        menu=menu.concat("4) Change location of specific product\n");
         menu=menu.concat("5) Return\n");
         menu=menu.concat("6) exit\n\n");
         while(true) {
@@ -639,25 +645,25 @@ public class CLController {
 
     //endregion
     //region Specific Product
-    static private void printAddSpecificProductMenu() {
-        Result result;
-        String menu = "Please enter the following details\n";
-        menu=menu.concat("[CatalogID],[Expiration date (dd/mm/YYYY)],[Quantity]");
-        String[] param = getInputParserbyComma(sc);
-        if(param.length==3) {
-            Date date =convertStringToDate(param[1]);
-            if (date!=null){
-                result = branchController.addSpecificProduct(Integer.getInteger(param[0]),date,Integer.parseInt(param[2]));
-                System.out.println(result.getMessage());
-            }
-            else{
-                System.out.println("Date is not in the right format");
-            }
-        }
-        else{
-            System.out.println("Invalid number of parameters");
-        }
-    }
+//    static private void printAddSpecificProductMenu() {
+//        Result result;
+//        String menu = "Please enter the following details\n";
+//        menu=menu.concat("[CatalogID],[Expiration date (dd/mm/YYYY)],[Quantity]");
+//        String[] param = getInputParserbyComma(sc);
+//        if(param.length==3) {
+//            Date date =convertStringToDate(param[1]);
+//            if (date!=null){
+//                result = branchController.addSpecificProduct(Integer.getInteger(param[0]),date,Integer.parseInt(param[2]));
+//                System.out.println(result.getMessage());
+//            }
+//            else{
+//                System.out.println("Date is not in the right format");
+//            }
+//        }
+//        else{
+//            System.out.println("Invalid number of parameters");
+//        }
+//    }
 
     static private void printRemoveSpecificProductMenu() {
         Result result;
@@ -1609,6 +1615,8 @@ public class CLController {
             Integer gpID = Integer.getInteger(param[1]);
             result = branchController.removeProductFromPeriodicOrder(orderID, gpID);
             System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid number of parameters for supplier ID");
         }
     }
 
@@ -1647,6 +1655,8 @@ public class CLController {
             Integer orderID = Integer.getInteger(param[0]);
             result = branchController.removePeriodicOrder(orderID);
             System.out.println(result);
+        } else {
+            System.out.println("Invalid number of parameters for supplier ID");
         }
     }
 
@@ -1696,6 +1706,8 @@ public class CLController {
                     break;
                 case 2:
                     break;
+                default:
+                    System.out.println("Option not valid, please retype");
             }
         } else {
             System.out.println("Invalid numbers of parameters");
@@ -1724,8 +1736,9 @@ public class CLController {
         menu=menu.concat("1) Print all categories\n");
         menu=menu.concat("2) Print all general products\n");
         menu=menu.concat("3) Print all sales\n");
-        menu=menu.concat("4) Return\n");
-        menu=menu.concat("5) exit\n\n");
+        menu=menu.concat("4) Print all branches\n");
+        menu=menu.concat("5) Return\n");
+        menu=menu.concat("6) exit\n\n");
         while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -1739,9 +1752,12 @@ public class CLController {
                 case (3):
                     printAllSales();
                     break;
-                case (4):
-                    return;
+                case 4:
+                    printAllBranches();
+                    break;
                 case (5):
+                    return;
+                case (6):
                     Exit();
                 default:
                     System.out.println("Option not valid, please retype");
@@ -1797,7 +1813,7 @@ public class CLController {
     //endregion
 
     //region initialize
-    public static void initialize() {
+    private static void initialize() {
 
         //Add categories:
         //              Hygiene
