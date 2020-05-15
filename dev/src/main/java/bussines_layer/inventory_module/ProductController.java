@@ -79,8 +79,11 @@ public class ProductController {
         GeneralProduct toEdit = searchGeneralProductByGpID(gpID);
         Result result;
         if (toEdit != null) {
-            toEdit.setSupplierPrice(new_supplier_price, supplier_id);
-            result = new Result<GeneralProduct>(true, toEdit, "Supplier price of general product has been changed");
+            if (toEdit.setSupplierPrice(new_supplier_price, supplier_id)) {
+                result = new Result<GeneralProduct>(true, toEdit, "Supplier price of general product has been changed");
+            } else {
+                result = new Result<Integer>(false, gpID, String.format("Could not find catalog product with supplier id %d", supplier_id));
+            }
         } else {
             result = new Result<Integer>(false, gpID, "Could not find general product");
         }
