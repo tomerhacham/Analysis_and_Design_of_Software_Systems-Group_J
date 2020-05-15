@@ -78,6 +78,22 @@ public class Roster {
     }
      
     public List<Worker> getWorkers() {
+        List<Worker> exisitingWorkers=mapper.getAllWorkers();
+        if(exisitingWorkers!=null)
+        {
+            for(Worker ew:exisitingWorkers) {
+                boolean found=false;
+                Worker temp=null;
+                for (Worker w : workers) {
+                    if(ew.getId().equals(w.getId())) {
+                        found = true;
+                        break;
+                    }
+                }
+                if(!found)
+                    workers.add(ew);
+            }
+        }
         return workers;
     }
 
@@ -164,4 +180,12 @@ public class Roster {
     }
 
 
+    public void removeExistingWorkers() {
+        List<Worker>existingWorkers=mapper.getAllWorkers();
+        if(existingWorkers!=null) {
+            for (Worker w : existingWorkers) {
+                mapper.deleteWorker(w.getId());
+            }
+        }
+    }
 }

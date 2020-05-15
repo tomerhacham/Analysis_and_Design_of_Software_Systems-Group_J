@@ -118,16 +118,18 @@ public class Scheduler {
                 return "The shift is invalid";
             addWeeksIfAbsent(currentEditedShift.getDate());
             DailySchedule day=findDay(currentEditedShift.getDate());
-            if(day==null)
+            if(day==null) {
                 return "Invalid date";
-            else if(currentEditedShift.getTimeOfDay()==morning){
+            }
+            Shift oldShift=findShift(currentEditedShift.getDate(),currentEditedShift.getTimeOfDay());
+            if(currentEditedShift.getTimeOfDay()==morning){
                 day.setMorningShift(currentEditedShift);}
             else{
                 day.setNightShift(currentEditedShift);
             }
-            Shift oldShift=findShift(currentEditedShift.getDate(),currentEditedShift.getTimeOfDay());
-            if(oldShift==null)
+            if(oldShift==null) {
                 mapper.addShift(currentEditedShift);
+            }
             else
                 mapper.updateShift(currentEditedShift);
             cancelShift();
@@ -140,14 +142,19 @@ public class Scheduler {
     {
         if(date==null)
             return "Invalid date";
-        if(!availableWorkers.containsKey(date))
-            return "No Available workers were marked for this shift";
+        /*if(!availableWorkers.containsKey(date))
+            return "No Available workers were marked for this shift";*/
         List<Worker> workerList = getAvailableWorkersForShift(date, timeOfDay);
         if(workerList.size()==0)
             return "No Available workers were marked for this shift";
         /*List<Worker>cloned =new ArrayList<>();
         cloned.addAll(workerList);*/
-        currentEditedShift=new Shift(date,timeOfDay,UUID.randomUUID().toString());
+        Shift s=findShift(date,timeOfDay);
+        String newId=UUID.randomUUID().toString();
+        if(s!=null)
+            currentEditedShift=new Shift(date,timeOfDay,s.getId());
+        else
+            currentEditedShift=new Shift(date,timeOfDay,newId);
         /*
         currentEditedShift.setDate(date);
         currentEditedShift.setTimeOfDay(timeOfDay);
@@ -172,8 +179,10 @@ public class Scheduler {
         List<Worker> workersList = getAvailableWorkersForShift(date, timeOfDay);
         List<Worker>clonedWorkers =new ArrayList<>();
         clonedWorkers.addAll(workersList);*/
-
-        currentEditedShift=new Shift(findShift(date,timeOfDay));
+        Shift s=findShift(date,timeOfDay);
+        if (s==null)
+            return createShift(date, timeOfDay);
+        currentEditedShift=new Shift(s);
         /*
         currentEditedShift.setDate(date);
         currentEditedShift.setTimeOfDay(timeOfDay);

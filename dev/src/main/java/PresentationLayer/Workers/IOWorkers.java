@@ -35,6 +35,7 @@ public class IOWorkers {
 
     public static void mainLoop() {
         boolean terminate=false;
+        removeExistingWorkers();
         init();
         while(!terminate)
         {
@@ -62,6 +63,10 @@ public class IOWorkers {
 
 
         }
+    }
+
+    private static void removeExistingWorkers() {
+        rc.removeExistingWorkers();
     }
 
     private static void manageSchedule() {
