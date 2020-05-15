@@ -1,6 +1,7 @@
 package data_access_layer.DTO;
 
 import bussines_layer.inventory_module.CatalogProduct;
+import bussines_layer.supplier_module.Contract;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -20,8 +21,15 @@ public class catalog_product_in_contractDTO {
         this.catalog_id=new CatalogProductDTO(catalogProduct);
         this.branch=contract.getBranch();
     }
-    public catalog_product_in_contractDTO(){
+
+    //TODO - update Tomer
+    public catalog_product_in_contractDTO(Contract contract, CatalogProduct catalogProduct){
+        this.contract = new ContractDTO(contract);
+        this.catalog_id = new CatalogProductDTO(catalogProduct);
+        this.branch = new BranchDTO(contract.getBranchID());
     }
+
+    public catalog_product_in_contractDTO(){}
 
     //region Methods
 

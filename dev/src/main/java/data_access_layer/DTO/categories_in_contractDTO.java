@@ -1,5 +1,6 @@
 package data_access_layer.DTO;
 
+import bussines_layer.supplier_module.Contract;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -18,7 +19,16 @@ public class categories_in_contractDTO {
         this.branch = contract.getBranch();
         this.category = category;
     }
-    public categories_in_contractDTO() {    }
+
+    //TODO - update Tomer
+    public categories_in_contractDTO(Contract contract, String category) {
+        this.contract =  new ContractDTO(contract);
+        this.branch = this.contract.getBranch();
+        this.category = category;
+    }
+
+    public categories_in_contractDTO() {}
+
     //region Methods
     public ContractDTO getContract() {
         return contract;

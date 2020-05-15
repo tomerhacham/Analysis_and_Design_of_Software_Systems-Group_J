@@ -1,6 +1,7 @@
 package data_access_layer.DTO;
 
 import bussines_layer.inventory_module.CatalogProduct;
+import bussines_layer.inventory_module.GeneralProduct;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -21,8 +22,15 @@ public class catalog_product_in_general_productDTO {
         this.branch = generalProduct.branch_id;
     }
 
-    public catalog_product_in_general_productDTO() {
+    //TODO - update Tomer
+    public catalog_product_in_general_productDTO(GeneralProduct generalProduct , CatalogProduct catalogProduct) {
+        this.catalogID = new CatalogProductDTO(catalogProduct);
+        this.generalProduct = new GeneralProductDTO(generalProduct);
+        this.branch = this.generalProduct.branch_id;
     }
+
+    public catalog_product_in_general_productDTO(){}
+
     //region Methods
 
     public CatalogProductDTO getCatalogID() {
