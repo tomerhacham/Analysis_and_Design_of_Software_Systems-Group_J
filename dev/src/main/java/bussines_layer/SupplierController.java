@@ -314,11 +314,11 @@ public class SupplierController {
 
     private supplierType convertStringToType(String t){
         supplierType type = null;
-        if (t.equals("byOrder") || t.equals("byorder")){
+        if (t.equals("by Order") || t.equals("by order")){
             type = supplierType.byOrder;
         } else if (t.equals("periodic") || t.equals("Periodic")){
             type = supplierType.periodic;
-        } else if (t.equals("selfDelivery") || t.equals("selfdelivery")){
+        } else if (t.equals("self Delivery") || t.equals("self delivery")){
             type = supplierType.selfDelivery;
         } else {
             return null;

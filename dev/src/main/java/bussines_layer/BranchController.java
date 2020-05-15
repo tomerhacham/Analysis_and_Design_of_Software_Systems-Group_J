@@ -219,12 +219,12 @@ public class BranchController {
     //endregion
 
     //region Supplier Module
-    public Result addContract(Integer supplier_id){
+    public Result addContract(Integer supplier_id , LinkedList<String> categories){
         Result<SupplierCard> result = supplierController.getSupplierCardByID(supplier_id);
         if(!result.isOK()) {
             return result;
         }
-        return currBranch.addContract(result.getData());
+        return currBranch.addContract(result.getData() , categories);
     }
     public Result removeContract(Integer supplier_id){
         Result<SupplierCard> result = supplierController.getSupplierCardByID(supplier_id);

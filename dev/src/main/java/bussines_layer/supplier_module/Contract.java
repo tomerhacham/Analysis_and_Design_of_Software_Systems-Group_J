@@ -23,13 +23,14 @@ public class Contract {
     private int contractID;
     private int branchID;
 
-    public Contract(SupplierCard supplier , int contractID , int branchID){
+    public Contract(SupplierCard supplier , int contractID , int branchID , LinkedList<String> categories){
         this.categories = new LinkedList<>();
         this.supplier = supplier;
         this.products = new HashMap<>();
         this.costEngineering = null;
         this.contractID = contractID;
         this.branchID = branchID;
+        this.categories = categories;
     }
 
     public int getSupplierID() {
