@@ -12,7 +12,7 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
-import sun.java2d.loops.GeneralRenderer;
+import javafx.util.Pair;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -149,8 +149,8 @@ public class Mapper {
      * write single order and it associate classes to the DB
      * @param order
      */
-    public void create(Order order){
-        OrderDTO orderDTO = new OrderDTO(order);
+    public void create(Order order,Integer branch_id){
+        OrderDTO orderDTO = new OrderDTO(order,branch_id);
         LinkedList<catalog_product_in_orderDTO> catalog_product_in_order = new LinkedList<>();
         for(CatalogProduct product:order.getProductsAndPrice().keySet()){
             catalog_product_in_order.add(new catalog_product_in_orderDTO(orderDTO,product,order.getProductsAndQuantity().get(product),order.getProductsAndPrice().get(product)));
@@ -279,8 +279,8 @@ public class Mapper {
     public void create(SpecificProduct specificProduct , GeneralProduct generalProduct){
         SpecificProductDTO specificProductDTO = new SpecificProductDTO(generalProduct , specificProduct);
         try {
-            specific_product_dao.create(categories_in_contractDTO);
-            System.err.println(String.format("[Writing] %s", categories_in_contractDTO));
+            specific_product_dao.create(specificProductDTO);
+            System.err.println(String.format("[Writing] %s", specificProductDTO));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -453,7 +453,6 @@ public class Mapper {
 
     //endregion
 
-
     //region Deletes
 
     public void delete(Branch branch){
@@ -583,12 +582,38 @@ public class Mapper {
 
     //region Loads
         //region First Loads
-    public void loadIDs(){
-        //todo:load all IDs
+
+    /**
+     * load all the next IDS of the system
+     * @return
+     */
+    public IDsDTO loadIDs(){
+        IDsDTO ids=null;
+        try {
+            List<IDsDTO> result =  ids_dao.queryForAll();
+            ids = result.get(0);
+            return ids;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return ids;
     }
-    public void loadBranches(){
-        //todo: load all branches to the system
+
+    /**
+     * load all the branches to the system
+     * @return list of Pair<ID,name>
+     */
+    public LinkedList<Pair<Integer,String>> loadBranches(){
+        LinkedList<Pair<Integer,String>> branches = new LinkedList<>();
+        try {
+            List<BranchDTO> result = branch_dao.queryForAll();
+            for (BranchDTO branch:result){branches.add(new Pair<>(branch.getBranch_id(),branch.getName()));}
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return branches;
     }
+
     public void loadSuppliers(){
         //todo:load all supplierCards
     }
