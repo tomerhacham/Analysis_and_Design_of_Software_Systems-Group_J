@@ -26,7 +26,7 @@ public class BranchController {
 
     //region Supplier Controller
 
-    public Result createSupplierCard (String supplierName, String address, String email, String phoneNumber, int id, String bankAccountNum, String payment, LinkedList<String> contactsName, String type) {
+    public Result createSupplierCard (String supplierName, String address, String email, String phoneNumber, Integer id, String bankAccountNum, String payment, LinkedList<String> contactsName, String type) {
         return supplierController.createSupplierCard(supplierName , address , email , phoneNumber , id , bankAccountNum , payment , contactsName, type);
     }
 
@@ -138,9 +138,9 @@ public class BranchController {
                                     Integer min_quantity, Integer catalogID, Integer gpID, Integer supplier_id, String supplier_category){
         return currBranch.addGeneralProduct(category_id, manufacture, name, supplier_price, retail_price, min_quantity, catalogID, gpID, supplier_id, supplier_category);
     }
-    public Result removeGeneralProduct(Integer category_id, Integer gpID) {
-        return currBranch.removeGeneralProduct(category_id, gpID);
-    }
+//    public Result removeGeneralProduct(Integer category_id, Integer gpID) {
+//        return currBranch.removeGeneralProduct(category_id, gpID);
+//    }
     public Result editGeneralProductName(Integer gpID, String new_name){
         return currBranch.editGeneralProductName(gpID, new_name);
     }
@@ -314,16 +314,14 @@ public class BranchController {
         for (Integer branchid : branches.keySet()) {
             LinkedList<String> periodicOrderFromBranch = branches.get(branchid).issuePeriodicOrder().getData();
             if(periodicOrderFromBranch!=null){ // the list can be null only if for this branch there are no periodic orders to send at this day
-                for (String periodicOrder :periodicOrderFromBranch) {
-                    allPeriodicOrdersFromAllBranches.add(periodicOrder);
-                }
+                allPeriodicOrdersFromAllBranches.addAll(periodicOrderFromBranch);
             }
         }
 
         if(allPeriodicOrdersFromAllBranches.size()>0){
-            return new Result(true,allPeriodicOrdersFromAllBranches, String.format("All periodic orders with %d as their delivery day had been sent to order", system_curr_date.getDay()));
+            return new Result<>(true,allPeriodicOrdersFromAllBranches, String.format("All periodic orders with %d as their delivery day had been sent to order", system_curr_date.getDay()));
         }
-        return new Result(false,null, String.format("There are no periodic orders with %d as their delivery day ",system_curr_date.getDay()));
+        return new Result<>(true,null, String.format("There are no periodic orders with %d as their delivery day ",system_curr_date.getDay()));
     }
 
     //endregion
@@ -350,14 +348,15 @@ public class BranchController {
     private boolean checkBranchExists(Integer branch_id){
         return branches.containsKey(branch_id);
     }
-    private void simulateNextDay(){
+    public Result simulateNextDay(Integer numOfDays){
+        String msg = String.format("Old date: %s. ", system_curr_date);
         Calendar cal = Calendar.getInstance();
         cal.setTime(system_curr_date);
-        cal.add(Calendar.DATE, 1);
+        cal.add(Calendar.DATE, numOfDays);
         system_curr_date = cal.getTime();
-
+        msg=msg.concat(String.format("New date: %s", system_curr_date));
         //after changing the day - check if there are periodic orders to send
-        issuePeriodicOrder();
+        return issuePeriodicOrder();
     }
 
     @Override
