@@ -9,6 +9,7 @@ import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
+import org.omg.PortableServer.LIFESPAN_POLICY_ID;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -711,6 +712,32 @@ public class Mapper {
             }
             return null;
         } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public List<Worker> getAllWorkers()
+    {//return list of all workers in the system if there are no matches or there is an error- return null
+        try {
+            List<Worker_DTO> worker_dtos = worker_DAO.queryForAll();
+            List<Worker> workers = new ArrayList<>();
+            for (Worker_DTO w:worker_dtos ) {
+                List<Driver_DTO> driver_dtos = Driver_DAO.queryForEq("driverID", w.getWorkerID());
+                if(driver_dtos.size()==0) {
+                    workers.add(makeWORKER(w));
+                }
+                else{
+                    workers.add(makeDRIVER(w));
+                }
+            }
+            if(workers.isEmpty())
+            {
+                return null;
+            }
+            return workers;
+        }catch (Exception e)
+        {
             System.out.println(e.getMessage());
             return null;
         }
