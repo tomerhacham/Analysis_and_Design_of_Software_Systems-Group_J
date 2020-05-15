@@ -279,8 +279,8 @@ public class Mapper {
     public void create(SpecificProduct specificProduct , GeneralProduct generalProduct){
         SpecificProductDTO specificProductDTO = new SpecificProductDTO(generalProduct , specificProduct);
         try {
-            specific_product_dao.create(categories_in_contractDTO);
-            System.err.println(String.format("[Writing] %s", categories_in_contractDTO));
+            specific_product_dao.create(specificProductDTO);
+            System.err.println(String.format("[Writing] %s", specificProductDTO));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -450,6 +450,15 @@ public class Mapper {
         }catch (Exception e){e.printStackTrace();}
     }
 
+    public void update (SpecificProduct specificProduct , GeneralProduct generalProduct){
+        SpecificProductDTO specificProductDTO = new SpecificProductDTO(generalProduct , specificProduct);
+        try {
+            specific_product_dao.update(specificProductDTO);
+            System.err.println(String.format("[Writing] %s", specificProductDTO));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
 
     //endregion
 
@@ -473,24 +482,8 @@ public class Mapper {
     public void delete(GeneralProduct generalProduct){
         try{
             GeneralProductDTO generalProductDTO = new GeneralProductDTO(generalProduct);
-            LinkedList<SpecificProductDTO> specific_products=new LinkedList<>();
-            general_product_dao.update(generalProductDTO);
-
-            for(SpecificProduct specificProduct:generalProduct.getProducts()){
-                SpecificProductDTO spDTO = new SpecificProductDTO(generalProductDTO,specificProduct);
-                specific_product_dao.update(spDTO);
-            }
-            for(CatalogProduct catalogProduct:generalProduct.getCatalog_products()){
-                catalog_product_in_general_products_dao.update(new catalog_product_in_general_productDTO(generalProductDTO,catalogProduct));
-                /*UpdateBuilder<catalog_product_in_general_productDTO,Void> updateBuilder = catalog_product_in_general_products_dao.updateBuilder();
-                // set the criteria like you would a QueryBuilder
-                updateBuilder.where().eq("catalogID", catalogProduct.getCatalogID()).and().eq("branch_id" , generalProduct.getBranch_id());
-                // update the value of your field(s)
-                updateBuilder.updateColumnValue("name" ,catalogProduct.getName());
-                updateBuilder.updateColumnValue("supplier_price" , catalogProduct.getSupplierPrice());
-                updateBuilder.updateColumnValue("supplier_category" , catalogProduct.getSupplierCategory());
-                updateBuilder.update();*/
-            }
+            general_product_dao.delete(generalProductDTO);
+            //all specific products and cata
         }catch (Exception e){e.printStackTrace();}
     }
 
@@ -576,6 +569,16 @@ public class Mapper {
     public void delete (Contract contract , String category){
 
         //TODO - update Tomer : there is no need to update the category name - you can only delete or add
+    }
+
+    public void delete (SpecificProduct specificProduct , GeneralProduct generalProduct){
+        SpecificProductDTO specificProductDTO = new SpecificProductDTO(generalProduct , specificProduct);
+        try {
+            specific_product_dao.update(specificProductDTO);
+            System.err.println(String.format("[Writing] %s", specificProductDTO));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
 
