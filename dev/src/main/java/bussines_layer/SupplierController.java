@@ -66,11 +66,11 @@ public class SupplierController {
     private Result addSupplierCardToList(SupplierCard supplierCard){
         Result result;
         if (suppliers.containsKey(supplierCard.getId())){
-            result=new Result(false,null, String.format("There is Already a supplier with the same ID %d",supplierCard.getId() ));
+            result=new Result<>(false,null, String.format("There is Already a supplier with the same ID %d",supplierCard.getId() ));
         }
         else{
             suppliers.put(supplierCard.getId() , supplierCard);
-            result=new Result(true, supplierCard, String.format("Supplier %s has been Added", supplierCard));
+            result=new Result<>(true, supplierCard, String.format("Supplier %s has been Added", supplierCard));
         }
         return result;
     }
@@ -86,13 +86,13 @@ public class SupplierController {
      */
     public Result ChangeSupplierName(Integer id , String newName){
         Result result;
-        if ( !isExist(id).isOK()){
-            result=new Result(false,null, String.format("Could not find supplier with ID %d",id ));
+        if (!isExist(id).isOK()){
+            result=new Result<>(false,null, String.format("Could not find supplier with ID %d",id ));
         }
         else {
             SupplierCard sc = suppliers.get(id);
             sc.setSupplierName(newName);
-            result=new Result(true,sc, String.format("Supplier %d has been edited", id) );
+            result=new Result<>(true,sc, String.format("Supplier %d has been edited", id) );
         }
         return result;
     }
@@ -259,7 +259,7 @@ public class SupplierController {
      * @return
      */
     public Result<SupplierCard> getSupplierCardByID (Integer id){
-        Result result;
+        Result<SupplierCard> result;
         if ( !isExist(id).isOK()){
             result= new Result<>(false,null, String.format("There is not supplier with ID %d",id ));
         }
@@ -281,13 +281,13 @@ public class SupplierController {
 
         if (suppliers.isEmpty()){
             msg=msg.concat("There is no suppliers in the system\n");
-            result=new Result(false,null,msg);
+            result=new Result<>(false,null,msg);
         }
         else {
             for (SupplierCard supplier : suppliers.values()) {
                 msg = msg.concat(supplier + "\n");
             }
-            result=new Result(true, msg, msg);
+            result=new Result<>(true, msg, msg);
         }
         return result;
     }
@@ -300,10 +300,10 @@ public class SupplierController {
     public Result isExist (Integer id){
         Result result;
         if ( ! suppliers.containsKey(id)){
-            result=new Result(false,id, String.format("here's No Such Supplie with ID:%d in the System", id));
+            result=new Result<>(false,id, String.format("here's No Such Supplie with ID:%d in the System", id));
         }
         else{
-            result=new Result(true, id,"Supplier found");
+            result=new Result<>(true, id,"Supplier found");
         }
         return result;
     }
