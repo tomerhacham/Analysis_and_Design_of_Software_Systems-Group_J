@@ -3,11 +3,11 @@ package BusinessLayer.Workers;
 public class Pair<K, V> {
 
     private  K key;
-    private  V val;
+    private  V value;
 
     public Pair(K keyElement, V valElement) {
         this.key = keyElement;
-        this.val = valElement;
+        this.value = valElement;
     }
 
     public K getKey() {
