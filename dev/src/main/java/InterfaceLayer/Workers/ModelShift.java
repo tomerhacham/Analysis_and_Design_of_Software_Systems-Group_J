@@ -25,7 +25,7 @@ public class ModelShift {
             partOfday="Empty night shift";
     }
 
-    public ModelShift(Shift shift)
+    public ModelShift(Shift shift,List<Worker>availableWorkers)
     {
         if(shift!=null) {
             drivers=new ArrayList<>();
@@ -37,7 +37,7 @@ public class ModelShift {
                 FixedSizeList<ModelWorker> cloned = cloneModelWorkers(original,original.capacity());
                 occupation.put(pos, cloned);
             }
-            availableWorkers = cloneModelWorkers(shift.getAvailableWorkers(),shift.getAvailableWorkers().size());
+            this.availableWorkers = cloneModelWorkers(availableWorkers,availableWorkers.size());
             this.date=shift.getDate();
             if(shift.getTimeOfDay())
                 partOfday="Morning Shift";

@@ -9,21 +9,17 @@ public class Shift {
     private Date date;
     private boolean timeOfDay;
     private String id;
-    private List<Worker> availableWorkers;
+    //private List<Worker> availableWorkers;
     private List<Driver> scheduledDrivers;
 
-    public void setTimeOfDay(boolean timeOfDay) {
-        this.timeOfDay = timeOfDay;
-    }
 
-    public Shift(List<Worker>availableWorkers, Date date, boolean timeOfday, String id)
+    public Shift(Date date, boolean timeOfday, String id)
     {
         this.id=id;
         scheduledDrivers=new ArrayList<>();
         this.timeOfDay=timeOfday;
         this.date=date;
         occupation=new HashMap<>();
-        this.availableWorkers=availableWorkers;
         occupation.put("manager",new FixedSizeList<>(1));
     }
 
@@ -33,8 +29,6 @@ public class Shift {
             this.id = other.id;
             this.timeOfDay=other.timeOfDay;
             this.date=other.date;
-            this.availableWorkers=new ArrayList<>();
-            this.availableWorkers.addAll(other.availableWorkers);
             scheduledDrivers=new ArrayList<>();
             scheduledDrivers.addAll(other.scheduledDrivers);
             occupation=new HashMap<>();
@@ -51,29 +45,17 @@ public class Shift {
         }
 
     }
-
-    public List<Worker> getAvailableWorkers() {
-        return availableWorkers;
+    public String getId() {
+        return id;
     }
 
-    /*
-        public String addAvailableWorker(Worker worker)
-        {
-            if(getAllAvailableWorkers().contains(worker))
-                return "The worker is already registered as available";
-            availableWorkers.add(worker);
-            return null;
-        }
-        public List<Worker> getAllAvailableWorkers()
-        {
-            List<Worker>allWorkers=new ArrayList<>();
-            allWorkers.addAll(availableWorkers);
-            for(FixedSizeList<Worker> fsl:occupation.values())
-                allWorkers.addAll(fsl);
-            return allWorkers;
-        }
+    public void setTimeOfDay(boolean timeOfDay) {
+        this.timeOfDay = timeOfDay;
+    }
 
-     */
+    /*public List<Worker> getAvailableWorkers() {
+        return availableWorkers;
+    }*/
 
     public Date getDate() {
         return date;
@@ -94,10 +76,12 @@ public class Shift {
         occupation.put(pos,new FixedSizeList<>(quantity));
         return null;
     }
-
+/*
     public void setAvailableWorkers(List<Worker> availableWorkers) {
         this.availableWorkers = availableWorkers;
     }
+
+   */
 
     public List<Driver> getScheduledDrivers() {
         return scheduledDrivers;
@@ -107,27 +91,27 @@ public class Shift {
     {
         if(!occupation.containsKey(pos))
             return "The shift does not contain this position";
-        availableWorkers.addAll(occupation.get(pos));
+        //availableWorkers.addAll(occupation.get(pos));
         occupation.remove(pos);
         return null;
     }
 
-    public String removeWorkerFromPosition(String position,String id) {
+    public String removeWorkerFromPosition(String position,String id,List<Worker> availableWorkers) {
         if(position.equals("driver"))
-            return replaceDriver(id);
+            return replaceDriver(id,availableWorkers);
         if(!occupation.containsKey(position))
             return "The position does not exist";
         Worker removed=occupation.get(position).findAndRemove((w)->
                 w.getId()==id);
         if(removed!=null)
         {
-            availableWorkers.add(removed);
+            //availableWorkers.add(removed);
             return null;
         }
         return "The worker is not scheduled for this shift";
     }
 
-    private String replaceDriver(String id) {
+    private String replaceDriver(String id,List<Worker> availableWorkers) {
         Driver removedDriver=null;
         for(Driver d:scheduledDrivers)
         {
@@ -147,9 +131,9 @@ public class Shift {
             }
             if(replacementDriver!=null) {
                 scheduledDrivers.remove(removedDriver);
-                availableWorkers.add(removedDriver);
+                //availableWorkers.add(removedDriver);
                 scheduledDrivers.add(replacementDriver);
-                availableWorkers.remove(replacementDriver);
+                //availableWorkers.remove(replacementDriver);
                 return null;
                 }
             else
@@ -158,7 +142,7 @@ public class Shift {
         return "The worker is not scheduled for this shift";
     }
 
-    public String addWorkerToPosition(String position,String id)
+    public String addWorkerToPosition(String position,String id,List<Worker> availableWorkers)
     {
         Worker w=null;
         if(!occupation.containsKey(position))
@@ -166,13 +150,13 @@ public class Shift {
         else if(occupation.get(position).isFull())
             return "The position is Full";
         else {
-            w=findIfAvailable(id);
+            w=findIfAvailable(id,availableWorkers);
             if(w==null)
                 return "The worker is not available";
             if(!w.getPositions().contains(position)) {
                 return "The worker can't work in this position";
             }
-            availableWorkers.remove(w);
+            //availableWorkers.remove(w);
             occupation.get(position).add(w);
         }
             return null;
@@ -181,7 +165,7 @@ public class Shift {
     public void addDriverToShift(Driver driver)
     {
         scheduledDrivers.add(driver);
-        availableWorkers.remove(driver);
+        //availableWorkers.remove(driver);
     }
 
     public Driver removeDriver(String id)
@@ -210,7 +194,7 @@ public class Shift {
         return true;
     }
 
-    private Worker findIfAvailable(String id) {
+    private Worker findIfAvailable(String id,List<Worker> availableWorkers) {
         Worker avail=null;
         for(Worker w :availableWorkers)
         {
@@ -227,4 +211,8 @@ public class Shift {
         this.date = date;
     }
 
+    //function for mapper
+    public void addARowToOcuupation(String pos, FixedSizeList<Worker> workers) {
+        this.occupation.put(pos, workers);
+    }
 }

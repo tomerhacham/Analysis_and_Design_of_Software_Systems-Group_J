@@ -42,8 +42,9 @@ public class ScheduleController {
     {
         return scheduler.editShift(date,timeOfDay);
     }
-    public ModelShift getCurrentEditedModelShift(){
-        return new ModelShift(scheduler.getCurrentEditedShift());
+    public ModelShift getCurrentEditedModelShift()
+    {
+        return new ModelShift(scheduler.getCurrentEditedShift(),scheduler.cloneAvailableWorkersForShift());
     }
     public void cancelShift(){scheduler.cancelShift();}
     public String submitShift(){
@@ -87,7 +88,7 @@ public class ScheduleController {
             if(s instanceof EmptyShift)
                 output.add(new ModelShift((EmptyShift)s));
             else
-                output.add(new ModelShift(s));
+                output.add(new ModelShift(s,new ArrayList<>()));
 
         }
         return output;
@@ -136,7 +137,7 @@ public class ScheduleController {
         scheduler.chooseDriverForTransport(shiftDate2,morning,"A");
         scheduler.chooseDriverForTransport(shiftDate2,morning,"B");
         editShift(shiftDate2,morning);
-        scheduler.getCurrentEditedShift().removeWorkerFromPosition("driver",workers.get(2).id);
+        scheduler.getCurrentEditedShift().removeWorkerFromPosition("driver",workers.get(2).id,scheduler.cloneAvailableWorkersForShift());
         this.submitShift();
         scheduler.removeDriverFromTransport(shiftDate2,morning,workers.get(3).id);
 //        System.out.println(scheduler.StorageManInShift(shiftDate2,morning));
