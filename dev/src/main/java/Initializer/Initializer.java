@@ -115,7 +115,9 @@ public class Initializer {
         branchController.createSupplierCard("niceToMeet" , "mesada 37 beer-sheva" , "niceToMeat@gmail.com" , "087594456" ,
                 supplierID, "09754432", "CreditCard" , contact2, "byOrder");
 
+        //Add supplier categories
         branchController.addCategory(supplierID, "Meet");
+        branchController.addCategory(supplierID, "Fish");
 
         branchController.addGeneralProduct(((Category)meet_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meet");
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
