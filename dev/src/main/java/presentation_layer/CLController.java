@@ -1510,9 +1510,9 @@ public class CLController {
         menu=menu.concat("2) Remove periodic order\n");
         menu=menu.concat("3) Add product to periodic order\n");
         menu=menu.concat("4) Remove product from periodic order\n");
-        menu=menu.concat("5) Update product quantity\n");
-        menu=menu.concat("6) Accept order\n");
-        menu=menu.concat("7) Update periodic order supplier\n");
+        menu=menu.concat("5) Update product quantity in periodic order\n");
+        menu=menu.concat("6) Update periodic order supplier \n");
+        menu=menu.concat("7) Accept order\n");
         menu=menu.concat("8) Display all orders\n");
         menu=menu.concat("9) Return\n");
         menu=menu.concat("10) Exit\n");
@@ -1536,10 +1536,11 @@ public class CLController {
                     printUpdateProductQuantity();
                     break;
                 case 6:
-                    printAcceptOrder();
+                    printUpdateSupplierInPO();
                     break;
                 case 7:
-                    printUpdateSupplierInPO();
+                    printAcceptOrder();
+                    break;
                 case 8:
                     printDisplayOrders();
                     break;
