@@ -388,9 +388,9 @@ public class Mapper {
         }catch (Exception e){e.printStackTrace();}
     }
 
-    public void update(Order order){
+    public void update(Order order, Integer branchId){
         try{
-            OrderDTO orderDTO = new OrderDTO(order);
+            OrderDTO orderDTO = new OrderDTO(order , branchId);
             order_dao.update(orderDTO);
 
             HashMap<CatalogProduct , Integer> productAndQuantity = order.getProductsAndQuantity();
@@ -483,77 +483,96 @@ public class Mapper {
         try{
             GeneralProductDTO generalProductDTO = new GeneralProductDTO(generalProduct);
             general_product_dao.delete(generalProductDTO);
-            //all specific products and cata
+            //all specific products and category are deleted due to cascade
         }catch (Exception e){e.printStackTrace();}
     }
 
     public void delete(Contract contract){
         try{
             ContractDTO contractDTO = new ContractDTO(contract);
-            contract_dao.update(contractDTO);
+            contract_dao.delete(contractDTO);
+            //catalog_product and product_in_cost_engineering and categories_in_contract are deleted due to cascade
         }catch (Exception e){e.printStackTrace();}
     }
 
-    public void delete(Order order){
+    /**
+     * delete the order from the DB
+     * @param order
+     */
+    public void delete(Order order , Integer branchId){
         try{
-            OrderDTO orderDTO = new OrderDTO(order);
-            order_dao.update(orderDTO);
+            OrderDTO orderDTO = new OrderDTO(order , branchId);
+            order_dao.delete(orderDTO);
+            //catalog_product_in_order are deleted due to cascade
 
-            HashMap<CatalogProduct , Integer> productAndQuantity = order.getProductsAndQuantity();
-            HashMap<CatalogProduct , Float> productAndPrice = order.getProductsAndPrice();
-            UpdateBuilder<catalog_product_in_orderDTO, Void> updateBuilder = catalog_product_in_order_dao.updateBuilder();
-
-            for(CatalogProduct product:order.getProductsAndPrice().keySet()){
-                // set criterias
-                updateBuilder.where().eq("order_id", order.getOrderID()).and().eq("catalog_id" , product.getCatalogID());
-                // update the field(s)
-                updateBuilder.updateColumnValue("quantity" ,productAndQuantity.get(product));
-                updateBuilder.updateColumnValue("price" , productAndPrice.get(product));
-                updateBuilder.update();
-            }
         }catch (Exception e){e.printStackTrace();}
     }
+
+    /**
+     * delete a specific product from the order and update the DB
+     * @param order
+     */
+    public void delete(CatalogProduct product , Order order , Integer branchId){
+        try{
+
+
+        }catch (Exception e){e.printStackTrace();}
+    }
+
+
+
 
     public void delete(SupplierCard supplier){
         try{
             SupplierDTO supplierDTO = new SupplierDTO(supplier);
-            supplier_dao.update(supplierDTO);
-
-            UpdateBuilder<contact_of_supplierDTO, Void> updateBuilder = contacts_of_supplier_dao.updateBuilder();
-
-            for(String contactNamde : supplier.getContactsName()){
-                // set criterias
-                updateBuilder.where().eq("supplier_id", supplier.getId());
-                // update the field(s)
-                updateBuilder.updateColumnValue("name" ,contactNamde);
-                updateBuilder.update();
-            }
+            supplier_dao.delete(supplierDTO);
+            //contact_list are deleted due to cascade
         }catch (Exception e){e.printStackTrace();}
     }
 
     public void delete(Sale sale){
         try{
             SaleDTO saleDTO = new SaleDTO(sale);
-            sale_dao.update(saleDTO);
+            sale_dao.delete(saleDTO);
+            //general_product_on_sale are deleted due to cascade
         }catch (Exception e){e.printStackTrace();}
     }
 
+    /**
+     * delete the cost engineering from the DB
+     * @param costEngineering
+     * @param contract
+     */
     public void delete (CostEngineering costEngineering ,Contract contract){
-        try{
+        HashMap<Integer , Integer> minQuntity = costEngineering.getMinQuntity(); // <catalogid , quantity>
+        HashMap<Integer , Float> newPrice = costEngineering.getNewPrice(); // <catalogid , newPrice>
 
-            HashMap<Integer , Integer> minQuntity = costEngineering.getMinQuntity(); // <catalogid , quantity>
-            HashMap<Integer , Float> newPrice = costEngineering.getNewPrice(); // <catalogid , newPrice>
-            UpdateBuilder<CostEngineeringDTO, Void> updateBuilder = cost_engineering_dao.updateBuilder();
-
+        try {
             for (Integer catalogid : minQuntity.keySet()) {
-                // set criterias
-                updateBuilder.where().eq("contract_id", contract.getContractID()).and().eq("branch_id" , contract.getBranchID()).and().eq("catalog_id" , catalogid);
-                // update the field(s)
-                updateBuilder.updateColumnValue("min_quantity" ,minQuntity.get(catalogid));
-                updateBuilder.updateColumnValue("discount_price" , newPrice.get(catalogid));
-                updateBuilder.update();
+                CostEngineeringDTO costEngineeringDTO = new CostEngineeringDTO(contract , catalogid , minQuntity.get(catalogid) , newPrice.get(catalogid) );
+                cost_engineering_dao.delete(costEngineeringDTO);
+                System.err.println(String.format("[Writing] %s", costEngineeringDTO));
             }
-        }catch (Exception e){e.printStackTrace();}
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    /**
+     * delete a product from cost engineering and update the DB
+     * @param product
+     * @param costEngineering
+     * @param contract
+     */
+    public void delete (CatalogProduct product , CostEngineering costEngineering ,Contract contract){
+        try {
+            CostEngineeringDTO costEngineeringDTO = new CostEngineeringDTO(contract , product.getCatalogID() , costEngineering.getMinQuntity().get(product.getCatalogID()) , costEngineering.getNewPrice().get(product.getCatalogID()) );
+            cost_engineering_dao.delete(costEngineeringDTO);
+            System.err.println(String.format("[Writing] %s", costEngineeringDTO));
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public void delete (CatalogProduct catalogProduct , Contract contract){
