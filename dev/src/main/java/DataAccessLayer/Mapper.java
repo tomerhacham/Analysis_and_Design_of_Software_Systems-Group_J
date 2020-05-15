@@ -864,7 +864,7 @@ public class Mapper {
 
     public List<Truck> getAllTrucks()
     {
-        //return list of all trucks in the system if there are no matches or there is an error- return null
+        //return list of all trucks in the system if there are no matches - empty list if there is an error- return null
         try {
             List<Truck_DTO> truck_dtos = truck_DAO.queryForAll();
             List<Truck> trucks = new ArrayList<>();
@@ -958,22 +958,56 @@ public class Mapper {
         }
     }
 
-    //TODO:: implement
     public Site getSite(int siteID) {
-        return null;
+        //return a site, if there are no matches or there is an error- return null
+        try {
+            Site_DTO site_dto = site_DAO.queryForId(siteID);
+            if (site_dto == null)
+                return null;
+            return  makeSITE(site_dto);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
-    //TODO:: implement
+    private Site makeSITE  (Site_DTO site_dto) {
+        return new Site(site_dto.getId(),site_dto.getAddress(),site_dto.getPhone_number(),site_dto.getContact(),site_dto.getShipping_area());
+    }
+
     public List<Site> getAllSites() {
-        return null;
+        //return list of all sites in the system if there are no matches -empty list if there is an error- return null
+        try {
+            List<Site_DTO> site_dtos = site_DAO.queryForAll();
+            List<Site> sites = new ArrayList<>();
+            for (Site_DTO site_dto:site_dtos) {
+                sites.add(makeSITE(site_dto));
+            }
+            return sites;
+        }catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
-    //TODO:: implement
     public List<Site> getAvailableSites(int otherSite_id) {
-        return null;
+        try {
+            Site_DTO Other_site_dto = site_DAO.queryForId(otherSite_id);
+            List<Site_DTO> site_dtos = site_DAO.queryForEq("shippingArea",Other_site_dto.getShipping_area());
+            List<Site> sites = new ArrayList<>();
+            for (Site_DTO site_dto:site_dtos) {
+                if(site_dto.getId()!=otherSite_id)
+                    sites.add(makeSITE(site_dto));
+            }
+            return sites;
+        }catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
-    //TODO:: implement
     public long MaxIDTransport() {
         try {
             long max = product_DAO.queryRawValue("SELECT MAX(transportID) FROM Transport");
@@ -984,24 +1018,93 @@ public class Mapper {
         }
     }
 
-    //TODO:: implement
     public List<Transport> getAllTransports() {
-        return null;
+        //return list of all transports in the system if there are no matches -empty list if there is an error- return null
+        try {
+            List<Transport_DTO> transport_dtos = transport_DAO.queryForAll();
+            List<Transport> Transports = new ArrayList<>();
+            for (Transport_DTO transport_dto:transport_dtos) {
+                Transports.add(makeTRANSPORT(transport_dto));
+            }
+            return Transports;
+        }catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
-    //TODO:: implement
+    private Transport makeTRANSPORT(Transport_DTO transport_dto) {
+        boolean partOfDay= false;
+        if(transport_dto.getShift()==1)
+        {
+            partOfDay=true;
+        }
+        Truck t = makeTRUCK(transport_dto.getTruck());
+        Site s = makeSITE(transport_dto.getSource());
+        Transport transport = new Transport(transport_dto.getTransportID(),transport_dto.getDate(),partOfDay,t,
+                                            transport_dto.getDriverId().getWorkerID(),transport_dto.getDriverName(),
+                                            s,transport_dto.getTotalWeight());
+        ForeignCollection<DestFile_DTO> destFile_dtos = transport_dto.getDestFiles();
+        HashMap<Site, ProductFile> destFile = new HashMap<>();
+        for (DestFile_DTO destFile_dto : destFile_dtos) {
+            destFile.put(makeSITE(destFile_dto.getSiteID()),makePRODUCT_FILE(destFile_dto.getProductFileID()));
+        }
+        transport.setDestFiles(destFile);
+        ForeignCollection<log_DTO> log_dtos = transport_dto.getLog();
+        for (log_DTO log_dto : log_dtos) {
+            transport.addToLog(log_dto.getMessage());
+        }
+        return transport;
+    }
+
     public Transport getTransport(int transportID) {
-        return null;
+        //return a transport, if there are no matches or there is an error- return null
+        try {
+            Transport_DTO transport_dto = transport_DAO.queryForId(transportID);
+            if (transport_dto == null)
+                return null;
+            return  makeTRANSPORT(transport_dto);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
-    //TODO:: implement
     public Transport getTransportToUpdate(String prevDriverId, Date date, Boolean partOfDay) {
-        return null;
+        try {
+            List<Transport_DTO> transport_dtos = transport_DAO.queryForEq("Date",date);
+            int shift=0;
+            if(partOfDay)
+                shift=1;
+            for (Transport_DTO transport_dto:transport_dtos) {
+                if(transport_dto.getDriverId().equals(prevDriverId) && transport_dto.getShift()==shift)
+                    return makeTRANSPORT(transport_dto);
+            }
+            return null;
+        }catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
-    //TODO:: implement
     public Boolean getTransportByShift(Date d, Boolean partOfDay) {
-        return null;
+        try {
+            List<Transport_DTO> transport_dtos = transport_DAO.queryForEq("Date",d);
+            int shift=0;
+            if(partOfDay)
+                shift=1;
+            for (Transport_DTO transport_dto:transport_dtos) {
+                if(transport_dto.getShift()==shift)
+                    return true;
+            }
+            return false;
+        }catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 }
 

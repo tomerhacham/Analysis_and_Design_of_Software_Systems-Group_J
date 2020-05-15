@@ -25,6 +25,17 @@ public class Transport {
         log =new ArrayList<>();
     }
 
+    public Transport(int id, Date date, boolean partOfDay, Truck truck, String driverId, String driverName, Site source, float totalWeight)
+    {
+        ID=id;
+        Date=date;
+        Shift=partOfDay;
+        Truck=truck;
+        this.driverId =driverId;
+        this.driverName=driverName;
+        Source= source;
+        totalWeight=totalWeight;
+    }
     public int getID() { return ID;}
 
     public Date getDate() { return Date;}
@@ -153,6 +164,10 @@ public class Transport {
 
     public String getDriverName() {
         return driverName;
+    }
+
+    public void setLog(ArrayList<String> log) {
+        this.log = log;
     }
 
 
