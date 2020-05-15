@@ -659,21 +659,34 @@ public class Mapper {
 
     /**
      * load all the branches to the system
-     * @return list of Pair<ID,name>
+     * @return list of Branches
      */
-    public LinkedList<Pair<Integer,String>> loadBranches(){
-        LinkedList<Pair<Integer,String>> branches = new LinkedList<>();
+    public LinkedList<Branch> loadBranches(){
+        LinkedList<Branch> branches = new LinkedList<>();
         try {
             List<BranchDTO> result = branch_dao.queryForAll();
-            for (BranchDTO branch:result){branches.add(new Pair<>(branch.getBranch_id(),branch.getName()));}
+            for (BranchDTO branch:result){branches.add(new Branch(branch.getBranch_id(),branch.getName())}
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return branches;
     }
 
-    public void loadSuppliers(){
-        //todo:load all supplierCards
+    public LinkedList<SupplierCard> loadSuppliers(){
+        LinkedList<SupplierCard> suppliers = new LinkedList<>();
+        try {
+            List<SupplierDTO> suppliersDTOs =supplier_dao.queryForAll();
+            for(SupplierDTO dto:suppliersDTOs){
+                LinkedList<String> contactNames = new LinkedList<>();
+                for(contact_of_supplierDTO contact:dto.getContact_list()){contactNames.add(contact.getName());}
+                suppliers.add(new SupplierCard(
+                        dto.getSupplier_name(),dto.getAddress(),dto.getEmail(),dto.getPhone_number(),dto.getSupplier_id(),
+                        dto.getBank_account_number(),dto.getPayment_kind(),contactNames,dto.getType())
+                ))
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
     public void loadCategories(){
         //todo:load all Categories

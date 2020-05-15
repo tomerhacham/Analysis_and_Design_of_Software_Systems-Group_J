@@ -2,13 +2,13 @@ package data_access_layer.DTO;
 
 
 import bussines_layer.SupplierCard;
+import bussines_layer.enums.supplierType;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
-enum supplierType {byOrder , periodic , selfDelivery;}
 
 @DatabaseTable(tableName = "Supplier")
 public class SupplierDTO {
@@ -35,7 +35,7 @@ public class SupplierDTO {
     //Constructor
     public SupplierDTO(Integer supplier_id, String supplier_name, String address,
                        String email, String phone_number, String bank_account_number,
-                       String payment_kind,String type) {
+                       String payment_kind,supplierType type) {
         this.supplier_id = supplier_id;
         this.supplier_name = supplier_name;
         this.address = address;
@@ -43,7 +43,7 @@ public class SupplierDTO {
         this.phone_number = phone_number;
         this.bank_account_number = bank_account_number;
         this.payment_kind = payment_kind;
-        this.type=convertEnumTString(type);
+        this.type=type;
     }
     public SupplierDTO(SupplierCard supplierCard){
         this.supplier_id = supplierCard.getId();
@@ -53,7 +53,7 @@ public class SupplierDTO {
         this.phone_number = supplierCard.getPhoneNumber();
         this.bank_account_number = supplierCard.getBankAccountNum();
         this.payment_kind = supplierCard.getPayment();
-        this.type=convertEnumTString(supplierCard.getType().name());
+        this.type=supplierCard.getType();
     }
     public SupplierDTO() {
     }

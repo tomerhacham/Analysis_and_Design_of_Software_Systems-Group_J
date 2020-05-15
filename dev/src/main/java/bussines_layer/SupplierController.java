@@ -1,5 +1,7 @@
 package bussines_layer;
 
+import bussines_layer.enums.supplierType;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 

@@ -1,13 +1,11 @@
 package bussines_layer.supplier_module;
-import bussines_layer.Branch;
 import bussines_layer.BranchController;
 import bussines_layer.Result;
 import bussines_layer.SupplierCard;
+import bussines_layer.enums.OrderStatus;
+import bussines_layer.enums.OrderType;
 import bussines_layer.inventory_module.CatalogProduct;
-import bussines_layer.inventory_module.GeneralProduct;
-import javafx.util.Pair;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 
