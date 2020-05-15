@@ -57,4 +57,11 @@ public class ProductFile {
         return products;
     }
 
+    public void setProducts(HashMap<Product, Integer> products) {
+        this.products = products;
+    }
+
+    public void setTotalWeight(float totalWeight) {
+        this.totalWeight = totalWeight;
+    }
 }

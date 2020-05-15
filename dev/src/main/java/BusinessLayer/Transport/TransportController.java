@@ -1,6 +1,10 @@
 package BusinessLayer.Transport;
 
 
+import DataAccessLayer.DTO.DestFile_DTO;
+import DataAccessLayer.Mapper;
+import com.j256.ormlite.stmt.query.In;
+
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.*;
@@ -10,6 +14,7 @@ public class TransportController {
     private static SiteController siteController = SiteController.getInstance();
     private static ProductsController productsController = ProductsController.getInstance();
     private static TruckController truckController = TruckController.getInstance();
+    private static Mapper mapper = Mapper.getInstance();
     private Hashtable<Integer, Transport> transports;
     private int Id_Counter;
 
@@ -33,7 +38,7 @@ public class TransportController {
         return t.getID();
     }
 
-    //if a transport exist in the system, delete it
+    //if a transport exist in the system, delete it - not remove from DB
     public boolean DeleteTransport(Integer id) {
         if (transports.containsKey(id)) {
             transports.remove(id);
@@ -42,6 +47,25 @@ public class TransportController {
         return false;
     }
 
+    public boolean DeleteTransportFromDB(Integer id)
+    {
+        DeleteTransport(id);
+        return mapper.deleteTransport(id);
+    }
+
+    public void SubmitTransportToDB(int transportToSubmit)
+    {
+        if(transports.containsKey(transportToSubmit))
+        {
+            Transport t =transports.get(transportToSubmit);
+            HashMap<Site,ProductFile> destFile = t.getDestFiles();
+            for (ProductFile pf:destFile.values() ) {
+                mapper.addProductFile(pf);
+            }
+            mapper.addTransport(t);
+        }
+
+    }
     //if a transport exist in the system return its details, else return an empty string
     public String getTransportDetails(Integer id) {
         if(transports.containsKey(id)) {

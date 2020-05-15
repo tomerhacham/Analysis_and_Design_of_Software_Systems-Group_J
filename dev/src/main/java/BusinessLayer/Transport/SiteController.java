@@ -1,17 +1,20 @@
 package BusinessLayer.Transport;
 
+import DataAccessLayer.Mapper;
+
 import java.util.HashMap;
 import java.util.Hashtable;
 
 //singleton
 public class SiteController {
     private static  SiteController instance = null;
+    private static Mapper mapper = Mapper.getInstance();
     private Hashtable<Integer , Site> sites;
     private int Id_Counter;
 
     private SiteController(){
         sites=new Hashtable<>();
-        Id_Counter=0;
+        Id_Counter=(int)mapper.MaxIdSite();
     }
 
     public static SiteController getInstance()
@@ -28,8 +31,18 @@ public class SiteController {
         Site s = new Site(Id_Counter, address, phone, contact, area);
         Id_Counter++;
         sites.put(s.getId(),s);
+        mapper.addSite(s);
     }
 
+//    public boolean getSiteFromDB(int siteID)
+//    {
+//        //Site s = mapper.getSite(siteID);
+//        if(s!=null) {
+//            sites.put(siteID, s);
+//            return true;
+//        }
+//        return false;
+//    }
     //if a site exist in the system return it, else return null
     public Site getById(int id)
     {
@@ -45,9 +58,9 @@ public class SiteController {
         if(sites.containsKey(id))
         {
             sites.remove(id);
-            return true;
         }
-        return false;
+        return mapper.deleteSite(id);
+
     }
 
     //if a site exist in the system return its details, else return empty string

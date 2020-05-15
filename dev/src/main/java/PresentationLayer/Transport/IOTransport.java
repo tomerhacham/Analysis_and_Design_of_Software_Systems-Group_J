@@ -198,7 +198,7 @@ public class IOTransport {
             System.out.println("Please choose the transport ID you wish to remove:");
             int transportToDelete = integerParse(scanner.nextLine());
             //try to delete the given transport, if returns false the id is not in the system
-            boolean deleted = facadeController.deleteTransport(transportToDelete);
+            boolean deleted = facadeController.DeleteTransportFronDB(transportToDelete);
             if (deleted) {
                 facadeController.removeDatesFromDriverAndTruck(transportToDelete);
                 System.out.println("The transport deleted successfully.\n");
@@ -249,7 +249,7 @@ public class IOTransport {
         }
         // add occupied date to truck
         facadeController.addDatesToTruck(transportID);
-
+        facadeController.SubmitTransportToDB(transportID);
         System.out.println("\nThe transport added successfully.\n");
     }
 

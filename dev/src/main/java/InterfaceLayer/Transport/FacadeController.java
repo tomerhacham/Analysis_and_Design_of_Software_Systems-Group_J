@@ -118,8 +118,16 @@ public class FacadeController {
         return transportController.createTransport();
     }
 
+    public void SubmitTransportToDB(int transportToSubmit) {
+         transportController.SubmitTransportToDB(transportToSubmit);
+    }
+
     public boolean deleteTransport(int transportToDelete) {
         return transportController.DeleteTransport(transportToDelete);
+    }
+
+    public boolean DeleteTransportFronDB(int transportToDelete) {
+        return transportController.DeleteTransportFromDB(transportToDelete);
     }
 
     public void setTransportSource(int transportID, int sourceID) {

@@ -13,13 +13,13 @@ import java.util.Date;
 public class Shift_DTO {
 
     @DatabaseField (columnName = "ShiftID", id = true, canBeNull = false)
-    String ShiftID;
+    private String ShiftID;
 
     @DatabaseField(columnName = "date", uniqueCombo = true, index = true, dataType = DataType.DATE_STRING, format = "dd/MM/yyy", canBeNull = false)
     private Date date;
 
     @DatabaseField(columnName = "partOfDay", uniqueCombo = true, index = true, canBeNull = false)
-    private int timeOfDay;
+    private int partOfDay;
 
     @ForeignCollectionField(eager = false)
     private ForeignCollection<Occupation_DTO> occupation;
@@ -30,7 +30,7 @@ public class Shift_DTO {
     public Shift_DTO(String shiftID, Date Date, int partOfDay){
         ShiftID=shiftID;
         date = Date;
-        timeOfDay = partOfDay;
+        this.partOfDay = partOfDay;
     }
 
     public Shift_DTO(){}
@@ -44,7 +44,7 @@ public class Shift_DTO {
     }
 
     public int getTimeOfDay() {
-        return timeOfDay;
+        return partOfDay;
     }
 
     public void setDate(Date date) {
@@ -56,7 +56,7 @@ public class Shift_DTO {
     }
 
     public void setTimeOfDay(int timeOfDay) {
-        this.timeOfDay = timeOfDay;
+        this.partOfDay = timeOfDay;
     }
 
     public String getShiftID() {
