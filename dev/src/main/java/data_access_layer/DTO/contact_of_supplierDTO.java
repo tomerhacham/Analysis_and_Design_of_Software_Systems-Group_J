@@ -7,7 +7,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "contact_of_supplier")
 public class contact_of_supplierDTO {
     //fields:
-    @DatabaseField(foreign = true, foreignColumnName = "supplier_id", foreignAutoRefresh = true, columnName = "supplier_id")
+    @DatabaseField(foreign = true, foreignColumnName = "supplier_id", foreignAutoRefresh = true, columnName = "supplier_id" )
     SupplierDTO supplier;
     @DatabaseField(columnName = "name")
     String name;
@@ -32,6 +32,14 @@ public class contact_of_supplierDTO {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public String toString() {
+        return "contact{" +
+                "supplier=" + supplier +
+                ", name='" + name + '\'' +
+                '}';
     }
 
     //endregion
