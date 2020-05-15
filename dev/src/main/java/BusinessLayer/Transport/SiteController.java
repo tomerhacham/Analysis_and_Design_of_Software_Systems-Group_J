@@ -15,7 +15,7 @@ public class SiteController {
 
     private SiteController(){
         sites=new Hashtable<>();
-        Id_Counter=(int)mapper.MaxIdSite();
+        Id_Counter=(int)mapper.MaxIdSite() + 1;
     }
 
     public static SiteController getInstance()

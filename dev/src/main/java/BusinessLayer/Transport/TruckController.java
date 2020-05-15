@@ -16,7 +16,7 @@ public class TruckController {
     // constructor
     private TruckController(){
         trucks = new Hashtable<>();
-        Id_Counter = (int)mapper.MaxIdTrucks();
+        Id_Counter = (int)mapper.MaxIdTrucks() + 1;
     }
 
     public static TruckController getInstance() {

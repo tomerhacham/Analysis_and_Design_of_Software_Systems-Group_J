@@ -17,7 +17,7 @@ public class TransportController {
 
     private TransportController() {
         transports = new Hashtable<>();
-        Id_Counter = (int)mapper.MaxIDTransport();
+        Id_Counter = (int)mapper.MaxIDTransport() + 1;
     }
 
     public static TransportController getInstance() {
