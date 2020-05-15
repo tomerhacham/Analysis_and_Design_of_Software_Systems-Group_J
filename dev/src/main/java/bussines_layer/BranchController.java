@@ -26,7 +26,7 @@ public class BranchController {
 
     //region Supplier Controller
 
-    public Result createSupplierCard (String supplierName, String address, String email, String phoneNumber, int id, String bankAccountNum, String payment, LinkedList<String> contactsName, String type) {
+    public Result createSupplierCard (String supplierName, String address, String email, String phoneNumber, Integer id, String bankAccountNum, String payment, LinkedList<String> contactsName, String type) {
         return supplierController.createSupplierCard(supplierName , address , email , phoneNumber , id , bankAccountNum , payment , contactsName, type);
     }
 
