@@ -1,12 +1,10 @@
 package bussines_layer.inventory_module;
 
 import bussines_layer.BranchController;
+import bussines_layer.enums.ReportType;
 
 import java.util.Date;
 import java.util.List;
-
-enum ReportType
-{OutOfStock,InStock,ExpiredDamaged;}
 
 
 public class Report {

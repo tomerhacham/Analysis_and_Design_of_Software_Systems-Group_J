@@ -1,6 +1,7 @@
 package bussines_layer.supplier_module;
 import bussines_layer.Result;
 import bussines_layer.SupplierCard;
+import bussines_layer.enums.OrderType;
 import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.inventory_module.GeneralProduct;
 import bussines_layer.inventory_module.Report;
@@ -50,7 +51,7 @@ public class SupplierModule {
 
             //before removing this suppliers contract from the branch , check first if there are any periodic orders with this suppliers id
             for (Order order : ordersController.getAllOrders()) {
-                if((order.getType()==OrderType.PeriodicOrder) && (order.getSupplierID() == supplier.getId())){
+                if((order.getType()== OrderType.PeriodicOrder) && (order.getSupplierID() == supplier.getId())){
                     ordersController.removePeriodicOrder(order.getOrderID());
                 }
             }

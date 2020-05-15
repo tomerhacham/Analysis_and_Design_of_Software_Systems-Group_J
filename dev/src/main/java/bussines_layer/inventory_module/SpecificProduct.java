@@ -1,11 +1,9 @@
 package bussines_layer.inventory_module;
 import bussines_layer.BranchController;
+import bussines_layer.enums.Location;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-enum Location
-{warehouse,store;}
 
 public class SpecificProduct {
     //fields:
@@ -26,7 +24,7 @@ public class SpecificProduct {
         return id;
     }
 
-    public Enum<Location> getLocation() {
+    public Location getLocation() {
         return location;
     }
 

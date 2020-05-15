@@ -1,13 +1,12 @@
 package bussines_layer.supplier_module;
 import bussines_layer.Result;
 import bussines_layer.SupplierCard;
+import bussines_layer.enums.OrderStatus;
+import bussines_layer.enums.OrderType;
 import bussines_layer.inventory_module.CatalogProduct;
-import bussines_layer.inventory_module.ProductController;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
-
 
 /**
  * Class Order.
@@ -16,11 +15,6 @@ import java.util.LinkedList;
  * Functionality that related to Order information.
  *
  */
-enum OrderType
-{PeriodicOrder,OutOfStockOrder;}
-
-enum OrderStatus
-{received,inProcess , sent}
 
 public class Order {
 
@@ -72,7 +66,7 @@ public class Order {
         return supplier.getId();
     }
 
-    public Enum<OrderStatus> getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 
@@ -82,7 +76,7 @@ public class Order {
 
     public void setIssuedDate (Date date){this.issuedDate = date;}
 
-    public Enum<OrderType> getType() {
+    public OrderType getType() {
         return type;
     }
 

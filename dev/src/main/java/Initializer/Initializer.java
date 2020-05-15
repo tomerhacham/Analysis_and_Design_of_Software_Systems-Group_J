@@ -5,6 +5,7 @@ import bussines_layer.inventory_module.Category;
 import bussines_layer.Result;
 import bussines_layer.supplier_module.Contract;
 
+import java.sql.Date;
 import java.util.LinkedList;
 
 import static presentation_layer.CLController.convertStringToDate;
@@ -67,7 +68,7 @@ public class Initializer {
 
         //Create GP
         branchController.addGeneralProduct(((Category)res_cat_30.getData()).getId(), "Niguvim",name, sup_price, 31.5f,  20,catalogID,gpID,supplierID,"Hygiene");
-
+        branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),21);
         //Add Product to contract
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
 
@@ -77,6 +78,7 @@ public class Initializer {
         gpID = 101;
         //Create GP
         branchController.addGeneralProduct(((Category)res_cat_500ml.getData()).getId(), "Crema", name, sup_price, 25.99f, 5,catalogID,gpID,supplierID,"Hygiene");
+        branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),6);
         //Add Product to contract
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
 
@@ -86,6 +88,7 @@ public class Initializer {
         gpID = 102;
         //Create GP
         branchController.addGeneralProduct(((Category)res_cat_500ml.getData()).getId(), "Dove", name, sup_price, 25.99f, 5,  5,gpID,supplierID,"Hygiene");
+        branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),6);
         //Add Product to contract
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
 
@@ -95,17 +98,26 @@ public class Initializer {
         gpID = 103;
         //Create GP
         branchController.addGeneralProduct(((Category)res_cat_500ml.getData()).getId(), "Crema", name, sup_price, 32.99f, 5,catalogID,gpID,supplierID,"Hygiene");
+        branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),6);
         //Add Product to contract
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
+
+        String manufacture = "Moosh";
+        gpID = 104;
+        name = "Moosh packed ground meet 1/2kg";
+        sup_price = 35.0f;
+        Float ret_price = 40.0f;
+        catalogID = 13;
+        branchController.addGeneralProduct(((Category)meet_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meet");
+        branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),6);
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
 
 //-------------------------------------------
 
 
-        String manufacture = "Moosh";
-        gpID = 200;
+        gpID = 104;
         name = "Moosh packed ground meet 1/2kg";
-        sup_price = 35.f;
-        Float ret_price = 40.0f;
+        sup_price = 32.5f;
         catalogID = 20;
         supplierID = 2;
 
@@ -124,7 +136,7 @@ public class Initializer {
         //create contract
         branchController.addContract(supplierID, categories2);
 
-        branchController.addGeneralProduct(((Category)meet_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meet");
+        ////branchController.addGeneralProduct(((Category)meet_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meet");
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
 
         manufacture = "Moosh";
@@ -166,6 +178,10 @@ public class Initializer {
         catalogID = 23;
         branchController.addGeneralProduct(((Category)meet_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,10,catalogID,gpID,supplierID,"Fish");
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
+
+
+
+
 
     }
 }
