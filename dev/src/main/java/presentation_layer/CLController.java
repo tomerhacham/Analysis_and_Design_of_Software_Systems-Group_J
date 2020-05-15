@@ -419,7 +419,7 @@ public class CLController {
     private static void printCreateSupplierCardMenu() {
         Result result;
         String menu = "Please enter the following details\n";
-        menu=menu.concat("[supplierName],[address],[Email],[PhoneNumber],[supplier_id],[BankAccountNumber],[Payment],[type]");
+        menu=menu.concat("[supplierName],[address],[Email],[PhoneNumber],[supplier_id],[BankAccountNumber],[Payment],[by order/periodic/self delivery]");
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 8) {
@@ -1489,7 +1489,11 @@ public class CLController {
         String[] param = getInputParserbyComma(sc);
         if (param.length == 1) {
             Integer supplierID = Integer.getInteger(param[0]);
-            result = branchController.addContract(supplierID);
+            String details= "Please enter list of categories names: [Category1],[Category2],...\n";
+            System.out.println(details);
+            String[] categoriesInput = getInputParserbyComma(sc);
+            LinkedList<String> categories = new LinkedList<>(Arrays.asList(categoriesInput));
+            result = branchController.addContract(supplierID , categories);
             System.out.println(result.getMessage());
         } else {
             System.out.println("Invalid numbers of parameters");

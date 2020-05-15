@@ -59,11 +59,15 @@ public class Initializer {
         branchController.createSupplierCard("halavi-lee" , "ringelbloom 97 beer-sheva" , "halavi@gmail.com" , "081234567" ,
                 supplierID, "0975635" , "CreditCard" , contact,"periodic");
 
-        branchController.addCategory(supplierID, "Hygiene");
+        LinkedList <String> categories = new LinkedList<>();
+        categories.add("Hygiene");
+
+        //create contract
+        branchController.addContract(supplierID, categories);
 
         //Create GP
         branchController.addGeneralProduct(((Category)res_cat_30.getData()).getId(), "Niguvim",name, sup_price, 31.5f,  20,catalogID,gpID,supplierID,"Hygiene");
-        branchController.addContract(supplierID);
+
         //Add Product to contract
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
 
@@ -74,7 +78,6 @@ public class Initializer {
         //Create GP
         branchController.addGeneralProduct(((Category)res_cat_500ml.getData()).getId(), "Crema", name, sup_price, 25.99f, 5,catalogID,gpID,supplierID,"Hygiene");
         //Add Product to contract
-        branchController.addContract(supplierID);
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
 
         name = "Dove shampoo for women 500ml";
@@ -84,7 +87,6 @@ public class Initializer {
         //Create GP
         branchController.addGeneralProduct(((Category)res_cat_500ml.getData()).getId(), "Dove", name, sup_price, 25.99f, 5,  5,gpID,supplierID,"Hygiene");
         //Add Product to contract
-        branchController.addContract(supplierID);
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
 
         name = "Crema shampoo for men 750ml";
@@ -94,7 +96,6 @@ public class Initializer {
         //Create GP
         branchController.addGeneralProduct(((Category)res_cat_500ml.getData()).getId(), "Crema", name, sup_price, 32.99f, 5,catalogID,gpID,supplierID,"Hygiene");
         //Add Product to contract
-        branchController.addContract(supplierID);
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
 
 //-------------------------------------------
@@ -111,13 +112,17 @@ public class Initializer {
         LinkedList<String> contact2 = new LinkedList<>();
         contact.add("Yossi");
 
+        LinkedList <String> categories2 = new LinkedList<>();
+        categories2.add("Meet");
+        categories2.add("Fish");
+
+
         //Create supplier niceToMeet
         branchController.createSupplierCard("niceToMeet" , "mesada 37 beer-sheva" , "niceToMeat@gmail.com" , "087594456" ,
                 supplierID, "09754432", "CreditCard" , contact2, "byOrder");
 
-        //Add supplier categories
-        branchController.addCategory(supplierID, "Meet");
-        branchController.addCategory(supplierID, "Fish");
+        //create contract
+        branchController.addContract(supplierID, categories2);
 
         branchController.addGeneralProduct(((Category)meet_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meet");
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
@@ -130,7 +135,7 @@ public class Initializer {
         catalogID = 24;
 
         branchController.addGeneralProduct(((Category)meet_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,3,catalogID,gpID,supplierID,"Meet");
-        branchController.addContract(supplierID);
+
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
 
 
@@ -141,7 +146,6 @@ public class Initializer {
         ret_price = 13.0f;
         catalogID = 21;
         branchController.addGeneralProduct(((Category)meet_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meet");
-        branchController.addContract(supplierID);
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
 
 
@@ -152,7 +156,6 @@ public class Initializer {
         ret_price = 12.0f;
         catalogID = 22;
         branchController.addGeneralProduct(((Category)meet_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,7,catalogID,gpID,supplierID,"Fish");
-        branchController.addContract(supplierID);
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
 
         manufacture = "Merluza";
@@ -162,7 +165,6 @@ public class Initializer {
         ret_price = 17.0f;
         catalogID = 23;
         branchController.addGeneralProduct(((Category)meet_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,10,catalogID,gpID,supplierID,"Fish");
-        branchController.addContract(supplierID);
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
 
     }

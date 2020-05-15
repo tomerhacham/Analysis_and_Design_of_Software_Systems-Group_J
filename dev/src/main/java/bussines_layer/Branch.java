@@ -142,8 +142,8 @@ public class Branch {
     //region Supplier Module
 
     //region Contracts
-    public Result addContract(SupplierCard supplier){
-        return supplierModule.addContract(supplier);
+    public Result addContract(SupplierCard supplier , LinkedList<String> categories){
+        return supplierModule.addContract(supplier, categories);
     }
     public Result removeContract(SupplierCard supplier){
         return supplierModule.removeContract(supplier);

@@ -20,6 +20,8 @@ public class OrderDTO {
     //fields
     @DatabaseField(id=true,columnName = "order_id")
     Integer order_id;
+    @DatabaseField(foreign = true, foreignColumnName = "branch_id", columnName = "branch_id")
+    BranchDTO branch_id;
     @DatabaseField(foreign = true,columnName = "supplier_id", foreignAutoRefresh = true, foreignColumnName = "supplier_id")
     SupplierDTO supplier;
     @DatabaseField(columnName = "type", dataType = DataType.ENUM_TO_STRING)
@@ -42,7 +44,8 @@ public class OrderDTO {
         this.status = convertOrderStatusToString(status);
         this.type = convertOrderTypeToString(type);
     }
-    public OrderDTO(Order order){
+    public OrderDTO(Order order,Integer branch_id){
+        this.branch_id=new BranchDTO(branch_id);
         this.order_id=order.getOrderID();
         this.supplier=new SupplierDTO(order.getSupplier());
         this.type = convertOrderTypeToString(order.getType().name());

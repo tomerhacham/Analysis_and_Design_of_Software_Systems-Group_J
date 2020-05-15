@@ -42,8 +42,8 @@ public class SupplierModule {
 
     //region Contract
 
-        public Result addContract(SupplierCard supplier){
-            return contractController.addContract(supplier);
+        public Result addContract(SupplierCard supplier , LinkedList<String> catagories){
+            return contractController.addContract(supplier, catagories);
         }
 
         public Result removeContract(SupplierCard supplier){
