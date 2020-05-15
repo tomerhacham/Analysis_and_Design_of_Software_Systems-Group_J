@@ -1,6 +1,7 @@
 package bussines_layer.inventory_module;
 
 import bussines_layer.Result;
+import bussines_layer.enums.ReportType;
 
 import java.util.List;
 

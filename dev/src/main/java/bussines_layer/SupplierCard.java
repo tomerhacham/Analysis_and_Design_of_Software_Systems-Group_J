@@ -1,7 +1,8 @@
 package bussines_layer;
 
-import java.util.LinkedList;
+import bussines_layer.enums.supplierType;
 
+import java.util.LinkedList;
 /**
  * Class SuppliersCard.
  * Holds all the Information about a Supplier.
@@ -10,8 +11,6 @@ import java.util.LinkedList;
  * Functionality that related to Supplier information.
  *
  */
-enum supplierType {byOrder , periodic , selfDelivery;}
-
 public class SupplierCard {
 
     private Integer id;
@@ -109,7 +108,7 @@ public class SupplierCard {
         this.numOfContract = numOfContract;
     }
 
-    public Enum<supplierType> getType () { return type; }
+    public supplierType getType () { return type; }
 
     public void setType (supplierType type) {this.type =type; }
 

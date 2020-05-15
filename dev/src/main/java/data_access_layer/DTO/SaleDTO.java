@@ -1,6 +1,7 @@
 package data_access_layer.DTO;
 
 
+import bussines_layer.enums.discountType;
 import bussines_layer.inventory_module.Sale;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
@@ -9,9 +10,6 @@ import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.Date;
-
-enum discountType
-{fix,precentage;}
 
 @DatabaseTable(tableName = "Sale")
 public class SaleDTO {
@@ -32,9 +30,9 @@ public class SaleDTO {
     ForeignCollection<general_product_on_saleDTO> general_product_on_sale;
 
     //Constructor
-    public SaleDTO(Integer sale_id, String type, Date start, Date end, Boolean active, BranchDTO branch) {
+    public SaleDTO(Integer sale_id, discountType type, Date start, Date end, Boolean active, BranchDTO branch) {
         this.sale_id = sale_id;
-        this.type = convertStringTOEnum(type);
+        this.type = type;
         this.start = start;
         this.end = end;
         this.active = active;

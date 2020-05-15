@@ -2,12 +2,10 @@ package bussines_layer.inventory_module;
 
 import bussines_layer.BranchController;
 import bussines_layer.Result;
+import bussines_layer.enums.discountType;
 
 import java.util.Date;
 import java.util.List;
-
-enum discountType
-{fix,precentage;}
 
 public class Sale {
     //fields

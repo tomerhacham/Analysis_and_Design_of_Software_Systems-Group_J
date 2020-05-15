@@ -1,15 +1,13 @@
 package data_access_layer.DTO;
 
 
+import bussines_layer.enums.Location;
 import bussines_layer.inventory_module.GeneralProduct;
 import bussines_layer.inventory_module.SpecificProduct;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import java.util.Date;
-
-enum Location
-{warehouse,store;}
 
 @DatabaseTable(tableName ="SpecificProduct" )
 public class SpecificProductDTO {
@@ -39,7 +37,7 @@ public class SpecificProductDTO {
     public SpecificProductDTO(GeneralProductDTO generalProductDTO,SpecificProduct specificProduct){
         this.generalProduct=generalProductDTO;
         this.id = specificProduct.getId();
-        this.location = convertStringTOEnum(specificProduct.getLocation().name());
+        this.location = specificProduct.getLocation();
         this.expiration_date = specificProduct.getExpiration_date();
         this.flaw_flag=specificProduct.getFlaw_flag();
         this.branch_id=generalProductDTO.getBranch_id().branch_id;
