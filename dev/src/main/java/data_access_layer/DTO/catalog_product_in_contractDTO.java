@@ -22,7 +22,6 @@ public class catalog_product_in_contractDTO {
         this.branch=contract.getBranch();
     }
 
-    //TODO - update Tomer
     public catalog_product_in_contractDTO(Contract contract, CatalogProduct catalogProduct){
         this.contract = new ContractDTO(contract);
         this.catalog_id = new CatalogProductDTO(catalogProduct);

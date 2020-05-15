@@ -3,6 +3,7 @@ package presentation_layer;
 import bussines_layer.Branch;
 import bussines_layer.BranchController;
 import bussines_layer.Result;
+import bussines_layer.inventory_module.Category;
 import bussines_layer.inventory_module.Sale;
 import javafx.util.Pair;
 
@@ -24,7 +25,7 @@ public class CLController {
 
     public static void displayMenu() {
         printLogo();
-        //printInitializeMenu();      //TODO fix/remove initialize
+        printInitializeMenu();
         while(true) {
             printSuperLiMenu();
             Integer option = getNextInt(sc);
@@ -46,6 +47,8 @@ public class CLController {
 
                 case 4:
                     Exit();
+                default:
+                    System.out.println("Option not valid, please retype");
             }
         }
     }
@@ -62,28 +65,28 @@ public class CLController {
         System.out.println(logo);
     }
 
-//    static private void printInitializeMenu() {
-//        String menu = "";
-//        menu = menu.concat("Choose one of the options:\n");
-//        menu = menu.concat("1) Run system with initial data\n");
-//        menu = menu.concat("2) Run system blank\n");
-//        menu = menu.concat("3) Exit\n\n");
-//        System.out.println(menu);
-//        Integer option = getNextInt(sc);
-//        while (true) {
-//            switch (option) {
-//                case 1:
-//                    Initializer.initialize(inventory);
-//                    return;
-//                case 2:
-//                    return;
-//                case 3:
-//                    Exit();
-//                default:
-//                    System.out.println("Option not valid, please retype");
-//            }
-//        }
-//    }
+    static private void printInitializeMenu() {
+        String menu = "";
+        menu = menu.concat("Choose one of the options:\n");
+        menu = menu.concat("1) Run system with initial data\n");
+        menu = menu.concat("2) Run system blank\n");
+        menu = menu.concat("3) Exit\n\n");
+        System.out.println(menu);
+        Integer option = getNextInt(sc);
+        while (true) {
+            switch (option) {
+                case 1:
+                    initialize();
+                    return;
+                case 2:
+                    return;
+                case 3:
+                    Exit();
+                default:
+                    System.out.println("Option not valid, please retype");
+            }
+        }
+    }
 
     private static void printSuperLiMenu() {
         String menu = "";
@@ -125,6 +128,8 @@ public class CLController {
                     return;
                 case 6:
                     Exit();
+                default:
+                    System.out.println("Option not valid, please retype");
             }
         }
     }
@@ -218,6 +223,8 @@ public class CLController {
                     return;
                 case 4:
                     Exit();
+                default:
+                    System.out.println("Option not valid, please retype");
             }
         }
     }
@@ -488,7 +495,7 @@ public class CLController {
         menu=menu.concat("1) Edit general product\n");
         menu=menu.concat("2) Remove specific product\n");
         menu=menu.concat("3) Mark flaw specific product\n");
-        menu=menu.concat("4 Change location of specific product\n");
+        menu=menu.concat("4) Change location of specific product\n");
         menu=menu.concat("5) Return\n");
         menu=menu.concat("6) exit\n\n");
         while(true) {
@@ -496,7 +503,7 @@ public class CLController {
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
-                    printAddSpecificProductMenu();
+                    printEditGeneralProductMenu();
                     break;
                 case (2):
                     printRemoveSpecificProductMenu();
@@ -638,25 +645,25 @@ public class CLController {
 
     //endregion
     //region Specific Product
-    static private void printAddSpecificProductMenu() {
-        Result result;
-        String menu = "Please enter the following details\n";
-        menu=menu.concat("[CatalogID],[Expiration date (dd/mm/YYYY)],[Quantity]");
-        String[] param = getInputParserbyComma(sc);
-        if(param.length==3) {
-            Date date =convertStringToDate(param[1]);
-            if (date!=null){
-                result = branchController.addSpecificProduct(Integer.getInteger(param[0]),date,Integer.parseInt(param[2]));
-                System.out.println(result.getMessage());
-            }
-            else{
-                System.out.println("Date is not in the right format");
-            }
-        }
-        else{
-            System.out.println("Invalid number of parameters");
-        }
-    }
+//    static private void printAddSpecificProductMenu() {
+//        Result result;
+//        String menu = "Please enter the following details\n";
+//        menu=menu.concat("[CatalogID],[Expiration date (dd/mm/YYYY)],[Quantity]");
+//        String[] param = getInputParserbyComma(sc);
+//        if(param.length==3) {
+//            Date date =convertStringToDate(param[1]);
+//            if (date!=null){
+//                result = branchController.addSpecificProduct(Integer.getInteger(param[0]),date,Integer.parseInt(param[2]));
+//                System.out.println(result.getMessage());
+//            }
+//            else{
+//                System.out.println("Date is not in the right format");
+//            }
+//        }
+//        else{
+//            System.out.println("Invalid number of parameters");
+//        }
+//    }
 
     static private void printRemoveSpecificProductMenu() {
         Result result;
@@ -1510,9 +1517,9 @@ public class CLController {
         menu=menu.concat("2) Remove periodic order\n");
         menu=menu.concat("3) Add product to periodic order\n");
         menu=menu.concat("4) Remove product from periodic order\n");
-        menu=menu.concat("5) Update product quantity\n");
-        menu=menu.concat("6) Accept order\n");
-        menu=menu.concat("7) Update periodic order supplier\n");
+        menu=menu.concat("5) Update product quantity in periodic order\n");
+        menu=menu.concat("6) Update periodic order supplier \n");
+        menu=menu.concat("7) Accept order\n");
         menu=menu.concat("8) Display all orders\n");
         menu=menu.concat("9) Return\n");
         menu=menu.concat("10) Exit\n");
@@ -1536,10 +1543,11 @@ public class CLController {
                     printUpdateProductQuantity();
                     break;
                 case 6:
-                    printAcceptOrder();
+                    printUpdateSupplierInPO();
                     break;
                 case 7:
-                    printUpdateSupplierInPO();
+                    printAcceptOrder();
+                    break;
                 case 8:
                     printDisplayOrders();
                     break;
@@ -1607,6 +1615,8 @@ public class CLController {
             Integer gpID = Integer.getInteger(param[1]);
             result = branchController.removeProductFromPeriodicOrder(orderID, gpID);
             System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid number of parameters for supplier ID");
         }
     }
 
@@ -1645,6 +1655,8 @@ public class CLController {
             Integer orderID = Integer.getInteger(param[0]);
             result = branchController.removePeriodicOrder(orderID);
             System.out.println(result);
+        } else {
+            System.out.println("Invalid number of parameters for supplier ID");
         }
     }
 
@@ -1694,6 +1706,8 @@ public class CLController {
                     break;
                 case 2:
                     break;
+                default:
+                    System.out.println("Option not valid, please retype");
             }
         } else {
             System.out.println("Invalid numbers of parameters");
@@ -1722,8 +1736,9 @@ public class CLController {
         menu=menu.concat("1) Print all categories\n");
         menu=menu.concat("2) Print all general products\n");
         menu=menu.concat("3) Print all sales\n");
-        menu=menu.concat("4) Return\n");
-        menu=menu.concat("5) exit\n\n");
+        menu=menu.concat("4) Print all branches\n");
+        menu=menu.concat("5) Return\n");
+        menu=menu.concat("6) exit\n\n");
         while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -1737,9 +1752,12 @@ public class CLController {
                 case (3):
                     printAllSales();
                     break;
-                case (4):
-                    return;
+                case 4:
+                    printAllBranches();
+                    break;
                 case (5):
+                    return;
+                case (6):
                     Exit();
                 default:
                     System.out.println("Option not valid, please retype");
@@ -1791,19 +1809,181 @@ public class CLController {
         System.out.println("Bye!");
         exit(0);
     }
-//    private static void PlayBeep(){
-//        //String filePath = new File(System.getProperty("user.dir")).getParent()+"//resources//beep.wav";
-//        String filePath = new File(System.getProperty("user.dir"))+"//src//resources//beep.wav";
-//        File beep = new File(filePath);
-//        try (Clip clip = AudioSystem.getClip()) {
-//            clip.open(AudioSystem.getAudioInputStream(beep));
-//            clip.start();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
+
+    //endregion
+
+    //region initialize
+    private static void initialize() {
+
+        //Add categories:
+        //              Hygiene
+        //                  Toilet Paper
+        //                      30 units
+        //                  Shampoo
+        //                      500ml
+        //                      750ml
+        //              Meet%Fish
+        //                  Meet
+        //                      1/2kg
+        //                      1kg
+        //                  Fish
+        //                      1/2kg
+        //                      1kg
+        Result res_cat_hygiene = branchController.addMainCategory("Hygiene");
+        Result res_cat_tp = branchController.addSubCategory(((Category)res_cat_hygiene.getData()).getId(), "Toilet paper");
+        Result res_cat_30 = branchController.addSubCategory(((Category)res_cat_tp.getData()).getId(), "30 units");
+        Result res_cat_shampoo = branchController.addSubCategory(((Category)res_cat_hygiene.getData()).getId(), "Shampoo");
+        Result res_cat_500ml = branchController.addSubCategory(((Category)res_cat_shampoo.getData()).getId(), "500ml");
+        Result res_cat_750ml = branchController.addSubCategory(((Category)res_cat_shampoo.getData()).getId(), "750ml");
+        Result res_cat_mnf = branchController.addMainCategory("Meet%Fish");
+        Result res_cat_meet = branchController.addSubCategory(((Category)res_cat_mnf.getData()).getId(), "Meet");
+        Result res_cat_fish = branchController.addSubCategory(((Category)res_cat_mnf.getData()).getId(), "Fish");
+        Result meet_half_kg = branchController.addSubCategory(((Category)res_cat_meet.getData()).getId(), "1/2kg");
+        Result meet_one_kg = branchController.addSubCategory(((Category)res_cat_meet.getData()).getId(), "1kg");
+        Result fish_half_kg = branchController.addSubCategory(((Category)res_cat_fish.getData()).getId(), "1/2kg");
+        Result fish_one_kg = branchController.addSubCategory(((Category)res_cat_fish.getData()).getId(), "1kg");
 
 
+//-----------------------------------------------------
+
+
+        Integer supplierID = 1;
+        Integer catalogID = 10;
+        Integer gpID = 100;
+        Float sup_price = 18.5f;
+        String name = "Toilet paper double layer 30u";
+
+        LinkedList<String> contact = new LinkedList<>();
+        contact.add("Moshe");
+        contact.add("Rachel");
+
+        //Create supplier halavi-lee
+        branchController.createSupplierCard("halavi-lee" , "ringelbloom 97 beer-sheva" , "halavi@gmail.com" , "081234567" ,
+                supplierID, "0975635" , "CreditCard" , contact,"periodic");
+
+        LinkedList <String> categories = new LinkedList<>();
+        categories.add("Hygiene");
+
+        //create contract
+        branchController.addContract(supplierID, categories);
+
+        //Create GP
+        branchController.addGeneralProduct(((Category)res_cat_30.getData()).getId(), "Niguvim",name, sup_price, 31.5f,  20,catalogID,gpID,supplierID,"Hygiene");
+        branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),21);
+        //Add Product to contract
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
+
+        name = "Crema shampoo for men 500ml";
+        sup_price = 15.99f;
+        catalogID = 10;
+        gpID = 101;
+        //Create GP
+        branchController.addGeneralProduct(((Category)res_cat_500ml.getData()).getId(), "Crema", name, sup_price, 25.99f, 5,catalogID,gpID,supplierID,"Hygiene");
+        branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),6);
+        //Add Product to contract
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
+
+        name = "Dove shampoo for women 500ml";
+        sup_price = 15.99f;
+        catalogID = 11;
+        gpID = 102;
+        //Create GP
+        branchController.addGeneralProduct(((Category)res_cat_500ml.getData()).getId(), "Dove", name, sup_price, 25.99f, 5,  5,gpID,supplierID,"Hygiene");
+        branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),6);
+        //Add Product to contract
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
+
+        name = "Crema shampoo for men 750ml";
+        sup_price = 22.0f;
+        catalogID = 12;
+        gpID = 103;
+        //Create GP
+        branchController.addGeneralProduct(((Category)res_cat_500ml.getData()).getId(), "Crema", name, sup_price, 32.99f, 5,catalogID,gpID,supplierID,"Hygiene");
+        branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),6);
+        //Add Product to contract
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
+
+        String manufacture = "Moosh";
+        gpID = 104;
+        name = "Moosh packed ground meet 1/2kg";
+        sup_price = 35.0f;
+        Float ret_price = 40.0f;
+        catalogID = 13;
+        branchController.addGeneralProduct(((Category)meet_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meet");
+        branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),6);
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
+
+//-------------------------------------------
+
+
+        gpID = 104;
+        name = "Moosh packed ground meet 1/2kg";
+        sup_price = 32.5f;
+        catalogID = 20;
+        supplierID = 2;
+
+        LinkedList<String> contact2 = new LinkedList<>();
+        contact.add("Yossi");
+
+        LinkedList <String> categories2 = new LinkedList<>();
+        categories2.add("Meet");
+        categories2.add("Fish");
+
+
+        //Create supplier niceToMeet
+        branchController.createSupplierCard("niceToMeet" , "mesada 37 beer-sheva" , "niceToMeat@gmail.com" , "087594456" ,
+                supplierID, "09754432", "CreditCard" , contact2, "byOrder");
+
+        //create contract
+        branchController.addContract(supplierID, categories2);
+
+        ////branchController.addGeneralProduct(((Category)meet_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meet");
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
+
+        manufacture = "Moosh";
+        gpID = 201;
+        name = "Moosh packed ground meet 1kg";
+        sup_price = 40.0f;
+        ret_price = 45.0f;
+        catalogID = 24;
+
+        branchController.addGeneralProduct(((Category)meet_one_kg.getData()).getId(), manufacture,name,sup_price,ret_price,3,catalogID,gpID,supplierID,"Meet");
+
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
+
+
+        manufacture = "Lakerda";
+        gpID = 202;
+        name = "Lakerda 1/2kg semi-fresh";
+        sup_price = 10.0f;
+        ret_price = 13.0f;
+        catalogID = 21;
+        branchController.addGeneralProduct(((Category)fish_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meet");
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
+
+
+        manufacture = "Merluza";
+        gpID = 203;
+        name = "Merluza 1/2kg semi-fresh";
+        sup_price = 9.5f;
+        ret_price = 12.0f;
+        catalogID = 22;
+        branchController.addGeneralProduct(((Category)fish_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,7,catalogID,gpID,supplierID,"Fish");
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
+
+        manufacture = "Merluza";
+        gpID = 204;
+        name = "Merluza 1kg semi-fresh";
+        sup_price = 15.5f;
+        ret_price = 17.0f;
+        catalogID = 23;
+        branchController.addGeneralProduct(((Category)fish_one_kg.getData()).getId(), manufacture,name,sup_price,ret_price,10,catalogID,gpID,supplierID,"Fish");
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
+
+
+
+
+
+    }
     //endregion
 }

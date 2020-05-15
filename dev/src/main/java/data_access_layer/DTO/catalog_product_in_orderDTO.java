@@ -2,6 +2,7 @@ package data_access_layer.DTO;
 
 
 import bussines_layer.inventory_module.CatalogProduct;
+import bussines_layer.supplier_module.Order;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -20,6 +21,13 @@ public class catalog_product_in_orderDTO {
     //Constructor
     public catalog_product_in_orderDTO(OrderDTO order, CatalogProduct catalogProduct, Integer quantity, Float price) {
         this.order = order;
+        this.catalogProduct=new CatalogProductDTO(catalogProduct);
+        this.quantity=quantity;
+        this.price=price;
+    }
+
+    public catalog_product_in_orderDTO(Order order, CatalogProduct catalogProduct, Integer quantity, Float price , Integer branchid) {
+        this.order = new OrderDTO(order , branchid);
         this.catalogProduct=new CatalogProductDTO(catalogProduct);
         this.quantity=quantity;
         this.price=price;

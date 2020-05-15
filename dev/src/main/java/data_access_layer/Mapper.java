@@ -95,7 +95,7 @@ public class Mapper {
 
     //region Methods
 
-    //region Creates
+    //region branch
     /**
      * write Branch to the DB
      * @param branch
@@ -105,6 +105,393 @@ public class Mapper {
         try{branch_dao.create(branchDTO);}
         catch(Exception e){e.printStackTrace();}
     }
+
+    /**
+     * change the Branch name and update the DB
+     * @param branch
+     */
+    public void update(Branch branch){
+        try{
+            BranchDTO branchDTO=new BranchDTO(branch);
+            branch_dao.update(branchDTO);
+        }catch (Exception e){e.printStackTrace();}
+    }
+
+    /**
+     * delete Branch from the DB
+     * @param branch
+     */
+    public void delete(Branch branch){
+        try{
+            BranchDTO branchDTO=new BranchDTO(branch);
+            branch_dao.delete(branchDTO);
+        }catch (Exception e){e.printStackTrace();}
+    }
+
+    //endregion
+
+    //region contract
+
+    /**
+     * write contract to the DB
+     * @param contract
+     */
+    public void create(Contract contract){
+        ContractDTO contractDTO = new ContractDTO(contract);
+        try {
+            contract_dao.create(contractDTO);
+            System.err.println(String.format("[Writing] %s", contractDTO));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    /**
+     * update contract and save changes at the DB
+     * @param contract
+     */
+    public void update(Contract contract){
+        try{
+            ContractDTO contractDTO = new ContractDTO(contract);
+            contract_dao.update(contractDTO);
+        }catch (Exception e){e.printStackTrace();}
+    }
+
+    /**
+     * delete contract from DB
+     * @param contract
+     */
+    public void delete(Contract contract){
+        try{
+            ContractDTO contractDTO = new ContractDTO(contract);
+            contract_dao.delete(contractDTO);
+            //catalog_product and product_in_cost_engineering and categories_in_contract are deleted due to cascade
+        }catch (Exception e){e.printStackTrace();}
+    }
+
+    //region product in contract
+    /**
+     * write the connection between a catalog product to its contract in the DB
+     * @param catalogProduct
+     * @param contract
+     */
+    public void create(CatalogProduct catalogProduct , Contract contract){
+        catalog_product_in_contractDTO catalog_product_in_contractDTO = new catalog_product_in_contractDTO(contract , catalogProduct);
+        try {
+            catalog_product_in_contract_dao.create(catalog_product_in_contractDTO);
+            System.err.println(String.format("[Writing] %s", catalog_product_in_contractDTO));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    /**
+     * delete the product from the contract and update the DB
+     * @param catalogProduct
+     * @param contract
+     */
+    public void delete (CatalogProduct catalogProduct , Contract contract){
+        try {
+            DeleteBuilder<catalog_product_in_contractDTO,Void> deleteBuilder = catalog_product_in_contract_dao.deleteBuilder();
+            // only delete the rows on "contract_id" and "catalog_id" and "branch_id"
+            deleteBuilder.where().eq("contract_id" , contract.getContractID()).and().eq("branch_id" , contract.getBranchID()).and().eq("catalog_id" , catalogProduct.getCatalogID());
+            deleteBuilder.delete();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    //endregion
+
+    //region categories in contract
+    /**
+     * write the contracts category in the DB
+     * @param contract
+     * @param category
+     */
+    public void create(Contract contract , String category){
+        categories_in_contractDTO categories_in_contractDTO = new categories_in_contractDTO(contract , category);
+        try {
+            categories_in_contract_dao.create(categories_in_contractDTO);
+            System.err.println(String.format("[Writing] %s", categories_in_contractDTO));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    /**
+     * delete a contracts category in the DB
+     * @param contract
+     * @param category
+     */
+    public void delete (Contract contract , String category){
+        try {
+            DeleteBuilder<categories_in_contractDTO,Void> deleteBuilder = categories_in_contract_dao.deleteBuilder();
+            // only delete the rows on "contract_id" and "branch_id" and category
+            deleteBuilder.where().eq("contract_id" , contract.getContractID()).and().eq("branch_id" , contract.getBranchID()).and().eq("category" , category);
+            deleteBuilder.delete();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+    //endregion
+
+    //region Supplier
+    /**
+     * writing supplierCard  and all its contactList to the DB
+     * @param supplier
+     */
+    public void create(SupplierCard supplier){
+        SupplierDTO supplierDTO = new SupplierDTO(supplier);
+        List<String> contactList = supplier.getContactsName();
+        LinkedList<contact_of_supplierDTO> contact_of_supplierDTOS = new LinkedList<>();
+        for(String contact:contactList){
+            contact_of_supplierDTOS.add(new contact_of_supplierDTO(supplierDTO,contact));
+        }
+        try {
+            supplier_dao.create(supplierDTO);
+            System.err.println(String.format("[Writing] %s", supplierDTO));
+            contacts_of_supplier_dao.create(contact_of_supplierDTOS);
+            System.err.println(String.format("[Writing] %s", concatObjectList(contact_of_supplierDTOS)));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+    /**
+     * update supplierCard  and all its contactList to the DB
+     * @param supplier
+     */
+    public void update(SupplierCard supplier){
+        try{
+            SupplierDTO supplierDTO = new SupplierDTO(supplier);
+            supplier_dao.update(supplierDTO);
+
+            UpdateBuilder<contact_of_supplierDTO, Void> updateBuilder = contacts_of_supplier_dao.updateBuilder();
+
+            for(String contactNamde : supplier.getContactsName()){
+                // set criterias
+                updateBuilder.where().eq("supplier_id", supplier.getId());
+                // update the field(s)
+                updateBuilder.updateColumnValue("name" ,contactNamde);
+                updateBuilder.update();
+            }
+        }catch (Exception e){e.printStackTrace();}
+    }
+    /**
+     * delete a the supplier and update the DB
+     * @param supplier
+     */
+    public void delete(SupplierCard supplier){
+        try{
+            SupplierDTO supplierDTO = new SupplierDTO(supplier);
+            supplier_dao.delete(supplierDTO);
+        }catch (Exception e){e.printStackTrace();}
+    }
+
+    //region contact of supplier
+    /**
+     * add a contact to the supplierCard and update the DB
+     * @param supplier
+     * @param contactName
+     */
+    public void create(String contactName ,SupplierCard supplier){
+        contact_of_supplierDTO contact_of_supplierDTO = new contact_of_supplierDTO(supplier,contactName);
+        try {
+            contacts_of_supplier_dao.create(contact_of_supplierDTO);
+            //System.err.println(String.format("[Writing] %s", concatObjectList(contact_of_supplierDTO)));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+    /**
+     * delete a contact from the supplier card and update the DB
+     * @param supplier
+     * @param contact
+     */
+    public void delete(String contact , SupplierCard supplier){
+        try {
+            DeleteBuilder<contact_of_supplierDTO,Void> deleteBuilder = contacts_of_supplier_dao.deleteBuilder();
+            // only delete the rows on "order_id" and "catalog_id"
+            deleteBuilder.where().eq("supplier_id" , supplier.getId()).and().eq("name" , contact);
+            deleteBuilder.delete();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+    //endregion
+
+    //endregion
+
+    //region cost engineering
+
+    /**
+     * write CostEngineering to the DB
+     * @param costEngineering
+     * @param contract
+     */
+    public void create(CostEngineering costEngineering ,Contract contract){
+
+        HashMap<Integer , Integer> minQuntity = costEngineering.getMinQuntity(); // <catalogid , quantity>
+        HashMap<Integer , Float> newPrice = costEngineering.getNewPrice(); // <catalogid , newPrice>
+
+        try {
+            for (Integer catalogid : minQuntity.keySet()) {
+                CostEngineeringDTO costEngineeringDTO = new CostEngineeringDTO(contract , catalogid , minQuntity.get(catalogid) , newPrice.get(catalogid) );
+                cost_engineering_dao.create(costEngineeringDTO);
+                System.err.println(String.format("[Writing] %s", costEngineeringDTO));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+    /**
+     * update CostEngineering to the DB
+     * @param costEngineering
+     * @param contract
+     */
+    public void update (CostEngineering costEngineering ,Contract contract){
+        try{
+
+            HashMap<Integer , Integer> minQuntity = costEngineering.getMinQuntity(); // <catalogid , quantity>
+            HashMap<Integer , Float> newPrice = costEngineering.getNewPrice(); // <catalogid , newPrice>
+            UpdateBuilder<CostEngineeringDTO, Void> updateBuilder = cost_engineering_dao.updateBuilder();
+
+            for (Integer catalogid : minQuntity.keySet()) {
+                // set criterias
+                updateBuilder.where().eq("contract_id", contract.getContractID()).and().eq("branch_id" , contract.getBranchID()).and().eq("catalog_id" , catalogid);
+                // update the field(s)
+                updateBuilder.updateColumnValue("min_quantity" ,minQuntity.get(catalogid));
+                updateBuilder.updateColumnValue("discount_price" , newPrice.get(catalogid));
+                updateBuilder.update();
+            }
+        }catch (Exception e){e.printStackTrace();}
+    }
+    /**
+     * delete the cost engineering from the DB
+     * @param costEngineering
+     * @param contract
+     */
+    public void delete (CostEngineering costEngineering ,Contract contract){
+        HashMap<Integer , Integer> minQuntity = costEngineering.getMinQuntity(); // <catalogid , quantity>
+        HashMap<Integer , Float> newPrice = costEngineering.getNewPrice(); // <catalogid , newPrice>
+
+        try {
+            for (Integer catalogid : minQuntity.keySet()) {
+                CostEngineeringDTO costEngineeringDTO = new CostEngineeringDTO(contract , catalogid , minQuntity.get(catalogid) , newPrice.get(catalogid) );
+                cost_engineering_dao.delete(costEngineeringDTO);
+                System.err.println(String.format("[Writing] %s", costEngineeringDTO));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+
+    //region product in cost engineering
+    /**
+     * add a product to CostEngineering and update the DB
+     * @param product
+     * @param costEngineering
+     * @param contract
+     */
+    public void create(CatalogProduct product , CostEngineering costEngineering ,Contract contract){
+        try {
+            CostEngineeringDTO costEngineeringDTO = new CostEngineeringDTO(contract , product.getCatalogID() , costEngineering.getMinQuntity().get(product.getCatalogID()) , costEngineering.getNewPrice().get(product.getCatalogID()) );
+            cost_engineering_dao.create(costEngineeringDTO);
+            System.err.println(String.format("[Writing] %s", costEngineeringDTO));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+    /**
+     * update the product quantity or price in CostEngineering and update the DB
+     * @param product
+     * @param costEngineering
+     * @param contract
+     */
+    public void update(CatalogProduct product , CostEngineering costEngineering ,Contract contract){
+        try {
+            UpdateBuilder<CostEngineeringDTO,Void> updateBuilder = cost_engineering_dao.updateBuilder();
+            updateBuilder.where().eq("contract_id", contract.getContractID()).and().eq("branch_id" , contract.getBranchID()).and().eq("catalog_id" , product.getCatalogID());
+            // update the field(s)
+            updateBuilder.updateColumnValue("min_quantity" ,costEngineering.getMinQuntity().get(product.getCatalogID()));
+            updateBuilder.updateColumnValue("discount_price" , costEngineering.getNewPrice().get(product.getCatalogID()));
+            updateBuilder.update();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+    /**
+     * delete a product from cost engineering and update the DB
+     * @param product
+     * @param costEngineering
+     * @param contract
+     */
+    public void delete (CatalogProduct product , CostEngineering costEngineering ,Contract contract){
+        try {
+            DeleteBuilder<CostEngineeringDTO,Void> deleteBuilder = cost_engineering_dao.deleteBuilder();
+            // only delete the rows on "contract_id" and "branch_id" and "catalog_id"
+            deleteBuilder.where().eq("contract_id" , contract.getContractID()).and().eq("branch_id" , contract.getBranchID()).and().eq("catalog_id" , product.getCatalogID());
+            deleteBuilder.delete();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    //endregion
+
+    //endregion
+
+    //endregion
+
+    //region general product
+    /**
+     * write general product to the DB
+     * @param generalProduct
+     */
+    public void create(GeneralProduct generalProduct){
+        GeneralProductDTO generalProductDTO = new GeneralProductDTO(generalProduct);
+        try {
+            general_product_dao.create(generalProductDTO);
+            System.err.println(String.format("[Writing] %s", generalProductDTO));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+    }
+    /**
+     * update general product at the DB
+     * @param generalProduct
+     */
+    public void update(GeneralProduct generalProduct){
+        try{
+            GeneralProductDTO generalProductDTO = new GeneralProductDTO(generalProduct);
+            LinkedList<SpecificProductDTO> specific_products=new LinkedList<>();
+            general_product_dao.update(generalProductDTO);
+
+            for(SpecificProduct specificProduct:generalProduct.getProducts()){
+                SpecificProductDTO spDTO = new SpecificProductDTO(generalProductDTO,specificProduct);
+                specific_product_dao.update(spDTO);
+            }
+            for(CatalogProduct catalogProduct:generalProduct.getCatalog_products()){
+                catalog_product_in_general_products_dao.update(new catalog_product_in_general_productDTO(generalProductDTO,catalogProduct));
+            }
+        }catch (Exception e){e.printStackTrace();}
+    }
+    /**
+     * delete general product from the DB
+     * @param generalProduct
+     */
+    public void delete(GeneralProduct generalProduct){
+        try{
+            GeneralProductDTO generalProductDTO = new GeneralProductDTO(generalProduct);
+            general_product_dao.delete(generalProductDTO);
+            //all specific products and category are deleted due to cascade
+        }catch (Exception e){e.printStackTrace();}
+    }
+
+    //region category
     /**
      * writing the provided category to the DB
      * @param category
@@ -121,73 +508,85 @@ public class Mapper {
 
     }
     /**
-     * write general product to the DB
+     * update the provided category from the DB
+     * @param category
+     */
+    public void update(Category category){
+        try{
+            CategoryDTO categoryDTO=new CategoryDTO(category);
+            category_dao.update(categoryDTO);
+        }catch (Exception e){e.printStackTrace();}
+    }
+    /**
+     * delete the provided category from the DB
+     * @param category
+     */
+    public void delete(Category category){
+        try{
+            CategoryDTO categoryDTO=new CategoryDTO(category);
+            category_dao.delete(categoryDTO);
+        }catch (Exception e){e.printStackTrace();}
+    }
+    //endregion
+
+    //region catalog product
+    /**
+     * write the connection between a catalog product to its general product in the DB
+     * @param catalogProduct
      * @param generalProduct
      */
-    public void create(GeneralProduct generalProduct){
-        GeneralProductDTO generalProductDTO = new GeneralProductDTO(generalProduct);
+    public void create(CatalogProduct catalogProduct , GeneralProduct generalProduct){
+        catalog_product_in_general_productDTO catalog_product_in_general_productDTO = new catalog_product_in_general_productDTO(generalProduct , catalogProduct);
+        CatalogProductDTO catalogProductDTO = new CatalogProductDTO(catalogProduct);
         try {
-            general_product_dao.create(generalProductDTO);
-            System.err.println(String.format("[Writing] %s", generalProductDTO));
+            catalog_product_in_general_products_dao.create(catalog_product_in_general_productDTO);
+            catalog_product_dao.create(catalogProductDTO);
+            System.err.println(String.format("[Writing] %s", catalog_product_in_general_productDTO));
+            System.err.println(String.format("[Writing] %s", catalogProductDTO));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    }
+    /**
+     * update the connection between a catalog product to its general product in the DB
+     * @param catalogProduct
+     * @param generalProduct
+     */
+    public void update (CatalogProduct catalogProduct , GeneralProduct generalProduct){
+        CatalogProductDTO catalogProductDTO = new CatalogProductDTO(catalogProduct);
+        try {
+            catalog_product_dao.update(catalogProductDTO);
+            System.err.println(String.format("[Writing] %s", catalogProductDTO));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+    /**
+     * update the connection between a catalog product to its general product in the DB
+     * @param catalogProduct
+     * @param generalProduct
+     */
+    public void delete (CatalogProduct catalogProduct , GeneralProduct generalProduct){
+        try {
 
-    }
-    /**
-     * write contract to the DB
-     * @param contract
-     */
-    public void create(Contract contract){
-        ContractDTO contractDTO = new ContractDTO(contract);
-        try {
-            contract_dao.create(contractDTO);
-            System.err.println(String.format("[Writing] %s", contractDTO));
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
-    /**
-     * write single order and it associate classes to the DB
-     * @param order
-     */
-    public void create(Order order,Integer branch_id){
-        OrderDTO orderDTO = new OrderDTO(order,branch_id);
-        LinkedList<catalog_product_in_orderDTO> catalog_product_in_order = new LinkedList<>();
-        for(CatalogProduct product:order.getProductsAndPrice().keySet()){
-            catalog_product_in_order.add(new catalog_product_in_orderDTO(orderDTO,product,order.getProductsAndQuantity().get(product),order.getProductsAndPrice().get(product)));
-        }
-        try {
-            order_dao.create(orderDTO);
-            System.err.println(String.format("[Writing] %s", orderDTO));
-            catalog_product_in_order_dao.create(catalog_product_in_order);
-            System.err.println(String.format("[Writing] %s", concatObjectList(catalog_product_in_order)));
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
-
-    /**
-     * writing supplierCard  and all its contactList to the DB
-     * @param supplier
-     */
-    public void create(SupplierCard supplier){
-        SupplierDTO supplierDTO = new SupplierDTO(supplier);
-        List<String> contactList = supplier.getContactsName();
-        LinkedList<contact_of_supplierDTO> contact_of_supplierDTOS = new LinkedList<>();
-        for(String contact:contactList){contact_of_supplierDTOS.add(new contact_of_supplierDTO(supplierDTO,contact));}
-        try {
-            supplier_dao.create(supplierDTO);
-            System.err.println(String.format("[Writing] %s", supplierDTO));
-            contacts_of_supplier_dao.create(contact_of_supplierDTOS);
-            System.err.println(String.format("[Writing] %s", concatObjectList(contact_of_supplierDTOS)));
+        CatalogProductDTO catalogProductDTO = new CatalogProductDTO(catalogProduct);
+        catalog_product_dao.delete(catalogProductDTO);
+        System.err.println(String.format("[Writing] %s", catalogProductDTO));
+//CASCADE?
+//            DeleteBuilder<catalog_product_in_general_productDTO,Void> deleteBuilder = catalog_product_in_general_products_dao.deleteBuilder();
+//            // only delete the rows on "catalog_id" and "GPID" and "branch_id"
+//            deleteBuilder.where().eq("catalog_id" , catalogProduct.getCatalogID()).and().eq("GPID" , generalProduct.getGpID()).and().eq("branch_id" , generalProduct.getBranch_id());
+//            deleteBuilder.delete();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
+    //endregion
+
+    //region sale
     /**
-     * write Sale object to the DB and all its general product associate to is
+     * write Sale object to the DB and all its general product associate to it
      * @param sale
      */
     public void create(Sale sale) {
@@ -205,79 +604,35 @@ public class Mapper {
             throwables.printStackTrace();
         }
     }
-
     /**
-     * write CostEngineering to the DB
-     * @param costEngineering
+     * update Sale object to the DB and all its general product associate to it
+     * @param sale
      */
-    //TODO:4. create CostEngineering
-    //TODO - do we need to get as arguments the contractDTO ? or contract?
-    public void create(CostEngineering costEngineering ,Contract contract){
-
-        HashMap<Integer , Integer> minQuntity = costEngineering.getMinQuntity(); // <catalogid , quantity>
-        HashMap<Integer , Float> newPrice = costEngineering.getNewPrice(); // <catalogid , newPrice>
-
-        try {
-            for (Integer catalogid : minQuntity.keySet()) {
-                CostEngineeringDTO costEngineeringDTO = new CostEngineeringDTO(contract , catalogid , minQuntity.get(catalogid) , newPrice.get(catalogid) );
-                cost_engineering_dao.create(costEngineeringDTO);
-                System.err.println(String.format("[Writing] %s", costEngineeringDTO));
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+    public void update(Sale sale){
+        try{
+            SaleDTO saleDTO = new SaleDTO(sale);
+            sale_dao.update(saleDTO);
+        }catch (Exception e){e.printStackTrace();}
     }
-
     /**
-     * write the connection between a catalog product to its contract in the DB
-     * @param catalogProduct
-     * @param contract
+     * delete Sale object to the DB and all its general product associate to it
+     * @param sale
      */
-    //TODO:1. create catalog_product_in_contract
-    //TODO - do we need to get as arguments the contractDTO ? or contract?
-    public void create(CatalogProduct catalogProduct , Contract contract){
-        catalog_product_in_contractDTO catalog_product_in_contractDTO = new catalog_product_in_contractDTO(contract , catalogProduct);
-        try {
-            catalog_product_in_contract_dao.create(catalog_product_in_contractDTO);
-            System.err.println(String.format("[Writing] %s", catalog_product_in_contractDTO));
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+    public void delete(Sale sale){
+        try{
+            SaleDTO saleDTO = new SaleDTO(sale);
+            sale_dao.delete(saleDTO);
+            //general_product_on_sale are deleted due to cascade
+        }catch (Exception e){e.printStackTrace();}
     }
+    //endregion
 
+    //region specific product
     /**
-     * write the connection between a catalog product to its general product in the DB
-     * @param catalogProduct
+     * write specific product to the DB
+     * @param specificProduct
      * @param generalProduct
      */
-    //TODO:2. create catalog_product_in_generalProduct
-    public void create(CatalogProduct catalogProduct , GeneralProduct generalProduct){
-        catalog_product_in_general_productDTO catalog_product_in_general_productDTO = new catalog_product_in_general_productDTO(generalProduct , catalogProduct);
-        try {
-            catalog_product_in_general_products_dao.create(catalog_product_in_general_productDTO);
-            System.err.println(String.format("[Writing] %s", catalog_product_in_general_productDTO));
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
-
-
-    /**
-     * write the contracts category in the DB
-     * @param contract
-     * @param category
-     */
-    //TODO:3. create categories_in_contract
-    public void create(Contract contract , String category){
-        categories_in_contractDTO categories_in_contractDTO = new categories_in_contractDTO(contract , category);
-        try {
-            categories_in_contract_dao.create(categories_in_contractDTO);
-            System.err.println(String.format("[Writing] %s", categories_in_contractDTO));
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
-
     public void create(SpecificProduct specificProduct , GeneralProduct generalProduct){
         SpecificProductDTO specificProductDTO = new SpecificProductDTO(generalProduct , specificProduct);
         try {
@@ -287,6 +642,126 @@ public class Mapper {
             throwables.printStackTrace();
         }
     }
+    /**
+     * update specific product to the DB
+     * @param specificProduct
+     * @param generalProduct
+     */
+    public void update (SpecificProduct specificProduct , GeneralProduct generalProduct){
+        SpecificProductDTO specificProductDTO = new SpecificProductDTO(generalProduct , specificProduct);
+        try {
+            specific_product_dao.update(specificProductDTO);
+            System.err.println(String.format("[Writing] %s", specificProductDTO));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+    /**
+     * delete specific product to the DB
+     * @param specificProduct
+     * @param generalProduct
+     */
+    public void delete (SpecificProduct specificProduct , GeneralProduct generalProduct) {
+        SpecificProductDTO specificProductDTO = new SpecificProductDTO(generalProduct , specificProduct);
+        try {
+            specific_product_dao.delete(specificProductDTO);
+            System.err.println(String.format("[Writing] %s", specificProductDTO));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+    //endregion
+    //endregion
+
+    //region order
+    /**
+     * write single order and it associate classes to the DB
+     * @param order
+     * @param branch_id
+     */
+    public void create(Order order,Integer branch_id){
+        OrderDTO orderDTO = new OrderDTO(order,branch_id);
+        LinkedList<catalog_product_in_orderDTO> catalog_product_in_order = new LinkedList<>();
+        for(CatalogProduct product:order.getProductsAndPrice().keySet()){
+            catalog_product_in_order.add(new catalog_product_in_orderDTO(orderDTO,product,order.getProductsAndQuantity().get(product),order.getProductsAndPrice().get(product)));
+        }
+        try {
+            order_dao.create(orderDTO);
+            System.err.println(String.format("[Writing] %s", orderDTO));
+            catalog_product_in_order_dao.create(catalog_product_in_order);
+            System.err.println(String.format("[Writing] %s", concatObjectList(catalog_product_in_order)));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+    /**
+     * update single order and all its products to the DB
+     * @param order
+     * @param branchId
+     */
+    public void update(Order order, Integer branchId){
+        try{
+            OrderDTO orderDTO = new OrderDTO(order , branchId);
+            order_dao.update(orderDTO);
+
+            HashMap<CatalogProduct , Integer> productAndQuantity = order.getProductsAndQuantity();
+            HashMap<CatalogProduct , Float> productAndPrice = order.getProductsAndPrice();
+            UpdateBuilder<catalog_product_in_orderDTO, Void> updateBuilder = catalog_product_in_order_dao.updateBuilder();
+
+            for(CatalogProduct product:order.getProductsAndPrice().keySet()){
+                // set criterias
+                updateBuilder.where().eq("order_id", order.getOrderID()).and().eq("catalog_id" , product.getCatalogID());
+                // update the field(s)
+                updateBuilder.updateColumnValue("quantity" ,productAndQuantity.get(product));
+                updateBuilder.updateColumnValue("price" , productAndPrice.get(product));
+                updateBuilder.update();
+            }
+        }catch (Exception e){e.printStackTrace();}
+    }
+    /**
+     * delete the order from the DB
+     * @param order
+     */
+    public void delete(Order order , Integer branchId){
+        try{
+            OrderDTO orderDTO = new OrderDTO(order , branchId);
+            order_dao.delete(orderDTO);
+            //catalog_product_in_order are deleted due to cascade
+        }catch (Exception e){e.printStackTrace();}
+    }
+    /**
+     * add a specific product to a single order ant update the DB
+     * @param product
+     * @param order
+     * @param quantity
+     * @param price
+     * @param branchId
+     */
+    public void create(CatalogProduct product ,Order order,Integer quantity , Float price , Integer branchId){
+        try {
+            catalog_product_in_orderDTO catalog_product_in_orderDTO = new catalog_product_in_orderDTO(order, product, quantity, price , branchId);
+            catalog_product_in_order_dao.create(catalog_product_in_orderDTO);
+            System.err.println(String.format("[Writing] %s", catalog_product_in_orderDTO));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+    /**
+     * delete a specific product from the order and update the DB
+     * @param product
+     * @param order
+     * @param branchId
+     */
+    public void delete(CatalogProduct product , Order order , Integer branchId){
+        try{
+            DeleteBuilder<catalog_product_in_orderDTO,Void> deleteBuilder = catalog_product_in_order_dao.deleteBuilder();
+            // only delete the rows on "order_id" and "catalog_id"
+            deleteBuilder.where().eq("order_id" , order.getOrderID()).and().eq("catalog_id" , product.getCatalogID());
+            deleteBuilder.delete();
+        }catch (Exception e){e.printStackTrace();}
+    }
+    //endregion
+
 
     //TODO:5. create ID's
 
@@ -342,245 +817,7 @@ public class Mapper {
         catch(Exception e){e.printStackTrace();}
     }*/
     //endregion
-    //endregion
 
-    //region Updates
-    public void update(Branch branch){
-        try{
-            BranchDTO branchDTO=new BranchDTO(branch);
-            branch_dao.update(branchDTO);
-        }catch (Exception e){e.printStackTrace();}
-    }
-
-    public void update(Category category){
-        try{
-            CategoryDTO categoryDTO=new CategoryDTO(category);
-            category_dao.update(categoryDTO);
-        }catch (Exception e){e.printStackTrace();}
-    }
-
-    public void update(GeneralProduct generalProduct){
-        try{
-            GeneralProductDTO generalProductDTO = new GeneralProductDTO(generalProduct);
-            LinkedList<SpecificProductDTO> specific_products=new LinkedList<>();
-            general_product_dao.update(generalProductDTO);
-
-            for(SpecificProduct specificProduct:generalProduct.getProducts()){
-                SpecificProductDTO spDTO = new SpecificProductDTO(generalProductDTO,specificProduct);
-                specific_product_dao.update(spDTO);
-            }
-            for(CatalogProduct catalogProduct:generalProduct.getCatalog_products()){
-                catalog_product_in_general_products_dao.update(new catalog_product_in_general_productDTO(generalProductDTO,catalogProduct));
-                /*UpdateBuilder<catalog_product_in_general_productDTO,Void> updateBuilder = catalog_product_in_general_products_dao.updateBuilder();
-                // set the criteria like you would a QueryBuilder
-                updateBuilder.where().eq("catalogID", catalogProduct.getCatalogID()).and().eq("branch_id" , generalProduct.getBranch_id());
-                // update the value of your field(s)
-                updateBuilder.updateColumnValue("name" ,catalogProduct.getName());
-                updateBuilder.updateColumnValue("supplier_price" , catalogProduct.getSupplierPrice());
-                updateBuilder.updateColumnValue("supplier_category" , catalogProduct.getSupplierCategory());
-                updateBuilder.update();*/
-            }
-        }catch (Exception e){e.printStackTrace();}
-    }
-
-    public void update(Contract contract){
-        try{
-            ContractDTO contractDTO = new ContractDTO(contract);
-            contract_dao.update(contractDTO);
-        }catch (Exception e){e.printStackTrace();}
-    }
-
-    public void update(Order order){
-        try{
-            OrderDTO orderDTO = new OrderDTO(order);
-            order_dao.update(orderDTO);
-
-            HashMap<CatalogProduct , Integer> productAndQuantity = order.getProductsAndQuantity();
-            HashMap<CatalogProduct , Float> productAndPrice = order.getProductsAndPrice();
-            UpdateBuilder<catalog_product_in_orderDTO, Void> updateBuilder = catalog_product_in_order_dao.updateBuilder();
-
-            for(CatalogProduct product:order.getProductsAndPrice().keySet()){
-                // set criterias
-                updateBuilder.where().eq("order_id", order.getOrderID()).and().eq("catalog_id" , product.getCatalogID());
-                // update the field(s)
-                updateBuilder.updateColumnValue("quantity" ,productAndQuantity.get(product));
-                updateBuilder.updateColumnValue("price" , productAndPrice.get(product));
-                updateBuilder.update();
-            }
-        }catch (Exception e){e.printStackTrace();}
-    }
-
-    public void update(SupplierCard supplier){
-        try{
-            SupplierDTO supplierDTO = new SupplierDTO(supplier);
-            supplier_dao.update(supplierDTO);
-
-            UpdateBuilder<contact_of_supplierDTO, Void> updateBuilder = contacts_of_supplier_dao.updateBuilder();
-
-            for(String contactNamde : supplier.getContactsName()){
-                // set criterias
-                updateBuilder.where().eq("supplier_id", supplier.getId());
-                // update the field(s)
-                updateBuilder.updateColumnValue("name" ,contactNamde);
-                updateBuilder.update();
-            }
-        }catch (Exception e){e.printStackTrace();}
-    }
-
-    public void update(Sale sale){
-        try{
-            SaleDTO saleDTO = new SaleDTO(sale);
-            sale_dao.update(saleDTO);
-        }catch (Exception e){e.printStackTrace();}
-    }
-
-    public void update (CostEngineering costEngineering ,Contract contract){
-        try{
-
-            HashMap<Integer , Integer> minQuntity = costEngineering.getMinQuntity(); // <catalogid , quantity>
-            HashMap<Integer , Float> newPrice = costEngineering.getNewPrice(); // <catalogid , newPrice>
-            UpdateBuilder<CostEngineeringDTO, Void> updateBuilder = cost_engineering_dao.updateBuilder();
-
-            for (Integer catalogid : minQuntity.keySet()) {
-                // set criterias
-                updateBuilder.where().eq("contract_id", contract.getContractID()).and().eq("branch_id" , contract.getBranchID()).and().eq("catalog_id" , catalogid);
-                // update the field(s)
-                updateBuilder.updateColumnValue("min_quantity" ,minQuntity.get(catalogid));
-                updateBuilder.updateColumnValue("discount_price" , newPrice.get(catalogid));
-                updateBuilder.update();
-            }
-        }catch (Exception e){e.printStackTrace();}
-    }
-
-
-    //endregion
-
-    //region Deletes
-
-    public void delete(Branch branch){
-        try{
-            BranchDTO branchDTO=new BranchDTO(branch);
-            branch_dao.delete(branchDTO);
-        }catch (Exception e){e.printStackTrace();}
-    }
-
-    public void delete(Category category){
-        try{
-            CategoryDTO categoryDTO=new CategoryDTO(category);
-            category_dao.delete(categoryDTO);
-        }catch (Exception e){e.printStackTrace();}
-    }
-
-    public void delete(GeneralProduct generalProduct){
-        try{
-            GeneralProductDTO generalProductDTO = new GeneralProductDTO(generalProduct);
-            LinkedList<SpecificProductDTO> specific_products=new LinkedList<>();
-            general_product_dao.update(generalProductDTO);
-
-            for(SpecificProduct specificProduct:generalProduct.getProducts()){
-                SpecificProductDTO spDTO = new SpecificProductDTO(generalProductDTO,specificProduct);
-                specific_product_dao.update(spDTO);
-            }
-            for(CatalogProduct catalogProduct:generalProduct.getCatalog_products()){
-                catalog_product_in_general_products_dao.update(new catalog_product_in_general_productDTO(generalProductDTO,catalogProduct));
-                /*UpdateBuilder<catalog_product_in_general_productDTO,Void> updateBuilder = catalog_product_in_general_products_dao.updateBuilder();
-                // set the criteria like you would a QueryBuilder
-                updateBuilder.where().eq("catalogID", catalogProduct.getCatalogID()).and().eq("branch_id" , generalProduct.getBranch_id());
-                // update the value of your field(s)
-                updateBuilder.updateColumnValue("name" ,catalogProduct.getName());
-                updateBuilder.updateColumnValue("supplier_price" , catalogProduct.getSupplierPrice());
-                updateBuilder.updateColumnValue("supplier_category" , catalogProduct.getSupplierCategory());
-                updateBuilder.update();*/
-            }
-        }catch (Exception e){e.printStackTrace();}
-    }
-
-    public void delete(Contract contract){
-        try{
-            ContractDTO contractDTO = new ContractDTO(contract);
-            contract_dao.update(contractDTO);
-        }catch (Exception e){e.printStackTrace();}
-    }
-
-    public void delete(Order order){
-        try{
-            OrderDTO orderDTO = new OrderDTO(order);
-            order_dao.update(orderDTO);
-
-            HashMap<CatalogProduct , Integer> productAndQuantity = order.getProductsAndQuantity();
-            HashMap<CatalogProduct , Float> productAndPrice = order.getProductsAndPrice();
-            UpdateBuilder<catalog_product_in_orderDTO, Void> updateBuilder = catalog_product_in_order_dao.updateBuilder();
-
-            for(CatalogProduct product:order.getProductsAndPrice().keySet()){
-                // set criterias
-                updateBuilder.where().eq("order_id", order.getOrderID()).and().eq("catalog_id" , product.getCatalogID());
-                // update the field(s)
-                updateBuilder.updateColumnValue("quantity" ,productAndQuantity.get(product));
-                updateBuilder.updateColumnValue("price" , productAndPrice.get(product));
-                updateBuilder.update();
-            }
-        }catch (Exception e){e.printStackTrace();}
-    }
-
-    public void delete(SupplierCard supplier){
-        try{
-            SupplierDTO supplierDTO = new SupplierDTO(supplier);
-            supplier_dao.update(supplierDTO);
-
-            UpdateBuilder<contact_of_supplierDTO, Void> updateBuilder = contacts_of_supplier_dao.updateBuilder();
-
-            for(String contactNamde : supplier.getContactsName()){
-                // set criterias
-                updateBuilder.where().eq("supplier_id", supplier.getId());
-                // update the field(s)
-                updateBuilder.updateColumnValue("name" ,contactNamde);
-                updateBuilder.update();
-            }
-        }catch (Exception e){e.printStackTrace();}
-    }
-
-    public void delete(Sale sale){
-        try{
-            SaleDTO saleDTO = new SaleDTO(sale);
-            sale_dao.update(saleDTO);
-        }catch (Exception e){e.printStackTrace();}
-    }
-
-    public void delete (CostEngineering costEngineering ,Contract contract){
-        try{
-
-            HashMap<Integer , Integer> minQuntity = costEngineering.getMinQuntity(); // <catalogid , quantity>
-            HashMap<Integer , Float> newPrice = costEngineering.getNewPrice(); // <catalogid , newPrice>
-            UpdateBuilder<CostEngineeringDTO, Void> updateBuilder = cost_engineering_dao.updateBuilder();
-
-            for (Integer catalogid : minQuntity.keySet()) {
-                // set criterias
-                updateBuilder.where().eq("contract_id", contract.getContractID()).and().eq("branch_id" , contract.getBranchID()).and().eq("catalog_id" , catalogid);
-                // update the field(s)
-                updateBuilder.updateColumnValue("min_quantity" ,minQuntity.get(catalogid));
-                updateBuilder.updateColumnValue("discount_price" , newPrice.get(catalogid));
-                updateBuilder.update();
-            }
-        }catch (Exception e){e.printStackTrace();}
-    }
-
-    public void delete (CatalogProduct catalogProduct , Contract contract){
-
-        //TODO : update Tomer - there is nothing to update in this table - there are only id's here
-    }
-
-    public void delete (CatalogProduct catalogProduct , GeneralProduct generalProduct){
-
-        //TODO : update Tomer - there is nothing to update in this table - there are only id's here
-    }
-
-    public void delete (Contract contract , String category){
-
-        //TODO - update Tomer : there is no need to update the category name - you can only delete or add
-    }
-
-
-    //endregion
 
     //region Loads
         //region First Loads
