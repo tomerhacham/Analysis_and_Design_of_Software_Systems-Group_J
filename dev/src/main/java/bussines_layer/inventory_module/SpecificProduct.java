@@ -1,6 +1,7 @@
 package bussines_layer.inventory_module;
 import bussines_layer.BranchController;
 import bussines_layer.enums.Location;
+import data_access_layer.DTO.SpecificProductDTO;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,6 +19,12 @@ public class SpecificProduct {
         this.location = location;
         this.expiration_date = expiration_date;
         this.flaw_flag=false;
+    }
+    public SpecificProduct(SpecificProductDTO specificProductDTO){
+        this.id=specificProductDTO.getId();
+        this.location=specificProductDTO.getLocation();
+        this.expiration_date=specificProductDTO.getExpiration_date();
+        this.flaw_flag=specificProductDTO.getFlaw_flag();
     }
     //region Getter-Setters
     public Integer getId() {

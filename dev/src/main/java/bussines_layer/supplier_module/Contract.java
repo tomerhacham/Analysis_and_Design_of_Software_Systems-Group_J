@@ -3,6 +3,7 @@ import bussines_layer.Result;
 import bussines_layer.SupplierCard;
 import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.inventory_module.GeneralProduct;
+import data_access_layer.DTO.ContractDTO;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -31,6 +32,16 @@ public class Contract {
         this.contractID = contractID;
         this.branchID = branchID;
         this.categories = categories;
+    }
+
+    public Contract(ContractDTO contractDTO,SupplierCard supplierCard,CostEngineering costEngineering, LinkedList<CatalogProduct> catalogProducts, LinkedList<String> categories) {
+        this.categories=categories;
+        products= new HashMap<>();
+        for(CatalogProduct catalogProduct:catalogProducts){products.put(catalogProduct.getCatalogID(),catalogProduct);}
+        this.supplier=supplierCard;
+        this.costEngineering=costEngineering;
+        this.contractID=contractDTO.getContract_id();
+        this.branchID=contractDTO.getBranch().getBranch_id();
     }
 
     public int getSupplierID() {

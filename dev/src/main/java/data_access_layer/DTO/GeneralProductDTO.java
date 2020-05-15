@@ -31,6 +31,8 @@ public class GeneralProductDTO {
     Float retail_price;
     @ForeignCollectionField(eager = false)
     ForeignCollection<SpecificProductDTO> specific_products;
+    @ForeignCollectionField(eager=false)
+    ForeignCollection<catalog_product_in_general_productDTO> catalog_products;
 
     //Constructor
     public GeneralProductDTO(Integer GPID, BranchDTO branch_id, CategoryDTO category,String manufacture,
@@ -100,6 +102,18 @@ public class GeneralProductDTO {
 
     public ForeignCollection<SpecificProductDTO> getSpecific_products() {
         return specific_products;
+    }
+
+    public ForeignCollection<catalog_product_in_general_productDTO> getCatalog_products() {
+        return catalog_products;
+    }
+
+    public void setSpecific_products(ForeignCollection<SpecificProductDTO> specific_products) {
+        this.specific_products = specific_products;
+    }
+
+    public void setCatalog_products(ForeignCollection<catalog_product_in_general_productDTO> catalog_products) {
+        this.catalog_products = catalog_products;
     }
 
     @Override

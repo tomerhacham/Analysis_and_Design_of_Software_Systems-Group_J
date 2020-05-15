@@ -3,6 +3,7 @@ package bussines_layer.inventory_module;
 import bussines_layer.Result;
 import bussines_layer.enums.Location;
 import bussines_layer.enums.ReportType;
+import data_access_layer.DTO.GeneralProductDTO;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -21,10 +22,22 @@ public class GeneralProduct {
     private List<CatalogProduct> catalog_products;
     private Integer branchId;
 
+    public GeneralProduct(GeneralProductDTO generalProductDTO) {
+        this.gpID = generalProductDTO.getGPID();
+        this.manufacture = generalProductDTO.getManufacture();
+        this.name = generalProductDTO.getName();
+        this.retail_price = generalProductDTO.getRetail_price();
+        this.sale_price = generalProductDTO.getSale_price();
+        this.quantity = generalProductDTO.getQuantity();
+        this.min_quantity = generalProductDTO.getMin_quantity();
+        this.branchId = generalProductDTO.getBranch_id().getBranch_id();
+    }
+
     //Constructor
     public GeneralProduct(String manufacture, String name, Float supplier_price,
                             Float retail_price, Integer min_quantity, Integer catalogID,
                             Integer gpID, Integer supplier_id, String supplier_category , Integer branchId)
+
     {
         this.manufacture = manufacture;
         this.name = name;
@@ -110,6 +123,15 @@ public class GeneralProduct {
     public List<CatalogProduct> getCatalog_products() {
         return catalog_products;
     }
+
+    public void setProducts(List<SpecificProduct> products) {
+        this.products = products;
+    }
+
+    public void setCatalog_products(List<CatalogProduct> catalog_products) {
+        this.catalog_products = catalog_products;
+    }
+
     //endregion
 
     //region Methods

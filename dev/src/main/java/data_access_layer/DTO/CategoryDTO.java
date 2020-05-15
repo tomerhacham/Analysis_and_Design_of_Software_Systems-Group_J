@@ -21,6 +21,8 @@ public class CategoryDTO {
     Integer level;
     @ForeignCollectionField(eager = false,foreignFieldName = "category_id")
     ForeignCollection<GeneralProductDTO> generalProducts;
+    @ForeignCollectionField(eager=false,foreignFieldName = "super_category_id")
+    ForeignCollection<CategoryDTO> sub_categories;
 
     //Constructor
     public CategoryDTO(String name, Integer id, Integer level,CategoryDTO super_category) {
@@ -74,6 +76,10 @@ public class CategoryDTO {
 
     public ForeignCollection<GeneralProductDTO> getGeneralProducts() {
         return generalProducts;
+    }
+
+    public ForeignCollection<CategoryDTO> getSub_categories() {
+        return sub_categories;
     }
 
     @Override

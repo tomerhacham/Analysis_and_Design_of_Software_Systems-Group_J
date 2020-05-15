@@ -2,6 +2,7 @@ package bussines_layer;
 
 import bussines_layer.inventory_module.*;
 import bussines_layer.supplier_module.SupplierModule;
+import data_access_layer.DTO.BranchDTO;
 import javafx.util.Pair;
 
 import java.util.Date;
@@ -15,7 +16,6 @@ public class Branch {
     private Integer branch_id;
     private Inventory inventory;
     private SupplierModule supplierModule;
-    private Object HashMap;
 
     //Constructor
     public Branch(Integer branch_id, String name) {
@@ -23,6 +23,10 @@ public class Branch {
         inventory = new Inventory(branch_id);
         supplierModule = SupplierModule.getInstance(branch_id);
         this.name = name;
+    }
+    public Branch(BranchDTO branchDTO){
+        this.branch_id=branchDTO.getBranch_id();
+        this.name=branchDTO.getName();
     }
 
     //region Inventory Module
@@ -291,6 +295,14 @@ public class Branch {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
+    }
+
+    public void setSupplierModule(SupplierModule supplierModule) {
+        this.supplierModule = supplierModule;
     }
     //endregion
 

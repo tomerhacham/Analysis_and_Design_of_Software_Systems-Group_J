@@ -1,8 +1,10 @@
 package bussines_layer.supplier_module;
 
 import bussines_layer.Result;
+import data_access_layer.DTO.CostEngineeringDTO;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Class Cost Engineering.
@@ -19,6 +21,14 @@ public class CostEngineering {
     public CostEngineering(){
         minQuntity = new HashMap<Integer, Integer>();
         newPrice = new HashMap<Integer, Float>();
+    }
+    public CostEngineering(List<CostEngineeringDTO> product_in_cost_engineering){
+        this.minQuntity = new HashMap<>();
+        this.newPrice = new HashMap<>();
+        for (CostEngineeringDTO costEngineeringDTO:product_in_cost_engineering){
+            minQuntity.put(costEngineeringDTO.getCatalog_id(),costEngineeringDTO.getMin_quantity());
+            newPrice.put(costEngineeringDTO.getCatalog_id(),costEngineeringDTO.getDiscount_price());
+        }
     }
 
     public HashMap<Integer, Integer> getMinQuntity() {

@@ -1,5 +1,8 @@
 package bussines_layer.inventory_module;
 
+import data_access_layer.DTO.CatalogProductDTO;
+import data_access_layer.DTO.catalog_product_in_general_productDTO;
+
 public class CatalogProduct {
 
     //fields
@@ -17,6 +20,15 @@ public class CatalogProduct {
         this.supplier_id = supplier_id;
         this.supplier_category = supplier_category;
         this.name = name;
+    }
+    public CatalogProduct(CatalogProductDTO catalogProductDTO){
+        this.catalogID=catalogProductDTO.getCatalogID();
+        this.gpID=catalogProductDTO.getGpID();
+        this.supplier_price=catalogProductDTO.getSupplier_price();
+        this.supplier_id=catalogProductDTO.getSupplier_id();
+        this.supplier_category=catalogProductDTO.getSupplier_category();
+        this.name=catalogProductDTO.getName();
+
     }
 
     //region Getters & setters

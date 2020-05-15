@@ -1,6 +1,7 @@
 package bussines_layer.inventory_module;
 
 import bussines_layer.Result;
+import data_access_layer.DTO.CategoryDTO;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -18,14 +19,22 @@ public class Category {
         this.name = name;
         this.id = id;
         this.level=level;
-        this.sub_categories = new LinkedList<>();
-        if(level==3){this.generalProducts =new LinkedList<>();}
+        if(level!=3){this.sub_categories = new LinkedList<>();}
+        else if(level==3){this.generalProducts =new LinkedList<>();}
     }
     public Category(String name,List<Category> sub_categories){
         this.name=name;
         this.sub_categories=sub_categories;
         this.id=0;
         this.level=0;
+    }
+    public Category(CategoryDTO categoryDTO,List<Category> sub_categories,List<GeneralProduct> generalProducts){
+        this.name=categoryDTO.getName();
+        this.sub_categories=sub_categories;
+        this.id=categoryDTO.getId();
+        this.level=categoryDTO.getLevel();
+        this.generalProducts=generalProducts;
+
     }
 
     //region Setters - Getters

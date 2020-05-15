@@ -1,6 +1,7 @@
 package bussines_layer;
 
 import bussines_layer.enums.supplierType;
+import data_access_layer.DTO.SupplierDTO;
 
 import java.util.LinkedList;
 /**
@@ -37,7 +38,18 @@ public class SupplierCard {
         this.numOfContract =0;
         this.type = type;
     }
-
+    public SupplierCard(SupplierDTO dto,LinkedList<String> contactsName){
+        this.id=dto.getSupplier_id();
+        this.SupplierName=dto.getSupplier_name();
+        this.Address=dto.getAddress();
+        this.Email=dto.getEmail();
+        this.PhoneNumber=dto.getPhone_number();
+        this.BankAccountNum=dto.getBank_account_number();
+        this.Payment=dto.getPayment_kind();
+        this.type=dto.getType();
+        this.ContactsName=contactsName;
+        this.numOfContract=dto.getContact_list().size();
+    }
 //#region getters_setters
 
     public String getSupplierName() {

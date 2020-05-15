@@ -3,8 +3,10 @@ package bussines_layer.inventory_module;
 import bussines_layer.BranchController;
 import bussines_layer.Result;
 import bussines_layer.enums.discountType;
+import data_access_layer.DTO.SaleDTO;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Sale {
@@ -38,6 +40,16 @@ public class Sale {
             active = true;
             this.branchId = branchId;
         }
+    }
+
+    public Sale(SaleDTO saleDTO, LinkedList<GeneralProduct> generalProducts) {
+        this.sale_id=saleDTO.getSale_id();
+        this.products_on_sale = generalProducts;
+        this.type=saleDTO.getType();
+        this.start=saleDTO.getStart();
+        this.end=saleDTO.getEnd();
+        active = saleDTO.getActive();
+        this.branchId =saleDTO.getBranch().getBranch_id();
     }
 
     public Result setDiscount(Float number){

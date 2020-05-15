@@ -6,6 +6,8 @@ import bussines_layer.inventory_module.*;
 import bussines_layer.supplier_module.Contract;
 import bussines_layer.supplier_module.CostEngineering;
 import bussines_layer.supplier_module.Order;
+import com.j256.ormlite.dao.ForeignCollection;
+import com.sun.org.apache.xml.internal.resolver.Catalog;
 import data_access_layer.DTO.*;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
@@ -607,51 +609,139 @@ public class Mapper {
         LinkedList<Branch> branches = new LinkedList<>();
         try {
             List<BranchDTO> result = branch_dao.queryForAll();
-            for (BranchDTO branch:result){branches.add(new Branch(branch.getBranch_id(),branch.getName())}
+            for (BranchDTO branch:result){branches.add(new Branch(branch.getBranch_id(),branch.getName()));}
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return branches;
     }
-
     public LinkedList<SupplierCard> loadSuppliers(){
         LinkedList<SupplierCard> suppliers = new LinkedList<>();
         try {
             List<SupplierDTO> suppliersDTOs =supplier_dao.queryForAll();
+            //creating the supplier object
             for(SupplierDTO dto:suppliersDTOs){
                 LinkedList<String> contactNames = new LinkedList<>();
+                //assign contact list to the supplier
                 for(contact_of_supplierDTO contact:dto.getContact_list()){contactNames.add(contact.getName());}
-                suppliers.add(new SupplierCard(
-                        dto.getSupplier_name(),dto.getAddress(),dto.getEmail(),dto.getPhone_number(),dto.getSupplier_id(),
-                        dto.getBank_account_number(),dto.getPayment_kind(),contactNames,dto.getType())
-                ))
+                suppliers.add(new SupplierCard(dto,contactNames));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        return suppliers;
     }
-    public void loadCategories(){
-        //todo:load all Categories
+    public LinkedList<Category> loadCategories(Integer branch_id){
+        LinkedList<Category> main_categories = new LinkedList<>();
+        try {
+            CategoryDTO super_category = category_dao.queryForId(0);
+            return loadAllsubCategories(super_category,branch_id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    return new LinkedList<>();
     }
-        //endregion
+    private LinkedList<Category> loadAllsubCategories(CategoryDTO categoryDTO,Integer branch_id){
+        LinkedList<Category> sub_categories = new LinkedList<>();
+        if(categoryDTO.getLevel()==2){
+            for (CategoryDTO sub_dto:categoryDTO.getSub_categories()){
+                    List<GeneralProduct> generalProducts = loadAllGeneralProductInCategory(sub_dto.getGeneralProducts(),branch_id);
+                    Category lowest_cat = new Category(sub_dto,null,generalProducts);
+                    sub_categories.add(lowest_cat);
+            }
+        }
+        else{
+            for (CategoryDTO sub_dto:categoryDTO.getSub_categories()){
+                Category new_cat = new Category(sub_dto,loadAllsubCategories(sub_dto,branch_id),null);
+                sub_categories.add(new_cat);
+            }
+        }
+        return sub_categories;
+    }
+    private List<GeneralProduct> loadAllGeneralProductInCategory(ForeignCollection<GeneralProductDTO> generalProducts, Integer branch_id) {
+        LinkedList<GeneralProduct> generalProducts1 = new LinkedList<>();
+        for (GeneralProductDTO gpDTO:generalProducts){
+            if(gpDTO.getBranch_id().getBranch_id()==branch_id){
+                generalProducts1.add(loadGeneralProductinBranch(gpDTO));
+            }
+        }
+        return generalProducts1;
+    }
+
+    //endregion
         //region After Selection of branch
-         public void loadGeneralProductsinBranch(Integer branch_id){//
-            // todo:load generalProduct in branch
-            //todo: load specific products (done alreadt with the library(?)
-            //todo: load catalog products_in_general_product
-            //todo: load all CatalogProducts
+         public GeneralProduct loadGeneralProductinBranch(GeneralProductDTO dto){//
+             GeneralProduct generalProduct = new GeneralProduct(dto);
+             LinkedList<SpecificProduct> specificProducts = new LinkedList<>();
+             LinkedList<CatalogProduct> catalogProducts = new LinkedList<>();
+             for (SpecificProductDTO specificProductDTO:dto.getSpecific_products()){
+                 specificProducts.add(new SpecificProduct(specificProductDTO));
+             }
+             for(catalog_product_in_general_productDTO connection:dto.getCatalog_products()){
+                 catalogProducts.add(new CatalogProduct(connection.getCatalogID()));
+             }
+             generalProduct.setCatalog_products(catalogProducts);
+             generalProduct.setProducts(specificProducts);
+             return generalProduct;
          }
-         public void loadSalesinBranch(Integer branch_id){
-            //todo:load all the sale associate with the branch
-             //todo:load all general_product_on_sale
+         public LinkedList<Sale> loadSalesinBranch(Integer branch_id){
+            LinkedList<Sale> sales = new LinkedList<>();
+             try {
+                 List<SaleDTO> saleDTOS = sale_dao.queryBuilder().where().eq("branch_id",branch_id).query();
+                 for (SaleDTO saleDTO:saleDTOS){
+                     LinkedList<GeneralProduct> generalProducts = new LinkedList<>();
+                     for (general_product_on_saleDTO general_product_on_saleDTO: saleDTO.getGeneral_product_on_sale()){
+                         generalProducts.add(new GeneralProduct(general_product_on_saleDTO.getGeneralProduct()));
+                     }
+                    sales.add(new Sale(saleDTO, generalProducts));
+                 }
+             } catch (SQLException throwables) {
+                 throwables.printStackTrace();
+             }
+            return sales;
          }
-         public void loadContractinBranch(Integer branch_id){
-            //todo: load all contract in the branch
+         public LinkedList<Contract> loadContractinBranch(Integer branch_id){
+        LinkedList<Contract> contracts = new LinkedList<>();
+             try {
+                 List<ContractDTO> contractDTOS = contract_dao.queryBuilder().where().eq("branch_id",branch_id).query();
+                 for(ContractDTO contractDTO:contractDTOS){
+                     CostEngineering costEngineering = loadCostEngineering(contractDTO.getProduct_in_cost_engineering());
+                     LinkedList<CatalogProduct> catalogProducts = loadCatalogProducts(contractDTO.getCatalog_product());
+                     LinkedList<String> categories = loadCategoriesinContract(contractDTO.getCategories_in_contract());
+                     //SupplierCard supplierCard = new SupplierCard(contractDTO.getSupplier());
+                     contracts.add(new Contract(contractDTO,,costEngineering,catalogProducts,categories));
+                 }
+             } catch (SQLException throwables) {
+                 throwables.printStackTrace();
+             }
+             //todo: load all contract in the branch
             //todo: load all costEngenieering in contract
              //todo:load all catalog product in contract
              //todo: load all categories in contract
+             return contracts;
          }
-         public void loadOrdersinBranch(Integer branch_id){
+
+    private CostEngineering loadCostEngineering(ForeignCollection<CostEngineeringDTO> product_in_cost_engineering) {
+        LinkedList<CostEngineeringDTO> linker = new LinkedList<>();
+        for (CostEngineeringDTO costEngineeringDTO:product_in_cost_engineering){linker.add(costEngineeringDTO);}
+        return new CostEngineering(linker);
+    }
+
+    private LinkedList<CatalogProduct> loadCatalogProducts(ForeignCollection<catalog_product_in_contractDTO> catalog_products_in_contract) {
+        LinkedList<CatalogProduct> catalogProducts = new LinkedList<>();
+        for(catalog_product_in_contractDTO catalog_product_in_contrac:catalog_products_in_contract){
+            catalogProducts.add(new CatalogProduct(catalog_product_in_contrac.getCatalog_id()));
+        }
+        return catalogProducts
+    }
+
+    private LinkedList<String> loadCategoriesinContract(ForeignCollection<categories_in_contractDTO> categories_in_contract) {
+        LinkedList<String> categories = new LinkedList<>();
+        for (categories_in_contractDTO category: categories_in_contract){categories.add(category.getCategory());}
+        return categories;
+    }
+
+    public void loadOrdersinBranch(Integer branch_id){
             //todo:load all the order associate to the branch;
              //todo: load all the catalog_product_in_order
          }
