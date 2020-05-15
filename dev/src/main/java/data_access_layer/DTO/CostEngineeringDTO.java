@@ -1,5 +1,7 @@
 package data_access_layer.DTO;
 
+import bussines_layer.supplier_module.Contract;
+import bussines_layer.supplier_module.CostEngineering;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -25,6 +27,16 @@ public class CostEngineeringDTO {
         this.min_quantity = min_quantity;
         this.discount_price = discount_price;
     }
+
+    //TODO - update Tomer
+    public CostEngineeringDTO(Contract contract , Integer catalog_id, Integer min_quantity, Float discount_price ){
+        this.contract = new ContractDTO(contract);
+        this.branch = new BranchDTO(contract.getBranchID());
+        this.catalog_id = catalog_id;
+        this.min_quantity = min_quantity;
+        this.discount_price = discount_price;
+    }
+
     public CostEngineeringDTO(){}
 
     //region Methods

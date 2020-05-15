@@ -1,6 +1,7 @@
 package data_access_layer.DTO;
 
 
+import bussines_layer.inventory_module.GeneralProduct;
 import bussines_layer.inventory_module.SpecificProduct;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
@@ -42,6 +43,15 @@ public class SpecificProductDTO {
         this.expiration_date = specificProduct.getExpiration_date();
         this.flaw_flag=specificProduct.getFlaw_flag();
         this.branch_id=generalProductDTO.getBranch_id().branch_id;
+    }
+
+    public SpecificProductDTO(GeneralProduct generalProduct, SpecificProduct specificProduct){
+        this.generalProduct= new GeneralProductDTO(generalProduct);
+        this.id = specificProduct.getId();
+        this.location = convertStringTOEnum(specificProduct.getLocation().name());
+        this.expiration_date = specificProduct.getExpiration_date();
+        this.flaw_flag=specificProduct.getFlaw_flag();
+        this.branch_id=this.generalProduct.getBranch_id().branch_id;
     }
     public SpecificProductDTO() {
     }
