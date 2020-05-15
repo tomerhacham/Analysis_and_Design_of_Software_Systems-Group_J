@@ -1,20 +1,25 @@
 package BusinessLayer.Transport;
 
 
+import DataAccessLayer.Mapper;
+
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 //singleton
 public class ProductsController {
     private static  ProductsController instance = null;
+    private static Mapper mapper = Mapper.getInstance();
+
     private int productID_Counter;
     private int fileID_Counter;
     private Hashtable<Integer, ProductFile> files;
     private Hashtable<Integer,Product> products;
 
     private ProductsController(){
-        productID_Counter = 0;
-        fileID_Counter = 0;
+        productID_Counter = (int)mapper.MaxIdProductsFile();
+        fileID_Counter = (int)mapper.MaxIdProducts();
         files = new Hashtable<>();
         products = new Hashtable<>();
     }
@@ -35,6 +40,15 @@ public class ProductsController {
         return file.getFileID();
     }
 
+    public boolean getProductFileFromDB(int fileID)
+    {
+        ProductFile pf = mapper.getProductFile(fileID);
+        if(pf!=null) {
+            files.put(fileID, pf);
+            return true;
+        }
+        return false;
+    }
     //creating a new Product
     public void CreateProduct(String productName, float productWeight, int fileID, int quantity) {
         Product p = new Product(productID_Counter, productName, productWeight);
@@ -45,7 +59,7 @@ public class ProductsController {
 
     //if a File exist in the system return it, else return null
     public ProductFile getFileByID(int fileID){
-        if(files.containsKey(fileID)) {
+        if(files.containsKey(fileID) || getProductFileFromDB(fileID)) {
             return files.get(fileID);
         }
         return null;
@@ -54,7 +68,7 @@ public class ProductsController {
     //if a File exist in the system return its details, else return empty string
     public String geFileDetails(int file_id)
     {
-        if(files.containsKey(file_id))
+        if(files.containsKey(file_id)||getProductFileFromDB(file_id))
         {
             return files.get(file_id).toString();
         }
@@ -96,8 +110,9 @@ public class ProductsController {
     //if a file exist in the system, get its total weight
     public float getFileWeight(int fileID)
     {
-        if(files.containsKey(fileID))
+        if(files.containsKey(fileID)||getProductFileFromDB(fileID)) {
             return files.get(fileID).getTotalWeight();
+        }
         else
             return 0;
     }

@@ -12,10 +12,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import org.omg.PortableServer.LIFESPAN_POLICY_ID;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 
 //singleton
@@ -114,11 +111,13 @@ public class Mapper {
         try {
             deleteShiftAvailableWorkers(workerId);
             Worker_DTO worker_dto = worker_DAO.queryForId(workerId);
-            ForeignCollection<Position_DTO> position_dtos = worker_dto.getPositions();
-            for (Position_DTO p : position_dtos) {
-                deletePosition(p.getPosition(), workerId);
+            if(worker_dto!=null) {
+                ForeignCollection<Position_DTO> position_dtos = worker_dto.getPositions();
+                for (Position_DTO p : position_dtos) {
+                    deletePosition(p.getPosition(), workerId);
+                }
+                worker_DAO.delete(worker_dto);
             }
-            worker_DAO.delete(worker_dto);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -222,19 +221,19 @@ public class Mapper {
     public void deleteShift(String shiftID) {
         try {
             Shift_DTO shift_dto = Shift_DAO.queryForId(shiftID);
+            if(shift_dto!=null) {
+                ForeignCollection<ShiftDriver_DTO> scheduledDrivers = shift_dto.getDrivers_in_shift();
+                for (ShiftDriver_DTO shiftDriver_dto : scheduledDrivers) {
+                    deleteShiftDriver(shiftDriver_dto.getDriverID().getWorkerID(), shiftID);
+                }
 
-            ForeignCollection<ShiftDriver_DTO> scheduledDrivers = shift_dto.getDrivers_in_shift();
-            for (ShiftDriver_DTO shiftDriver_dto : scheduledDrivers) {
-                deleteShiftDriver(shiftDriver_dto.getDriverID().getWorkerID(), shiftID);
+                ForeignCollection<Occupation_DTO> occupation = shift_dto.getOccupation();
+                for (Occupation_DTO occupation_dto : occupation) {
+                    deleteOccupation(shiftID, occupation_dto.getPosition(), occupation_dto.getWorkerID().getWorkerID());
+                }
+
+                Shift_DAO.delete(shift_dto);
             }
-
-            ForeignCollection<Occupation_DTO> occupation = shift_dto.getOccupation();
-            for (Occupation_DTO occupation_dto : occupation) {
-                deleteOccupation(shiftID, occupation_dto.getPosition(), occupation_dto.getWorkerID().getWorkerID());
-            }
-
-            Shift_DAO.delete(shift_dto);
-
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -365,17 +364,22 @@ public class Mapper {
         }
     }
 
-    public void deleteTransport(int transportID) {
+    public boolean deleteTransport(int transportID) {
         try {
             Transport_DTO transport_dto = transport_DAO.queryForId(transportID);
-            ForeignCollection<DestFile_DTO> destFile_dtos = transport_dto.getDestFiles();
-            for (DestFile_DTO df : destFile_dtos) {
-                deleteDestFile(transportID, df.getSiteID().getId(), df.getProductFileID().getFileID());
+            if(transport_dto!=null) {
+                ForeignCollection<DestFile_DTO> destFile_dtos = transport_dto.getDestFiles();
+                for (DestFile_DTO df : destFile_dtos) {
+                    deleteDestFile(transportID, df.getSiteID().getId(), df.getProductFileID().getFileID());
+                }
+                delete_from_log(transportID);
+                transport_DAO.delete(transport_dto);
+                return true;
             }
-            delete_from_log(transportID);
-            transport_DAO.delete(transport_dto);
+            return false;
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            return false;
         }
     }
 
@@ -390,12 +394,17 @@ public class Mapper {
 
     }
 
-    public void deleteSite(int siteID) {
+    public boolean deleteSite(int siteID) {
         try {
             Site_DTO site_dto = site_DAO.queryForId(siteID);
-            site_DAO.delete(site_dto);
+            if(site_dto!=null) {
+                site_DAO.delete(site_dto);
+                return true;
+            }
+            return false;
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            return false;
         }
     }
 
@@ -411,20 +420,25 @@ public class Mapper {
 
     }
 
-    public void deleteTruck(int truckID) {
+    public boolean deleteTruck(int truckID) {
         try {
             Truck_DTO truck_dto = truck_DAO.queryForId(truckID);
-            ForeignCollection<morning_shifts_DTO> morning_shifts_dtos = truck_dto.getMorning_shifts();
-            for (morning_shifts_DTO ms : morning_shifts_dtos) {
-                delete_MorningShift(ms.getDate(), truckID);
+            if(truck_dto!=null) {
+                ForeignCollection<morning_shifts_DTO> morning_shifts_dtos = truck_dto.getMorning_shifts();
+                for (morning_shifts_DTO ms : morning_shifts_dtos) {
+                    delete_MorningShift(ms.getDate(), truckID);
+                }
+                ForeignCollection<night_shifts_DTO> night_shifts_dtos = truck_dto.getNight_shifts();
+                for (night_shifts_DTO ns : night_shifts_dtos) {
+                    deleteNightShift(ns.getDate(), truckID);
+                }
+                truck_DAO.delete(truck_dto);
+                return true;
             }
-            ForeignCollection<night_shifts_DTO> night_shifts_dtos = truck_dto.getNight_shifts();
-            for (night_shifts_DTO ns : night_shifts_dtos) {
-                deleteNightShift(ns.getDate(), truckID);
-            }
-            truck_DAO.delete(truck_dto);
+            return false;
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            return false;
         }
 
     }
@@ -507,10 +521,12 @@ public class Mapper {
     public void deleteProductFile(int fileID) {
         try {
             ProductFile_DTO productFile_dto = productFile_DAO.queryForId(fileID);
-            //delete all the products in the product file
-            deleteProduct(productFile_dto.getProducts());
-            //delete the productFile
-            productFile_DAO.delete(productFile_dto);
+            if(productFile_dto!=null) {
+                //delete all the products in the product file
+                deleteProduct(productFile_dto.getProducts());
+                //delete the productFile
+                productFile_DAO.delete(productFile_dto);
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -740,6 +756,69 @@ public class Mapper {
         {
             System.out.println(e.getMessage());
             return null;
+        }
+    }
+
+    public ProductFile getProductFile(int id){
+        //return a ProductFile, if there are no matches or there is an error- return null
+        try {
+            ProductFile_DTO productFile_dto = productFile_DAO.queryForId(id);
+            if (productFile_dto == null)
+                return null;
+            return  makePRODUCT_FILE(productFile_dto);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+
+        }
+    }
+
+    private ProductFile makePRODUCT_FILE(ProductFile_DTO productFile_dto) {
+        ProductFile productFile = new ProductFile(productFile_dto.getFileID());
+        productFile.setTotalWeight(productFile_dto.getTotalWeight());
+        ForeignCollection<Product_DTO> product_dtos = productFile_dto.getProducts();
+        HashMap<Product,Integer> products = new HashMap<>();
+        for (Product_DTO p : product_dtos) {
+            products.put(makePRODUCT(p),p.getQuantity());
+        }
+        productFile.setProducts(products);
+        return productFile;
+    }
+
+    private Product makePRODUCT(Product_DTO product_dto) {
+        return  new Product(product_dto.getID(),product_dto.getName(),product_dto.getWeight());
+    }
+
+    public long MaxIdProducts()
+    {
+        try {
+            long max = product_DAO.queryRawValue("SELECT MAX(productID) FROM Product");
+            return max;
+        }catch (Exception e)
+        {
+            return 0;
+        }
+    }
+
+    public long MaxIdProductsFile()
+    {
+        try {
+            long max = product_DAO.queryRawValue("SELECT MAX(fileID) FROM ProductFile");
+            return max;
+        }catch (Exception e)
+        {
+            return 0;
+        }
+    }
+
+    public long MaxIdSite()
+    {
+        try {
+            long max = product_DAO.queryRawValue("SELECT MAX(siteID) FROM Site");
+            return max;
+        }catch (Exception e)
+        {
+            return 0;
         }
     }
 }

@@ -1,11 +1,14 @@
 package BusinessLayer.Transport;
 
+import DataAccessLayer.Mapper;
+
 import java.util.Date;
 import java.util.Hashtable;
 
 //singleton
 public class TruckController {
     private static  TruckController instance = null;
+    private static Mapper mapper = Mapper.getInstance();
     private Hashtable<Integer, Truck> trucks; // aggregates all trucks in the system <truckID, truck object>
     private int Id_Counter;
 
@@ -39,6 +42,7 @@ public class TruckController {
         Truck t = new Truck(Id_Counter, license_plate, model, net_weight, max_weight, drivers_license);
         Id_Counter++;
         trucks.put(t.getId(),t);
+        mapper.addTruck(t);
         return true;
     }
 
@@ -46,9 +50,8 @@ public class TruckController {
     public boolean DeleteTruck(Integer id) {
         if(trucks.containsKey(id)) {
             trucks.remove(id);
-            return true;
         }
-        return false;
+        return mapper.deleteTruck(id);
     }
 
     // returns string of the details of truck with the specified id
