@@ -15,9 +15,8 @@ public class TruckController {
 
     // constructor
     private TruckController(){
-        //TODO:: max id
         trucks = new Hashtable<>();
-        Id_Counter = 0;
+        Id_Counter = (int)mapper.MaxIdTrucks();
     }
 
     public static TruckController getInstance() {
@@ -30,7 +29,7 @@ public class TruckController {
     // returns truck by specified id if it exist in the system else return null
     public Truck getById(int id)
     {
-        if(trucks.containsKey(id)) {
+        if(trucks.containsKey(id)||getTruckFromDB(id)) {
             return trucks.get(id);
         }
         return null;
@@ -57,7 +56,7 @@ public class TruckController {
     }
 
     public boolean getTruckFromDB(Integer id){
-        Truck truck = mapper.getTruck(id); //TODO
+        Truck truck = mapper.getTruck(id);
         if (truck != null){
             trucks.put(id, truck);
             return true;
@@ -124,21 +123,31 @@ public class TruckController {
     // adds a date to the list of occupied dates of the truck with the specified id
     // shift- morning:true, night:false
     public void addDate(Date date,boolean shift, int id){
-        if(trucks.containsKey(id)){
+        if(trucks.containsKey(id)||getTruckFromDB(id)){
             trucks.get(id).addDate(date,shift);
-        }}
+        }
+        if(shift)
+            mapper.addMorningShift(id,date);
+        else
+            mapper.addNightShift(id,date);
+    }
 
     // removes a date from the list of occupied dates of the truck with the specified id
     // shift- morning:true, night:false
     public void removeDate(Date date,boolean shift, int id){
-        if(trucks.containsKey(id))
+        if(trucks.containsKey(id)||getTruckFromDB(id))
         {
             trucks.get(id).removeDate(date, shift);
-        }}
+        }
+        if(shift)
+            mapper.delete_MorningShift(date, id);
+        else
+            mapper.deleteNightShift(date,id);
+    }
 
     // returns a string with the driver license compatible to the truck with the specified id
     public String getDriversLicense(Integer id) {
-        if(trucks.containsKey(id)) {
+        if(trucks.containsKey(id)||getTruckFromDB(id)) {
             return trucks.get(id).getDrivers_license();
         }
         return "";
