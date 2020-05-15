@@ -260,11 +260,6 @@ public class TransportController {
         return false;
     }
 
-    //check if a transport exist in the system
-    public boolean checkIfTransportExist(int transportID) {
-        return transports.containsKey(transportID);
-    }
-
     //get the total weight in the transport, if it exist in the system
     public float getTotalWeight(int transport_id) {
         if(transports.containsKey(transport_id)) {

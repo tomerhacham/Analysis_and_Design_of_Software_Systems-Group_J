@@ -195,10 +195,6 @@ public class FacadeController {
         return transportController.checkIfDestInFile(transportID, destToEdit);
     }
 
-    public boolean checkIfTransportExist(int transportID) {
-        return transportController.checkIfTransportExist(transportID);
-    }
-
     public boolean getTransportShift(int transportID)
     {
         return transportController.getTransportShift(transportID);
