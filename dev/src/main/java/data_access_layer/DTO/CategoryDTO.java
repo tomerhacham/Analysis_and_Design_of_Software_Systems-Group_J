@@ -35,6 +35,15 @@ public class CategoryDTO {
         this.id=category.getId();
         this.level=category.getLevel();
     }
+    public CategoryDTO(Category category,Integer super_category_id){
+        CategoryDTO dummy_super_category = new CategoryDTO();
+        dummy_super_category.id=super_category_id;
+        this.super_category=dummy_super_category;
+        this.name=category.getName();
+        this.id=category.getId();
+        this.level=category.getLevel();
+    }
+    //for UPDATE situation
     public CategoryDTO(Category category){
         this.super_category=null;
         this.name=category.getName();
@@ -67,5 +76,13 @@ public class CategoryDTO {
         return generalProducts;
     }
 
+    @Override
+    public String toString() {
+        return "CategoryDTO{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                ", level=" + level +
+                '}';
+    }
     //endregion
 }

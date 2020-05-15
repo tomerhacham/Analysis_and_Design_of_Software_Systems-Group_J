@@ -5,7 +5,6 @@ import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.inventory_module.GeneralProduct;
 import bussines_layer.inventory_module.Report;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import javafx.util.Pair;
@@ -113,7 +112,7 @@ public class SupplierModule {
     //region Order Controller
 
     public Result issueOrder (Order order){
-        return ordersController.issueOrder(order);
+          return ordersController.issueOrder(order);
     }
 
     public Result<HashMap<CatalogProduct, Integer>> getProductsToAcceptOrder(Integer orderID){
@@ -157,7 +156,7 @@ public class SupplierModule {
 
         //for each supplier(contract) get its catalog product and check the quantity needed throw the General Product
         for (SupplierCard supplierCard: productsForEachSupplier.keySet()) {
-            Integer orderid = ordersController.createOrder(supplierCard.getId() , OrderType.OutOfStockOrder).getData();//(contract.getSupplierID() , productsForEachSupplier.get(contract));
+            Integer orderid = ordersController.createOrder(supplierCard , OrderType.OutOfStockOrder).getData();//(contract.getSupplierID() , productsForEachSupplier.get(contract));
 
             LinkedList<Pair<CatalogProduct , Float>> cpPrice = productsForEachSupplier.get(supplierCard);
 
@@ -181,7 +180,9 @@ public class SupplierModule {
     //region PeriodicOrder
 
     public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<GeneralProduct , Integer>> productsAndQuantity , Integer date){
-        int orderID = ordersController.createPeriodicOrder(supplierID).getData();
+        Result<Contract> contractResult = contractController.findContract(supplierID);
+        if (!contractResult.isOK()){return new Result<>(false, null, String.format("Supplier %d does not exist", supplierID));}
+        int orderID = ordersController.createPeriodicOrder(contractResult.getData().getSupplier()).getData();
         Result<Order> resultOrder = ordersController.getOrder(orderID);
         if (!resultOrder.isOK()){return new Result<>(false, null, String.format("Order %d does not exist", orderID));}
         for (Pair<GeneralProduct , Integer> pair : productsAndQuantity) {
@@ -256,7 +257,8 @@ public class SupplierModule {
             resultPrice = contract.getProductPriceConsideringQuantity(product.getGpID(), periodicOrder.getProductsAndQuantity().get(product));
             periodicOrder.getProductsAndPrice().replace(product, resultPrice.getData());
         }
-        periodicOrder.setSupplierID(supplierID);
+
+        periodicOrder.setSupplier(contract.getSupplier());
         return new Result<>(true , periodicOrder , String.format("Order %d updated successfully", orderID));
     }
 

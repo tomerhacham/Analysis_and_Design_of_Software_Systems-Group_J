@@ -1,8 +1,10 @@
 package bussines_layer.supplier_module;
 import bussines_layer.Result;
+import bussines_layer.SupplierCard;
 import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.inventory_module.ProductController;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -23,19 +25,20 @@ enum OrderStatus
 public class Order {
 
     private Integer orderID;
-    private Integer supplierID;
+    private SupplierCard supplier;
     private OrderType type;
     private OrderStatus status;
     private HashMap<CatalogProduct, Integer> productsAndQuantity; // <product , quantity>
     private HashMap<CatalogProduct , Float> productsAndPrice; //<product, price>
     private Integer dayToDeliver;
+    private Date issuedDate;
 
 
     //constructor to out of stock order
-    public Order(int orderID , Integer supplierID , OrderType type){
+    public Order(int orderID , SupplierCard supplier , OrderType type){
         this.orderID = orderID;
         productsAndQuantity = new HashMap<>();
-        this.supplierID = supplierID;
+        this.supplier = supplier;
         productsAndPrice = new HashMap<>();
         this.type = type;
         this.status=OrderStatus.inProcess;
@@ -43,10 +46,10 @@ public class Order {
     }
 
     //constructor to periodic order
-    public Order(int orderID , Integer supplierID , OrderType type , Integer dayToDeliver){
+    public Order(int orderID , SupplierCard supplierID , OrderType type , Integer dayToDeliver){
         this.orderID = orderID;
         productsAndQuantity = new HashMap<>();
-        this.supplierID = supplierID;
+        this.supplier = supplier;
         productsAndPrice = new HashMap<>();
         this.type = type;
         this.status=OrderStatus.inProcess;
@@ -57,11 +60,19 @@ public class Order {
         return orderID;
     }
 
-    public Integer getSupplierID() {
-        return supplierID;
+    public SupplierCard getSupplier() {
+        return supplier;
     }
 
-    public OrderStatus getStatus() {
+    public Date getIssuedDate() {
+        return issuedDate;
+    }
+
+    public Integer getSupplierID() {
+        return supplier.getId();
+    }
+
+    public Enum<OrderStatus> getStatus() {
         return status;
     }
 
@@ -69,7 +80,9 @@ public class Order {
         this.status = status;
     }
 
-    public OrderType getType() {
+    public void setIssuedDate (Date date){this.issuedDate = date;}
+
+    public Enum<OrderType> getType() {
         return type;
     }
 
@@ -77,7 +90,7 @@ public class Order {
         this.type = type;
     }
 
-    public void setSupplierID (Integer supplierID){ this.supplierID = supplierID;}
+    public void setSupplier (SupplierCard supplier){ this.supplier = supplier;}
 
     public  HashMap<CatalogProduct, Float> getProductsAndPrice() {return productsAndPrice;}
 
@@ -85,14 +98,14 @@ public class Order {
 
     public Result updateDayToDeliver(Integer dayToDeliver) {
         if(this.type != OrderType.PeriodicOrder){
-            return new Result(false,null, String.format("The delivery day has NOT been updated to %d in the order:%d because it is not a periodic order", dayToDeliver , getOrderID()));
+            return new Result<>(false,null, String.format("The delivery day has NOT been updated to %d in the order:%d because it is not a periodic order", dayToDeliver , getOrderID()));
         }
         this.dayToDeliver = dayToDeliver;
-        return new Result(true,dayToDeliver, String.format("The delivery day has been updated to %d in the order:%d", dayToDeliver , getOrderID()));
+        return new Result<>(true,dayToDeliver, String.format("The delivery day has been updated to %d in the order:%d", dayToDeliver , getOrderID()));
     }
 
     public Result getDayToDeliver() {
-        return new Result(true,dayToDeliver, String.format("The delivery day it %d in the order:%d", dayToDeliver , getOrderID()));
+        return new Result<>(true,dayToDeliver, String.format("The delivery day it %d in the order:%d", dayToDeliver , getOrderID()));
     }
 
     public Result addProduct(CatalogProduct product , Integer quantity , Float price){
@@ -121,15 +134,17 @@ public class Order {
     public Result updateProductQuantityInPeriodicOrder(CatalogProduct product , Integer newQuantity , Float newPrice){
         productsAndQuantity.replace(product , newQuantity);
         productsAndPrice.replace(product , newPrice);
-        return new Result(true,product, String.format("The product %s has been updated in the order:%d", product.getName() , getOrderID()));
+        return new Result<>(true,product, String.format("The product %s has been updated in the order:%d", product.getName() , getOrderID()));
     }
 
     public Result<String> display() {
-        String toDisplay = "Order id : "+'\t'+this.orderID.toString() +'\t'+ "Type : "+ type + '\t' +"Supplier id : "+this.supplierID+ '\n';
-        toDisplay = toDisplay+ "Product"+'\t'+'\t'+"Quantity" + '\n';
+        String toDisplay = "Order Details - Type " + type + "order";
+        toDisplay = toDisplay + "Supplier name : " + supplier.getSupplierName() + '\t'+ "Address : " + supplier.getAddress() + '\t' + "Order ID : " + orderID;
+        toDisplay = toDisplay + "Supplier ID : "+'\t'+supplier.getId() +'\t'+ "IssuedDate : "+ issuedDate + '\t' +"Phone number : "+ supplier.getPhoneNumber()+ '\n';
+        toDisplay = toDisplay+ "Product catalogID"+'\t'+'\t'+"Product name"+'\t'+'\t'+ "Quantity" + '\t'+'\t' + "Origin price"+ '\t'+'\t' + "Final price"+'\n';
 
         for (CatalogProduct p : productsAndQuantity.keySet()){
-            toDisplay = toDisplay+ p.getName() + '\t' +'\t'+ productsAndQuantity.get(p).toString() + '\n';
+            toDisplay = toDisplay+ p.getCatalogID() +'\t'+'\t'+ p.getName() +'\t'+'\t'+ productsAndQuantity.get(p).toString() +'\t' +'\t'+ p.getSupplierPrice()+'\t' +'\t'+ this.productsAndPrice.get(p).toString() +'\n';
         }
 
         if (productsAndQuantity.isEmpty()){
@@ -137,7 +152,7 @@ public class Order {
             toDisplay = toDisplay +"No Products In This Order\n";
         }
         else{
-            toDisplay = toDisplay + "Order Total Amount : " + getTotalAmount().toString() +'\n'+" Employee - Do Not Forget To Send The Order To The supplier\n" ;
+            toDisplay = toDisplay + "Order Total Amount : " + getTotalAmount().toString() +'\n'+"Do Not Forget To Send The Order To The supplier !\n" ;
         }
         return new Result<>(true, toDisplay, String.format(" The Order Is Ready And Has Been Sent Back To The Employee: %s", toDisplay));
     }
