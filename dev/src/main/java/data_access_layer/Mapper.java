@@ -276,6 +276,15 @@ public class Mapper {
         }
     }
 
+    public void create(SpecificProduct specificProduct , GeneralProduct generalProduct){
+        SpecificProductDTO specificProductDTO = new SpecificProductDTO(generalProduct , specificProduct);
+        try {
+            specific_product_dao.create(categories_in_contractDTO);
+            System.err.println(String.format("[Writing] %s", categories_in_contractDTO));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
 
     //TODO:5. create ID's
 
@@ -441,20 +450,6 @@ public class Mapper {
         }catch (Exception e){e.printStackTrace();}
     }
 
-    public void update (CatalogProduct catalogProduct , Contract contract){
-
-        //TODO : update Tomer - there is nothing to update in this table - there are only id's here
-    }
-
-    public void update (CatalogProduct catalogProduct , GeneralProduct generalProduct){
-
-        //TODO : update Tomer - there is nothing to update in this table - there are only id's here
-    }
-
-    public void update (Contract contract , String category){
-
-        //TODO - update Tomer : there is no need to update the category name - you can only delete or add
-    }
 
     //endregion
 
@@ -583,6 +578,10 @@ public class Mapper {
         //TODO - update Tomer : there is no need to update the category name - you can only delete or add
     }
 
+
+    //endregion
+
+    //region Loads
 
     //endregion
 
