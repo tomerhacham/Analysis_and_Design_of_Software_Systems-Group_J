@@ -58,17 +58,9 @@ public class ContractDTO {
     public ForeignCollection<CostEngineeringDTO> getProduct_in_cost_engineering() {
         return product_in_cost_engineering;
     }
+
     public ForeignCollection<categories_in_contractDTO> getCategories_in_contract() {
         return categories_in_contract;
-    }
-
-    @Override
-    public String toString() {
-        return "ContractDTO{" +
-                "contract_id=" + contract_id +
-                ", branch_id=" + branch.branch_id +
-                ", supplier_id=" + supplier.supplier_id +
-                '}';
     }
     //endregion
 }

@@ -12,12 +12,12 @@ enum discountType
 public class Sale {
     //fields
     private Integer sale_id;
-    private discountType type;
+    private List<GeneralProduct> products_on_sale;
     private Date start;
     private Date end;
+    private discountType type;
     private Boolean active;
     private Integer branchId;
-    private List<GeneralProduct> products_on_sale;
 
 
     //Constructor

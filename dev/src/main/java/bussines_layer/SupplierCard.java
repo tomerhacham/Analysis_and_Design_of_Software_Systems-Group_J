@@ -14,16 +14,16 @@ enum supplierType {byOrder , periodic , selfDelivery;}
 
 public class SupplierCard {
 
-    private Integer id;
     private String SupplierName;
     private String Address;
     private String Email;
     private String PhoneNumber;
+    private int id;
     private String BankAccountNum;
     private String Payment;
-    private supplierType type;
-    private Integer numOfContract;
     private LinkedList<String> ContactsName;
+    private int numOfContract;
+    private supplierType type;
     public SupplierCard(String SupplierName , String Address , String Email , String PhoneNumber ,
                         int id , String BankAccountNum , String Payment , LinkedList<String> ContactsName, supplierType type){
 

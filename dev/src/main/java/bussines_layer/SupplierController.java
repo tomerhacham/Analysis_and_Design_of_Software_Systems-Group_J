@@ -45,15 +45,11 @@ public class SupplierController {
      * @param BankAccountNum
      * @param Payment
      * @param ContactsName
-     * @param typeString - enum;
+     * @param type - enum;
      * @return
      */
     public Result createSupplierCard(String SupplierName , String Address , String Email , String PhoneNumber ,
-                                   Integer id ,String BankAccountNum , String Payment , LinkedList<String> ContactsName, String typeString){
-        supplierType type = convertStringToType(typeString);
-        if (type == null){
-            return new Result<>(false,id, String.format("Type: %s of supplier invalid",typeString));
-        }
+                                   Integer id ,String BankAccountNum , String Payment , LinkedList<String> ContactsName, supplierType type){
         SupplierCard supplierCard = new SupplierCard(SupplierName, Address, Email, PhoneNumber,
                 id ,BankAccountNum ,Payment ,ContactsName, type);
         return addSupplierCardToList(supplierCard);
@@ -231,21 +227,16 @@ public class SupplierController {
     /**
      * change supplier type
      * @param id
-     * @param typeString - ENUM {byOrder , periodic , selfDelivery;}
+     * @param type - ENUM {byOrder , periodic , selfDelivery;}
      */
-    public Result ChangeSupplierKind(Integer id ,String typeString){
+    public Result ChangeSupplierKind(Integer id ,supplierType type){
         Result result;
         if ( ! isExist(id).isOK()){
-            result=new Result<>(false,id, String.format("Could not find supplier ID:%d", id));
+            result=new Result(false,id, String.format("Could not find supplier ID:%d", id));
         }
-        else {
-            supplierType type = convertStringToType(typeString);
-            if (type == null) {
-                result = new Result<>(false, id, String.format("Type: %s of supplier invalid", typeString));
-            } else {
-                suppliers.get(id).setType(type);
-                result = new Result<>(true, id, String.format("Supplier ID:%d type has been set to %s", id, type.name()));
-            }
+        else{
+            suppliers.get(id).setType(type);
+            result = new Result(true, id, String.format("Supplier ID:%d type has been set to %s", id,type.name()));
         }
         return result;
     }
@@ -312,19 +303,7 @@ public class SupplierController {
         return suppliers;
     }
 
-    private supplierType convertStringToType(String t){
-        supplierType type = null;
-        if (t.equals("byOrder") || t.equals("byorder")){
-            type = supplierType.byOrder;
-        } else if (t.equals("periodic") || t.equals("Periodic")){
-            type = supplierType.periodic;
-        } else if (t.equals("selfDelivery") || t.equals("selfdelivery")){
-            type = supplierType.selfDelivery;
-        } else {
-            return null;
-        }
-        return type;
-    }
+
 
     //endregion
 }

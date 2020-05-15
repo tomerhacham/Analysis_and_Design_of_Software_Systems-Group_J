@@ -161,6 +161,25 @@ public class Mapper {
             throwables.printStackTrace();
         }
     }
+
+    public void update(Order order){
+        try{
+            OrderDTO orderDTO = new OrderDTO(order);
+            order_dao.update(orderDTO);
+            for(CatalogProduct product:order.getProductsAndPrice().keySet()){
+                UpdateBuilder<catalog_product_in_orderDTO, Void> updateBuilder = catalog_product_in_order_dao.updateBuilder();
+                // set criterias
+                updateBuilder.where().eq("order_id", order.getOrderID());
+                // update the value of your field(s)
+                updateBuilder.updateColumnValue("name" ,catalogProduct.getName());
+                updateBuilder.updateColumnValue("supplier_price" , catalogProduct.getSupplierPrice());
+                updateBuilder.updateColumnValue("supplier_category" , catalogProduct.getSupplierCategory());
+                updateBuilder.update();
+
+            }
+            contract_dao.update(contractDTO);
+        }catch (Exception e){e.printStackTrace();}
+    }
     /**
      * writing supplierCard  and all its contactList to the DB
      * @param supplier
@@ -264,18 +283,14 @@ public class Mapper {
             branch_dao.update(branchDTO);
         }catch (Exception e){e.printStackTrace();}
     }
-    public void update(Sale sale){
-        try{
-            SaleDTO saleDTO = new SaleDTO(sale);
-            sale_dao.update(saleDTO);
-        }catch (Exception e){e.printStackTrace();}
-    }
+
     public void update(Category category){
         try{
             CategoryDTO categoryDTO=new CategoryDTO(category);
             category_dao.update(categoryDTO);
         }catch (Exception e){e.printStackTrace();}
     }
+
     public void update(GeneralProduct generalProduct){
         try{
             GeneralProductDTO generalProductDTO = new GeneralProductDTO(generalProduct);
@@ -299,6 +314,25 @@ public class Mapper {
             }
         }catch (Exception e){e.printStackTrace();}
     }
+
+    public void update(Contract contract){
+        try{
+            ContractDTO contractDTO = new ContractDTO(contract);
+            contract_dao.update(contractDTO);
+        }catch (Exception e){e.printStackTrace();}
+    }
+
+
+
+    public void update(Sale sale){
+        try{
+            SaleDTO saleDTO = new SaleDTO(sale);
+            sale_dao.update(saleDTO);
+        }catch (Exception e){e.printStackTrace();}
+    }
+
+
+
     //endregion
 
     //endregion
