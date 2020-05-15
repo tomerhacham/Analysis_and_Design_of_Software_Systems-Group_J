@@ -26,15 +26,15 @@ public class BranchController {
 
     //region Supplier Controller
 
-    public Result createSupplierCard (String supplierName, String address, String email, String phoneNumber, int id, String bankAccountNum, String payment, LinkedList<String> contactsName, supplierType type) {
+    public Result createSupplierCard (String supplierName, String address, String email, String phoneNumber, int id, String bankAccountNum, String payment, LinkedList<String> contactsName, String type) {
         return supplierController.createSupplierCard(supplierName , address , email , phoneNumber , id , bankAccountNum , payment , contactsName, type);
     }
 
-    public Result ChangeSupplierName(Integer supid, String supplierName) {
+    public Result changeSupplierName(Integer supid, String supplierName) {
         return supplierController.ChangeSupplierName(supid , supplierName);
     }
 
-    public Result ChangeAddress(Integer supid, String address) {
+    public Result changeAddress(Integer supid, String address) {
         return supplierController.ChangeAddress(supid , address);
     }
 
@@ -62,7 +62,7 @@ public class BranchController {
         return supplierController.DeleteContactName(supid , contactName);
     }
 
-    public Result ChangeSupplierType(Integer supid, supplierType type) {
+    public Result ChangeSupplierType(Integer supid, String type) {
         return supplierController.ChangeSupplierKind(supid , type);
     }
 
@@ -103,7 +103,7 @@ public class BranchController {
         return new Result<>(true, branch_id, String.format("Branch (ID: %d) removed successfully", branch_id));
     }
 
-    public Result editName(Integer branch_id, String newName){
+    public Result editBranchName(Integer branch_id, String newName){
         if (checkBranchExists(branch_id)){
             Branch b = branches.get(branch_id);
             b.setName(newName);

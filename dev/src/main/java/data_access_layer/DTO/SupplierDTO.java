@@ -100,5 +100,19 @@ public class SupplierDTO {
         else if(type.equals("periodic")){return supplierType.periodic;}
         else{return supplierType.selfDelivery;}
     }
+
+    @Override
+    public String toString() {
+        return "SupplierDTO{" +
+                "supplier_id=" + supplier_id +
+                ", supplier_name='" + supplier_name + '\'' +
+                ", address='" + address + '\'' +
+                ", email='" + email + '\'' +
+                ", phone_number='" + phone_number + '\'' +
+                ", bank_account_number='" + bank_account_number + '\'' +
+                ", payment_kind='" + payment_kind + '\'' +
+                ", type=" + type +
+                '}';
+    }
     //endregion
 }

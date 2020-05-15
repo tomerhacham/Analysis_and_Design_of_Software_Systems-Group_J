@@ -2,22 +2,15 @@ package presentation_layer;
 
 import bussines_layer.Branch;
 import bussines_layer.BranchController;
-import bussines_layer.inventory_module.Inventory;
 import bussines_layer.Result;
-import Initializer.Initializer;
 import bussines_layer.inventory_module.Sale;
 import javafx.util.Pair;
-import sun.awt.image.ImageWatched;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import static java.lang.System.exit;
-import static java.lang.System.in;
 
 public class CLController {
 
@@ -59,28 +52,268 @@ public class CLController {
                 "            |_|     \n";
         System.out.println(logo);
     }
-    static private void printInitializeMenu() {
+
+//    static private void printInitializeMenu() {
+//        String menu = "";
+//        menu = menu.concat("Choose one of the options:\n");
+//        menu = menu.concat("1) Run system with initial data\n");
+//        menu = menu.concat("2) Run system blank\n");
+//        menu = menu.concat("3) Exit\n\n");
+//        System.out.println(menu);
+//        Integer option = getNextInt(sc);
+//        while (true) {
+//            switch (option) {
+//                case 1:
+//                    Initializer.initialize(inventory);
+//                    return;
+//                case 2:
+//                    return;
+//                case 3:
+//                    Exit();
+//                default:
+//                    System.out.println("Option not valid, please retype");
+//            }
+//        }
+//    }
+
+    //region Supplier Controller
+    private static void printSuppliersMenu() {
         String menu = "";
         menu = menu.concat("Choose one of the options:\n");
-        menu = menu.concat("1) Run system with initial data\n");
-        menu = menu.concat("2) Run system blank\n");
-        menu = menu.concat("3) Exit\n\n");
-        System.out.println(menu);
-        Integer option = getNextInt(sc);
+        menu = menu.concat("1) Create new supplier card\n");
+        menu = menu.concat("2) Edit supplier card details\n");
+        menu = menu.concat("3) Return\n");
+        menu = menu.concat("4) Exit\n\n");
         while (true) {
+            System.out.println(menu);
+            Integer option = getNextInt(sc);
             switch (option) {
                 case 1:
-                    Initializer.initialize(inventory);
-                    return;
+                    printCreateSupplierCardMenu();
+                    break;
                 case 2:
-                    return;
+                    printEditSupplierCardDetails();
+                    break;
                 case 3:
+                    return;
+                case 4:
+                    Exit();
+            }
+        }
+    }
+
+    private static void printEditSupplierCardDetails() {
+        String menu = "";
+        menu=menu.concat("Choose detail to edit:\n");
+        menu=menu.concat("1) Supplier name\n");
+        menu=menu.concat("2) Address\n");
+        menu=menu.concat("3) Email\n");
+        menu=menu.concat("4) Phone number \n");
+        menu=menu.concat("5) Bank account\n");
+        menu=menu.concat("6) Payment\n");
+        menu=menu.concat("7) Supplier type\n");
+        menu=menu.concat("8) Delete contact name\n");
+        menu=menu.concat("9) Add contact name\n");
+        menu=menu.concat("10) Return\n");
+        menu=menu.concat("11) Exit\n");
+        while(true) {
+            System.out.println(menu);
+            Integer option = getNextInt(sc);
+            switch (option) {
+                case 1:
+                    printEditSupplierName();
+                    break;
+                case 2:
+                    printEditChangeAddress();
+                    break;
+                case 3:
+                    printEditEmail();
+                    break;
+                case 4:
+                    printEditPhoneNumber();
+                    break;
+                case 5:
+                    printEditBankAccount();
+                    break;
+                case 6:
+                    printEditPayment();
+                    break;
+                case 7:
+                    printEditSupplierType();
+                    break;
+                case 8:
+                    printDeleteContactName();
+                    break;
+                case 9:
+                    printAddContactName();
+                    break;
+                case 10:
+                    return;
+                case 11:
                     Exit();
                 default:
                     System.out.println("Option not valid, please retype");
             }
         }
     }
+
+    private static void printAddContactName() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 1) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            String details= "Please enter list of contacts names to add: [Name1],[Name2],...\n";
+            System.out.println(details);
+            String[] contactsInput = getInputParserbyComma(sc);
+            LinkedList<String> contactsName = new LinkedList<>(Arrays.asList(contactsInput));
+            result = branchController.AddContactName(supplierID,contactsName);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printDeleteContactName() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID],[Contact name to delete]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 2) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            result = branchController.DeleteContactName(supplierID,param[1]);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printEditSupplierType() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID],[SupplierType]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 2) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            result = branchController.ChangeSupplierType(supplierID,param[1]);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printEditPayment() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID],[New payment]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 2) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            result = branchController.ChangePayment(supplierID,param[1]);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printEditBankAccount() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID],[New bank account number]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 2) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            result = branchController.ChangeBankAccount(supplierID,param[1]);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printEditPhoneNumber() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID],[newPhoneNumber]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 2) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            result = branchController.ChangePhoneNumber(supplierID,param[1]);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printEditEmail() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID],[newEmail]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 2) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            result = branchController.ChangeEmail(supplierID,param[1]);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printEditChangeAddress() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID],[newAddress]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 2) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            result = branchController.changeAddress(supplierID,param[1]);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printEditSupplierName() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID],[newName]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 2) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            result = branchController.changeSupplierName(supplierID,param[1]);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printCreateSupplierCardMenu() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierName],[address],[Email],[PhoneNumber],[supplier_id],[BankAccountNumber],[Payment],[type]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 8) {
+            String details= "Please enter list of contacts names: [Name1],[Name2],...\n";
+            System.out.println(details);
+            String[] contactsInput = getInputParserbyComma(sc);
+            LinkedList<String> contactsName = new LinkedList<>(Arrays.asList(contactsInput));
+            result = branchController.createSupplierCard(param[0],param[1],param[2],param[3],Integer.getInteger(param[4]),param[5],param[6],contactsName,param[7]);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid number of parameters");
+        }
+    }
+    //endregion
 
     private static void printSuperLiMenu() {
         String menu = "";
@@ -97,8 +330,9 @@ public class CLController {
         menu = menu.concat("1) Choose existing branch\n");
         menu = menu.concat("2) Open new branch\n");
         menu = menu.concat("3) Remove branch\n");
-        menu = menu.concat("4) Return\n");
-        menu = menu.concat("5) Exit\n\n");
+        menu = menu.concat("4) Edit branch name\n");
+        menu = menu.concat("5) Return\n");
+        menu = menu.concat("6) Exit\n\n");
         while (true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -113,10 +347,36 @@ public class CLController {
                     printRemoveBranchMenu();
                     break;
                 case 4:
-                    return;
+                    printEditBranchNameMenu();
                 case 5:
+                    return;
+                case 6:
                     Exit();
             }
+        }
+    }
+
+    private static void printEditBranchNameMenu() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[branchID],[newName]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 2) {
+            result = branchController.editBranchName(Integer.getInteger(param[0]), param[1]);
+            System.out.println(result.getMessage());
+        }
+    }
+
+    private static void printRemoveBranchMenu() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[branchID]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 1) {
+            result = branchController.removeBranch(Integer.getInteger(param[0]));
+            System.out.println(result.getMessage());
         }
     }
 
@@ -151,8 +411,10 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 1) {
-            result = branchController.addMainCategory(param[0]);
+            result = branchController.createNewBranch(param[0]);
             System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid number of parameters");
         }
     }
 
@@ -203,6 +465,289 @@ public class CLController {
         }
     }
 
+    //region Supplier Contracts management
+    private static void printSupplierContractsMenu() {
+        String menu = "";
+        menu=menu.concat("Choose one of the options:\n");
+        menu=menu.concat("1) Add contract\n");
+        menu=menu.concat("2) Remove contract\n");
+        menu=menu.concat("3) Add product to contract\n");
+        menu=menu.concat("4) Remove product from contract\n");
+        menu=menu.concat("5) Add category to contract\n");
+        menu=menu.concat("6) Remove category from contract\n");
+        menu=menu.concat("7) Cost Engineering\n");
+        menu=menu.concat("8) Return\n");
+        menu=menu.concat("9) Exit\n");
+        while(true) {
+            System.out.println(menu);
+            Integer option = getNextInt(sc);
+            switch (option) {
+                case 1:
+                    printAddContract();
+                    break;
+                case 2:
+                    printRemoveContract();
+                    break;
+                case 3:
+                    printAddProductToContract();
+                    break;
+                case 4:
+                    printRemoveProductFromContract();
+                    break;
+                case 5:
+                    printAddCategoryToContract();
+                    break;
+                case 6:
+                    printRemoveCategoryFromContract();
+                    break;
+                case 7:
+                    printCostEngineeringMenu();
+                    break;
+                case 8:
+                    return;
+                case 9:
+                    Exit();
+                default:
+                    System.out.println("Option not valid, please retype");
+            }
+        }
+
+    }
+
+    private static void printCostEngineeringMenu() {
+        String menu = "";
+        menu=menu.concat("Choose one of the options:\n");
+        menu=menu.concat("1) Add cost engineering\n");
+        menu=menu.concat("2) Remove cost engineering\n");
+        menu=menu.concat("3) Add product\n");
+        menu=menu.concat("4) Remove product\n");
+        menu=menu.concat("5) Update minimum quantity\n");
+        menu=menu.concat("6) Update sale price\n");
+        menu=menu.concat("7) Return\n");
+        menu=menu.concat("8) Exit\n");
+        while(true) {
+            System.out.println(menu);
+            Integer option = getNextInt(sc);
+            switch (option) {
+                case 1:
+                    printAddCostEng();
+                    break;
+                case 2:
+                    printRemoveCostEng();
+                    break;
+                case 3:
+                    printAddProductToCostEng();
+                    break;
+                case 4:
+                    printRemoveProductFromCostEng();
+                    break;
+                case 5:
+                    printUpdateMinQuantityCostEng();
+                    break;
+                case 6:
+                    printUpdateSalePriceCostEng();
+                    break;
+                case 7:
+                    return;
+                case 8:
+                    Exit();
+                default:
+                    System.out.println("Option not valid, please retype");
+            }
+        }
+    }
+
+    private static void printUpdateSalePriceCostEng() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID],[catalogID],[price]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 3) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            Integer catalogID = Integer.getInteger(param[1]);
+            Float price = Float.parseFloat(param[2]);
+            result = branchController.updatePriceAfterSale(supplierID,catalogID,price);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printUpdateMinQuantityCostEng() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID],[catalogID],[minQuantity]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 3) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            Integer catalogID = Integer.getInteger(param[1]);
+            Integer minQuan = Integer.getInteger(param[2]);
+            result = branchController.updateMinQuantity(supplierID,catalogID,minQuan);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printRemoveProductFromCostEng() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID],[catalogID]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 2) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            Integer catalogID = Integer.getInteger(param[1]);
+            result = branchController.removeProductCostEng(supplierID,catalogID);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printAddProductToCostEng() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID],[catalogID],[minQuantity],[price]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 4) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            Integer catalogID = Integer.getInteger(param[1]);
+            Integer minQuan = Integer.getInteger(param[2]);
+            Float price = Float.parseFloat(param[3]);
+            result = branchController.addProductToCostEng(supplierID,catalogID,minQuan,price);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printRemoveCostEng() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 1) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            result = branchController.removeCostEng(supplierID);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printAddCostEng() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 1) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            result = branchController.addCostEng(supplierID);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printRemoveCategoryFromContract() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID],[categoryName]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 2) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            result = branchController.removeCategory(supplierID, param[1]);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printAddCategoryToContract() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID],[categoryName]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 2) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            result = branchController.addCategory(supplierID,param[1]);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printRemoveProductFromContract() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID],[gpID]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 2) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            Integer gpID = Integer.getInteger(param[1]);
+            result = branchController.removeProductFromContract(supplierID,gpID);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printAddProductToContract() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID],[catalogID],[gpID],[supplier_price],[supplier_id],[supplier_category],[name]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 7) {
+            result = branchController.addProductToContract(Integer.getInteger(param[0]), Integer.getInteger(param[1]),Integer.getInteger(param[2]),Float.parseFloat(param[3]),Integer.getInteger(param[4]),param[5],param[6]);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printRemoveContract() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 1) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            result = branchController.removeContract(supplierID);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    private static void printAddContract() {
+        Result result;
+        String menu = "Please enter the following details\n";
+        menu=menu.concat("[supplierID]");
+        System.out.println(menu);
+        String[] param = getInputParserbyComma(sc);
+        if (param.length == 1) {
+            Integer supplierID = Integer.getInteger(param[0]);
+            result = branchController.addContract(supplierID);
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Invalid numbers of parameters");
+        }
+    }
+
+    //endregion
+
+    //region Orders Management
     private static void printOrdersMenu() {
         String menu = "";
         menu=menu.concat("Choose one of the options:\n");
@@ -394,43 +939,31 @@ public class CLController {
     //region Products Management
     static private void printProductMenu() {
         String menu = "Products management\n";
-        //menu=menu.concat("1) Add new general product\n");
-        menu=menu.concat("2) Edit general product\n");
-       // menu=menu.concat("3) Remove general product\n");
-        //menu=menu.concat("4) Add specific product\n");
-        menu=menu.concat("5) Remove specific product\n");
-        menu=menu.concat("6) Mark flaw specific product\n");
-        menu=menu.concat("7) Change location of specific product\n");
-        menu=menu.concat("8) Return\n");
-        menu=menu.concat("9) exit\n\n");
+        menu=menu.concat("1) Edit general product\n");
+        menu=menu.concat("2) Remove specific product\n");
+        menu=menu.concat("3) Mark flaw specific product\n");
+        menu=menu.concat("4 Change location of specific product\n");
+        menu=menu.concat("5) Return\n");
+        menu=menu.concat("6) exit\n\n");
         while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
             switch (option) {
                 case (1):
-                    printAddGeneralProductMenu();
-                    break;
-                case (2):
-                    printEditGeneralProductMenu();
-                    break;
-                case (3):
-                    printRemoveGeneralProductMenu();
-                    break;
-                case (4):
                     printAddSpecificProductMenu();
                     break;
-                case (5):
+                case (2):
                     printRemoveSpecificProductMenu();
                     break;
-                case (6):
+                case (3):
                     printMarkAsFlawtMenu();
                     break;
-                case (7):
+                case (4):
                     printMoveLocationtMenu();
                     break;
-                case (8):
+                case (5):
                     return;
-                case (9):
+                case (6):
                     Exit();
                 default:
                     System.out.println("Option not valid, please retype");
@@ -439,36 +972,36 @@ public class CLController {
     }
 
     //region General Product
-    static private void printAddGeneralProductMenu() {
-        Result result;
-        String menu = "Please enter the following details\n";
-        menu=menu.concat("[CategoryID],[Manufacture],[CatalogID],[Name],[Supplier price],[Retail price],[Minimum quantity]");
-        System.out.println(menu);
-        String[] param = getInputParserbyComma(sc);
-        if (param.length==7){
-            result=inv.addGeneralProduct(Integer.parseInt(param[0]),param[1],param[2],param[3],
-                    Float.parseFloat(param[4]),Float.parseFloat(param[5]),Integer.parseInt(param[6]));
-            System.out.println(result.getMessage());
-        }
-        else{
-            System.out.println("Invalid number of parameters");
-        }
-    }
+//    static private void printAddGeneralProductMenu() {
+//        Result result;
+//        String menu = "Please enter the following details\n";
+//        menu=menu.concat("[CategoryID],[Manufacture],[CatalogID],[Name],[Supplier price],[Retail price],[Minimum quantity]");
+//        System.out.println(menu);
+//        String[] param = getInputParserbyComma(sc);
+//        if (param.length==7){
+//            result=branchController.addGeneralProduct(Integer.parseInt(param[0]),param[1],param[2],param[3],
+//                    Float.parseFloat(param[4]),Float.parseFloat(param[5]),Integer.parseInt(param[6]));
+//            System.out.println(result.getMessage());
+//        }
+//        else{
+//            System.out.println("Invalid number of parameters");
+//        }
+//    }
 
-    static private void printRemoveGeneralProductMenu() {
-        Result result;
-        String menu = "Please enter the following details\n";
-        menu=menu.concat("[CategoryID],[CatalogID]");
-        System.out.println(menu);
-        String[] param = getInputParserbyComma(sc);
-        if(param.length==2){
-            result=inv.removeGeneralProduct(Integer.parseInt(param[0]),param[1]);
-            System.out.println(result.getMessage());
-        }
-        else{
-            System.out.println("Invalid number of parameters");
-        }
-    }
+//    static private void printRemoveGeneralProductMenu() {
+//        Result result;
+//        String menu = "Please enter the following details\n";
+//        menu=menu.concat("[CategoryID],[CatalogID]");
+//        System.out.println(menu);
+//        String[] param = getInputParserbyComma(sc);
+//        if(param.length==2){
+//            result=branchController.removeGeneralProduct(Integer.parseInt(param[0]),param[1]);
+//            System.out.println(result.getMessage());
+//        }
+//        else{
+//            System.out.println("Invalid number of parameters");
+//        }
+//    }
 
     static private void printEditGeneralProductMenu() {
         Result result;
@@ -491,9 +1024,8 @@ public class CLController {
                     details=details.concat("[CatalogID],[New name]");
                     System.out.println(details);
                     param = getInputParserbyComma(sc);
-                    //TODO convert param[0] to Integer
                     if(param.length==2) {
-                        result = branchController.editGeneralProductName(param[0], param[1]);
+                        result = branchController.editGeneralProductName(Integer.getInteger(param[0]), param[1]);
                         System.out.println(result.getMessage());
                     }
                     else{
@@ -504,8 +1036,8 @@ public class CLController {
                     details=details.concat("[CatalogID],[New supplier price],[supplierID]");
                     System.out.println(details);
                     param = getInputParserbyComma(sc);
-                    if(param.length==2) {
-                        result = branchController.editGeneralProductSupplierPrice(param[0], Float.parseFloat(param[1]));
+                    if(param.length==3) {
+                        result = branchController.editGeneralProductSupplierPrice(Integer.getInteger(param[0]), Float.parseFloat(param[1]),Integer.getInteger(param[2]));
                         System.out.println(result.getMessage());
                     }
                     else{
@@ -517,7 +1049,7 @@ public class CLController {
                     System.out.println(details);
                     param=getInputParserbyComma(sc);
                     if(param.length==2) {
-                        result = branchController.editGeneralProductRetailPrice(param[0], Float.parseFloat(param[1]));
+                        result = branchController.editGeneralProductRetailPrice(Integer.getInteger(param[0]), Float.parseFloat(param[1]));
                         System.out.println(result.getMessage());
                     }
                     else{
@@ -529,7 +1061,7 @@ public class CLController {
                     System.out.println(details);
                     param = getInputParserbyComma(sc);
                     if(param.length==2) {
-                        result=branchController.editGeneralProductQuantity(param[0], Integer.parseInt(param[1]));
+                        result=branchController.editGeneralProductQuantity(Integer.getInteger(param[0]), Integer.parseInt(param[1]));
                         System.out.println(result.getMessage());
                     }
                     else{
@@ -541,7 +1073,7 @@ public class CLController {
                     System.out.println(details);
                     param = getInputParserbyComma(sc);
                     if(param.length==2) {
-                        result=branchController.editGeneralProductMinQuantity(param[0], Integer.parseInt(param[1]));
+                        result=branchController.editGeneralProductMinQuantity(Integer.getInteger(param[0]), Integer.parseInt(param[1]));
                         System.out.println(result.getMessage());
                     }
                     else{
@@ -1020,7 +1552,7 @@ public class CLController {
             Date start_date=convertStringToDate(param[2]);
             Date end_date =convertStringToDate(param[3]);
             if(start_date!=null && end_date!=null){
-                result = inv.addSaleByCategory(Integer.parseInt(param[0]),"fix",Float.parseFloat(param[1]),start_date,end_date);
+                result = branchController.addSaleByCategory(Integer.parseInt(param[0]),"fix",Float.parseFloat(param[1]),start_date,end_date);
                 System.out.println(result.getMessage());
             }
             else{

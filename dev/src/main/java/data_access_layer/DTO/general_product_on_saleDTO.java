@@ -1,6 +1,7 @@
 package data_access_layer.DTO;
 
 
+import bussines_layer.inventory_module.GeneralProduct;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.stmt.query.In;
 import com.j256.ormlite.table.DatabaseTable;
@@ -13,13 +14,13 @@ public class general_product_on_saleDTO {
     @DatabaseField(foreign =true, columnName = "sale_id",foreignColumnName = "sale_id",foreignAutoRefresh = true)
     SaleDTO sale;
     @DatabaseField(columnName = "branch_id")
-    Integer branch_id;
+    BranchDTO branch_id;
 
     //Constructor
-    public general_product_on_saleDTO(GeneralProductDTO generalProduct, SaleDTO sale) {
-        this.generalProduct = generalProduct;
+    public general_product_on_saleDTO(SaleDTO sale, GeneralProduct generalProduct) {
         this.sale = sale;
-        this.branch_id=generalProduct.getBranch_id().branch_id;
+        this.branch_id=sale.branch;
+        this.generalProduct = new GeneralProductDTO(generalProduct);
     }
     public general_product_on_saleDTO() {}
 
@@ -34,16 +35,16 @@ public class general_product_on_saleDTO {
         return sale;
     }
 
-    public Integer getBranch_id() {
+    public BranchDTO getBranch_id() {
         return branch_id;
     }
 
     @Override
     public String toString() {
         return "general_product_on_saleDTO{" +
-                "generalProduct=" + generalProduct +
-                ", sale=" + sale +
-                ", branch_id=" + branch_id +
+                "generalProduct=" + generalProduct.GPID +
+                ", sale=" + sale.sale_id +
+                ", branch_id=" + branch_id.branch_id +
                 '}';
     }
     //endregion

@@ -2,6 +2,7 @@ package bussines_layer.supplier_module;
 import bussines_layer.Branch;
 import bussines_layer.BranchController;
 import bussines_layer.Result;
+import bussines_layer.SupplierCard;
 import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.inventory_module.GeneralProduct;
 import javafx.util.Pair;
@@ -81,6 +82,7 @@ public class OrdersController {
 
     public Result<String> issueOrder (Order order){
         order.setStatus(OrderStatus.sent);
+        order.setIssuedDate(BranchController.system_curr_date);
         return order.display();
     }
 
@@ -134,18 +136,18 @@ public class OrdersController {
     //endregion
 
     //region OutOfStockOrder
-    public Result<Integer> createOrder(Integer supplierID , OrderType type){
+    public Result<Integer> createOrder(SupplierCard supplier , OrderType type){
         orderidCounter++;
-        orders.add(new Order(orderidCounter  , supplierID , type));
+        orders.add(new Order(orderidCounter  , supplier , type));
         return new Result(true,orderidCounter, String.format("The new order id is  : %d" ,orderidCounter));
     }
 
     //endregion
 
     //region PeriodicOrder
-    public Result<Integer> createPeriodicOrder(Integer supplierID ){
+    public Result<Integer> createPeriodicOrder(SupplierCard supplier ){
         orderidCounter++;
-        orders.add(new Order(orderidCounter , supplierID ,OrderType.PeriodicOrder ));
+        orders.add(new Order(orderidCounter , supplier ,OrderType.PeriodicOrder ));
         return new Result(true,orderidCounter, String.format("The new order id is  : %d" ,orderidCounter));
     }
 

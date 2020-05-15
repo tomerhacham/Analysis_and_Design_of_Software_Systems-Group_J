@@ -40,15 +40,15 @@ public class SaleDTO {
         this.active = active;
         this.branch = branch;
     }
-    public SaleDTO(BranchDTO branch, Sale sale){
+    public SaleDTO(Sale sale){
         this.sale_id=sale.getSale_id();
         this.type=convertStringTOEnum(sale.getType().name());
         this.start=sale.getStart();
         this.end=sale.getEnd();
         this.active=sale.getActive();
-        this.branch=branch;
-
+        this.branch=new BranchDTO(sale.getBranch_id());
     }
+
     public SaleDTO() {
     }
 
@@ -89,6 +89,18 @@ public class SaleDTO {
         else{
             return discountType.precentage;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "SaleDTO{" +
+                "sale_id=" + sale_id +
+                ", type=" + type +
+                ", start=" + start +
+                ", end=" + end +
+                ", active=" + active +
+                ", branch=" + branch.getBranch_id() +
+                '}';
     }
     //endregion
 }
