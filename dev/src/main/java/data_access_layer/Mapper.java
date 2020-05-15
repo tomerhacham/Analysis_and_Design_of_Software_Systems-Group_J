@@ -582,6 +582,44 @@ public class Mapper {
     //endregion
 
     //region Loads
+        //region First Loads
+    public void loadIDs(){
+        //todo:load all IDs
+    }
+    public void loadBranches(){
+        //todo: load all branches to the system
+    }
+    public void loadSuppliers(){
+        //todo:load all supplierCards
+    }
+    public void loadCategories(){
+        //todo:load all Categories
+    }
+        //endregion
+        //region After Selection of branch
+         public void loadGeneralProductsinBranch(Integer branch_id){//
+            // todo:load generalProduct in branch
+            //todo: load specific products (done alreadt with the library(?)
+            //todo: load catalog products_in_general_product
+            //todo: load all CatalogProducts
+         }
+         public void loadSalesinBranch(Integer branch_id){
+            //todo:load all the sale associate with the branch
+             //todo:load all general_product_on_sale
+         }
+         public void loadContractinBranch(Integer branch_id){
+            //todo: load all contract in the branch
+            //todo: load all costEngenieering in contract
+             //todo:load all catalog product in contract
+             //todo: load all categories in contract
+         }
+         public void loadOrdersinBranch(Integer branch_id){
+            //todo:load all the order associate to the branch;
+             //todo: load all the catalog_product_in_order
+         }
+
+        //endregion
+
 
     //endregion
 
