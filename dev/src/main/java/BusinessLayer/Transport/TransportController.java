@@ -32,7 +32,6 @@ public class TransportController {
         Transport t = new Transport(Id_Counter);
         Id_Counter++;
         transports.put(t.getID(), t);
-        mapper.addTransport(t);
         return t.getID();
     }
 
