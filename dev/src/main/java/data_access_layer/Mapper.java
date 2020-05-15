@@ -150,7 +150,7 @@ public class Mapper {
         OrderDTO orderDTO = new OrderDTO(order);
         LinkedList<catalog_product_in_orderDTO> catalog_product_in_order = new LinkedList<>();
         for(CatalogProduct product:order.getProductsAndPrice().keySet()){
-            catalog_product_in_order.add(new catalog_product_in_orderDTO(orderDTO,product));
+            catalog_product_in_order.add(new catalog_product_in_orderDTO(orderDTO,product,order.getProductsAndQuantity().get(product),order.getProductsAndPrice().get(product)));
         }
         try {
             order_dao.create(orderDTO);
