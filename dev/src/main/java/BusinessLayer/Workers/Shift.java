@@ -211,4 +211,8 @@ public class Shift {
         this.date = date;
     }
 
+    //function for mapper
+    public void addARowToOcuupation(String pos, FixedSizeList<Worker> workers) {
+        this.occupation.put(pos, workers);
+    }
 }

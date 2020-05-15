@@ -13,15 +13,15 @@ public class Shift_availableWorkers_DTO {
     private Worker_DTO workerID;
 
     @DatabaseField(columnName = "shiftDate", uniqueCombo = true, index = true, dataType = DataType.DATE_STRING, format = "dd/MM/yyy", canBeNull = false)
-    private Date date;
+    private Date shiftDate;
 
     @DatabaseField(columnName = "partOfDay", uniqueCombo = true, index = true, canBeNull = false)
-    private int timeOfDay;
+    private int partOfDay;
 
     public Shift_availableWorkers_DTO(Worker_DTO workerID, Date date, int timeOfDay ) {
         this.workerID = workerID;
-        this.date=date;
-        this.timeOfDay=timeOfDay;
+        this.shiftDate=date;
+        this.partOfDay=timeOfDay;
 
     }
 
@@ -34,5 +34,21 @@ public class Shift_availableWorkers_DTO {
 
     public void setWorkerID(Worker_DTO workerID) {
         this.workerID = workerID;
+    }
+
+    public Date getShiftDate() {
+        return shiftDate;
+    }
+
+    public int getTimeOfDay() {
+        return partOfDay;
+    }
+
+    public void setShiftDate(Date shiftDate) {
+        this.shiftDate = shiftDate;
+    }
+
+    public void setTimeOfDay(int timeOfDay) {
+        this.partOfDay = timeOfDay;
     }
 }
