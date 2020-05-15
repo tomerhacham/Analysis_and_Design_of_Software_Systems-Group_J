@@ -6,6 +6,7 @@ import bussines_layer.inventory_module.*;
 import bussines_layer.supplier_module.Contract;
 import bussines_layer.supplier_module.CostEngineering;
 import bussines_layer.supplier_module.Order;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import data_access_layer.DTO.*;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
@@ -173,11 +174,28 @@ public class Mapper {
         SupplierDTO supplierDTO = new SupplierDTO(supplier);
         List<String> contactList = supplier.getContactsName();
         LinkedList<contact_of_supplierDTO> contact_of_supplierDTOS = new LinkedList<>();
-        for(String contact:contactList){contact_of_supplierDTOS.add(new contact_of_supplierDTO(supplierDTO,contact));}
+        for(String contact:contactList){
+            contact_of_supplierDTOS.add(new contact_of_supplierDTO(supplierDTO,contact));
+        }
         try {
             supplier_dao.create(supplierDTO);
             System.err.println(String.format("[Writing] %s", supplierDTO));
             contacts_of_supplier_dao.create(contact_of_supplierDTOS);
+            System.err.println(String.format("[Writing] %s", concatObjectList(contact_of_supplierDTOS)));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    /**
+     * add a contact to the supplierCard and update the DB
+     * @param supplier
+     * @param contactName
+     */
+    public void create(String contactName ,SupplierCard supplier){
+        contact_of_supplierDTO contact_of_supplierDTO = new contact_of_supplierDTO(supplier,contactName);
+        try {
+            contacts_of_supplier_dao.create(contact_of_supplierDTO);
             System.err.println(String.format("[Writing] %s", concatObjectList(contact_of_supplierDTOS)));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -513,20 +531,38 @@ public class Mapper {
      */
     public void delete(CatalogProduct product , Order order , Integer branchId){
         try{
-
-
+            DeleteBuilder<catalog_product_in_orderDTO,Void> deleteBuilder = catalog_product_in_order_dao.deleteBuilder();
+            // only delete the rows on "order_id" and "catalog_id"
+            deleteBuilder.where().eq("order_id" , order.getOrderID()).and().eq("catalog_id" , product.getCatalogID());
+            deleteBuilder.delete();
         }catch (Exception e){e.printStackTrace();}
     }
 
-
-
-
+    /**
+     * delete a the supplier and update the DB
+     * @param supplier
+     */
     public void delete(SupplierCard supplier){
         try{
             SupplierDTO supplierDTO = new SupplierDTO(supplier);
             supplier_dao.delete(supplierDTO);
-            //contact_list are deleted due to cascade
         }catch (Exception e){e.printStackTrace();}
+    }
+
+    /**
+     * delete a contact from the supplier card and update the DB
+     * @param supplier
+     * @param contact
+     */
+    public void delete(String contact , SupplierCard supplier){
+        try {
+            DeleteBuilder<contact_of_supplierDTO,Void> deleteBuilder = contacts_of_supplier_dao.deleteBuilder();
+            // only delete the rows on "order_id" and "catalog_id"
+            deleteBuilder.where().eq("supplier_id" , supplier.getId());
+            deleteBuilder.delete();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public void delete(Sale sale){
