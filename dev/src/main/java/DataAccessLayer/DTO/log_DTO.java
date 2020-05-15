@@ -9,7 +9,7 @@ public class log_DTO {
     @DatabaseField(columnName = "message", uniqueCombo = true, canBeNull = false)
     private String message;
 
-    @DatabaseField(columnName = "transportID",foreign = true, foreignColumnName = "transportID", uniqueCombo = true, canBeNull = false)
+    @DatabaseField(columnName = "transportID",foreign = true, foreignColumnName = "transportID", uniqueCombo = true, canBeNull = false, foreignAutoRefresh = true)
     private Transport_DTO transportID;
 
     public log_DTO(String message, Transport_DTO transportID){

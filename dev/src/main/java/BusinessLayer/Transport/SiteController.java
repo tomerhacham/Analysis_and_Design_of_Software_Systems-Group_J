@@ -4,6 +4,7 @@ import DataAccessLayer.Mapper;
 
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 
 //singleton
 public class SiteController {
@@ -34,19 +35,20 @@ public class SiteController {
         mapper.addSite(s);
     }
 
-//    public boolean getSiteFromDB(int siteID)
-//    {
-//        //Site s = mapper.getSite(siteID);
-//        if(s!=null) {
-//            sites.put(siteID, s);
-//            return true;
-//        }
-//        return false;
-//    }
+    public boolean getSiteFromDB(int siteID)
+    {
+        Site s = mapper.getSite(siteID);
+        if(s!=null) {
+            sites.put(siteID, s);
+            return true;
+        }
+        return false;
+    }
+
     //if a site exist in the system return it, else return null
     public Site getById(int id)
     {
-        if(sites.containsKey(id)) {
+        if(sites.containsKey(id) || getSiteFromDB(id)) {
             return sites.get(id);
         }
         return null;
@@ -66,7 +68,7 @@ public class SiteController {
     //if a site exist in the system return its details, else return empty string
     public String getSiteDetails(Integer id)
     {
-        if(sites.containsKey(id)) {
+        if(sites.containsKey(id) || getSiteFromDB(id)) {
             return sites.get(id).toString();
         }
         return "";
@@ -75,44 +77,48 @@ public class SiteController {
     //return all sites details
     public String getAllSitesDetails()
     {
+        List<Site> all_sites = mapper.getAllSites();
         String details="";
         int count=1;
-        for (Integer i:sites.keySet()) {
-            details=details+count+". "+getSiteDetails(i)+"\n";
+        for (Site s :all_sites) {
+            details=details+count+". "+ s.toString() +"\n";
             count++;
         }
         return details;
     }
 
     //if a site exist in the system, check if its has an other site shipping area
-    public boolean checkIfAvailable(Integer my_id, Integer other_id, HashMap<Integer,Integer>destFile)
+    public boolean checkIfChosen(Integer my_id, HashMap<Integer,Integer>destFile)
     {
-        if(sites.containsKey(my_id)&&sites.containsKey(other_id)) {
-            boolean Available=true;
-            for(Integer j:destFile.keySet())
+        for(Integer j:destFile.keySet())
+        {
+            //check if the site my_id is not equal to a site j - that was already chosen to be a destination in the transport
+            if(my_id == j)
             {
-                //check if the site my_id is not equal to a site j - that was already chosen to be a destination in the transport
-                if(my_id==j)
-                {
-                    Available=false;
-                }
+                return true;
             }
-            return Available && sites.get(my_id).checkIfAvailable(sites.get(other_id).getShipping_area());
         }
-        else return false;
+        return false;
+    }
+
+    public boolean checkIfAvailable(int siteID, int sourceID, HashMap<Integer, Integer> destFile) {
+        Site site = mapper.getSite(siteID);
+        Site source = mapper.getSite(sourceID);
+        return siteID != sourceID && site.getShipping_area() == source.getShipping_area() && !checkIfChosen(siteID, destFile);
     }
 
     //return the details of all available sites
     public String getAvailableSites(int other_id, HashMap<Integer,Integer>destFile)
     {
+        List<Site> availableSites = mapper.getAvailableSites(other_id); // returns all sites with same shipping area as other_id and with different id
         String available = "";
         int count = 1;
-        for (Integer i:sites.keySet()) {
+        for (Site s : availableSites) {
 
             //add details of sites who are not equals to other chosen, to the source and are available by shipping area
-            if( i != other_id && checkIfAvailable(i,other_id,destFile))
+            if(!checkIfChosen(s.getId(), destFile))
             {
-                available = available + count + ". " + getSiteDetails(i)+"\n";
+                available = available + count + ". " + s.toString() +"\n";
                 count++;
             }
         }
@@ -122,7 +128,8 @@ public class SiteController {
     //check if a site exist in teh system
     public boolean checkIfSiteExist(int siteId)
     {
-        return sites.containsKey(siteId);
+        Site site = mapper.getSite(siteId);
+        return sites.containsKey(siteId) || site != null;
     }
 
     public void reset()

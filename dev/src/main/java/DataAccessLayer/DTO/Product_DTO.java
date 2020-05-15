@@ -9,7 +9,7 @@ public class Product_DTO {
     @DatabaseField(columnName = "productID", id = true, canBeNull = false)
     private int ID;
 
-    @DatabaseField(columnName = "fileID", foreign = true, foreignColumnName = "fileID", canBeNull = false)
+    @DatabaseField(columnName = "fileID", foreign = true, foreignColumnName = "fileID", canBeNull = false, foreignAutoRefresh = true)
     private ProductFile_DTO fileID;
 
     @DatabaseField(columnName = "name", canBeNull = false)

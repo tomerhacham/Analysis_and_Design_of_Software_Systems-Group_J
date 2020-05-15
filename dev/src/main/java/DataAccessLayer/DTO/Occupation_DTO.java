@@ -12,10 +12,10 @@ public class Occupation_DTO {
     @DatabaseField(columnName = "position", uniqueCombo = true, canBeNull = false)
     private String position;
 
-    @DatabaseField(columnName = "workerID", foreign = true, foreignColumnName = "workerID", uniqueCombo = true, canBeNull = false)
+    @DatabaseField(columnName = "workerID", foreign = true, foreignColumnName = "workerID", uniqueCombo = true, canBeNull = false, foreignAutoRefresh = true)
     private Worker_DTO workerID;
 
-    @DatabaseField(columnName = "ShiftID", foreign = true, foreignColumnName = "ShiftID", uniqueCombo = true, canBeNull = false)
+    @DatabaseField(columnName = "ShiftID", foreign = true, foreignColumnName = "ShiftID", uniqueCombo = true, canBeNull = false, foreignAutoRefresh = true)
     private Shift_DTO ShiftID;
 
 

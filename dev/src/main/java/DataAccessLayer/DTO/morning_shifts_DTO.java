@@ -13,7 +13,7 @@ public class morning_shifts_DTO {
     @DatabaseField(columnName = "date", uniqueCombo = true, dataType = DataType.DATE_STRING, format = "dd/MM/yyy", canBeNull = false)
     private Date date;
 
-    @DatabaseField(columnName = "truckID", foreign = true, foreignColumnName = "truckID", uniqueCombo = true, canBeNull = false)
+    @DatabaseField(columnName = "truckID", foreign = true, foreignColumnName = "truckID", uniqueCombo = true, canBeNull = false, foreignAutoRefresh = true)
     private Truck_DTO truckID;
 
     public morning_shifts_DTO(Date date, Truck_DTO truckID){

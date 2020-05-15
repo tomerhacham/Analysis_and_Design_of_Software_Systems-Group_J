@@ -1,10 +1,7 @@
 package BusinessLayer.Transport;
 
 
-import DataAccessLayer.DTO.DestFile_DTO;
 import DataAccessLayer.Mapper;
-import com.j256.ormlite.stmt.query.In;
-
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.*;
@@ -20,7 +17,7 @@ public class TransportController {
 
     private TransportController() {
         transports = new Hashtable<>();
-        Id_Counter = 0;
+        Id_Counter = (int)mapper.MaxIDTransport();
     }
 
     public static TransportController getInstance() {
@@ -35,6 +32,7 @@ public class TransportController {
         Transport t = new Transport(Id_Counter);
         Id_Counter++;
         transports.put(t.getID(), t);
+        mapper.addTransport(t);
         return t.getID();
     }
 
@@ -66,20 +64,26 @@ public class TransportController {
         }
 
     }
-    //if a transport exist in the system return its details, else return an empty string
+
+/*  redundant!! -  //if a transport exist in the system return its details, else return an empty string
     public String getTransportDetails(Integer id) {
+        Transport transport = mapper.getTransport(id);
         if(transports.containsKey(id)) {
             return transports.get(id).toString();
         }
+        else if (transport != null){
+            transport.toString();
+        }
         return "";
     }
-
+*/
     //return the details of all transports in the system
     public String getAllTransportsDetails() {
+        List<Transport> all_transports = mapper.getAllTransports();
         String details = "";
         int count = 1;
-        for (Integer i : transports.keySet()) {
-            details = details + count + ". " + getTransportDetails(i) + "\n";
+        for (Transport t : all_transports) {
+            details = details + count + ". " + t.toString() + "\n";
             count++;
         }
         return details;
@@ -114,8 +118,12 @@ public class TransportController {
 
     //if a transport exist in the system return its date, else null
     public Date getTransportDate(int id) {
+        Transport t = mapper.getTransport(id);
         if(transports.containsKey(id)) {
             return transports.get(id).getDate();
+        }
+        else if (t != null){
+            return t.getDate();
         }
         return null;
     }
@@ -133,6 +141,7 @@ public class TransportController {
 
     //if a transport exist in the system return its truck ID, -1 if truck is null
     public int getTransportTruck(int id) {
+
         if(transports.containsKey(id))
         {
             Truck t = transports.get(id).getTruck();
@@ -226,7 +235,6 @@ public class TransportController {
             boolean shift=getTransportShift(transportID);
             truckController.addDate(d,shift, transports.get(transportID).getTruck().getId());
         }
-
     }
 
     //remove the date of the given transport to its truck and driver
@@ -284,35 +292,46 @@ public class TransportController {
 
     public boolean getTransportShift(int transportID)
     {
+        Transport t = mapper.getTransport(transportID);
+        if (t != null){
+            return t.getShift();
+        }
         return transports.get(transportID).getShift();
     }
 
     public void changeDriverInTransport(String prevDriverId, String newDriverId, Date date, Boolean shift, String newDriverName)
     {
-        for (Transport t:transports.values()) {
+        Transport t = mapper.getTransportToUpdate(prevDriverId, date, shift);
+        mapper.updateTransportDriver(t.getID(), newDriverId, newDriverName);
+        /*for (Transport t:transports.values()) {
             if(t.getDriverId()==prevDriverId&&t.getDate()==date&&t.getShift()==shift)
             {
                 t.setDriver(newDriverId,newDriverName);
                 return;
             }
-        }
+        }*/
     }
 
-    public Boolean isTransportExist(Date d, Boolean shift)
+    public Boolean isTransportExist(Date d, Boolean partOfDay)
     {
+        return mapper.getTransportByShift(d, partOfDay) != null;
+        /*
         for (Transport t:transports.values()) {
-            if(t.getDate()==d&&t.getShift()==shift)
+            if(t.getDate()==d&&t.getShift()==partOfDay)
             {
                return true;
             }
         }
-        return false;
+        return false;*/
     }
 
     public String getTransportDriverID(int TransportID)
     {
+        Transport t = mapper.getTransport(TransportID);
         if(transports.containsKey(TransportID))
             return transports.get(TransportID).getDriverId();
+        else if (t != null)
+            return t.getDriverId();
         return "";
     }
 }

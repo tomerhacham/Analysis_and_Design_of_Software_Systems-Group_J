@@ -957,6 +957,52 @@ public class Mapper {
             return false;
         }
     }
+
+    //TODO:: implement
+    public Site getSite(int siteID) {
+        return null;
+    }
+
+    //TODO:: implement
+    public List<Site> getAllSites() {
+        return null;
+    }
+
+    //TODO:: implement
+    public List<Site> getAvailableSites(int otherSite_id) {
+        return null;
+    }
+
+    //TODO:: implement
+    public long MaxIDTransport() {
+        try {
+            long max = product_DAO.queryRawValue("SELECT MAX(transportID) FROM Transport");
+            return max;
+        }catch (Exception e)
+        {
+            return 0;
+        }
+    }
+
+    //TODO:: implement
+    public List<Transport> getAllTransports() {
+        return null;
+    }
+
+    //TODO:: implement
+    public Transport getTransport(int transportID) {
+        return null;
+    }
+
+    //TODO:: implement
+    public Transport getTransportToUpdate(String prevDriverId, Date date, Boolean partOfDay) {
+        return null;
+    }
+
+    //TODO:: implement
+    public Boolean getTransportByShift(Date d, Boolean partOfDay) {
+        return null;
+    }
 }
 
 
