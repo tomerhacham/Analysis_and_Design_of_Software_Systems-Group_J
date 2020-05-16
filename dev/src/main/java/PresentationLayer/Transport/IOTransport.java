@@ -198,11 +198,14 @@ public class IOTransport {
             System.out.println("Please choose the transport ID you wish to remove:");
             int transportToDelete = integerParse(scanner.nextLine());
             //try to delete the given transport, if returns false the id is not in the system
-            facadeController.removeDatesFromDriverAndTruck(transportToDelete);
-            boolean deleted = facadeController.DeleteTransportFronDB(transportToDelete);
-            if (deleted) {
-                System.out.println("The transport deleted successfully.\n");
-            } else {
+            if (facadeController.checkIfTransportExist(transportToDelete)) {
+                facadeController.removeDatesFromDriverAndTruck(transportToDelete);
+                boolean deleted = facadeController.DeleteTransportFronDB(transportToDelete);
+                if (deleted) {
+                    System.out.println("The transport deleted successfully.\n");
+                }
+            }
+            else {
                 System.out.println("The transport ID:" + transportToDelete + " is not in the system, operation canceled.\n");
             }
         }

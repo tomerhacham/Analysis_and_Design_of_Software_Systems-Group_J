@@ -102,11 +102,11 @@ public class ScheduleController {
         positions1.add("manager");
         positions1.add("storage man");
         List<String>positions2=new ArrayList<>();
-        positions2.add("driver");
+        positions2.add("manager");
         Date startDate1=parseDate("11/04/2020");
         Date startDate2=parseDate("12/04/2020");
         rc.addWorker("Gil",16,startDate1,positions1);
-        rc.addWorker("Sharon",15.9,startDate2,positions1);
+        rc.addWorker("Sharon",15.9,startDate2,positions2);
         rc.addDriver("Moshe",10,startDate1,"C4");
         rc.addDriver("Dani",100,startDate2,"C");
         rc.addDriver("Gadi",100,startDate2,"C1");
@@ -119,6 +119,7 @@ public class ScheduleController {
         this.addAvailableWorker(shiftDate1,morning,workers.get(0).id);
         this.addAvailableWorker(shiftDate1,night,workers.get(1).id);
         this.addAvailableWorker(shiftDate1,morning,workers.get(2).id);
+        this.addAvailableWorker(shiftDate1,morning,workers.get(3).id);
         this.addAvailableWorker(shiftDate2,morning,workers.get(0).id);
         this.addAvailableWorker(shiftDate2,morning,workers.get(1).id);
         this.addAvailableWorker(shiftDate2,morning,workers.get(2).id);

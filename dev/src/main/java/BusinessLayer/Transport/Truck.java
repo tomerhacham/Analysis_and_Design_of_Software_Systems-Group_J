@@ -125,14 +125,6 @@ public class Truck {
         return model;
     }
 
-    public ArrayList<Date> getMorning_shifts() {
-        return morning_shifts;
-    }
-
-    public ArrayList<Date> getNight_shifts() {
-        return night_shifts;
-    }
-
     public float getMax_weight() {
         return max_weight;
     }

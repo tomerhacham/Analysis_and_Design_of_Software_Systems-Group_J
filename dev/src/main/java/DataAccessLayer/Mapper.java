@@ -7,9 +7,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
-import org.omg.PortableServer.LIFESPAN_POLICY_ID;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -19,7 +17,7 @@ import java.util.*;
 public class Mapper {
     private static Mapper instance = null;
     private String databaseUrl = "jdbc:sqlite:dev\\src\\main\\java\\DataAccessLayer\\SuperLi.db";
-    private ConnectionSource conn;
+    private static ConnectionSource conn;
     private Dao<DestFile_DTO, Integer> DestFile_DAO;
     private Dao<Driver_DTO, Integer> Driver_DAO;
     private Dao<log_DTO, Integer> log_DAO;
@@ -79,7 +77,7 @@ public class Mapper {
         transport_DAO = DaoManager.createDao(conn, Transport_DTO.class);
     }
 
-    public void CloseConnection() throws Exception {
+    public static void CloseConnection() throws Exception {
         try {
             conn.close();
         } catch (Exception e) {

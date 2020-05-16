@@ -165,9 +165,4 @@ public class Transport {
         return driverName;
     }
 
-    public void setLog(ArrayList<String> log) {
-        this.log = log;
-    }
-
-
 }
