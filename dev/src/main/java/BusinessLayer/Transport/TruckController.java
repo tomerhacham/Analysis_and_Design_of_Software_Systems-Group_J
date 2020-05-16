@@ -84,21 +84,7 @@ public class TruckController {
         }
         return details;
     }
-/*
-    // returns true if the truck with the specified id is available at date
-    // otherwise returns false
-    // shift- morning:true, night:false
-    public boolean checkIfAvailableByDate(Date date,Boolean shift, Integer id)
-    {
-        return mapper.checkIfTruckAvailableByShift(date, shift, id);
-    }
 
-    // returns true if the truck with the specified id have max weight sufficient to weight
-    // otherwise returns false
-    public boolean checkIfAvailableByWeight(float weight, Integer id) {
-        return mapper.checkIfTruckAvailableByWeight(weight, id);
-    }
-*/
     // returns true if there is a truck in the system which is available at date
     // otherwise returns false
     // shift- morning:true, night:false

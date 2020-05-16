@@ -40,9 +40,9 @@ public class IOWorkers {
         while(!terminate)
         {
             System.out.println("Choose an option:");
-            System.out.println("1.Manage workers");
-            System.out.println("2.Mange schedule");
-            System.out.println("3.Quit");
+            System.out.println("1. Manage workers");
+            System.out.println("2. Mange schedule");
+            System.out.println("3. Return to main menu.");
             int opt=scanner.nextInt();
             if(opt==1)
             {

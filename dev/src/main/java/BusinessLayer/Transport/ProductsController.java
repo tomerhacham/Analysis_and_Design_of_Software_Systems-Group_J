@@ -2,10 +2,8 @@ package BusinessLayer.Transport;
 
 
 import DataAccessLayer.Mapper;
-
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.List;
 
 //singleton
 public class ProductsController {

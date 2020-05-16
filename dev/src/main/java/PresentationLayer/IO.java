@@ -1,6 +1,7 @@
 package PresentationLayer;
 
 //import PresentationLayer.Transport.IOTransport;
+import DataAccessLayer.Mapper;
 import PresentationLayer.Transport.IOTransport;
 import PresentationLayer.Workers.IOWorkers;
 
@@ -47,6 +48,11 @@ public class IO {
                 case 3:
                     System.out.println("Thank you, good bye!");
                     terminated = true;
+                    try {
+                        Mapper.CloseConnection();
+                    }catch (Exception e){
+                        System.out.println("Database Connection did not closed.");
+                    }
                     break;
                 default:
                     System.out.println("Invalid operation.");

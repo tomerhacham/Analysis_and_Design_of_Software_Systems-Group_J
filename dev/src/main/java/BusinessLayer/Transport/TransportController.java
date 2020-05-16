@@ -64,18 +64,6 @@ public class TransportController {
 
     }
 
-/*  redundant!! -  //if a transport exist in the system return its details, else return an empty string
-    public String getTransportDetails(Integer id) {
-        Transport transport = mapper.getTransport(id);
-        if(transports.containsKey(id)) {
-            return transports.get(id).toString();
-        }
-        else if (transport != null){
-            transport.toString();
-        }
-        return "";
-    }
-*/
     //return the details of all transports in the system
     public String getAllTransportsDetails() {
         List<Transport> all_transports = mapper.getAllTransports();
@@ -238,11 +226,12 @@ public class TransportController {
 
     //remove the date of the given transport to its truck and driver
     public void removeDatesFromTruck(int transportID) {
-        if(transports.containsKey(transportID))
+        Transport t = mapper.getTransport(transportID);
+        if(t != null)
         {
-            Date d =getTransportDate(transportID);
-            boolean shift=getTransportShift(transportID);
-            truckController.removeDate(d,shift, transports.get(transportID).getTruck().getId());
+            Date d = getTransportDate(transportID);
+            boolean shift = getTransportShift(transportID);
+            truckController.removeDate(d,shift, t.getTruck().getId());
         }
     }
 
@@ -278,10 +267,6 @@ public class TransportController {
             }
         }
         return s;
-    }
-
-    public Transport getByID(int transportID){
-        return transports.get(transportID);
     }
 
     public boolean getTransportShift(int transportID)
@@ -327,5 +312,12 @@ public class TransportController {
         else if (t != null)
             return t.getDriverId();
         return "";
+    }
+
+    public boolean checkIfTransportExist(int transportID){
+        if (mapper.getTransport(transportID) != null){
+            return true;
+        }
+        return false;
     }
 }

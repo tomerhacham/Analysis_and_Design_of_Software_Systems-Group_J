@@ -200,6 +200,9 @@ public class FacadeController {
         return transportController.getTransportShift(transportID);
     }
 
+    public boolean checkIfTransportExist(int transportID){
+        return transportController.checkIfTransportExist(transportID);
+    }
 
     //added after mergings:
     //shift- true:morning, false:night
