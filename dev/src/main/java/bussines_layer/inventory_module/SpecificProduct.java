@@ -8,19 +8,25 @@ import java.util.Date;
 
 public class SpecificProduct {
     //fields:
+    private Integer branch_id;
+    private Integer gpId;
     private final Integer id;
     private Location location;
     private Date expiration_date;
     private Boolean flaw_flag;
 
     //Constructors
-    public SpecificProduct(Integer id, Location location, Date expiration_date) {
+    public SpecificProduct(Integer branch_id,Integer gpId,Integer id, Location location, Date expiration_date) {
+        this.branch_id=branch_id;
+        this.gpId=gpId;
         this.id = id;
         this.location = location;
         this.expiration_date = expiration_date;
         this.flaw_flag=false;
     }
     public SpecificProduct(SpecificProductDTO specificProductDTO){
+        this.branch_id=specificProductDTO.getBranch_id().getBranch_id();
+        this.gpId=specificProductDTO.getId();
         this.id=specificProductDTO.getId();
         this.location=specificProductDTO.getLocation();
         this.expiration_date=specificProductDTO.getExpiration_date();
@@ -29,6 +35,14 @@ public class SpecificProduct {
     //region Getter-Setters
     public Integer getId() {
         return id;
+    }
+
+    public Integer getGpId() {
+        return gpId;
+    }
+
+    public Integer getBranch_id() {
+        return branch_id;
     }
 
     public Location getLocation() {

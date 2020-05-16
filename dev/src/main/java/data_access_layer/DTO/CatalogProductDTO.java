@@ -7,10 +7,12 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "CatalogProduct")
 public class CatalogProductDTO {
     //fields:
-    @DatabaseField(id=true,columnName = "catalog_id")
+    @DatabaseField(columnName = "catalog_id")
     Integer catalogID;
     @DatabaseField(columnName = "GPID")
     Integer gpID;
+    @DatabaseField(foreign = true, foreignColumnName = "branch_id",columnName = "branch_id")
+    BranchDTO branch_id;
     @DatabaseField(columnName = "supplier_price")
     Float supplier_price;
     @DatabaseField(columnName = "supplier_id")
@@ -24,6 +26,7 @@ public class CatalogProductDTO {
     public CatalogProductDTO(CatalogProduct catalogProduct) {
         this.catalogID=catalogProduct.getCatalogID();
         this.gpID=catalogProduct.getGpID();
+        this.branch_id=new BranchDTO(catalogProduct.getBranch_id());
         this.supplier_price=catalogProduct.getSupplierPrice();
         this.supplier_id=catalogProduct.getSupplierId();
         this.supplier_category=catalogProduct.getSupplierCategory();
@@ -33,6 +36,10 @@ public class CatalogProductDTO {
     }
 
     //region Methods
+
+    public BranchDTO getBranch_id() {
+        return branch_id;
+    }
 
     public Integer getCatalogID() {
         return catalogID;

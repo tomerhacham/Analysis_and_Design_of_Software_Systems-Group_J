@@ -225,4 +225,7 @@ public class ContractController {
     //endregion
 
 
+    public Integer getBranchID() {
+        return branchID;
+    }
 }

@@ -4,6 +4,7 @@ import bussines_layer.SupplierCard;
 import bussines_layer.enums.OrderStatus;
 import bussines_layer.enums.OrderType;
 import bussines_layer.inventory_module.CatalogProduct;
+import data_access_layer.DTO.OrderDTO;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -19,18 +20,20 @@ import java.util.HashMap;
 public class Order {
 
     private Integer orderID;
-    private SupplierCard supplier;
     private OrderType type;
     private OrderStatus status;
-    private HashMap<CatalogProduct, Integer> productsAndQuantity; // <product , quantity>
-    private HashMap<CatalogProduct , Float> productsAndPrice; //<product, price>
     private Integer dayToDeliver;
     private Date issuedDate;
+    private Integer branch_id;
+    private HashMap<CatalogProduct, Integer> productsAndQuantity; // <product , quantity>
+    private HashMap<CatalogProduct , Float> productsAndPrice; //<product, price>
+    private SupplierCard supplier;
 
 
     //constructor to out of stock order
-    public Order(int orderID , SupplierCard supplier , OrderType type){
+    public Order(Integer branch_id,Integer orderID , SupplierCard supplier , OrderType type){
         this.orderID = orderID;
+        this.branch_id = branch_id;
         productsAndQuantity = new HashMap<>();
         this.supplier = supplier;
         productsAndPrice = new HashMap<>();
@@ -50,8 +53,21 @@ public class Order {
         this.dayToDeliver = dayToDeliver;
     }
 
+    public Order(OrderDTO orderDTO){
+        this.orderID = orderDTO.getOrder_id();
+        this.type = orderDTO.getType();
+        this.status = orderDTO.getStatus();
+        this.dayToDeliver = orderDTO.getDaytodeliver();
+        this.issuedDate = orderDTO.getIssuedDate();
+        this.branch_id = orderDTO.getBranch_id().getBranch_id();
+    }
+
     public int getOrderID() {
         return orderID;
+    }
+
+    public Integer getBranch_id() {
+        return branch_id;
     }
 
     public SupplierCard getSupplier() {
@@ -164,4 +180,12 @@ public class Order {
         return new Result<>(true, total, String.format(" The orders total amount is : %d", total));
     }
 
-   }
+
+    public void setProductsAndQuantity(HashMap<CatalogProduct, Integer> productsAndQuantity) {
+        this.productsAndQuantity = productsAndQuantity;
+    }
+
+    public void setProductsAndPrice(HashMap<CatalogProduct, Float> productsAndPrice) {
+        this.productsAndPrice = productsAndPrice;
+    }
+}

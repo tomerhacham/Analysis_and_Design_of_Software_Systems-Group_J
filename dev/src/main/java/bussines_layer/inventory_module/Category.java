@@ -8,14 +8,18 @@ import java.util.List;
 
 public class Category {
     //fields:
+    private Integer branch_id;
+    private Integer super_category_id;
     private String name;
     private Integer id;
-    private List<Category> sub_categories;
     private final Integer level;
+    private List<Category> sub_categories;
     private List<GeneralProduct> generalProducts;
 
     //Constructor
-    public Category(String name, Integer id,Integer level) {
+    public Category(Integer branch_id,Integer super_category_id,String name, Integer id,Integer level) {
+        this.branch_id=branch_id;
+        this.super_category_id=super_category_id;
         this.name = name;
         this.id = id;
         this.level=level;
@@ -28,13 +32,12 @@ public class Category {
         this.id=0;
         this.level=0;
     }
-    public Category(CategoryDTO categoryDTO,List<Category> sub_categories,List<GeneralProduct> generalProducts){
+    public Category(CategoryDTO categoryDTO){
+        this.branch_id=categoryDTO.getBranch_id().getBranch_id();
+        this.super_category_id=categoryDTO.getSuper_category();
         this.name=categoryDTO.getName();
-        this.sub_categories=sub_categories;
-        this.id=categoryDTO.getId();
         this.level=categoryDTO.getLevel();
-        this.generalProducts=generalProducts;
-
+        this.id=categoryDTO.getId();
     }
 
     //region Setters - Getters
@@ -59,6 +62,10 @@ public class Category {
         return sub_categories;
     }
 
+    public void setGeneralProducts(List<GeneralProduct> generalProducts) {
+        this.generalProducts = generalProducts;
+    }
+
     public void setSub_categories(List<Category> sub_categories) {
         this.sub_categories = sub_categories;
     }
@@ -66,7 +73,7 @@ public class Category {
 
     //region Methods
     public Result addSubCategory(String name, Integer  id){
-        Category  new_category = new Category(name,id,level+1);
+        Category  new_category = new Category(this.branch_id,this.id,name,id,level+1);
         boolean res=false;
         String msg="";
         Result<Category> result;
@@ -111,6 +118,7 @@ public class Category {
         boolean res=false;
         Result<GeneralProduct> result;
         if(level==3){
+            generalProduct.setCategory_id(this.id);
             res=generalProducts.add(generalProduct);
             if(res){result=new Result<>(res,generalProduct,"general product has been added to the category");}
             else{result=new Result<>(res,generalProduct,"There was a problem with adding the product the the category");}
@@ -174,6 +182,19 @@ public class Category {
         }
         return result;
     }
+
+    public Integer getBranch_id() {
+        return branch_id;
+    }
+
+    public Integer getSuper_category_id() {
+        return super_category_id;
+    }
+
+    public List<GeneralProduct> getGeneralProducts() {
+        return generalProducts;
+    }
+
     @Override
     public String toString() {
         String toReturn=tabs()+"-".concat(name).concat("("+id+")").concat("\n");

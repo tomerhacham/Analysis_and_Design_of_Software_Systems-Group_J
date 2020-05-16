@@ -12,6 +12,7 @@ import java.util.List;
 public class GeneralProduct {
     //fields
     private final Integer gpID;
+    private Integer category_id;
     private final String manufacture;
     private String name;
     private Float retail_price;
@@ -23,6 +24,7 @@ public class GeneralProduct {
     private Integer branchId;
 
     public GeneralProduct(GeneralProductDTO generalProductDTO) {
+        this.category_id=generalProductDTO.getCategory_id();
         this.gpID = generalProductDTO.getGPID();
         this.manufacture = generalProductDTO.getManufacture();
         this.name = generalProductDTO.getName();
@@ -54,6 +56,11 @@ public class GeneralProduct {
 
     //region Getters - Setters
 
+
+    public void setCategory_id(Integer category_id) {
+        this.category_id = category_id;
+    }
+
     public String getManufacture() {
         return manufacture;
     }
@@ -81,6 +88,14 @@ public class GeneralProduct {
             return sale_price;
         }
         return retail_price;
+    }
+
+    public Integer getCategory_id() {
+        return category_id;
+    }
+
+    public Integer getBranchId() {
+        return branchId;
     }
 
     public void setRetailPrice(Float retail_price) {
@@ -136,7 +151,7 @@ public class GeneralProduct {
 
     //region Methods
     public Result addProduct(Integer product_id, Date expiration_date){
-        SpecificProduct product = new SpecificProduct(product_id, Location.warehouse,expiration_date);
+        SpecificProduct product = new SpecificProduct(branchId,this.gpID,product_id, Location.warehouse,expiration_date);
         boolean res= products.add(product);
         Result<SpecificProduct> result;
         if(res){
@@ -342,7 +357,7 @@ public class GeneralProduct {
     }
 
     public Result<CatalogProduct> addCatalogProduct(Integer catalogID, Integer gpID, Float supplier_price, Integer supplier_id, String supplier_category , String name){
-        CatalogProduct toAdd = new CatalogProduct(catalogID, gpID, supplier_price, supplier_id, supplier_category , name);
+        CatalogProduct toAdd = new CatalogProduct(this.branchId,catalogID, gpID, supplier_price, supplier_id, supplier_category , name);
         catalog_products.add(toAdd);
         return new Result<>(true,toAdd,"Catalog Product " + name + " of supplier " + supplier_id + " added successfully");
     }

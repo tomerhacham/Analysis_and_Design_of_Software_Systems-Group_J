@@ -9,40 +9,55 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "catalog_products_in_order")
 public class catalog_product_in_orderDTO {
     //fields:
-    @DatabaseField(foreign =true, columnName = "order_id",foreignColumnName = "order_id",foreignAutoRefresh = true)
-    OrderDTO order;
-    @DatabaseField(foreign = true, columnName = "catalog_id",foreignColumnName = "catalog_id",foreignAutoRefresh = true)
-    CatalogProductDTO catalogProduct;
+    @DatabaseField(columnName = "order_id")
+    Integer order_id;
+    @DatabaseField(columnName = "catalog_id")
+    Integer catalog_id;
+    @DatabaseField(columnName = "GPID")
+    Integer GPID;
+    @DatabaseField(columnName = "branch_id")
+    Integer branch_id;
     @DatabaseField(columnName = "quantity")
     Integer quantity;
     @DatabaseField(columnName = "price")
     Float price;
 
     //Constructor
-    public catalog_product_in_orderDTO(OrderDTO order, CatalogProduct catalogProduct, Integer quantity, Float price) {
-        this.order = order;
-        this.catalogProduct=new CatalogProductDTO(catalogProduct);
-        this.quantity=quantity;
-        this.price=price;
+    public catalog_product_in_orderDTO(Order order, CatalogProduct catalogProduct,Integer quantity, Float price) {
+    this.order_id=order.getOrderID();
+    this.catalog_id=catalogProduct.getCatalogID();
+    this.GPID=catalogProduct.getGpID();
+    this.branch_id=catalogProduct.getBranch_id();
+    this.quantity=quantity;
+    this.price=price;
     }
-
-    public catalog_product_in_orderDTO(Order order, CatalogProduct catalogProduct, Integer quantity, Float price , Integer branchid) {
-        this.order = new OrderDTO(order , branchid);
-        this.catalogProduct=new CatalogProductDTO(catalogProduct);
-        this.quantity=quantity;
-        this.price=price;
-    }
-    public catalog_product_in_orderDTO() {
-    }
+    public catalog_product_in_orderDTO() {}
 
     //region Methods
 
-    public OrderDTO getOrder() {
-        return order;
+    public Integer getOrder_id() {
+        return order_id;
     }
 
-    public CatalogProductDTO getCatalogProduct() {
-        return catalogProduct;
+    public Integer getCatalog_id() {
+        return catalog_id;
     }
+
+    public Integer getGPID() {
+        return GPID;
+    }
+
+    public Integer getBranch_id() {
+        return branch_id;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public Float getPrice() {
+        return price;
+    }
+
     //endregion
 }

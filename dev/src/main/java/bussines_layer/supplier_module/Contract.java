@@ -17,14 +17,14 @@ import java.util.LinkedList;
 
 public class Contract {
 
-    private LinkedList<String> categories; // a supplier can have a lot of categories
+    private Integer contractID;
+    private Integer branchID;
     private HashMap<Integer , CatalogProduct> products; // <product ID, product>
     private SupplierCard supplier;
     private CostEngineering costEngineering;
-    private int contractID;
-    private int branchID;
+    private LinkedList<String> categories; // a supplier can have a lot of categories
 
-    public Contract(SupplierCard supplier , int contractID , int branchID , LinkedList<String> categories){
+    public Contract(SupplierCard supplier , Integer contractID , Integer branchID , LinkedList<String> categories){
         this.categories = new LinkedList<>();
         this.supplier = supplier;
         this.products = new HashMap<>();
@@ -34,12 +34,7 @@ public class Contract {
         this.categories = categories;
     }
 
-    public Contract(ContractDTO contractDTO,SupplierCard supplierCard,CostEngineering costEngineering, LinkedList<CatalogProduct> catalogProducts, LinkedList<String> categories) {
-        this.categories=categories;
-        products= new HashMap<>();
-        for(CatalogProduct catalogProduct:catalogProducts){products.put(catalogProduct.getCatalogID(),catalogProduct);}
-        this.supplier=supplierCard;
-        this.costEngineering=costEngineering;
+    public Contract(ContractDTO contractDTO) {
         this.contractID=contractDTO.getContract_id();
         this.branchID=contractDTO.getBranch().getBranch_id();
     }
@@ -49,6 +44,18 @@ public class Contract {
     }
 
     public SupplierCard getSupplierCard() {return supplier; }
+
+    public void setSupplier(SupplierCard supplier) {
+        this.supplier = supplier;
+    }
+
+    public void setCostEngineering(CostEngineering costEngineering) {
+        this.costEngineering = costEngineering;
+    }
+
+    public void setCategories(LinkedList<String> categories) {
+        this.categories = categories;
+    }
 
     //region Getters
     public LinkedList<String> getCategories() {
@@ -63,7 +70,7 @@ public class Contract {
         return contractID;
     }
 
-    public int getBranchID() {
+    public Integer getBranchID() {
         return branchID;
     }
     //endregion

@@ -9,35 +9,27 @@ import com.j256.ormlite.table.DatabaseTable;
 public class catalog_product_in_general_productDTO {
     //fields:
     @DatabaseField(columnName = "catalog_id")
-    CatalogProductDTO catalogID;
-    @DatabaseField(foreign = true, foreignAutoRefresh = true, foreignColumnName = "GPID", columnName = "GPID")
-    GeneralProductDTO generalProduct;
+    Integer catalogID;
+    @DatabaseField(columnName = "GPID")
+    Integer generalProduct;
     @DatabaseField(foreign = true, foreignAutoRefresh = true, foreignColumnName = "branch_id", columnName = "branch_id")
     BranchDTO branch;
 
     //Constructor
-    public catalog_product_in_general_productDTO(GeneralProductDTO generalProduct, CatalogProduct catalogProduct) {
-        this.catalogID = new CatalogProductDTO(catalogProduct);
-        this.generalProduct = generalProduct;
-        this.branch = generalProduct.branch_id;
+    public catalog_product_in_general_productDTO(CatalogProduct catalogProduct) {
+        this.catalogID = catalogProduct.getCatalogID();
+        this.generalProduct = catalogProduct.getGpID();
+        this.branch = new BranchDTO(catalogProduct.getBranch_id());
     }
-
-    //TODO - update Tomer
-    public catalog_product_in_general_productDTO(GeneralProduct generalProduct , CatalogProduct catalogProduct) {
-        this.catalogID = new CatalogProductDTO(catalogProduct);
-        this.generalProduct = new GeneralProductDTO(generalProduct);
-        this.branch = this.generalProduct.branch_id;
-    }
-
     public catalog_product_in_general_productDTO(){}
 
     //region Methods
 
-    public CatalogProductDTO getCatalogID() {
+    public Integer getCatalogID() {
         return catalogID;
     }
 
-    public GeneralProductDTO getGeneralProduct() {
+    public Integer getGeneralProduct() {
         return generalProduct;
     }
 

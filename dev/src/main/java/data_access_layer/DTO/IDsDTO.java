@@ -6,6 +6,8 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "IDs")
 public class IDsDTO {
     //fields
+    @DatabaseField(id = true, columnName = "key")
+    Integer key;
     @DatabaseField(columnName = "category_next_id")
     Integer category_next_id;
     @DatabaseField(columnName = "product_next_id")
@@ -23,6 +25,7 @@ public class IDsDTO {
 
     //Constructor
     public IDsDTO(Integer category_next_id, Integer product_next_id, Integer sale_next_id, Integer contract_next_id, Integer order_next_id, Integer branch_next_id, Integer supplier_next_id) {
+        this.key=1;
         this.category_next_id = category_next_id;
         this.product_next_id = product_next_id;
         this.sale_next_id = sale_next_id;

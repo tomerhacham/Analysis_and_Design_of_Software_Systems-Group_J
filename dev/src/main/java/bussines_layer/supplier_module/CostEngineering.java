@@ -15,20 +15,35 @@ import java.util.List;
 
 public class CostEngineering {
 
+    private Integer contract_id;
+    private Integer branch_id;
     private HashMap<Integer , Integer> minQuntity; // <catalogid , quantity>
     private HashMap<Integer , Float> newPrice; // <catalogid , newPrice>
 
-    public CostEngineering(){
+    public CostEngineering(Integer contract_id , Integer branch_id){
+        this.branch_id = branch_id;
+        this.contract_id = contract_id;
         minQuntity = new HashMap<Integer, Integer>();
         newPrice = new HashMap<Integer, Float>();
     }
     public CostEngineering(List<CostEngineeringDTO> product_in_cost_engineering){
+        this.branch_id = product_in_cost_engineering.get(0).getBranch().getBranch_id();
+        this.contract_id = product_in_cost_engineering.get(0).getContract_id();
         this.minQuntity = new HashMap<>();
         this.newPrice = new HashMap<>();
         for (CostEngineeringDTO costEngineeringDTO:product_in_cost_engineering){
             minQuntity.put(costEngineeringDTO.getCatalog_id(),costEngineeringDTO.getMin_quantity());
             newPrice.put(costEngineeringDTO.getCatalog_id(),costEngineeringDTO.getDiscount_price());
         }
+    }
+
+
+    public Integer getContract_id() {
+        return contract_id;
+    }
+
+    public Integer getBranch_id() {
+        return branch_id;
     }
 
     public HashMap<Integer, Integer> getMinQuntity() {

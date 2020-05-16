@@ -1,7 +1,10 @@
 package data_access_layer.DTO;
 
 import bussines_layer.Branch;
+import bussines_layer.supplier_module.Order;
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "Branch")
@@ -11,6 +14,12 @@ public class BranchDTO {
     Integer branch_id;
     @DatabaseField(columnName = "name")
     String name;
+    @ForeignCollectionField(eager = false,foreignFieldName = "branch_id")
+    ForeignCollection<CategoryDTO> categories;
+    @ForeignCollectionField(eager =false, foreignFieldName ="branch_id")
+    ForeignCollection<OrderDTO> orders;
+    @ForeignCollectionField(eager=false, foreignFieldName = "branch_id")
+    ForeignCollection<CatalogProductDTO> catalogProducts;
 
     //Constructor
     public BranchDTO(Integer branch_id) {

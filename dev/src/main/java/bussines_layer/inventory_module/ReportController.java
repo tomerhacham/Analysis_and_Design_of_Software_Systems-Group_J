@@ -6,8 +6,8 @@ import bussines_layer.enums.ReportType;
 import java.util.List;
 
 public class ReportController {
-
-    public ReportController() {}
+    private Integer branch_id;
+    public ReportController(Integer branch_id) {this.branch_id=branch_id;}
 
     /**
      * make report object which has String report field that represent the report to be prints

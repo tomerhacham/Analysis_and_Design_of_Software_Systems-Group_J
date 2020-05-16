@@ -27,8 +27,10 @@ public class OrdersController {
     private static OrdersController instance = null;
     private LinkedList<Order> orders;
     private int orderidCounter;
+    private Integer branch_id;
 
-    private OrdersController(){
+    private OrdersController(Integer branch_id){
+        this.branch_id = branch_id;
         orders = new LinkedList<>();
         orderidCounter = 0;
     }
@@ -37,9 +39,9 @@ public class OrdersController {
     //region methods
 
     // static method to create instance of Singleton class
-    public static OrdersController getInstance(){
+    public static OrdersController getInstance(Integer branch_id){
         if (instance == null)
-            instance = new OrdersController();
+            instance = new OrdersController(branch_id);
 
         return instance;
     }
@@ -129,6 +131,10 @@ public class OrdersController {
             }
         }
         return new Result<>(false,null, String.format("Order %d does not exist", orderID));
+    }
+
+    public Integer getBranch_id() {
+        return branch_id;
     }
 
     //endregion

@@ -13,44 +13,28 @@ public class CategoryDTO {
     //fields:
     @DatabaseField(columnName = "name")
     String name;
-    @DatabaseField(id=true,columnName = "category_id")
+    @DatabaseField(columnName = "category_id")
     Integer id;
-    @DatabaseField(foreign = true,foreignAutoRefresh = true, columnName = "super_category_id",canBeNull = true)
-    CategoryDTO super_category;
+    @DatabaseField(columnName = "super_category_id",canBeNull = true)
+    Integer super_category;
     @DatabaseField(columnName = "level")
     Integer level;
-    @ForeignCollectionField(eager = false,foreignFieldName = "category_id")
+    @DatabaseField(foreign = true, foreignColumnName = "branch_id",columnName = "branch_id")
+    BranchDTO branch_id;
+
+    /*@ForeignCollectionField(eager = false,foreignFieldName = "category_id")
     ForeignCollection<GeneralProductDTO> generalProducts;
     @ForeignCollectionField(eager=false,foreignFieldName = "super_category_id")
-    ForeignCollection<CategoryDTO> sub_categories;
+    ForeignCollection<CategoryDTO> sub_categories;*/
 
     //Constructor
-    public CategoryDTO(String name, Integer id, Integer level,CategoryDTO super_category) {
-        this.name = name;
-        this.id = id;
-        this.level = level;
-        this.super_category=super_category;
-    }
-    public CategoryDTO(CategoryDTO super_category, Category category){
-        this.super_category=super_category;
-        this.name=category.getName();
-        this.id=category.getId();
-        this.level=category.getLevel();
-    }
-    public CategoryDTO(Category category,Integer super_category_id){
-        CategoryDTO dummy_super_category = new CategoryDTO();
-        dummy_super_category.id=super_category_id;
-        this.super_category=dummy_super_category;
-        this.name=category.getName();
-        this.id=category.getId();
-        this.level=category.getLevel();
-    }
     //for UPDATE situation
     public CategoryDTO(Category category){
-        this.super_category=null;
+        this.super_category=category.getSuper_category_id();
         this.name=category.getName();
         this.id=category.getId();
         this.level=category.getLevel();
+        this.branch_id=new BranchDTO(category.getBranch_id());
     }
     public CategoryDTO() {
     }
@@ -66,7 +50,7 @@ public class CategoryDTO {
         return id;
     }
 
-    public CategoryDTO getSuper_category() {
+    public Integer getSuper_category() {
         return super_category;
     }
 
@@ -74,13 +58,16 @@ public class CategoryDTO {
         return level;
     }
 
-    public ForeignCollection<GeneralProductDTO> getGeneralProducts() {
+    public BranchDTO getBranch_id() {
+        return branch_id;
+    }
+    /*public ForeignCollection<GeneralProductDTO> getGeneralProducts() {
         return generalProducts;
     }
 
     public ForeignCollection<CategoryDTO> getSub_categories() {
         return sub_categories;
-    }
+    }*/
 
     @Override
     public String toString() {

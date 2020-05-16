@@ -8,35 +8,28 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "catalog_product_in_contract")
 public class catalog_product_in_contractDTO {
     //fields:
-    @DatabaseField(foreign = true,foreignColumnName ="contract_id",foreignAutoRefresh = true,columnName = "contract_id")
-    ContractDTO contract;
+    @DatabaseField(columnName = "contract_id")
+    Integer contract_id;
     @DatabaseField(columnName = "catalog_id")
-    CatalogProductDTO catalog_id;
+    Integer catalog_id;
     @DatabaseField(foreign = true, foreignColumnName = "branch_id", foreignAutoRefresh = true, columnName = "branch_id")
     BranchDTO branch;
 
     //Constructor
-    public catalog_product_in_contractDTO(ContractDTO contract, CatalogProduct catalogProduct){
-        this.contract=contract;
-        this.catalog_id=new CatalogProductDTO(catalogProduct);
-        this.branch=contract.getBranch();
-    }
-
     public catalog_product_in_contractDTO(Contract contract, CatalogProduct catalogProduct){
-        this.contract = new ContractDTO(contract);
-        this.catalog_id = new CatalogProductDTO(catalogProduct);
+        this.contract_id = contract.getContractID();
+        this.catalog_id = catalogProduct.getCatalogID();
         this.branch = new BranchDTO(contract.getBranchID());
     }
-
     public catalog_product_in_contractDTO(){}
 
     //region Methods
 
-    public ContractDTO getContract() {
-        return contract;
+    public Integer getContract_id() {
+        return contract_id;
     }
 
-    public CatalogProductDTO getCatalog_id() {
+    public Integer getCatalog_id() {
         return catalog_id;
     }
 

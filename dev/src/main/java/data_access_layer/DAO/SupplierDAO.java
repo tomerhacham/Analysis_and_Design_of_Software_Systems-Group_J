@@ -18,7 +18,7 @@ import java.util.function.Supplier;
 public class SupplierDAO {
     //fields
     HashMap<Integer, SupplierCard> identityMap;
-    Dao<SupplierDTO,Integer> dao;
+    public Dao<SupplierDTO,Integer> dao;
     private Dao<contact_of_supplierDTO,Void> contacts_of_supplier_dao;
 
     //Constructor
@@ -33,6 +33,11 @@ public class SupplierDAO {
         }
     }
 
+    /**
+     * find and returns the supplierCard object in the repository
+     * @param supplier_id
+     * @return
+     */
     public SupplierCard find(Integer supplier_id){
         SupplierCard supplierCard=null;
         if(identityMap.containsKey(supplier_id)){
@@ -59,7 +64,7 @@ public class SupplierDAO {
      * @param supplier
      */
     public void create(SupplierCard supplier){
-        identityMap.put(supplier.getId(),supplier);
+        if(!identityMap.containsKey(supplier.getId())){identityMap.put(supplier.getId(),supplier);}
         SupplierDTO supplierDTO = new SupplierDTO(supplier);
         List<String> contactList = supplier.getContactsName();
         LinkedList<contact_of_supplierDTO> contact_of_supplierDTOS = new LinkedList<>();
@@ -142,6 +147,9 @@ public class SupplierDAO {
         }catch (Exception e){e.printStackTrace();}
     }
     //region Utilities
+    public void clearCache(){
+        this.identityMap.clear();
+    }
     private String concatObjectList(List list){
         String string="";
         for (Object object:list){string=string.concat(object.toString().concat("\n"));}

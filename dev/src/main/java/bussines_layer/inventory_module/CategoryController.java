@@ -7,11 +7,13 @@ import java.util.List;
 
 public class CategoryController {
     //fields
+    private Integer branch_id;
     private Integer next_id;
     private List<Category> main_categories;
 
     //Constructor
-    public CategoryController() {
+    public CategoryController(Integer branch_id) {
+        this.branch_id=branch_id;
         this.next_id=1;
         this.main_categories=new LinkedList<>();
     }
@@ -23,7 +25,7 @@ public class CategoryController {
      * @return
      */
     public Result addNewCategory(String name){
-        Category new_category = new Category(name,getNext_id(),1);
+        Category new_category = new Category(branch_id,0,name,getNext_id(),1);
         boolean res=main_categories.add(new_category);
         Result<Category> result;
         if (res){

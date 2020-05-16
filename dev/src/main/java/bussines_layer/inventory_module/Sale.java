@@ -42,14 +42,17 @@ public class Sale {
         }
     }
 
-    public Sale(SaleDTO saleDTO, LinkedList<GeneralProduct> generalProducts) {
+    public Sale(SaleDTO saleDTO) {
         this.sale_id=saleDTO.getSale_id();
-        this.products_on_sale = generalProducts;
         this.type=saleDTO.getType();
         this.start=saleDTO.getStart();
         this.end=saleDTO.getEnd();
         active = saleDTO.getActive();
         this.branchId =saleDTO.getBranch().getBranch_id();
+    }
+
+    public void setProducts_on_sale(List<GeneralProduct> products_on_sale) {
+        this.products_on_sale = products_on_sale;
     }
 
     public Result setDiscount(Float number){
@@ -112,10 +115,6 @@ public class Sale {
 
     public Boolean getActive() {
         return active;
-    }
-
-    public Integer getBranchId() {
-        return branchId;
     }
 
     @Override

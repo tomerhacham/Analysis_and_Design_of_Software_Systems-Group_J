@@ -26,10 +26,14 @@ public class SupplierModule {
     // static variable single_instance of type Singleton
     private static SupplierModule instance = null;
     private Integer branchId;
-    private ContractController contractController = new ContractController(branchId);
-    private OrdersController ordersController = OrdersController.getInstance();
+    private ContractController contractController;
+    private OrdersController ordersController;
 
-    private SupplierModule(Integer branchId){ this.branchId = branchId; }
+    private SupplierModule(Integer branchId){
+        this.branchId = branchId;
+        contractController = new ContractController(branchId);
+        ordersController = OrdersController.getInstance(branchId);
+    }
 
     // static method to create instance of Singleton class
     public static SupplierModule getInstance(Integer branchId){
@@ -117,7 +121,7 @@ public class SupplierModule {
     }
 
     public Result<HashMap<CatalogProduct, Integer>> getProductsToAcceptOrder(Integer orderID){
-        return OrdersController.getInstance().getProductsToAcceptOrder(orderID);
+        return OrdersController.getInstance(branchId).getProductsToAcceptOrder(orderID);
     }
 
     public Result<LinkedList<String>> displayAllOrders(){
@@ -273,7 +277,9 @@ public class SupplierModule {
     //endregion
 
 
-
+    public Integer getBranchId() {
+        return branchId;
+    }
 }
 
 

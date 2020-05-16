@@ -12,7 +12,7 @@ import java.util.Date;
 @DatabaseTable(tableName ="SpecificProduct" )
 public class SpecificProductDTO {
     //fields:
-    @DatabaseField(id=true, columnName = "specific_product_id")
+    @DatabaseField(columnName = "specific_product_id")
     private Integer id;
     @DatabaseField(columnName = "location",dataType = DataType.ENUM_TO_STRING)
     private Location location;
@@ -20,37 +20,21 @@ public class SpecificProductDTO {
     private Date expiration_date;
     @DatabaseField(columnName = "flaw_flag")
     private Boolean flaw_flag;
-    @DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "GPID")
-    private GeneralProductDTO generalProduct;
-    @DatabaseField(columnName = "branch_id")
-    private Integer branch_id;
+    @DatabaseField(columnName = "GPID")
+    private Integer generalProduct;
+    @DatabaseField(foreign = true,foreignColumnName = "branch_id",columnName = "branch_id")
+    private BranchDTO branch_id;
 
     //Constructors
-    public SpecificProductDTO(GeneralProductDTO gp,Integer id, String location, Date expiration_date,Boolean flaw_flag) {
-        this.generalProduct=gp;
-        this.id = id;
-        this.location = convertStringTOEnum(location);
-        this.expiration_date = expiration_date;
-        this.flaw_flag=flaw_flag;
-        this.branch_id=gp.getBranch_id().branch_id;
-    }
-    public SpecificProductDTO(GeneralProductDTO generalProductDTO,SpecificProduct specificProduct){
-        this.generalProduct=generalProductDTO;
+    public SpecificProductDTO(SpecificProduct specificProduct){
+        this.generalProduct=specificProduct.getGpId();
         this.id = specificProduct.getId();
         this.location = specificProduct.getLocation();
         this.expiration_date = specificProduct.getExpiration_date();
         this.flaw_flag=specificProduct.getFlaw_flag();
-        this.branch_id=generalProductDTO.getBranch_id().branch_id;
+        this.branch_id=new BranchDTO(specificProduct.getBranch_id());
     }
 
-    public SpecificProductDTO(GeneralProduct generalProduct, SpecificProduct specificProduct){
-        this.generalProduct= new GeneralProductDTO(generalProduct);
-        this.id = specificProduct.getId();
-        this.location = convertStringTOEnum(specificProduct.getLocation().name());
-        this.expiration_date = specificProduct.getExpiration_date();
-        this.flaw_flag=specificProduct.getFlaw_flag();
-        this.branch_id=this.generalProduct.getBranch_id().branch_id;
-    }
     public SpecificProductDTO() {
     }
 
@@ -72,11 +56,11 @@ public class SpecificProductDTO {
         return flaw_flag;
     }
 
-    public GeneralProductDTO getGeneralProduct() {
+    public Integer getGeneralProduct() {
         return generalProduct;
     }
 
-    public Integer getBranch_id() {
+    public BranchDTO getBranch_id() {
         return branch_id;
     }
 

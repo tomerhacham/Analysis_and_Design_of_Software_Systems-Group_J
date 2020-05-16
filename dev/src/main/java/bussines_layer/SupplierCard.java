@@ -24,6 +24,8 @@ public class SupplierCard {
     private supplierType type;
     private Integer numOfContract;
     private LinkedList<String> ContactsName;
+
+
     public SupplierCard(String SupplierName , String Address , String Email , String PhoneNumber ,
                         int id , String BankAccountNum , String Payment , LinkedList<String> ContactsName, supplierType type){
 

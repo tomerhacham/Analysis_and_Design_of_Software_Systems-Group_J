@@ -8,8 +8,8 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "Cost Engineering")
 public class CostEngineeringDTO {
     //fields:
-    @DatabaseField(foreign = true, foreignColumnName = "contract_id", foreignAutoRefresh = true, columnName = "contract_id")
-    ContractDTO contract;
+    @DatabaseField(columnName = "contract_id")
+    Integer contract_id;
     @DatabaseField(foreign = true, foreignColumnName = "branch_id", foreignAutoRefresh = true, columnName = "branch_id")
     BranchDTO branch;
     @DatabaseField(columnName = "catalog_id")
@@ -20,18 +20,9 @@ public class CostEngineeringDTO {
     Float discount_price;
 
     //Constructor
-    public CostEngineeringDTO(ContractDTO contract, Integer catalog_id, Integer min_quantity, Float discount_price) {
-        this.contract = contract;
-        this.branch=contract.getBranch();
-        this.catalog_id = catalog_id;
-        this.min_quantity = min_quantity;
-        this.discount_price = discount_price;
-    }
-
-    //TODO - update Tomer
-    public CostEngineeringDTO(Contract contract , Integer catalog_id, Integer min_quantity, Float discount_price ){
-        this.contract = new ContractDTO(contract);
-        this.branch = new BranchDTO(contract.getBranchID());
+    public CostEngineeringDTO(CostEngineering costEngineering, Integer catalog_id, Integer min_quantity, Float discount_price ){
+        this.contract_id =costEngineering.getContract_id() ;
+        this.branch = new BranchDTO(costEngineering.getBranch_id());
         this.catalog_id = catalog_id;
         this.min_quantity = min_quantity;
         this.discount_price = discount_price;
@@ -41,8 +32,8 @@ public class CostEngineeringDTO {
 
     //region Methods
 
-    public ContractDTO getContract() {
-        return contract;
+    public Integer getContract_id() {
+        return contract_id;
     }
 
     public BranchDTO getBranch() {

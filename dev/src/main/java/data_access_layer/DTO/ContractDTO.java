@@ -10,29 +10,24 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "Contract")
 public class ContractDTO {
     //fields:
-    @DatabaseField(id=true, columnName = "contract_id")
+    @DatabaseField(columnName = "contract_id")
     Integer contract_id;
     @DatabaseField(foreign = true, columnName = "branch_id", foreignColumnName = "branch_id", foreignAutoRefresh = true)
     BranchDTO branch;
-    @DatabaseField(foreign = true, columnName = "supplier_id", foreignColumnName = "supplier_id", foreignAutoRefresh = true)
-    SupplierDTO supplier;
-    @ForeignCollectionField(eager=false)
+    @DatabaseField(columnName = "supplier_id")
+    Integer supplier_id;
+    /*@ForeignCollectionField(eager=false)
     ForeignCollection<catalog_product_in_contractDTO> catalog_product;
     @ForeignCollectionField(eager=false)
     ForeignCollection<CostEngineeringDTO> product_in_cost_engineering;
     @ForeignCollectionField(eager=false)
-    ForeignCollection<categories_in_contractDTO> categories_in_contract;
+    ForeignCollection<categories_in_contractDTO> categories_in_contract;*/
 
     //Constructor
-    public ContractDTO(Integer contract_id, BranchDTO branch, SupplierDTO supplier) {
-        this.contract_id = contract_id;
-        this.branch = branch;
-        this.supplier = supplier;
-    }
     public ContractDTO(Contract contract){
         this.contract_id=contract.getContractID();
         this.branch = new BranchDTO(contract.getBranchID());
-        this.supplier = new SupplierDTO(contract.getSupplier());
+        this.supplier_id = contract.getSupplierID();
 
     }
     public ContractDTO() {}
@@ -47,11 +42,11 @@ public class ContractDTO {
         return branch;
     }
 
-    public SupplierDTO getSupplier() {
-        return supplier;
+    public Integer getSupplier_id() {
+        return supplier_id;
     }
 
-    public ForeignCollection<catalog_product_in_contractDTO> getCatalog_product() {
+    /*public ForeignCollection<catalog_product_in_contractDTO> getCatalog_product() {
         return catalog_product;
     }
 
@@ -60,14 +55,14 @@ public class ContractDTO {
     }
     public ForeignCollection<categories_in_contractDTO> getCategories_in_contract() {
         return categories_in_contract;
-    }
+    }*/
 
     @Override
     public String toString() {
         return "ContractDTO{" +
                 "contract_id=" + contract_id +
                 ", branch_id=" + branch.branch_id +
-                ", supplier_id=" + supplier.supplier_id +
+                ", supplier_id=" + supplier_id +
                 '}';
     }
     //endregion

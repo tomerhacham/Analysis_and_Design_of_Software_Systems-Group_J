@@ -9,6 +9,7 @@ import java.util.*;
 
 public class Inventory {
     //fields
+    private Integer branch_id;
     private CategoryController categoryController;
     private ProductController productController;
     private ReportController reportController;
@@ -17,9 +18,10 @@ public class Inventory {
 
     //Constructors
     public Inventory(Integer branchId) {
-        this.categoryController=new CategoryController();
+        this.branch_id=branchId;
+        this.categoryController=new CategoryController(branchId);
         this.productController = new ProductController(branchId);
-        this.reportController = new ReportController();
+        this.reportController = new ReportController(branchId);
         this.saleController=new SaleController(branchId);
     }
     //region Methods
