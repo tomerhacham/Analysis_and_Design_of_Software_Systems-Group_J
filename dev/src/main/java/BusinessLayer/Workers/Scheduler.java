@@ -1,6 +1,8 @@
 package BusinessLayer.Workers;
 
 import DataAccessLayer.Mapper;
+
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -8,7 +10,7 @@ public class Scheduler {
     private TreeSet<WeeklySchedule> schedule;
     private static final boolean morning=true;
     private static final boolean night=false;
-    private HashMap<Date, Pair<List<Worker>,List<Worker>>> availableWorkers;
+    private HashMap<Date, Pair<LazyList<Worker>,LazyList<Worker>>> availableWorkers;
     private Shift currentEditedShift;
     private static Scheduler scheduler;
     private Mapper mapper=Mapper.getInstance();
@@ -77,9 +79,9 @@ public class Scheduler {
             return currentEditedShift.removeWorkerFromPosition(pos,id,cloneAvailableWorkersForShift());
     }
 
-    public HashMap<Date, Pair<List<Worker>, List<Worker>>> getAvailableWorkers() {
-        return availableWorkers;
-    }
+   // public HashMap<Date, Pair<List<Worker>, List<Worker>>> getAvailableWorkers() {
+        //return availableWorkers;
+   // }
 
     /*
         //change tests so that we wont use it in the test
@@ -100,7 +102,7 @@ public class Scheduler {
 
     public String removePositionToShift(String pos)
     {
-        if(pos!=null)
+        if(pos==null)
             return "Invalid positions";
         return currentEditedShift.removePosition(pos);
     }
@@ -110,44 +112,76 @@ public class Scheduler {
     }
 
     public String submitShift()
-    // TODO:Use separate calls for add / update
-    //TODO:Mapper-update/add "Shift" table + add/remove to "Occupation"+ add/remove to "shift_driver" / (Mapper function - addShift)
     {
         if(currentEditedShift!=null) {
             if (!currentEditedShift.isValid())
                 return "The shift is invalid";
             addWeeksIfAbsent(currentEditedShift.getDate());
             DailySchedule day=findDay(currentEditedShift.getDate());
-            if(day==null)
+            if(day==null) {
                 return "Invalid date";
-            else if(currentEditedShift.getTimeOfDay()==morning){
+            }
+            Shift oldShift=findShift(currentEditedShift.getDate(),currentEditedShift.getTimeOfDay());
+            if(currentEditedShift.getTimeOfDay()==morning){
                 day.setMorningShift(currentEditedShift);}
             else{
                 day.setNightShift(currentEditedShift);
             }
-            Shift oldShift=findShift(currentEditedShift.getDate(),currentEditedShift.getTimeOfDay());
-            if(oldShift==null)
+            if(oldShift==null) {
                 mapper.addShift(currentEditedShift);
-            else
+            }
+            else {
                 mapper.updateShift(currentEditedShift);
-            cancelShift();
+                updateShift(oldShift);
+            }cancelShift();
             return null;
         }
             return "Error-No shift is being edited";
+    }
+
+    /*adds and deletes changes in shift to database*/
+    private void updateShift(Shift oldShift) {
+        for (String newPosition:currentEditedShift.getOccupation().keySet())
+        {
+            List<Worker> oldWorkers=new ArrayList<>();
+            if(oldShift.getOccupation().containsKey(newPosition))
+            {
+                oldWorkers=oldShift.getOccupation().get(newPosition);
+            }
+            for(Worker newWorker:currentEditedShift.getOccupation().get(newPosition))
+            {
+
+                if(!oldWorkers.remove(newWorker))
+                    mapper.addOccupation(oldShift.getId(),newPosition,newWorker.getId());
+            }
+
+        }
+        for (String oldPosition:oldShift.getOccupation().keySet())
+        {
+            for(Worker oldWorker:oldShift.getOccupation().get(oldPosition))
+            {
+                mapper.deleteOccupation(oldShift.getId(),oldPosition,oldWorker.getId());
+            }
+        }
     }
 
     public String createShift(Date date,boolean timeOfDay)
     {
         if(date==null)
             return "Invalid date";
-        if(!availableWorkers.containsKey(date))
-            return "No Available workers were marked for this shift";
+        /*if(!availableWorkers.containsKey(date))
+            return "No Available workers were marked for this shift";*/
         List<Worker> workerList = getAvailableWorkersForShift(date, timeOfDay);
         if(workerList.size()==0)
             return "No Available workers were marked for this shift";
         /*List<Worker>cloned =new ArrayList<>();
         cloned.addAll(workerList);*/
-        currentEditedShift=new Shift(date,timeOfDay,UUID.randomUUID().toString());
+        Shift s=findShift(date,timeOfDay);
+        String newId=UUID.randomUUID().toString();
+        if(s!=null)
+            currentEditedShift=new Shift(date,timeOfDay,s.getId());
+        else
+            currentEditedShift=new Shift(date,timeOfDay,newId);
         /*
         currentEditedShift.setDate(date);
         currentEditedShift.setTimeOfDay(timeOfDay);
@@ -172,8 +206,10 @@ public class Scheduler {
         List<Worker> workersList = getAvailableWorkersForShift(date, timeOfDay);
         List<Worker>clonedWorkers =new ArrayList<>();
         clonedWorkers.addAll(workersList);*/
-
-        currentEditedShift=new Shift(findShift(date,timeOfDay));
+        Shift s=findShift(date,timeOfDay);
+        if (s==null)
+            return createShift(date, timeOfDay);
+        currentEditedShift=new Shift(s);
         /*
         currentEditedShift.setDate(date);
         currentEditedShift.setTimeOfDay(timeOfDay);
@@ -327,34 +363,36 @@ public class Scheduler {
     }
     private List<Worker> getAvailableWorkersForShift(Date date,boolean partOfDay)
     {
-        List<Worker> workerList = null;
+        LazyList<Worker> workerList = null;
         if (availableWorkers.containsKey(date))
             {
             if (partOfDay == morning)
             {
-                workerList = availableWorkers.get(date).getKey();
+                workerList = availableWorkers.get(date).getMorning();
             }
             else
-                workerList = availableWorkers.get(date).getValue();
+                workerList = availableWorkers.get(date).getNight();
         }
         else
         {
             availableWorkers.put(date,new Pair<>(null,null));
         }
         if(workerList==null)
+            workerList=new LazyList<>();
+        if(!workerList.isRead())
         {
-            {
-                mapper.getAvailableWorkers(date,partOfDay);
-                if(workerList==null)
-                    workerList= new ArrayList<>();
+            List<Worker> currWorkers=mapper.getAvailableWorkers(date,partOfDay);
+            if(currWorkers!=null)
+                workerList.addAll(currWorkers);
+            workerList.setRead(true);
 
-                Pair pair = availableWorkers.get(date);
-                if(partOfDay==morning)
-                    pair.setKey(workerList);
-                else
-                    pair.setValue(workerList);
+            Pair pair = availableWorkers.get(date);
+            if(partOfDay==morning)
+                pair.setMorning(workerList);
+            else
+                pair.setNight(workerList);
             }
-        }
+
         return workerList;
     }
     public String removeAvailableWorker(Date date,boolean partOfDay,String id)
@@ -373,10 +411,14 @@ public class Scheduler {
 
     private void removeAvailableWorker(Worker w)
     {
-        for(Pair<List<Worker>,List<Worker>> p:availableWorkers.values())
+        for(Pair<LazyList<Worker>,LazyList<Worker>> p:availableWorkers.values())
         {
-            p.getValue().remove(w);
-            p.getKey().remove(w);
+            List<Worker> workers = p.getMorning();
+            if(workers!=null)
+                workers.remove(w);
+            workers = p.getNight();
+            if(workers!=null)
+                workers.remove(w);
         }
     }
 

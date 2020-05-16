@@ -56,4 +56,7 @@ public class RosterController {
         return roster.removeWorker(id);
     }
 
+    public void removeExistingWorkers() {
+        roster.removeExistingWorkers();
+    }
 }
