@@ -33,7 +33,7 @@ public class Scheduler {
         return currentEditedShift;
     }
 
-    public String removeShift(Date date,boolean timeOfDay)//TODO:Mapper-remove from "Shift" table+ remove from "Occupation" (Mapper funtcion- deleteShift() (for both))
+    public String removeShift(Date date,boolean timeOfDay)
     {
         if(date==null||findShift(date, timeOfDay)==null)
             return "Invalid date";
@@ -51,7 +51,7 @@ public class Scheduler {
         return null;
     }
 
-    public List<Shift> getWeeklySchedulebyDate(Date date)//TODO:Mapper- pull from "Shift" table get(date,timeOfday)
+    public List<Shift> getWeeklySchedulebyDate(Date date)
     {
         if(date==null||schedule.size()==0||date.after(DateManipulator.addDays(schedule.last().dayStart,6)))
             return null;
@@ -249,7 +249,7 @@ public class Scheduler {
         return null;
     }
 
-    public Shift findShift(Date date,boolean timeOfDay)//TODO:Mapper-getShift(date,timeOfday) from "Shift" table + (?)getDriversForShift(date,time) from "shift_drivers" table
+    public Shift findShift(Date date,boolean timeOfDay)
     {
         Shift shift=null;
         DailySchedule day=findDay(date);
@@ -310,7 +310,7 @@ public class Scheduler {
         return output;
     }
 
-    public String addAvailableWorker(Date date,boolean partOfDay,String id)//TODO:Mapper-(?) List<Worker> pull(date,time) , add(date,time,worker) from/to "Shift_available_workers" table
+    public String addAvailableWorker(Date date,boolean partOfDay,String id)
     {
         if(date==null)
             return "Invalid date";
@@ -334,7 +334,7 @@ public class Scheduler {
         mapper.addShiftAvailableWorkers(worker.getId(),date,partOfDay);
         return null;
     }
-    private List<Worker> getAvailableWorkersForShift(Date date,boolean partOfDay)//TODO:Mapper-List<Worker> pull(date,time) from "Shift_available_workers" table
+    private List<Worker> getAvailableWorkersForShift(Date date,boolean partOfDay)
     {
         List<Worker> workerList = null;
         if (availableWorkers.containsKey(date))
@@ -366,7 +366,7 @@ public class Scheduler {
         }
         return workerList;
     }
-    public String removeAvailableWorker(Date date,boolean partOfDay,String id)//TODO:Mapper-remove(date,time,worker) from/to "Shift_available_workers" table
+    public String removeAvailableWorker(Date date,boolean partOfDay,String id)
     {
         Worker worker=getWorkerById(id);
         if (worker==null)
@@ -380,7 +380,7 @@ public class Scheduler {
         return "The worker is not available for this shift";
     }
 
-    private void removeAvailableWorker(Worker w)//TODO:Mapper- remove(worker) from every entry in "Shift_available_workers" table
+    private void removeAvailableWorker(Worker w)
     {
         for(Pair<List<Worker>,List<Worker>> p:availableWorkers.values())
         {
@@ -390,7 +390,7 @@ public class Scheduler {
     }
 
     /*returns a list of every shift to which the worker is scheduled */
-    private List<Shift> isWorkerScheduled(Worker w)//TODO:Mapper- List<string(id)/shift(?)> pull(worker) from "shift_available_worker"
+    private List<Shift> isWorkerScheduled(Worker w)
     {
         List<Shift> output=new ArrayList<>();
         Date currentDate=new Date();
@@ -473,7 +473,7 @@ public class Scheduler {
         return false;
     }
 
-    public String chooseDriverForTransport(Date date, boolean timeOfDay, String license)//TODO:Mapper- add(date,time,driver) to "Shift_driver"
+    public String chooseDriverForTransport(Date date, boolean timeOfDay, String license)
     {
         if(date==null||license==null)
             return null;
@@ -502,7 +502,7 @@ public class Scheduler {
         return null;
     }
 
-    public void removeDriverFromTransport(Date date, boolean timeOfDay, String id)//TODO:Mapper-remove(date,time,driver) to "Shift_driver"
+    public void removeDriverFromTransport(Date date, boolean timeOfDay, String id)
     {
         Shift shift=findShift(date,timeOfDay);
         Driver d=null;

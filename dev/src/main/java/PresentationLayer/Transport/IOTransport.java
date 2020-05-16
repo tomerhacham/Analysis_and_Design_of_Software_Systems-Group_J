@@ -38,7 +38,7 @@ public class IOTransport {
                     "8. Add site.\n" +
                     "9. Remove truck.\n" +
                     "10. Remove site.\n" +
-                    "11. Exit system.\n");
+                    "11. Return to main menu.\n");
             int operation;
             try {
                 operation = Integer.parseInt(scanner.nextLine());

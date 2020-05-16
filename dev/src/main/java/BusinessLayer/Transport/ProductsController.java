@@ -18,8 +18,8 @@ public class ProductsController {
     private Hashtable<Integer,Product> products;
 
     private ProductsController(){
-        productID_Counter = (int)mapper.MaxIdProductsFile();
-        fileID_Counter = (int)mapper.MaxIdProducts();
+        productID_Counter = (int)mapper.MaxIdProductsFile() + 1;
+        fileID_Counter = (int)mapper.MaxIdProducts() + 1;
         files = new Hashtable<>();
         products = new Hashtable<>();
     }

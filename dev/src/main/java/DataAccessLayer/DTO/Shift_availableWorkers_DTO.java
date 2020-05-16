@@ -9,7 +9,7 @@ import java.util.Date;
 @DatabaseTable(tableName = "Shift_availableWorkers")
 public class Shift_availableWorkers_DTO {
 
-    @DatabaseField(columnName = "workerID", foreign = true, foreignColumnName = "workerID", uniqueCombo = true, canBeNull = false)
+    @DatabaseField(columnName = "workerID", foreign = true, foreignColumnName = "workerID", uniqueCombo = true, canBeNull = false, foreignAutoRefresh = true)
     private Worker_DTO workerID;
 
     @DatabaseField(columnName = "shiftDate", uniqueCombo = true, index = true, dataType = DataType.DATE_STRING, format = "dd/MM/yyy", canBeNull = false)

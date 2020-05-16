@@ -4,6 +4,7 @@ import DataAccessLayer.Mapper;
 
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.List;
 
 //singleton
 public class TruckController {
@@ -15,7 +16,7 @@ public class TruckController {
     // constructor
     private TruckController(){
         trucks = new Hashtable<>();
-        Id_Counter = 0;
+        Id_Counter = (int)mapper.MaxIdTrucks() + 1;
     }
 
     public static TruckController getInstance() {
@@ -28,7 +29,7 @@ public class TruckController {
     // returns truck by specified id if it exist in the system else return null
     public Truck getById(int id)
     {
-        if(trucks.containsKey(id)) {
+        if(trucks.containsKey(id)||getTruckFromDB(id)) {
             return trucks.get(id);
         }
         return null;
@@ -54,10 +55,19 @@ public class TruckController {
         return mapper.deleteTruck(id);
     }
 
+    public boolean getTruckFromDB(Integer id){
+        Truck truck = mapper.getTruck(id);
+        if (truck != null){
+            trucks.put(id, truck);
+            return true;
+        }
+        return false;
+    }
+
     // returns string of the details of truck with the specified id
     public String getTruckDetails(Integer id)
     {
-        if(trucks.containsKey(id)) {
+        if(trucks.containsKey(id) || getTruckFromDB(id)) {
             return trucks.get(id).toString();
         }
         return "";
@@ -65,59 +75,47 @@ public class TruckController {
 
     // returns string of the details of all trucks in the system
     public String getAllTrucksDetails() {
+        List<Truck> all_trucks = mapper.getAllTrucks();
         String details = "";
         int count = 1;
-        for (Integer i : trucks.keySet()) {
-            details = details + count + ". " + getTruckDetails(i);
+        for (Truck t : all_trucks) {
+            details = details + count + ". " + t.toString();
             count++;
         }
         return details;
     }
-
+/*
     // returns true if the truck with the specified id is available at date
     // otherwise returns false
     // shift- morning:true, night:false
     public boolean checkIfAvailableByDate(Date date,Boolean shift, Integer id)
     {
-        if(trucks.containsKey(id)) {
-            return trucks.get(id).checkIfAvailableByDateAndShift(date,shift);
-        }
-        return false;
+        return mapper.checkIfTruckAvailableByShift(date, shift, id);
     }
 
     // returns true if the truck with the specified id have max weight sufficient to weight
     // otherwise returns false
     public boolean checkIfAvailableByWeight(float weight, Integer id) {
-        if(trucks.containsKey(id)) {
-            return trucks.get(id).checkIfAvailableByWeight(weight);
-        }
-        return false;
+        return mapper.checkIfTruckAvailableByWeight(weight, id);
     }
-
+*/
     // returns true if there is a truck in the system which is available at date
     // otherwise returns false
     // shift- morning:true, night:false
-    public boolean checkIfTrucksAvailableByDate(Date d, boolean shift) {
-        for (Integer i:trucks.keySet()) {
-            if(checkIfAvailableByDate(d,shift, i))
-                return true;
-        }
-        return false;
+    public boolean checkIfTrucksAvailableByDate(Date d, boolean partOfDay) {
+        return mapper.checkIfTrucksAvailableByDate(d, partOfDay);
     }
 
     // returns string of details of all the trucks in the system which have max weight
     // sufficient to weight and are available by date
     // shift- morning:true, night:false
-    public String getAvailableTrucks(Date date,boolean shift, float Weight) {
+    public String getAvailableTrucks(Date date,boolean partOfDay, float Weight) {
+        List<Truck> availableTrucks = mapper.getAvailableTrucks(date, partOfDay, Weight);
         String ret = "";
         int count = 1;
-        for (Integer i:trucks.keySet()) {
-            if(checkIfAvailableByWeight(Weight, i)) {
-                if(checkIfAvailableByDate(date, shift, i)) {
-                    ret = ret + count + ". " + trucks.get(i).toString();
-                    count++;
-                }
-            }
+        for (Truck t:availableTrucks) {
+            ret = ret + count + ". " + t.toString();
+            count++;
         }
         return ret;
     }
@@ -125,21 +123,31 @@ public class TruckController {
     // adds a date to the list of occupied dates of the truck with the specified id
     // shift- morning:true, night:false
     public void addDate(Date date,boolean shift, int id){
-        if(trucks.containsKey(id)){
+        if(trucks.containsKey(id)||getTruckFromDB(id)){
             trucks.get(id).addDate(date,shift);
-        }}
+        }
+        if(shift)
+            mapper.addMorningShift(id,date);
+        else
+            mapper.addNightShift(id,date);
+    }
 
     // removes a date from the list of occupied dates of the truck with the specified id
     // shift- morning:true, night:false
     public void removeDate(Date date,boolean shift, int id){
-        if(trucks.containsKey(id))
+        if(trucks.containsKey(id)||getTruckFromDB(id))
         {
             trucks.get(id).removeDate(date, shift);
-        }}
+        }
+        if(shift)
+            mapper.delete_MorningShift(date, id);
+        else
+            mapper.deleteNightShift(date,id);
+    }
 
     // returns a string with the driver license compatible to the truck with the specified id
     public String getDriversLicense(Integer id) {
-        if(trucks.containsKey(id)) {
+        if(trucks.containsKey(id)||getTruckFromDB(id)) {
             return trucks.get(id).getDrivers_license();
         }
         return "";
@@ -148,9 +156,10 @@ public class TruckController {
     // returns true if the truck with the specified id exist in the system
     // shift- morning:true, night:false
     public boolean checkIfTruckExistAndValid(int truckID, float totalWeight, Date d, boolean shift) {
-        if(trucks.containsKey(truckID))
+        if(trucks.containsKey(truckID) || getTruckFromDB(truckID))
         {
-           return (checkIfAvailableByWeight(totalWeight, truckID)&&checkIfAvailableByDate(d,shift,truckID));
+            Truck t = trucks.get(truckID);
+           return t.checkIfAvailableByWeight(totalWeight) && t.checkIfAvailableByDateAndShift(d, shift);
         }
         return false;
     }

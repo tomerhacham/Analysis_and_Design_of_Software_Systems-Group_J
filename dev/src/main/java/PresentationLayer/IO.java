@@ -1,6 +1,7 @@
 package PresentationLayer;
 
 //import PresentationLayer.Transport.IOTransport;
+import PresentationLayer.Transport.IOTransport;
 import PresentationLayer.Workers.IOWorkers;
 
 import java.util.Scanner;
@@ -8,7 +9,7 @@ import java.util.Scanner;
 public class IO {
 
     private static IO instance = null;
-    private static Object TransportInstance ;
+    private static IOTransport TransportInstance = IOTransport.getInstance();
     private static IOWorkers WorkerInstance = IOWorkers.getInstance();
     private static Scanner scanner = new Scanner(System.in);
     private boolean terminated;
@@ -41,7 +42,7 @@ public class IO {
                     WorkerInstance.mainLoop();
                     break;
                 case 2:
-                    //TransportInstance.SystemActivation();
+                    TransportInstance.SystemActivation();
                     break;
                 case 3:
                     System.out.println("Thank you, good bye!");

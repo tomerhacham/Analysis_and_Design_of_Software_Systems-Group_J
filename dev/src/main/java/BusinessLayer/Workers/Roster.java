@@ -24,7 +24,7 @@ public class Roster {
       return roster;
     }
 
-    public String addDriver(String name, double salary, Date startDate,String license)//TODO:Mapper-write to "Driver" table
+    public String addDriver(String name, double salary, Date startDate,String license)
     {
         UUID uuid = UUID.randomUUID();
         String output = checkNewWorkerInputValidity(name, salary, startDate);
@@ -36,7 +36,7 @@ public class Roster {
         return null;
     }
 
-    public String addWorker(String name, double salary, Date startDate, List<String> positions)//TODO:Mapper-write to "Workers" table
+    public String addWorker(String name, double salary, Date startDate, List<String> positions)
     {
         UUID uuid = UUID.randomUUID();
         String output = checkNewWorkerInputValidity(name, salary, startDate);
@@ -64,7 +64,7 @@ public class Roster {
         return null;
     }
 
-    public String removeWorker(String id)//TODO:Mapper-remove from "Workers" table
+    public String removeWorker(String id)
     {
         if(id==null)
             return "Invalid ID";
@@ -97,7 +97,7 @@ public class Roster {
         return workers;
     }
 
-    public String editName(String newName, String id)//TODO:Mapper-update to "Workers" table
+    public String editName(String newName, String id)
     {
         if(id==null)
             return "Invalid ID";
@@ -111,7 +111,7 @@ public class Roster {
         return null;
     }
      
-    public String editSalary(double newSalary, String id)//TODO:Mapper-update to "Workers" table
+    public String editSalary(double newSalary, String id)
     {
         if(id==null)
             return "Invalid ID";
@@ -125,7 +125,7 @@ public class Roster {
         return null;
     }
      
-    public String addPosition(String pos, String id)//TODO:Mapper-write to "Workers_positions" table
+    public String addPosition(String pos, String id)
     {
         if(id==null)
             return "Invalid ID";
@@ -139,7 +139,7 @@ public class Roster {
         return null;
     }
      
-    public String removePosition(String pos, String id)//TODO:Mapper-remove from "Workers_positions" table
+    public String removePosition(String pos, String id)
     {
         if(id==null)
             return "Invalid ID";
@@ -157,7 +157,7 @@ public class Roster {
         return null;
     }
 
-    public Worker findWorker(String id)//TODO:Mapper-pull from "Workers" table
+    public Worker findWorker(String id)
     {
         Worker searched=null;
         for(Worker w:workers)
