@@ -23,8 +23,8 @@ public class Category {
         this.name = name;
         this.id = id;
         this.level=level;
-        if(level!=3){this.sub_categories = new LinkedList<>();}
-        else if(level==3){this.generalProducts =new LinkedList<>();}
+        this.sub_categories = new LinkedList<>();
+        this.generalProducts =new LinkedList<>();
     }
     public Category(String name,List<Category> sub_categories){
         this.name=name;
@@ -85,10 +85,10 @@ public class Category {
             msg = "You have reached hierarchy level";
         }
         if(res){
-            result=new Result(res,new_category,"New category "+name+"("+id+")"+" has been added");
+            result=new Result<>(res,new_category,"New category "+name+"("+id+")"+" has been added");
         }
         else{
-            result=new Result(res,new_category,msg);
+            result=new Result<>(res,new_category,msg);
         }
         return result;
     }
@@ -150,7 +150,7 @@ public class Category {
         }
         return total_quantity;
     }
-    public Result deleteCategoryRecursive(Category toRemove){
+    public Result<Category> deleteCategoryRecursive(Category toRemove){
         Result<Category> result=null;
         boolean res=false;
         if (sub_categories.contains(toRemove)){
@@ -159,7 +159,7 @@ public class Category {
             else{result=new Result<>(res,toRemove,"There was a problem deleting the category"+this.name+"("+id+")");}
         }
         else{
-            for (Category category :sub_categories) {
+            for (Category category : sub_categories) {
                 result=category.deleteCategoryRecursive(toRemove);
             }
         }
