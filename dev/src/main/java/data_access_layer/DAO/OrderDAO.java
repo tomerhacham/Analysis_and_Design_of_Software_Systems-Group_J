@@ -19,7 +19,7 @@ import java.util.List;
 public class OrderDAO {
     //feilds:
     HashMap<Integer, Order> identityMap;
-    Dao<OrderDTO,Void> dao;
+    public Dao<OrderDTO,Void> dao;
     Dao<catalog_product_in_orderDTO,Void>catalog_product_in_order_dao;
 
     //Constructor

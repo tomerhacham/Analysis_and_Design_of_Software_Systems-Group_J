@@ -19,9 +19,9 @@ import java.util.HashMap;
 public class ContractDAO {
     //fields:
     HashMap<Integer, Contract> identityMap;
-    Dao<ContractDTO,Void> dao;
-    Dao<categories_in_contractDTO,Void> categories_in_contract_dao;
-    Dao<catalog_product_in_contractDTO,Void> catalog_product_in_contract_dao;
+    public Dao<ContractDTO,Void> dao;
+    public Dao<categories_in_contractDTO,Void> categories_in_contract_dao;
+    public Dao<catalog_product_in_contractDTO,Void> catalog_product_in_contract_dao;
     //Constructor
 
     public ContractDAO(ConnectionSource conn) {
