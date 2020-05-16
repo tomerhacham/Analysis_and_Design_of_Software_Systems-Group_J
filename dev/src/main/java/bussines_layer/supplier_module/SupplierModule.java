@@ -184,10 +184,10 @@ public class SupplierModule {
 
     //region PeriodicOrder
 
-    public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<GeneralProduct , Integer>> productsAndQuantity , Integer date){
+    public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<GeneralProduct , Integer>> productsAndQuantity , Integer dayToDeliver){
         Result<Contract> contractResult = contractController.findContract(supplierID);
         if (!contractResult.isOK()){return new Result<>(false, null, String.format("Supplier %d does not exist", supplierID));}
-        int orderID = ordersController.createPeriodicOrder(contractResult.getData().getSupplier()).getData();
+        int orderID = ordersController.createPeriodicOrder(contractResult.getData().getSupplier(),dayToDeliver).getData();
         Result<Order> resultOrder = ordersController.getOrder(orderID);
         if (!resultOrder.isOK()){return new Result<>(false, null, String.format("Order %d does not exist", orderID));}
         for (Pair<GeneralProduct , Integer> pair : productsAndQuantity) {

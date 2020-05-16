@@ -142,16 +142,16 @@ public class OrdersController {
     //region OutOfStockOrder
     public Result<Integer> createOrder(SupplierCard supplier , OrderType type){
         orderidCounter++;
-        orders.add(new Order(orderidCounter  , supplier , type));
+        orders.add(new Order(branch_id,orderidCounter  , supplier , type));
         return new Result(true,orderidCounter, String.format("The new order id is  : %d" ,orderidCounter));
     }
 
     //endregion
 
     //region PeriodicOrder
-    public Result<Integer> createPeriodicOrder(SupplierCard supplier ){
+    public Result<Integer> createPeriodicOrder(SupplierCard supplier,Integer dayToDeliver){
         orderidCounter++;
-        orders.add(new Order(orderidCounter , supplier ,OrderType.PeriodicOrder ));
+        orders.add(new Order(branch_id,orderidCounter , supplier ,OrderType.PeriodicOrder,dayToDeliver ));
         return new Result(true,orderidCounter, String.format("The new order id is  : %d" ,orderidCounter));
     }
 

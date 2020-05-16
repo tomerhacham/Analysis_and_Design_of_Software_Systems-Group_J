@@ -17,7 +17,7 @@ import java.util.HashMap;
 public class SpecificProductDAO {
     //fields:
     HashMap<Integer, SpecificProduct> identityMap;
-    Dao<SpecificProductDTO,Void> dao;
+    public Dao<SpecificProductDTO,Void> dao;
 
     //Constructor
     public SpecificProductDAO(ConnectionSource conn)

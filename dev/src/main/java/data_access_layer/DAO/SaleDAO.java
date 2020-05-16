@@ -22,7 +22,7 @@ import java.util.List;
 public class SaleDAO {
     //fields:
     HashMap<Integer, Sale> identityMap;
-    Dao<SaleDTO,Void> dao;
+    public Dao<SaleDTO,Void> dao;
     Dao<general_product_on_saleDTO,Void> general_product_on_sale_dao;
     //Constructor
 

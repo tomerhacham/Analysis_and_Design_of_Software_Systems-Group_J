@@ -38,8 +38,6 @@ public class Mapper {
     private BranchDAO branch_dao;
     private CostEngineeringDAO cost_engineering_dao;                                    //will not support cache
     private Dao<IDsDTO, Void> ids_dao;                                                   //will not support cache
-    private Dao<catalog_product_in_general_productDTO, Void> catalog_product_in_general_products_dao;
-    private Dao<contact_of_supplierDTO, Void> contacts_of_supplier_dao;
 
     //Constructor
     public Mapper() {
@@ -97,6 +95,7 @@ public class Mapper {
         }
     return main_categories;
     }
+    //region load categories
 
     private LinkedList<Category> LoadSubCategories(Integer branch_id, Integer id) {
         LinkedList<Category> sub_categories = new LinkedList<>();
@@ -127,14 +126,15 @@ public class Mapper {
         return sub_sub_categories;
     }
 
-    public LinkedList<GeneralProduct> loadGeneralProduct(Integer branch_id, Integer category_id){
+    private LinkedList<GeneralProduct> loadGeneralProduct(Integer branch_id, Integer category_id){
         LinkedList<GeneralProduct> generalProducts = new LinkedList<>();
         try {
             List<GeneralProductDTO> generalProductDTOS = general_product_dao.dao.queryBuilder().where().eq("branch_id",branch_id).and().eq("category_id",category_id).query();
             for(GeneralProductDTO dto:generalProductDTOS){
                 GeneralProduct generalProduct= general_product_dao.find(dto.getGPID(),category_id,branch_id);
-                generalProduct.setCatalog_products(loadCatalogProducts());
-                generalProduct.setProducts();
+                generalProduct.setCatalog_products(loadCatalogProducts(generalProduct.getGpID(),generalProduct.getBranch_id()));
+                generalProduct.setProducts(loadSpecificProducts(generalProduct.getGpID(),generalProduct.getBranch_id()));
+                generalProducts.add(generalProduct);
 
             }
         } catch (SQLException throwables) {
@@ -143,7 +143,50 @@ public class Mapper {
         return generalProducts;
     }
 
+    private LinkedList<SpecificProduct> loadSpecificProducts(Integer gpID, Integer branch_id) {
+        LinkedList<SpecificProduct> specificProducts = new LinkedList<>();
+        try {
+            List<SpecificProductDTO> DTos  = specific_product_dao.dao.queryBuilder().where().eq("GPID",gpID).and().eq("branch_id",branch_id).query();
+            for(SpecificProductDTO sp:DTos){
+                specificProducts.add(specific_product_dao.find(sp.getId(),branch_id));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return specificProducts;
+    }
 
+    private LinkedList<CatalogProduct> loadCatalogProducts(Integer gpID, Integer branch_id) {
+        LinkedList<CatalogProduct> catalogProducts = new LinkedList<>();
+        try {
+            List<catalog_product_in_general_productDTO> binding  = catalog_product_dao.catalog_product_in_general_products_dao.queryBuilder().where().eq("GPID",gpID).and().eq("branch_id",branch_id).query();
+            for(catalog_product_in_general_productDTO cpg:binding){
+                catalogProducts.add(catalog_product_dao.find(cpg.getCatalogID(),branch_id));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return catalogProducts;
+    }
+    //endregion
+
+    public LinkedList<Sale> loadSales(Integer branch_id){
+        LinkedList<Sale> sales = new LinkedList<>();
+        try {
+            List<SaleDTO> saleDTOS = sale_dao.dao.queryBuilder().where().eq("branch_id",branch_id).query();
+            for(SaleDTO saleDTO:saleDTOS){
+                sales.add(sale_dao.find(saleDTO.getSale_id(),branch_id));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return sales;
+    }
+
+    public LinkedList<Order> loadOrders(Integer branch_id){
+        LinkedList<Order> orders = new LinkedList<>();
+        //TODO: here
+    }
 
 
     //region CRUD section

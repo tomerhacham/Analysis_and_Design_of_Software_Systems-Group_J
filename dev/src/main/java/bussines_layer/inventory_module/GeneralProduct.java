@@ -94,10 +94,6 @@ public class GeneralProduct {
         return category_id;
     }
 
-    public Integer getBranchId() {
-        return branchId;
-    }
-
     public void setRetailPrice(Float retail_price) {
         this.retail_price = retail_price;
     }

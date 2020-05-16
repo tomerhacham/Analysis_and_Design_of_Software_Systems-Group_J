@@ -20,8 +20,8 @@ import java.util.HashMap;
 
 public class CatalogProductDAO {
     HashMap<Integer, CatalogProduct> identityMap; //assuming that all the object are relevant for the currently active branch in the business layer
-    Dao<CatalogProductDTO,Void>dao;
-    Dao<catalog_product_in_general_productDTO,Void> catalog_product_in_general_products_dao;
+    public Dao<CatalogProductDTO,Void>dao;
+    public Dao<catalog_product_in_general_productDTO,Void> catalog_product_in_general_products_dao;
 
     //Constructor
 
