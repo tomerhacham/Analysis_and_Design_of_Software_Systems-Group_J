@@ -90,21 +90,11 @@ public class Branch {
     //endregion
 
     //region Reports
-    public Result makeReportByGeneralProduct(Integer gpID, String type){
-        Result<Report> reportResult = inventory.makeReportByCategory(gpID,type);
-        if (!reportResult.isOK()) {return reportResult;}
-        if (type.equals("outofstock")){
-            return createOutOfStockOrder(reportResult.getData());
-        }
-        return inventory.makeReportByGeneralProduct(gpID, type);
+    public Result<Report> makeReportByGeneralProduct(Integer gpID, String type){
+        return inventory.makeReportByGeneralProduct(gpID,type);
     }
-    public Result makeReportByCategory(Integer category_id, String type){
-        Result<Report> reportResult = inventory.makeReportByCategory(category_id,type);
-        if (!reportResult.isOK()) {return reportResult;}
-        if (type.equals("outofstock")){
-            return createOutOfStockOrder(reportResult.getData());
-        }
-        return inventory.makeReportByCategory(category_id, type);
+    public Result<Report> makeReportByCategory(Integer category_id, String type){
+        return inventory.makeReportByCategory(category_id,type);
     }
     //endregion
 
@@ -152,12 +142,13 @@ public class Branch {
     public Result removeContract(SupplierCard supplier){
         return supplierModule.removeContract(supplier);
     }
-    public Result addProductToContract(Integer supplierID, Integer catalogID, Integer gpID, Float supplier_price, Integer supplier_id, String supplier_category , String name){
+
+    public Result addProductToContract(Integer supplierID, Integer catalogID, Integer gpID, Float supplier_price, String supplier_category){
         GeneralProduct gp = searchGeneralProductByGpID(gpID).getData();
         if (gp == null){
             return new Result<>(false, null, String.format("General Product with ID %d does not exist", gpID));
         }
-        Result<CatalogProduct> res = gp.addCatalogProduct(catalogID, gpID, supplier_price, supplier_id, supplier_category, name);
+        Result<CatalogProduct> res = gp.addCatalogProduct(catalogID, gpID, supplier_price, supplierID, supplier_category, gp.getName());
         return supplierModule.addProductToContract(supplierID, res.getData());
     }
     public Result removeProductFromContract(Integer supplierID, Integer gpID){
@@ -204,13 +195,14 @@ public class Branch {
 
     public Result acceptOrder (Integer orderID){
         Result<HashMap<CatalogProduct, Integer>> productsResult = supplierModule.getProductsToAcceptOrder(orderID);
-        if (!productsResult.isOK()) {return productsResult;}
+        if (!productsResult.isOK()) {
+            return productsResult;
+        }
         HashMap<CatalogProduct, Integer> products = productsResult.getData();
-
         return inventory.updateInventory(products);
     }
 
-    public Result createOutOfStockOrder(Report report){
+    public Result<String> createOutOfStockOrder(Report report){
         return supplierModule.createOutOfStockOrder(report);
     }
 

@@ -37,7 +37,7 @@ public class SupplierModule {
 
     // static method to create instance of Singleton class
     public static SupplierModule getInstance(Integer branchId){
-       if (instance == null)
+        if (instance == null)
             instance = new SupplierModule(branchId);
 
         return instance;
@@ -47,77 +47,77 @@ public class SupplierModule {
 
     //region Contract
 
-        public Result addContract(SupplierCard supplier , LinkedList<String> catagories){
-            return contractController.addContract(supplier, catagories);
-        }
+    public Result addContract(SupplierCard supplier , LinkedList<String> catagories){
+        return contractController.addContract(supplier, catagories);
+    }
 
-        public Result removeContract(SupplierCard supplier){
+    public Result removeContract(SupplierCard supplier){
 
-            //before removing this suppliers contract from the branch , check first if there are any periodic orders with this suppliers id
-            for (Order order : ordersController.getAllOrders()) {
-                if((order.getType()== OrderType.PeriodicOrder) && (order.getSupplierID() == supplier.getId())){
-                    ordersController.removePeriodicOrder(order.getOrderID());
-                }
+        //before removing this suppliers contract from the branch , check first if there are any periodic orders with this suppliers id
+        for (Order order : ordersController.getAllOrders()) {
+            if((order.getType()== OrderType.PeriodicOrder) && (order.getSupplierID() == supplier.getId())){
+                ordersController.removePeriodicOrder(order.getOrderID());
             }
-            return contractController.removeContract(supplier);
         }
+        return contractController.removeContract(supplier);
+    }
 
-        public Result addProductToContract(Integer supplierID, CatalogProduct product){
-            return contractController.addProductToContract(supplierID, product);
-        }
+    public Result addProductToContract(Integer supplierID, CatalogProduct product){
+        return contractController.addProductToContract(supplierID, product);
+    }
 
-        public Result removeProductFromContract(Integer supplierID, CatalogProduct product){
-            return contractController.removeProductFromContract(supplierID, product);
-        }
+    public Result removeProductFromContract(Integer supplierID, CatalogProduct product){
+        return contractController.removeProductFromContract(supplierID, product);
+    }
 
-        public Result addCategory (Integer supplierID, String category){
-            return contractController.addCategory(supplierID, category);
-        }
+    public Result addCategory (Integer supplierID, String category){
+        return contractController.addCategory(supplierID, category);
+    }
 
-        public Result removeCategory (Integer supplierID, String category){
-            return contractController.removeCategory(supplierID, category);
-        }
+    public Result removeCategory (Integer supplierID, String category){
+        return contractController.removeCategory(supplierID, category);
+    }
 
 
     //endregion
 
     //region CostEngineering
 
-        public Result addProductToCostEng(Integer supid, Integer catalogid, Integer minQuantity, Float price) {
-            return contractController.addProductToCostEng(supid , catalogid , minQuantity , price);
-        }
+    public Result addProductToCostEng(Integer supid, Integer catalogid, Integer minQuantity, Float price) {
+        return contractController.addProductToCostEng(supid , catalogid , minQuantity , price);
+    }
 
-        public Result removeProductCostEng(Integer supid, Integer catalogid2delete) {
-            return contractController.removeProductFromCostEng(supid , catalogid2delete);
-        }
+    public Result removeProductCostEng(Integer supid, Integer catalogid2delete) {
+        return contractController.removeProductFromCostEng(supid , catalogid2delete);
+    }
 
-        public Result updateMinQuantity(Integer supid, Integer catalogid, Integer minQuantity) {
-            return contractController.updateMinQuantity(supid , catalogid , minQuantity);
-        }
+    public Result updateMinQuantity(Integer supid, Integer catalogid, Integer minQuantity) {
+        return contractController.updateMinQuantity(supid , catalogid , minQuantity);
+    }
 
-        public Result updatePriceAfterSale(Integer supid, Integer catalogid, Float price) {
-            return contractController.updatePriceAfterSale(supid , catalogid , price);
-        }
+    public Result updatePriceAfterSale(Integer supid, Integer catalogid, Float price) {
+        return contractController.updatePriceAfterSale(supid , catalogid , price);
+    }
 
-        public Result<LinkedList<CatalogProduct>> getAllSupplierProducts(Integer supId) {
-            return contractController.getAllSupplierProducts(supId);
-        }
+    public Result<LinkedList<CatalogProduct>> getAllSupplierProducts(Integer supId) {
+        return contractController.getAllSupplierProducts(supId);
+    }
 
-        public Result addCostEng(Integer supid) {
-            return contractController.addCostEngineering(supid);
-        }
+    public Result addCostEng(Integer supid) {
+        return contractController.addCostEngineering(supid);
+    }
 
-        public Result removeCostEng(Integer supid) {
-            return contractController.removeCostEngineering(supid);
-        }
+    public Result removeCostEng(Integer supid) {
+        return contractController.removeCostEngineering(supid);
+    }
     //endregion
 
     //endregion
 
     //region Order Controller
 
-    public Result issueOrder (Order order){
-          return ordersController.issueOrder(order);
+    public Result<String> issueOrder (Order order){
+        return ordersController.issueOrder(order);
     }
 
     public Result<HashMap<CatalogProduct, Integer>> getProductsToAcceptOrder(Integer orderID){
@@ -134,8 +134,8 @@ public class SupplierModule {
 
     //region OutOfStockOrder
 
-    public Result createOutOfStockOrder(Report report){
-
+    public Result<String> createOutOfStockOrder(Report report){
+        String all_orders = "";
         //HashMap<SupplierCard , LinkedList<CatalogProduct , Price>>
         HashMap<SupplierCard , LinkedList<Pair<CatalogProduct , Float>>> productsForEachSupplier = new HashMap<>();
 
@@ -175,9 +175,9 @@ public class SupplierModule {
 
             Result<Order> resultOrder =ordersController.getOrder(orderid);
             if (!resultOrder.isOK()) { return new Result<>(false, null, String.format("Order %d does not exist", orderid));}
-            issueOrder(resultOrder.getData());
+            all_orders = all_orders.concat(String.format("%s\n---------------------------------------", issueOrder(resultOrder.getData()).getData()));
         }
-        return new Result<>(true, report, String.format("All orders had been generated from the report successfully: %s", report));
+        return new Result<>(true, all_orders, String.format("All orders had been generated from the report successfully: %s", report));
     }
 
     //endregion

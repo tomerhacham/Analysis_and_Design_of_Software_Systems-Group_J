@@ -149,13 +149,13 @@ public class Order {
     }
 
     public Result<String> display() {
-        String toDisplay = "Order Details - Type " + type + "order";
-        toDisplay = toDisplay + "Supplier name : " + supplier.getSupplierName() + '\t'+ "Address : " + supplier.getAddress() + '\t' + "Order ID : " + orderID;
-        toDisplay = toDisplay + "Supplier ID : "+'\t'+supplier.getId() +'\t'+ "IssuedDate : "+ issuedDate + '\t' +"Phone number : "+ supplier.getPhoneNumber()+ '\n';
-        toDisplay = toDisplay+ "Product catalogID"+'\t'+'\t'+"Product name"+'\t'+'\t'+ "Quantity" + '\t'+'\t' + "Origin price"+ '\t'+'\t' + "Final price"+'\n';
+        String toDisplay = "Order Details - Type " + type + "\n";
+        toDisplay = toDisplay + "Supplier name: " + supplier.getSupplierName() + '\t'+ "Address: " + supplier.getAddress() + '\t' + "Order ID: " + orderID;
+        toDisplay = toDisplay + "\tSupplier ID: "+'\t'+supplier.getId() +'\t'+ "IssuedDate: "+ issuedDate + '\t' +"Phone number : "+ supplier.getPhoneNumber()+ '\n';
+        toDisplay = toDisplay+ "CatalogID"+"\t\t"+"Name"+"\t\t\t\t\t\t\t"+ "Quantity" + "\t\t" + "Origin price"+ "\t\t" + "Final price"+'\n';
 
         for (CatalogProduct p : productsAndQuantity.keySet()){
-            toDisplay = toDisplay+ p.getCatalogID() +'\t'+'\t'+ p.getName() +'\t'+'\t'+ productsAndQuantity.get(p).toString() +'\t' +'\t'+ p.getSupplierPrice()+'\t' +'\t'+ this.productsAndPrice.get(p).toString() +'\n';
+            toDisplay = toDisplay+ p.getCatalogID() +"\t\t\t\t"+ p.getName() +"\t\t"+ productsAndQuantity.get(p).toString() +"\t\t"+ p.getSupplierPrice()+'\t' +'\t'+ this.productsAndPrice.get(p).toString() +'\n';
         }
 
         if (productsAndQuantity.isEmpty()){
@@ -163,13 +163,13 @@ public class Order {
             toDisplay = toDisplay +"No Products In This Order\n";
         }
         else{
-            toDisplay = toDisplay + "Order Total Amount : " + getTotalAmount().toString() +'\n'+"Do Not Forget To Send The Order To The supplier !\n" ;
+            toDisplay = toDisplay.concat(String.format("Order Total Amount: %.02f\nDo Not Forget To Send The Order To The supplier !\n", getTotalAmount().getData()));
         }
         return new Result<>(true, toDisplay, String.format(" The Order Is Ready And Has Been Sent Back To The Employee: %s", toDisplay));
     }
 
     public Result<Float> getTotalAmount (){
-        Float total = new Float(0);
+        Float total = (float) 0;
         int quantity;
         Float price;
 
@@ -178,7 +178,7 @@ public class Order {
             price = productsAndPrice.get(cp);
             total = total + (price * quantity);
         }
-        return new Result<>(true, total, String.format(" The orders total amount is : %d", total));
+        return new Result<>(true, total, String.format(" The orders total amount is: %f", total));
     }
 
 

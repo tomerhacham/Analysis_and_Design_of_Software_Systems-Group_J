@@ -51,7 +51,7 @@ public class SupplierController {
      * @return
      */
     public Result createSupplierCard(String SupplierName , String Address , String Email , String PhoneNumber ,
-                                   Integer id ,String BankAccountNum , String Payment , LinkedList<String> ContactsName, String typeString){
+                                     Integer id ,String BankAccountNum , String Payment , LinkedList<String> ContactsName, String typeString){
         supplierType type = convertStringToType(typeString);
         if (type == null){
             return new Result<>(false,id, String.format("Type: %s of supplier invalid",typeString));
@@ -326,6 +326,15 @@ public class SupplierController {
             return null;
         }
         return type;
+    }
+
+    @Override
+    public String toString(){
+        String toReturn = "Suppliers:\n";
+        for (SupplierCard supplier : suppliers.values()){
+            toReturn=toReturn.concat(String.format("ID: %d\tName: %s\n", supplier.getId(),supplier.getSupplierName()));
+        }
+        return toReturn;
     }
 
     //endregion

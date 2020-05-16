@@ -27,14 +27,18 @@ public class Inventory {
     //region Methods
 
     public Result updateInventory(HashMap<CatalogProduct, Integer> product_received){
-        String msg="";
+        String error_msg="";
         for (CatalogProduct catalogProduct: product_received.keySet()) {
             GeneralProduct generalProduct = productController.searchGeneralProductByGpID(catalogProduct.getGpID());
             Date expiration_date = simulateExpirationDate();
             Result res = addSpecificProduct(generalProduct.getGpID(),expiration_date,product_received.get(catalogProduct));
-            msg=msg.concat(res.getMessage().concat("\n"));
+            error_msg=error_msg.concat(res.getMessage().concat("\n"));
+            if (!res.isOK()){
+                return new Result<>(false, null, error_msg);
+            }
         }
-        return new Result<>(true,product_received.keySet(), msg);
+        String success = String.format("Order accepted. %d general products quantities were successfully updated in inventory", product_received.keySet().size());
+        return new Result<>(true,product_received.keySet(), success);
 
     }
 
@@ -54,11 +58,11 @@ public class Inventory {
     //region General Product Management
     public Result addGeneralProduct(Integer category_id, String manufacture, String name, Float supplier_price, Float retail_price,
                                     Integer min_quantity, Integer catalogID, Integer gpID, Integer supplier_id, String supplier_category){
-    Category category = categoryController.searchCategorybyId(category_id);
-    Result result;
+        Category category = categoryController.searchCategorybyId(category_id);
+        Result result;
         if (category!=null){
             result= productController.addGeneralProduct(category,manufacture, name, supplier_price, retail_price,
-                        min_quantity, catalogID, gpID, supplier_id, supplier_category);
+                    min_quantity, catalogID, gpID, supplier_id, supplier_category);
         }
         else{
             result=new Result<>(false,category_id,"Could not find category");
@@ -126,6 +130,7 @@ public class Inventory {
         dummy_list.add(generalProduct);
         return reportController.makeReport(dummy_list, convertStringToReportType(type));
     }
+
     public Result<Report> makeReportByCategory(Integer category_id, String type){
         Category category;
         if(category_id==0){
@@ -134,8 +139,17 @@ public class Inventory {
         else{
             category = categoryController.searchCategorybyId(category_id);
         }
-        List general_products = category.getAllGeneralProduct();
-        return reportController.makeReport(general_products, convertStringToReportType(type));
+        List<GeneralProduct> all_general_products = category.getAllGeneralProduct();
+        if (type.equals("outofstock")){
+            List<GeneralProduct> toReport = new LinkedList<>();
+            for (GeneralProduct gp : all_general_products){
+                if (gp.getQuantity() < gp.getMinQuantity()){
+                    toReport.add(gp);
+                }
+            }
+            return reportController.makeReport(toReport, convertStringToReportType(type));
+        }
+        return reportController.makeReport(all_general_products, convertStringToReportType(type));
     }
     private ReportType convertStringToReportType(String stype){
         switch(stype){

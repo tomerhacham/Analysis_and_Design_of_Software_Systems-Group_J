@@ -5,6 +5,7 @@ import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.inventory_module.GeneralProduct;
 import data_access_layer.DTO.ContractDTO;
 
+
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -97,7 +98,7 @@ public class Contract {
             result=new Result(true, category, String.format("Category %s has been added to contract ID:%d", category,contractID));
         }
         return result;
-        }
+    }
 
     /**
      * removes category from the contract
@@ -148,18 +149,18 @@ public class Contract {
      */
     public Result<LinkedList<CatalogProduct>> getProducts() {
         Result<LinkedList<CatalogProduct>> result;
-            if (products.isEmpty()){
-                result = new Result<>(false,null, String.format("There is no catalog product under contract %d", this.contractID));
-            }
-            else {
-                LinkedList<CatalogProduct> listP = new LinkedList<>();
-                for (Integer i : products.keySet()) {
-                    listP.add(products.get(i));
-                }
-                result=new Result<>(true, listP, String.format("List of all the catalog product under contract ID: %d", this.contractID));
-            }
-            return result;
+        if (products.isEmpty()){
+            result = new Result<>(false,null, String.format("There is no catalog product under contract %d", this.contractID));
         }
+        else {
+            LinkedList<CatalogProduct> listP = new LinkedList<>();
+            for (Integer i : products.keySet()) {
+                listP.add(products.get(i));
+            }
+            result=new Result<>(true, listP, String.format("List of all the catalog product under contract ID: %d", this.contractID));
+        }
+        return result;
+    }
 
     /**
      * set all catalog product under this contract
@@ -178,22 +179,22 @@ public class Contract {
      */
     public Result addProduct(CatalogProduct catalogProduct){
         Result result;
-            // first check if the supplier can supply this category (check if the category is in the category list)
-            boolean categoryInList = isCategoryExist(catalogProduct.getSupplierCategory());
-            if (categoryInList){
-                if (products.containsKey(catalogProduct.getGpID())){
-                    result=new Result<>(false, catalogProduct, String.format("Catalog product already under contract ID:%d", contractID));
-                }
-                else{
-                    products.put(catalogProduct.getGpID() , catalogProduct);
-                    result=new Result<>(true,catalogProduct, String.format("%s has been added to contract ID:%d", catalogProduct,contractID));
-                }
+        // first check if the supplier can supply this category (check if the category is in the category list)
+        boolean categoryInList = isCategoryExist(catalogProduct.getSupplierCategory());
+        if (categoryInList){
+            if (products.containsKey(catalogProduct.getGpID())){
+                result=new Result<>(false, null, String.format("Catalog product already under contract ID:%d", contractID));
             }
             else{
-                result=new Result<>(false,catalogProduct, String.format("The Category Of %s Is Not In The Category List under contract ID:%d", catalogProduct,contractID));
+                products.put(catalogProduct.getGpID() , catalogProduct);
+                result=new Result<>(true,catalogProduct, String.format("%s has been added to contract ID:%d", catalogProduct,contractID));
             }
-            return result;
         }
+        else{
+            result=new Result<>(false,null, String.format("The Category Of %s Is Not In The Category List under contract ID: %d", catalogProduct,contractID));
+        }
+        return result;
+    }
 
     /**
      * remove catalog product from the product under this contracr
@@ -203,14 +204,14 @@ public class Contract {
     public Result removeProduct(CatalogProduct catalogProduct){
         Result result;
         if (!products.containsKey(catalogProduct.getGpID())){
-            result=new Result(false,catalogProduct, String.format("Could not find %s under contract ID:%d", catalogProduct,contractID));
+            result=new Result<>(false,catalogProduct, String.format("Could not find %s under contract ID:%d", catalogProduct,contractID));
         }
         else {
             products.remove(catalogProduct.getGpID()); // remove product
-            result=new Result(true, catalogProduct, String.format("%s has been remove from contract ID:%d", catalogProduct,contractID));
+            result=new Result<>(true, catalogProduct, String.format("%s has been remove from contract ID:%d", catalogProduct,contractID));
         }
         return result;
-        }
+    }
 
     /**
      *checks if the product is under this contract
@@ -317,8 +318,8 @@ public class Contract {
      * @return
      */
     public CostEngineering getCostEngineering() {
-            return costEngineering;
-        }
+        return costEngineering;
+    }
 
     /**
      * update min quantity of product in cost engineering

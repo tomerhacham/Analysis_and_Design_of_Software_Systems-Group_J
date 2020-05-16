@@ -138,7 +138,7 @@ public class BranchController {
                                     Integer min_quantity, Integer catalogID, Integer gpID, Integer supplier_id, String supplier_category){
         return currBranch.addGeneralProduct(category_id, manufacture, name, supplier_price, retail_price, min_quantity, catalogID, gpID, supplier_id, supplier_category);
     }
-//    public Result removeGeneralProduct(Integer category_id, Integer gpID) {
+    //    public Result removeGeneralProduct(Integer category_id, Integer gpID) {
 //        return currBranch.removeGeneralProduct(category_id, gpID);
 //    }
     public Result editGeneralProductName(Integer gpID, String new_name){
@@ -175,10 +175,10 @@ public class BranchController {
     //endregion
 
     //region Reports
-    public Result makeReportByGeneralProduct(Integer gpID, String type){
+    public Result<Report> makeReportByGeneralProduct(Integer gpID, String type){
         return currBranch.makeReportByGeneralProduct(gpID, type);
     }
-    public Result makeReportByCategory(Integer category_id, String type){
+    public Result<Report> makeReportByCategory(Integer category_id, String type){
         return currBranch.makeReportByCategory(category_id, type);
     }
     //endregion
@@ -214,6 +214,9 @@ public class BranchController {
     public String mapAllSales(){
         return currBranch.mapAllSales();
     }
+    public String mapAllSuppliers() {
+        return supplierController.toString();
+    }
     //endregion
 
     //endregion
@@ -233,8 +236,8 @@ public class BranchController {
         }
         return currBranch.removeContract(result.getData());
     }
-    public Result addProductToContract(Integer supplierID, Integer catalogID, Integer gpID, Float supplier_price, Integer supplier_id, String supplier_category , String name){
-        return currBranch.addProductToContract(supplierID, catalogID, gpID, supplier_price, supplier_id, supplier_category, name);
+    public Result addProductToContract(Integer supplierID, Integer catalogID, Integer gpID, Float supplier_price, String supplier_category){
+        return currBranch.addProductToContract(supplierID, catalogID, gpID, supplier_price, supplier_category);
     }
     public Result removeProductFromContract(Integer supplierID, Integer gpID){
         return currBranch.removeProductFromContract(supplierID, gpID);
@@ -279,6 +282,10 @@ public class BranchController {
 
     public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<Integer, Integer>> productsAndQuantity , Integer date){
         return currBranch.createPeriodicOrder(supplierID, productsAndQuantity,date);
+    }
+
+    public Result<String> createOutOfStockOrder(Report report){
+        return currBranch.createOutOfStockOrder(report);
     }
 
     public Result removePeriodicOrder(Integer orderId){
@@ -367,5 +374,6 @@ public class BranchController {
         }
         return toReturn;
     }
+
     //endregion
 }

@@ -137,7 +137,7 @@ public class SupplierCard {
 
 
     public Result deleteContactName(String contactName){
-    Result result;
+        Result result;
         int i = 0;
         boolean foundName = false;
         for (String cn:ContactsName) {

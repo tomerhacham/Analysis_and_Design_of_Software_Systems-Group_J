@@ -143,7 +143,7 @@ public class OrdersController {
     public Result<Integer> createOrder(SupplierCard supplier , OrderType type){
         orderidCounter++;
         orders.add(new Order(branch_id,orderidCounter  , supplier , type));
-        return new Result(true,orderidCounter, String.format("The new order id is  : %d" ,orderidCounter));
+        return new Result<>(true,orderidCounter, String.format("The new order id is  : %d" ,orderidCounter));
     }
 
     //endregion
@@ -196,9 +196,9 @@ public class OrdersController {
         }
 
         if(periodicOrdersToIsuue.size()>0){
-            return new Result(true,periodicOrdersToIsuue, String.format("All periodic orders with %d as their delivery day had been sent to order", day));
+            return new Result<>(true,periodicOrdersToIsuue, String.format("All periodic orders with %d as their delivery day had been sent to order", day));
         }
-        return new Result(false,null, String.format("There are no periodic orders with %d as their delivery day ",day));
+        return new Result<>(false,null, String.format("There are no periodic orders with %d as their delivery day ",day));
     }
 
     //endregion

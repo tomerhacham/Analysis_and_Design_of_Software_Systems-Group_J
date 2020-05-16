@@ -4,6 +4,7 @@ import bussines_layer.Branch;
 import bussines_layer.BranchController;
 import bussines_layer.Result;
 import bussines_layer.inventory_module.Category;
+import bussines_layer.inventory_module.Report;
 import bussines_layer.inventory_module.Sale;
 import javafx.util.Pair;
 
@@ -25,7 +26,8 @@ public class CLController {
 
     public static void displayMenu() {
         printLogo();
-        printInitializeMenu();
+        //printInitializeMenu();
+        initialize();
         while(true) {
             printSuperLiMenu();
             Integer option = getNextInt(sc);
@@ -141,7 +143,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 2) {
-            result = branchController.editBranchName(Integer.getInteger(param[0]), param[1]);
+            result = branchController.editBranchName(Integer.parseInt(param[0]), param[1]);
             System.out.println(result.getMessage());
         }
     }
@@ -153,7 +155,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 1) {
-            result = branchController.removeBranch(Integer.getInteger(param[0]));
+            result = branchController.removeBranch(Integer.parseInt(param[0]));
             System.out.println(result.getMessage());
         }
     }
@@ -291,7 +293,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 1) {
-            Integer supplierID = Integer.getInteger(param[0]);
+            Integer supplierID = Integer.parseInt(param[0]);
             String details= "Please enter list of contacts names to add: [Name1],[Name2],...\n";
             System.out.println(details);
             String[] contactsInput = getInputParserbyComma(sc);
@@ -310,7 +312,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 2) {
-            Integer supplierID = Integer.getInteger(param[0]);
+            Integer supplierID = Integer.parseInt(param[0]);
             result = branchController.DeleteContactName(supplierID,param[1]);
             System.out.println(result.getMessage());
         } else {
@@ -325,7 +327,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 2) {
-            Integer supplierID = Integer.getInteger(param[0]);
+            Integer supplierID = Integer.parseInt(param[0]);
             result = branchController.ChangeSupplierType(supplierID,param[1]);
             System.out.println(result.getMessage());
         } else {
@@ -340,7 +342,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 2) {
-            Integer supplierID = Integer.getInteger(param[0]);
+            Integer supplierID = Integer.parseInt(param[0]);
             result = branchController.ChangePayment(supplierID,param[1]);
             System.out.println(result.getMessage());
         } else {
@@ -355,7 +357,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 2) {
-            Integer supplierID = Integer.getInteger(param[0]);
+            Integer supplierID = Integer.parseInt(param[0]);
             result = branchController.ChangeBankAccount(supplierID,param[1]);
             System.out.println(result.getMessage());
         } else {
@@ -370,7 +372,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 2) {
-            Integer supplierID = Integer.getInteger(param[0]);
+            Integer supplierID = Integer.parseInt(param[0]);
             result = branchController.ChangePhoneNumber(supplierID,param[1]);
             System.out.println(result.getMessage());
         } else {
@@ -385,7 +387,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 2) {
-            Integer supplierID = Integer.getInteger(param[0]);
+            Integer supplierID = Integer.parseInt(param[0]);
             result = branchController.ChangeEmail(supplierID,param[1]);
             System.out.println(result.getMessage());
         } else {
@@ -400,7 +402,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 2) {
-            Integer supplierID = Integer.getInteger(param[0]);
+            Integer supplierID = Integer.parseInt(param[0]);
             result = branchController.changeAddress(supplierID,param[1]);
             System.out.println(result.getMessage());
         } else {
@@ -415,7 +417,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 2) {
-            Integer supplierID = Integer.getInteger(param[0]);
+            Integer supplierID = Integer.parseInt(param[0]);
             result = branchController.changeSupplierName(supplierID,param[1]);
             System.out.println(result.getMessage());
         } else {
@@ -434,7 +436,7 @@ public class CLController {
             System.out.println(details);
             String[] contactsInput = getInputParserbyComma(sc);
             LinkedList<String> contactsName = new LinkedList<>(Arrays.asList(contactsInput));
-            result = branchController.createSupplierCard(param[0],param[1],param[2],param[3],Integer.getInteger(param[4]),param[5],param[6],contactsName,param[7]);
+            result = branchController.createSupplierCard(param[0],param[1],param[2],param[3],Integer.parseInt(param[4]),param[5],param[6],contactsName,param[7]);
             System.out.println(result.getMessage());
         } else {
             System.out.println("Invalid number of parameters");
@@ -578,7 +580,7 @@ public class CLController {
                     System.out.println(details);
                     param = getInputParserbyComma(sc);
                     if(param.length==2) {
-                        result = branchController.editGeneralProductName(Integer.getInteger(param[0]), param[1]);
+                        result = branchController.editGeneralProductName(Integer.parseInt(param[0]), param[1]);
                         System.out.println(result.getMessage());
                     }
                     else{
@@ -590,7 +592,7 @@ public class CLController {
                     System.out.println(details);
                     param = getInputParserbyComma(sc);
                     if(param.length==3) {
-                        result = branchController.editGeneralProductSupplierPrice(Integer.getInteger(param[0]), Float.parseFloat(param[1]),Integer.getInteger(param[2]));
+                        result = branchController.editGeneralProductSupplierPrice(Integer.parseInt(param[0]), Float.parseFloat(param[1]),Integer.parseInt(param[2]));
                         System.out.println(result.getMessage());
                     }
                     else{
@@ -602,7 +604,7 @@ public class CLController {
                     System.out.println(details);
                     param=getInputParserbyComma(sc);
                     if(param.length==2) {
-                        result = branchController.editGeneralProductRetailPrice(Integer.getInteger(param[0]), Float.parseFloat(param[1]));
+                        result = branchController.editGeneralProductRetailPrice(Integer.parseInt(param[0]), Float.parseFloat(param[1]));
                         System.out.println(result.getMessage());
                     }
                     else{
@@ -614,7 +616,7 @@ public class CLController {
                     System.out.println(details);
                     param = getInputParserbyComma(sc);
                     if(param.length==2) {
-                        result=branchController.editGeneralProductQuantity(Integer.getInteger(param[0]), Integer.parseInt(param[1]));
+                        result=branchController.editGeneralProductQuantity(Integer.parseInt(param[0]), Integer.parseInt(param[1]));
                         System.out.println(result.getMessage());
                     }
                     else{
@@ -626,7 +628,7 @@ public class CLController {
                     System.out.println(details);
                     param = getInputParserbyComma(sc);
                     if(param.length==2) {
-                        result=branchController.editGeneralProductMinQuantity(Integer.getInteger(param[0]), Integer.parseInt(param[1]));
+                        result=branchController.editGeneralProductMinQuantity(Integer.parseInt(param[0]), Integer.parseInt(param[1]));
                         System.out.println(result.getMessage());
                     }
                     else{
@@ -653,7 +655,7 @@ public class CLController {
 //        if(param.length==3) {
 //            Date date =convertStringToDate(param[1]);
 //            if (date!=null){
-//                result = branchController.addSpecificProduct(Integer.getInteger(param[0]),date,Integer.parseInt(param[2]));
+//                result = branchController.addSpecificProduct(Integer.parseInt(param[0]),date,Integer.parseInt(param[2]));
 //                System.out.println(result.getMessage());
 //            }
 //            else{
@@ -869,7 +871,7 @@ public class CLController {
     }
 
     static private void printOutOfStockReportByCategoryMenu() {
-        Result result;
+        Result<Report> result;
         String menu = "Please enter the following details\n";
         menu=menu.concat("[CategoryID]\n");
         menu=menu.concat("for all categories type 'all'");
@@ -883,6 +885,16 @@ public class CLController {
                 result = branchController.makeReportByCategory(Integer.parseInt(param[0]), "outofstock");
             }
             System.out.println(result.getMessage());
+            if (result.isOK()){
+                System.out.println("Ordering out-of-stock delivery.");
+                Result<String> orders_res = branchController.createOutOfStockOrder(result.getData());
+                if(orders_res.isOK()){
+                    System.out.println(orders_res.getData());
+                } else {
+                    System.out.println(orders_res.getMessage());
+                }
+            }
+
         }
         else{
             System.out.println("Invalid number of parameters");
@@ -896,7 +908,7 @@ public class CLController {
         System.out.println(menu);
         String[] param=getInputParserbyComma(sc);
         if(param.length==1) {
-            result = branchController.makeReportByGeneralProduct(Integer.getInteger(param[0]), "outofstock");
+            result = branchController.makeReportByGeneralProduct(Integer.parseInt(param[0]), "outofstock");
             System.out.println(result.getMessage());
         }
         else{
@@ -944,7 +956,7 @@ public class CLController {
                 result = branchController.makeReportByCategory(0, "instock");
             }
             else{
-                result = branchController.makeReportByCategory(Integer.getInteger(param[0]), "instock");
+                result = branchController.makeReportByCategory(Integer.parseInt(param[0]), "instock");
             }
             System.out.println(result.getMessage());
         }
@@ -957,7 +969,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if(param.length==1) {
-            result = branchController.makeReportByGeneralProduct(Integer.getInteger(param[0]), "instock");
+            result = branchController.makeReportByGeneralProduct(Integer.parseInt(param[0]), "instock");
             System.out.println(result.getMessage());
         }
         else{
@@ -1005,7 +1017,7 @@ public class CLController {
                 result = branchController.makeReportByCategory(0, "dne");
             }
             else{
-                result = branchController.makeReportByCategory(Integer.getInteger(param[0]), "dne");
+                result = branchController.makeReportByCategory(Integer.parseInt(param[0]), "dne");
             }
             System.out.println(result.getMessage());
         }
@@ -1018,7 +1030,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if(param.length==1) {
-            result = branchController.makeReportByGeneralProduct(Integer.getInteger(param[0]), "dne");
+            result = branchController.makeReportByGeneralProduct(Integer.parseInt(param[0]), "dne");
             System.out.println(result.getMessage());
         }
         else{
@@ -1135,18 +1147,18 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if(param.length==2) {
-            result = branchController.addSaleByGeneralProduct(Integer.getInteger(param[0]),"fix",Float.parseFloat(param[1]));
+            result = branchController.addSaleByGeneralProduct(Integer.parseInt(param[0]),"fix",Float.parseFloat(param[1]));
             System.out.println(result.getMessage());
         }
         else if(param.length==3){
-            result = branchController.addSaleByGeneralProduct(Integer.getInteger(param[0]),"percentage",Float.parseFloat(param[1]));
+            result = branchController.addSaleByGeneralProduct(Integer.parseInt(param[0]),"percentage",Float.parseFloat(param[1]));
             System.out.println(result.getMessage());
         }
         else if(param.length==4){
             Date start_date=convertStringToDate(param[2]);
             Date end_date =convertStringToDate(param[3]);
             if(start_date!=null && end_date!=null){
-                result = branchController.addSaleByGeneralProduct(Integer.getInteger(param[0]),"fix",Float.parseFloat(param[1]),start_date,end_date);
+                result = branchController.addSaleByGeneralProduct(Integer.parseInt(param[0]),"fix",Float.parseFloat(param[1]),start_date,end_date);
                 System.out.println(result.getMessage());
             }
             else{
@@ -1157,7 +1169,7 @@ public class CLController {
             Date start_date=convertStringToDate(param[3]);
             Date end_date =convertStringToDate(param[4]);
             if(start_date!=null && end_date!=null && param[2].equals("%")){
-                result = branchController.addSaleByGeneralProduct(Integer.getInteger(param[0]),"percentage",Float.parseFloat(param[1]),start_date,end_date);
+                result = branchController.addSaleByGeneralProduct(Integer.parseInt(param[0]),"percentage",Float.parseFloat(param[1]),start_date,end_date);
                 System.out.println(result.getMessage());
             }
             else{
@@ -1299,8 +1311,8 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 3) {
-            Integer supplierID = Integer.getInteger(param[0]);
-            Integer catalogID = Integer.getInteger(param[1]);
+            Integer supplierID = Integer.parseInt(param[0]);
+            Integer catalogID = Integer.parseInt(param[1]);
             Float price = Float.parseFloat(param[2]);
             result = branchController.updatePriceAfterSale(supplierID,catalogID,price);
             System.out.println(result.getMessage());
@@ -1316,9 +1328,9 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 3) {
-            Integer supplierID = Integer.getInteger(param[0]);
-            Integer catalogID = Integer.getInteger(param[1]);
-            Integer minQuan = Integer.getInteger(param[2]);
+            Integer supplierID = Integer.parseInt(param[0]);
+            Integer catalogID = Integer.parseInt(param[1]);
+            Integer minQuan = Integer.parseInt(param[2]);
             result = branchController.updateMinQuantity(supplierID,catalogID,minQuan);
             System.out.println(result.getMessage());
         } else {
@@ -1333,8 +1345,8 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 2) {
-            Integer supplierID = Integer.getInteger(param[0]);
-            Integer catalogID = Integer.getInteger(param[1]);
+            Integer supplierID = Integer.parseInt(param[0]);
+            Integer catalogID = Integer.parseInt(param[1]);
             result = branchController.removeProductCostEng(supplierID,catalogID);
             System.out.println(result.getMessage());
         } else {
@@ -1349,9 +1361,9 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 4) {
-            Integer supplierID = Integer.getInteger(param[0]);
-            Integer catalogID = Integer.getInteger(param[1]);
-            Integer minQuan = Integer.getInteger(param[2]);
+            Integer supplierID = Integer.parseInt(param[0]);
+            Integer catalogID = Integer.parseInt(param[1]);
+            Integer minQuan = Integer.parseInt(param[2]);
             Float price = Float.parseFloat(param[3]);
             result = branchController.addProductToCostEng(supplierID,catalogID,minQuan,price);
             System.out.println(result.getMessage());
@@ -1367,7 +1379,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 1) {
-            Integer supplierID = Integer.getInteger(param[0]);
+            Integer supplierID = Integer.parseInt(param[0]);
             result = branchController.removeCostEng(supplierID);
             System.out.println(result.getMessage());
         } else {
@@ -1382,7 +1394,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 1) {
-            Integer supplierID = Integer.getInteger(param[0]);
+            Integer supplierID = Integer.parseInt(param[0]);
             result = branchController.addCostEng(supplierID);
             System.out.println(result.getMessage());
         } else {
@@ -1397,7 +1409,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 2) {
-            Integer supplierID = Integer.getInteger(param[0]);
+            Integer supplierID = Integer.parseInt(param[0]);
             result = branchController.removeCategory(supplierID, param[1]);
             System.out.println(result.getMessage());
         } else {
@@ -1412,7 +1424,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 2) {
-            Integer supplierID = Integer.getInteger(param[0]);
+            Integer supplierID = Integer.parseInt(param[0]);
             result = branchController.addCategory(supplierID,param[1]);
             System.out.println(result.getMessage());
         } else {
@@ -1427,8 +1439,8 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 2) {
-            Integer supplierID = Integer.getInteger(param[0]);
-            Integer gpID = Integer.getInteger(param[1]);
+            Integer supplierID = Integer.parseInt(param[0]);
+            Integer gpID = Integer.parseInt(param[1]);
             result = branchController.removeProductFromContract(supplierID,gpID);
             System.out.println(result.getMessage());
         } else {
@@ -1439,34 +1451,33 @@ public class CLController {
     private static void printAddProductToContract() {
         Result result;
         String menu = "Please enter the following details\n";
-        menu=menu.concat("[supplierID],[catalogID],[gpID],[supplier_price],[supplier_id],[supplier_category],[name]");
+        menu=menu.concat("[supplierID],[catalogID],[gpID],[supplier_price],[supplier_category]");
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
-        if (param.length == 7) {
-            Integer supID = Integer.getInteger(param[0]);
-            Integer catalogID = Integer.getInteger(param[1]);
-            Integer gpID = Integer.getInteger(param[2]);
+        if (param.length == 5) {
+            Integer supID = Integer.parseInt(param[0]);
+            Integer catalogID = Integer.parseInt(param[1]);
+            Integer gpID = Integer.parseInt(param[2]);
             Float sup_price = Float.parseFloat(param[3]);
-            Integer sup_id = Integer.getInteger(param[4]);
-            String sup_cat = param[5];
-            String name = param[6];
-            result = branchController.addProductToContract(supID,catalogID,gpID,sup_price,sup_id,sup_cat,name);
+            String sup_cat = param[4];
+            result = branchController.addProductToContract(supID,catalogID,gpID,sup_price,sup_cat);
             System.out.println(result.getMessage());
-            if (!result.isOK()){
-               menu="Enter the following details to create new General Product before adding to contract:\n";
-               menu=menu.concat("[category_id],[manufacture],[retail_price],[min_quantity]");
-               System.out.println(menu);
-               String[] addDetails = getInputParserbyComma(sc);
-               if (addDetails.length == 4){
-                   Integer category_id = Integer.getInteger(addDetails[0]);
-                   String manufacture = addDetails[1];
-                   Float ret_price = Float.parseFloat(addDetails[2]);
-                   Integer min_quan = Integer.getInteger(addDetails[3]);
-                   result = branchController.addGeneralProduct(category_id,manufacture,name,sup_price,ret_price,min_quan,catalogID,gpID,sup_id,sup_cat);
-                   System.out.println(result.getMessage());
-                   result = branchController.addProductToContract(supID,catalogID,gpID,sup_price,sup_id,sup_cat,name);
-                   System.out.println(result.getMessage());
-               }
+            if (!result.isOK() && result.getMessage().substring(0, 23).matches("General Product with ID")){
+                menu="Enter the following details to create new General Product before adding to contract:\n";
+                menu=menu.concat("[category_id],[manufacture],[retail_price],[min_quantity],[name]");
+                System.out.println(menu);
+                String[] addDetails = getInputParserbyComma(sc);
+                if (addDetails.length == 5){
+                    Integer category_id = Integer.parseInt(addDetails[0]);
+                    String manufacture = addDetails[1];
+                    Float ret_price = Float.parseFloat(addDetails[2]);
+                    Integer min_quan = Integer.parseInt(addDetails[3]);
+                    String name = addDetails[4];
+                    result = branchController.addGeneralProduct(category_id,manufacture,name,sup_price,ret_price,min_quan,catalogID,gpID,supID,sup_cat);
+                    System.out.println(result.getMessage());
+                    result = branchController.addProductToContract(supID,catalogID,gpID,sup_price,sup_cat);
+                    System.out.println(result.getMessage());
+                }
             }
         } else {
             System.out.println("Invalid numbers of parameters");
@@ -1480,7 +1491,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 1) {
-            Integer supplierID = Integer.getInteger(param[0]);
+            Integer supplierID = Integer.parseInt(param[0]);
             result = branchController.removeContract(supplierID);
             System.out.println(result.getMessage());
         } else {
@@ -1495,7 +1506,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 1) {
-            Integer supplierID = Integer.getInteger(param[0]);
+            Integer supplierID = Integer.parseInt(param[0]);
             String details= "Please enter list of categories names: [Category1],[Category2],...\n";
             System.out.println(details);
             String[] categoriesInput = getInputParserbyComma(sc);
@@ -1569,8 +1580,8 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 2) {
-            Integer orderID = Integer.getInteger(param[0]);
-            Integer supID = Integer.getInteger(param[1]);;
+            Integer orderID = Integer.parseInt(param[0]);
+            Integer supID = Integer.parseInt(param[1]);;
             result = branchController.updateSupplierToPeriodicOrder(orderID, supID);
             System.out.println(result.getMessage());
         } else {
@@ -1594,9 +1605,9 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 3) {
-            Integer orderID = Integer.getInteger(param[0]);
-            Integer gpID = Integer.getInteger(param[1]);
-            Integer newQuantity = Integer.getInteger(param[2]);
+            Integer orderID = Integer.parseInt(param[0]);
+            Integer gpID = Integer.parseInt(param[1]);
+            Integer newQuantity = Integer.parseInt(param[2]);
             result = branchController.updateProductQuantityInPeriodicOrder(orderID, gpID, newQuantity);
             System.out.println(result.getMessage());
         } else {
@@ -1611,8 +1622,8 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 2) {
-            Integer orderID = Integer.getInteger(param[0]);
-            Integer gpID = Integer.getInteger(param[1]);
+            Integer orderID = Integer.parseInt(param[0]);
+            Integer gpID = Integer.parseInt(param[1]);
             result = branchController.removeProductFromPeriodicOrder(orderID, gpID);
             System.out.println(result.getMessage());
         } else {
@@ -1627,14 +1638,14 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 1) {
-            Integer orderID = Integer.getInteger(param[0]);
+            Integer orderID = Integer.parseInt(param[0]);
             menu = "Please enter the following details\n";
             menu=menu.concat("[gpID,quantity]");
             System.out.println(menu);
             param = getInputParserbyComma(sc);
             if (param.length == 2) {
-                Integer gpID = Integer.getInteger(param[0]);
-                Integer quantity = Integer.getInteger(param[1]);
+                Integer gpID = Integer.parseInt(param[0]);
+                Integer quantity = Integer.parseInt(param[1]);
                 result = branchController.addProductToPeriodicOrder(orderID,gpID,quantity);
                 System.out.println(result.getMessage());
             } else {
@@ -1652,7 +1663,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 1) {
-            Integer orderID = Integer.getInteger(param[0]);
+            Integer orderID = Integer.parseInt(param[0]);
             result = branchController.removePeriodicOrder(orderID);
             System.out.println(result);
         } else {
@@ -1667,11 +1678,11 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 1) {
-            Integer supplierID = Integer.getInteger(param[0]);
+            Integer supplierID = Integer.parseInt(param[0]);
             menu = "Order will be made once a week. Choose delivery day (1- Sunday, 6- Friday):\n";
             param = getInputParserbyComma(sc);
             if (param.length == 1) {
-                Integer day = Integer.getInteger(param[0]);
+                Integer day = Integer.parseInt(param[0]);
                 Result res = branchController.createPeriodicOrder(supplierID, products, day);
                 System.out.println(res.getMessage());
             } else {
@@ -1692,8 +1703,8 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 2){
-            Integer gpID = Integer.getInteger(param[0]);
-            Integer quantity = Integer.getInteger(param[1]);
+            Integer gpID = Integer.parseInt(param[0]);
+            Integer quantity = Integer.parseInt(param[1]);
             products.add(new Pair<>(gpID, quantity));
             menu="Add more products to order?";
             menu=menu.concat("1) Yes\n");
@@ -1720,7 +1731,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 1) {
-            Integer orderID = Integer.getInteger(param[0]);
+            Integer orderID = Integer.parseInt(param[0]);
             result = branchController.acceptOrder(orderID);
             System.out.println(result.getMessage());
         } else{
@@ -1737,8 +1748,9 @@ public class CLController {
         menu=menu.concat("2) Print all general products\n");
         menu=menu.concat("3) Print all sales\n");
         menu=menu.concat("4) Print all branches\n");
-        menu=menu.concat("5) Return\n");
-        menu=menu.concat("6) exit\n\n");
+        menu=menu.concat("5) Print all suppliers\n");
+        menu=menu.concat("6) Return\n");
+        menu=menu.concat("7) exit\n\n");
         while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -1755,9 +1767,12 @@ public class CLController {
                 case 4:
                     printAllBranches();
                     break;
-                case (5):
+                case 5:
+                    printAllSuppliers();
+                    break;
+                case 6:
                     return;
-                case (6):
+                case 7:
                     Exit();
                 default:
                     System.out.println("Option not valid, please retype");
@@ -1776,6 +1791,9 @@ public class CLController {
     }
     private static void printAllBranches(){
         System.out.println(branchController.toString());
+    }
+    private static void printAllSuppliers() {
+        System.out.println(branchController.mapAllSuppliers());
     }
 
     //endregion
@@ -1867,6 +1885,7 @@ public class CLController {
 
         LinkedList <String> categories = new LinkedList<>();
         categories.add("Hygiene");
+        categories.add("Meet");
 
         //create contract
         branchController.addContract(supplierID, categories);
@@ -1875,17 +1894,17 @@ public class CLController {
         branchController.addGeneralProduct(((Category)res_cat_30.getData()).getId(), "Niguvim",name, sup_price, 31.5f,  20,catalogID,gpID,supplierID,"Hygiene");
         branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),21);
         //Add Product to contract
-        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Hygiene");
 
         name = "Crema shampoo for men 500ml";
         sup_price = 15.99f;
-        catalogID = 10;
+        catalogID = 9;
         gpID = 101;
         //Create GP
         branchController.addGeneralProduct(((Category)res_cat_500ml.getData()).getId(), "Crema", name, sup_price, 25.99f, 5,catalogID,gpID,supplierID,"Hygiene");
         branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),6);
         //Add Product to contract
-        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Hygiene");
 
         name = "Dove shampoo for women 500ml";
         sup_price = 15.99f;
@@ -1895,7 +1914,7 @@ public class CLController {
         branchController.addGeneralProduct(((Category)res_cat_500ml.getData()).getId(), "Dove", name, sup_price, 25.99f, 5,  5,gpID,supplierID,"Hygiene");
         branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),6);
         //Add Product to contract
-        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Hygiene");
 
         name = "Crema shampoo for men 750ml";
         sup_price = 22.0f;
@@ -1905,17 +1924,17 @@ public class CLController {
         branchController.addGeneralProduct(((Category)res_cat_500ml.getData()).getId(), "Crema", name, sup_price, 32.99f, 5,catalogID,gpID,supplierID,"Hygiene");
         branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),6);
         //Add Product to contract
-        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Hygiene");
 
         String manufacture = "Moosh";
         gpID = 104;
         name = "Moosh packed ground meet 1/2kg";
-        sup_price = 35.0f;
+        sup_price = 30.0f;
         Float ret_price = 40.0f;
         catalogID = 13;
         branchController.addGeneralProduct(((Category)meet_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meet");
-        branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),6);
-        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
+        branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),4);
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Meet");
 
 //-------------------------------------------
 
@@ -1936,13 +1955,13 @@ public class CLController {
 
         //Create supplier niceToMeet
         branchController.createSupplierCard("niceToMeet" , "mesada 37 beer-sheva" , "niceToMeat@gmail.com" , "087594456" ,
-                supplierID, "09754432", "CreditCard" , contact2, "byOrder");
+                supplierID, "09754432", "CreditCard" , contact2, "by order");
 
         //create contract
         branchController.addContract(supplierID, categories2);
 
         ////branchController.addGeneralProduct(((Category)meet_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meet");
-        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Meet");
 
         manufacture = "Moosh";
         gpID = 201;
@@ -1953,7 +1972,7 @@ public class CLController {
 
         branchController.addGeneralProduct(((Category)meet_one_kg.getData()).getId(), manufacture,name,sup_price,ret_price,3,catalogID,gpID,supplierID,"Meet");
 
-        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Meet");
 
 
         manufacture = "Lakerda";
@@ -1963,7 +1982,7 @@ public class CLController {
         ret_price = 13.0f;
         catalogID = 21;
         branchController.addGeneralProduct(((Category)fish_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meet");
-        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Fish");
 
 
         manufacture = "Merluza";
@@ -1973,7 +1992,7 @@ public class CLController {
         ret_price = 12.0f;
         catalogID = 22;
         branchController.addGeneralProduct(((Category)fish_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,7,catalogID,gpID,supplierID,"Fish");
-        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Fish");
 
         manufacture = "Merluza";
         gpID = 204;
@@ -1982,7 +2001,7 @@ public class CLController {
         ret_price = 17.0f;
         catalogID = 23;
         branchController.addGeneralProduct(((Category)fish_one_kg.getData()).getId(), manufacture,name,sup_price,ret_price,10,catalogID,gpID,supplierID,"Fish");
-        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,supplierID,((Category)res_cat_hygiene.getData()).getName(),name);
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Fish");
 
 
 
