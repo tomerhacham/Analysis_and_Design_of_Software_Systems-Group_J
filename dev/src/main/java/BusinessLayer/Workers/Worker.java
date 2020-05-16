@@ -5,6 +5,7 @@ import InterfaceLayer.Workers.ModelWorker;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class Worker {
     private String name;
@@ -72,4 +73,13 @@ public class Worker {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Worker worker = (Worker) o;
+        return id.equals(worker.id);
+    }
+
 }
