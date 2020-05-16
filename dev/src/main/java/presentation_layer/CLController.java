@@ -44,9 +44,9 @@ public class CLController {
                     System.out.println(branchController.simulateNextDay(numOfDays).getMessage());
                     msg = msg.concat(String.format("New date: %s\n", BranchController.system_curr_date));
                     System.out.println(msg);
-
                 case 4:
                     Exit();
+                    return;
                 default:
                     System.out.println("Option not valid, please retype");
             }
@@ -1814,6 +1814,10 @@ public class CLController {
 
     //region initialize
     private static void initialize() {
+
+        // Open and switch to initial branch
+        Branch initialBranch = branchController.createNewBranch("Initial branch").getData();
+        branchController.switchBranch(initialBranch.getBranchId());
 
         //Add categories:
         //              Hygiene

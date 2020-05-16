@@ -78,7 +78,7 @@ public class BranchController {
     //endregion
 
     //region Branch
-    public Result createNewBranch(String name){
+    public Result<Branch> createNewBranch(String name){
         Branch toAdd = new Branch(getNextId(), name);
         branches.put(toAdd.getBranchId(), toAdd);
         return new Result<>(true, toAdd, String.format("New branch (ID: %d) created successfully", toAdd.getBranchId()));
