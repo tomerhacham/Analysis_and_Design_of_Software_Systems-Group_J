@@ -310,7 +310,7 @@ public class Mapper {
 
     public void deleteShiftDriver(String driverID, String shiftID) {
         try {
-            Shift_Driver_DAO.executeRaw("DELETE FROM Shift_Driver WHERE driverID=" + driverID + " AND ShiftID=" + shiftID);
+            Shift_Driver_DAO.executeRaw("DELETE FROM Shift_Driver WHERE driverID='" + driverID + "' AND ShiftID='" + shiftID + "'");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -906,13 +906,13 @@ public class Mapper {
             List<Truck_DTO> truck_dtos = truck_DAO.queryForAll();
             List<Truck> trucks = new ArrayList<>();
             for (Truck_DTO truck_dto:truck_dtos) {
-                if(truck_dto.getNet_weight()+Weight<truck_dto.getMax_weight())
+                if(truck_dto.getNet_weight()+ Weight < truck_dto.getMax_weight())
                 {
-                    if(partOfDay&&TruckNotInMorningShift(date,truck_dto.getId()))
+                    if(partOfDay && TruckNotInMorningShift(date,truck_dto.getId()))
                     {
                         trucks.add(makeTRUCK(truck_dto));
                     }
-                    else if(TruckNotInNightShift(date,truck_dto.getId()))
+                    else if(!partOfDay && TruckNotInNightShift(date,truck_dto.getId()))
                     {
                         trucks.add(makeTRUCK(truck_dto));
                     }

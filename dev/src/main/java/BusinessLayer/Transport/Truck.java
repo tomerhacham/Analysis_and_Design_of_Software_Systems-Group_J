@@ -1,5 +1,6 @@
 package BusinessLayer.Transport;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -103,14 +104,15 @@ public class Truck {
 
     public String toString()
     {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         String s = "id: "+id+ " license plate: "+license_plate+" model: "+model+" net weight: "+net_weight+" max weight: "+max_weight+" drivers license: "+drivers_license+"\n";
         if(morning_shifts.size()>0 || night_shifts.size()>0) {
             s = s + "\tunavailable shifts:\n";
             for (int i = 0; i < morning_shifts.size(); i++) {
-                s = s + "\t\t" + morning_shifts.get(i).toString() + " morning shift.\n";
+                s = s + "\t\t" + formatter.format(morning_shifts.get(i)) + " morning shift.\n";
             }
             for (int i = 0; i < night_shifts.size(); i++) {
-                s = s + "\t\t" + night_shifts.get(i).toString() + " night shift.\n";
+                s = s + "\t\t" + formatter.format(night_shifts.get(i)) + " night shift.\n";
             }
         }
         else {

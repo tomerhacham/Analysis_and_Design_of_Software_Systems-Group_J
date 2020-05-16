@@ -47,7 +47,7 @@ public class ProductFile {
         String s = "file id: "+fileID+" total weight: " + totalWeight +"\n\tproducts:\n";
         int count = 1;
         for (Product p :products.keySet()) {
-            s += "\t\t" + count + ". " + p.toString()+" quantity: " + products.get(p) +"\n";
+            s += "\t\t\t" + count + ". " + p.toString()+" quantity: " + products.get(p) +"\n";
             count ++;
         }
         return s;

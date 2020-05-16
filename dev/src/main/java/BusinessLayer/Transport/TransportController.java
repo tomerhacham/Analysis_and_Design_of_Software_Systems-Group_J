@@ -238,11 +238,12 @@ public class TransportController {
 
     //remove the date of the given transport to its truck and driver
     public void removeDatesFromTruck(int transportID) {
-        if(transports.containsKey(transportID))
+        Transport t = mapper.getTransport(transportID);
+        if(t != null)
         {
-            Date d =getTransportDate(transportID);
-            boolean shift=getTransportShift(transportID);
-            truckController.removeDate(d,shift, transports.get(transportID).getTruck().getId());
+            Date d = getTransportDate(transportID);
+            boolean shift = getTransportShift(transportID);
+            truckController.removeDate(d,shift, t.getTruck().getId());
         }
     }
 

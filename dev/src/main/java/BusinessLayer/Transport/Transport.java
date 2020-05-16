@@ -1,8 +1,6 @@
 package BusinessLayer.Transport;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,7 +32,9 @@ public class Transport {
         this.driverId =driverId;
         this.driverName=driverName;
         Source= source;
-        totalWeight=totalWeight;
+        TotalWeight=totalWeight;
+        DestFiles = new HashMap<>();
+        log =new ArrayList<>();
     }
     public int getID() { return ID;}
 
@@ -125,11 +125,10 @@ public class Transport {
     @Override
     public String toString() {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
-        String s = "Transport Details:\n" + "id: " + ID + "\tDate: " + formatter.format(Date) +
+        String s = "Transport Details:\n" + "\tid: " + ID + "\tDate: " + formatter.format(Date) +
                 " \tTruckNumber: " + Truck.getLicense_plate() +
                 " \tDriver: " + driverName + "\n"
-                +"\tSource details:\n" + Source.toString() + "\n";
+                +"\tSource details:\n\t" + Source.toString() + "\n";
         if(DestFiles.size()>0) {
             int count = 1;
             s = s + "\tDestinations and products details: \n";

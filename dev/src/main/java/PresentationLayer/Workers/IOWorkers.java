@@ -35,8 +35,8 @@ public class IOWorkers {
 
     public static void mainLoop() {
         boolean terminate=false;
-        removeExistingWorkers();
-        init();
+        //removeExistingWorkers();
+        //init();
         while(!terminate)
         {
             System.out.println("Choose an option:");
