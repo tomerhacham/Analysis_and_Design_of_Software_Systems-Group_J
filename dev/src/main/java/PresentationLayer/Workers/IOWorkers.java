@@ -19,11 +19,7 @@ public class IOWorkers {
     private static MyScanner scanner=new MyScanner(System.in);
     private static final boolean morning=true;
     private static final boolean night=false;
-   /* public static void main(String[] args) throws ParseException {
-        //if(args.length>0&&args[0].equals("-i"))
-         //   init();
-        mainLoop();
-    }*/
+
 
     private IOWorkers() {}
 
@@ -35,8 +31,6 @@ public class IOWorkers {
 
     public static void mainLoop() {
         boolean terminate=false;
-        removeExistingWorkers();
-        init();
         while(!terminate)
         {
             System.out.println("Choose an option:");
