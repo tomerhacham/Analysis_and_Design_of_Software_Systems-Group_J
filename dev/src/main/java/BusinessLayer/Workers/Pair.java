@@ -10,20 +10,20 @@ public class Pair<K, V> {
         this.value = valElement;
     }
 
-    public K getKey() {
+    public K getMorning() {
         return key;
     }
 
-    public V getValue() {
-        return val;
+    public V getNight() {
+        return value;
     }
 
-    public void setKey(K key) {
+    public void setMorning(K key) {
         this.key = key;
     }
 
-    public void setValue(V val) {
-        this.val = val;
+    public void setNight(V val) {
+        this.value = val;
     }
 }
 

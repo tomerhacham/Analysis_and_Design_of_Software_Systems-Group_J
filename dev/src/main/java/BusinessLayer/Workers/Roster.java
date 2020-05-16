@@ -30,6 +30,8 @@ public class Roster {
         String output = checkNewWorkerInputValidity(name, salary, startDate);
         if (output != null)
             return output;
+        if(license==null||license.length()==0)
+            return "Invalid license input";
         Driver driver= new Driver(uuid.toString(),license,name,startDate,salary);
         workers.add(driver);
         Mapper.getInstance().addDriver(driver);
@@ -72,8 +74,12 @@ public class Roster {
         if(searched==null)
             return "The worker does not exist";
         workers.remove(searched);
-        mapper.deleteWorker(searched.getId());
-        // TODO:see if there is a need to remove each position or is it Cascade
+        if(searched.getLicense()!=null) {
+            mapper.deleteDriver(id);
+        }
+        else {
+            mapper.deleteWorker(searched.getId());
+        }
         return null;
     }
      
