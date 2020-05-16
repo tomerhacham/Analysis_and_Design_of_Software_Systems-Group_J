@@ -16,7 +16,7 @@ import java.util.HashMap;
 public class CategoryDAO {
     //fields:
     HashMap<Integer, Category> identityMap;
-    Dao<CategoryDTO,Void> dao;
+    public Dao<CategoryDTO,Void> dao;
     //Constructor
 
     public CategoryDAO(ConnectionSource conn) {

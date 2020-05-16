@@ -43,7 +43,7 @@ public class Order {
     }
 
     //constructor to periodic order
-    public Order(int orderID , SupplierCard supplierID , OrderType type , Integer dayToDeliver){
+    public Order(int orderID , SupplierCard supplier , OrderType type , Integer dayToDeliver){
         this.orderID = orderID;
         productsAndQuantity = new HashMap<>();
         this.supplier = supplier;

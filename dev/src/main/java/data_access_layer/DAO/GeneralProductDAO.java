@@ -19,7 +19,7 @@ import java.util.LinkedList;
 public class GeneralProductDAO {
     //fields:
     HashMap<Integer, GeneralProduct> identityMap;
-    Dao<GeneralProductDTO,Void> dao;
+    public Dao<GeneralProductDTO,Void> dao;
     //Constructor
 
     public GeneralProductDAO(ConnectionSource conn) {
@@ -38,6 +38,21 @@ public class GeneralProductDAO {
         else{
             try {
                 generalProduct = new GeneralProduct(dao.queryBuilder().where().eq("GPID",general_product_id).and().eq("branch_id",branch_id).queryForFirst());
+                identityMap.put(general_product_id,generalProduct);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return generalProduct;
+    }
+    public GeneralProduct find(Integer general_product_id, Integer category_id,Integer branch_id){
+        GeneralProduct generalProduct=null;
+        if(identityMap.containsKey(general_product_id)){
+            generalProduct=identityMap.get(general_product_id);
+        }
+        else{
+            try {
+                generalProduct = new GeneralProduct(dao.queryBuilder().where().eq("GPID",general_product_id).and().eq("branch_id",branch_id).and().eq("category_id",category_id).queryForFirst());
                 identityMap.put(general_product_id,generalProduct);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
