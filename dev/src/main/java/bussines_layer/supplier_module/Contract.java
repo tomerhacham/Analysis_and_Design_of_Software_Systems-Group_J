@@ -298,7 +298,7 @@ public class Contract {
             result=new Result(false,null, String.format("There is already cost engineering associate to contract ID:%d", contractID));
         }
         else {
-            this.costEngineering = new CostEngineering();
+            this.costEngineering = new CostEngineering(contractID,branchID);
             result=new Result(true, this.costEngineering, String.format("Cost engineering has been associate to contract ID:%d.", contractID));
         }
         return result;
