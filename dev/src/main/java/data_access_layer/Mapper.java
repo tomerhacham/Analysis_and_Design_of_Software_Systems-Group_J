@@ -6,6 +6,7 @@ import bussines_layer.inventory_module.*;
 import bussines_layer.supplier_module.Contract;
 import bussines_layer.supplier_module.CostEngineering;
 import bussines_layer.supplier_module.Order;
+import com.j256.ormlite.table.TableUtils;
 import data_access_layer.DAO.*;
 import data_access_layer.DTO.*;
 import com.j256.ormlite.dao.Dao;
@@ -729,6 +730,30 @@ public class Mapper {
         branch_dao.clearCache();
         cost_engineering_dao.clearCache();
 
+    }
+
+    public void clearDatabase(){
+        try {
+            TableUtils.clearTable(this.conn,BranchDTO.class);
+            TableUtils.clearTable(this.conn,catalog_product_in_contractDTO.class);
+            TableUtils.clearTable(this.conn,catalog_product_in_general_productDTO.class);
+            TableUtils.clearTable(this.conn,catalog_product_in_orderDTO.class);
+            TableUtils.clearTable(this.conn,CatalogProductDTO.class);
+            TableUtils.clearTable(this.conn,categories_in_contractDTO.class);
+            TableUtils.clearTable(this.conn,CategoryDTO.class);
+            TableUtils.clearTable(this.conn,contact_of_supplierDTO.class);
+            TableUtils.clearTable(this.conn,ContractDTO.class);
+            TableUtils.clearTable(this.conn,CostEngineeringDTO.class);
+            TableUtils.clearTable(this.conn,general_product_on_saleDTO.class);
+            TableUtils.clearTable(this.conn,GeneralProductDTO.class);
+            TableUtils.clearTable(this.conn,IDsDTO.class);
+            TableUtils.clearTable(this.conn,OrderDTO.class);
+            TableUtils.clearTable(this.conn,SaleDTO.class);
+            TableUtils.clearTable(this.conn,SpecificProductDTO.class);
+            TableUtils.clearTable(this.conn,SupplierDTO.class);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
     //endregion
 }
