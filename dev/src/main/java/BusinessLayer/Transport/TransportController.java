@@ -91,7 +91,12 @@ public class TransportController {
             throw new Exception("Date already passed. Try again.");
 
         boolean shift = false;
-        LocalTime transportTime = LocalTime.parse(time);
+        LocalTime transportTime;
+        try {
+            transportTime = LocalTime.parse(time);
+        } catch (Exception e) {
+            throw new Exception("Format is incorrect. Insert date again.");
+        }
         LocalTime noonShift = LocalTime.of(14, 00);
         if (transportTime.isBefore(noonShift)){
             shift = true;

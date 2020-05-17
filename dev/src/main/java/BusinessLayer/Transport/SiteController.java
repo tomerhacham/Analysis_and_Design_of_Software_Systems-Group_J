@@ -104,7 +104,10 @@ public class SiteController {
     public boolean checkIfAvailable(int siteID, int sourceID, HashMap<Integer, Integer> destFile) {
         Site site = mapper.getSite(siteID);
         Site source = mapper.getSite(sourceID);
-        return siteID != sourceID && site.getShipping_area() == source.getShipping_area() && !checkIfChosen(siteID, destFile);
+        if (site != null && source != null) {
+            return siteID != sourceID && site.getShipping_area() == source.getShipping_area() && !checkIfChosen(siteID, destFile);
+        }
+        return false;
     }
 
     //return the details of all available sites
