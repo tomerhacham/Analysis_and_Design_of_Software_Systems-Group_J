@@ -28,17 +28,16 @@ public class IOTransport {
         System.out.println("Transports system\n");
         while (!terminated) {
             System.out.println( "Please choose an operation:\n" +
-                    "1. Initialize data.\n" +
-                    "2. Book new transport.\n" +
-                    "3. Delete transport.\n" +
-                    "4. Display all trucks.\n" +
-                    "5. Display all sites.\n" +
-                    "6. Display all transports.\n" +
-                    "7. Add truck.\n" +
-                    "8. Add site.\n" +
-                    "9. Remove truck.\n" +
-                    "10. Remove site.\n" +
-                    "11. Return to main menu.\n");
+                    "1. Book new transport.\n" +
+                    "2. Delete transport.\n" +
+                    "3. Display all trucks.\n" +
+                    "4. Display all sites.\n" +
+                    "5. Display all transports.\n" +
+                    "6. Add truck.\n" +
+                    "7. Add site.\n" +
+                    "8. Remove truck.\n" +
+                    "9. Remove site.\n" +
+                    "10. Return to main menu.\n");
             int operation;
             try {
                 operation = Integer.parseInt(scanner.nextLine());
@@ -47,36 +46,33 @@ public class IOTransport {
             }
             switch (operation) {
                 case 1 :
-                    initializeData();
-                    break;
-                case 2 :
                     newTransport();
                     break;
-                case 3:
+                case 2:
                     deleteTransport();
                     break;
-                case 4:
+                case 3:
                     System.out.println("Trucks:\n" + facadeController.getAllTrucksDetails());
                     break;
-                case 5:
+                case 4:
                     System.out.println("Sites:\n" + facadeController.getAllSitesDetails());
                     break;
-                case 6:
+                case 5:
                     System.out.println("Transports:\n" + facadeController.getAllTransportsDetails());
                     break;
-                case 7:
+                case 6:
                     addTruck();
                     break;
-                case 8:
+                case 7:
                     addSite();
                     break;
-                case 9:
+                case 8:
                     deleteTruck();
                     break;
-                case 10:
+                case 9:
                     deleteSite();
                     break;
-                case 11:
+                case 10:
                     System.out.println("Exit transport system");
                     terminated = true;
                     break;

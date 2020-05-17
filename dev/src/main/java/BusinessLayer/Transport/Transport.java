@@ -128,13 +128,13 @@ public class Transport {
         String s = "Transport Details:\n" + "\tid: " + ID + "\tDate: " + formatter.format(Date) +
                 " \tTruckNumber: " + Truck.getLicense_plate() +
                 " \tDriver: " + driverName + "\n"
-                +"\tSource details:\n\t" + Source.toString() + "\n";
+                +"\tSource details:\n\t\t" + Source.toString() + "\n";
         if(DestFiles.size()>0) {
             int count = 1;
             s = s + "\tDestinations and products details: \n";
             for (Site site:DestFiles.keySet()) {
                 s=s+"\t\t"+count+". site: "+site.toString()+"\n";
-                s=s+"\tproducts File: "+DestFiles.get(site).toString();
+                s=s+"\t\tproducts File: "+DestFiles.get(site).toString();
                 count++;
             }
         }
