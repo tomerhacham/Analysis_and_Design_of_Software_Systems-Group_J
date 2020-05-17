@@ -115,7 +115,7 @@ public class Order {
         return new Result<>(true,dayToDeliver, String.format("The delivery day has been updated to %d in the order:%d", dayToDeliver , getOrderID()));
     }
 
-    public Result getDayToDeliver() {
+    public Result<Integer> getDayToDeliver() {
         return new Result<>(true,dayToDeliver, String.format("The delivery day it %d in the order:%d", dayToDeliver , getOrderID()));
     }
 
