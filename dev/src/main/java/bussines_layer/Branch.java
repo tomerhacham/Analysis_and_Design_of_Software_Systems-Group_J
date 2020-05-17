@@ -148,8 +148,11 @@ public class Branch {
         if (gp == null){
             return new Result<>(false, null, String.format("General Product with ID %d does not exist", gpID));
         }
-        Result<CatalogProduct> res = gp.addCatalogProduct(catalogID, gpID, supplier_price, supplierID, supplier_category, gp.getName());
-        return supplierModule.addProductToContract(supplierID, res.getData());
+        CatalogProduct cp = gp.getSupplierCatalogProduct(supplierID);
+        if (cp == null){
+            cp = gp.addCatalogProduct(catalogID, gpID, supplier_price, supplierID, supplier_category, gp.getName()).getData();
+        }
+        return supplierModule.addProductToContract(supplierID, cp);
     }
     public Result removeProductFromContract(Integer supplierID, Integer gpID){
         GeneralProduct gp = searchGeneralProductByGpID(gpID).getData();
