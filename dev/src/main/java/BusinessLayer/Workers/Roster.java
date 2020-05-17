@@ -177,7 +177,6 @@ public class Roster {
         if(searched==null)
         {
             searched=mapper.getWorker(id);
-            //TODO: make sure Mapper->getWorker returns null if not found;
             if (searched!=null) {
                 workers.add(searched);
             }
