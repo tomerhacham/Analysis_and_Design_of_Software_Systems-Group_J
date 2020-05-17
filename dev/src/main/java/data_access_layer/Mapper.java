@@ -735,6 +735,7 @@ public class Mapper {
     public void clearDatabase(){
         try {
             TableUtils.clearTable(this.conn,BranchDTO.class);
+            TableUtils.clearTable(this.conn,SupplierDTO.class);
             TableUtils.clearTable(this.conn,catalog_product_in_contractDTO.class);
             TableUtils.clearTable(this.conn,catalog_product_in_general_productDTO.class);
             TableUtils.clearTable(this.conn,catalog_product_in_orderDTO.class);
@@ -750,7 +751,6 @@ public class Mapper {
             TableUtils.clearTable(this.conn,OrderDTO.class);
             TableUtils.clearTable(this.conn,SaleDTO.class);
             TableUtils.clearTable(this.conn,SpecificProductDTO.class);
-            TableUtils.clearTable(this.conn,SupplierDTO.class);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

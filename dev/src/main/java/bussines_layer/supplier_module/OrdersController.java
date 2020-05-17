@@ -5,6 +5,7 @@ import bussines_layer.SupplierCard;
 import bussines_layer.enums.OrderStatus;
 import bussines_layer.enums.OrderType;
 import bussines_layer.inventory_module.CatalogProduct;
+import data_access_layer.Mapper;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -23,15 +24,17 @@ import java.util.LinkedList;
 public class OrdersController {
 
     private LinkedList<Order> orders;
-    private int orderidCounter;
+    private Integer next_id;
     private Integer branch_id;
+    private Mapper mapper;
 
     public OrdersController(Integer branch_id){
         this.branch_id = branch_id;
-        orders = new LinkedList<>();
-        orderidCounter = 0;
+        this.mapper=Mapper.getInstance();
+        this.orders=mapper.loadOrders(branch_id);
+        if(orders.isEmpty()){orders = new LinkedList<>();}
+        this.next_id=mapper.loadID("order");
     }
-
 
     //region methods
 
@@ -51,7 +54,8 @@ public class OrdersController {
     public Result addProductToOrder(int orderID , CatalogProduct product , Integer quantity , Float price){
         Result<Order> result = getOrder(orderID);
         if (result.isOK()){
-            return result.getData().addProduct(product, quantity, price);
+            result= result.getData().addProduct(product, quantity, price);
+            if (result.isOK()){mapper.addCatalogProductToOrder(product,result.getData(),quantity,price);}
         }
         return result;
     }
@@ -126,51 +130,80 @@ public class OrdersController {
         return branch_id;
     }
 
+    /**
+     * allocate the next free ID
+     * @return
+     */
+    private Integer getNext_id() {
+        Integer next = next_id;
+        this.next_id++;
+        mapper.writeID("contract",next_id);
+        return next;
+    }
+
     //endregion
 
     //region OutOfStockOrder
     public Result<Integer> createOrder(SupplierCard supplier , OrderType type){
-        orderidCounter++;
-        orders.add(new Order(branch_id,orderidCounter  , supplier , type));
-        return new Result<>(true,orderidCounter, String.format("The new order id is  : %d" ,orderidCounter));
+        Integer id = getNext_id();
+        Order order = new Order(branch_id,id, supplier , type);
+        orders.add(order);
+        mapper.create(order);
+        return new Result<>(true,id, String.format("The new order id is  : %d" ,id));
     }
 
     //endregion
 
     //region PeriodicOrder
     public Result<Integer> createPeriodicOrder(SupplierCard supplier,Integer dayToDeliver){
-        orderidCounter++;
-        orders.add(new Order(branch_id,orderidCounter , supplier ,OrderType.PeriodicOrder,dayToDeliver ));
-        return new Result<>(true,orderidCounter, String.format("The new order id is  : %d" ,orderidCounter));
+        Integer id = getNext_id();
+        Order order = new Order(branch_id,id , supplier ,OrderType.PeriodicOrder,dayToDeliver );
+        orders.add(order);
+        mapper.create(order);
+        return new Result<>(true,id, String.format("The new order id is  : %d" ,id));
     }
 
     public Result removeProductFromPeriodicOrder(Integer orderID , CatalogProduct product) {
+        Result result;
         if(getOrder(orderID).getData().getType() == OrderType.PeriodicOrder){
-            return getOrder(orderID).getData().removeProductFromPeriodicOrder(product);
+            result= getOrder(orderID).getData().removeProductFromPeriodicOrder(product);
+            Order order=getOrder(orderID).getData();
+            if (result.isOK()){mapper.deleteCatalogProductFromOrder(order,product);}
         }
-
-        return new Result<>(false,product, String.format("The order : %d is not a periodic order , therefore the product %s can not be removed", product.getName() , orderID));
+        else {
+            result = new Result<>(false, product, String.format("The order : %d is not a periodic order , therefore the product %s can not be removed", product.getName(), orderID));
+        }
+        return result;
     }
 
     public Result updateProductQuantityInPeriodicOrder(Integer orderId , CatalogProduct product , Integer newQuantity , Float newPrice){
+        Result result;
         if(getOrder(orderId).getData().getType() == OrderType.PeriodicOrder){
-            return getOrder(orderId).getData().updateProductQuantityInPeriodicOrder(product , newQuantity , newPrice);
+            result= getOrder(orderId).getData().updateProductQuantityInPeriodicOrder(product , newQuantity , newPrice);
+            Order order = getOrder(orderId).getData();
+            if (result.isOK()){mapper.update(order);}
         }
-
-        return new Result<>(false,orderId, String.format("The order %d is not a periodic order therefore can not be modified " , orderId));
-
+        else{
+            result= new Result<>(false,orderId, String.format("The order %d is not a periodic order therefore can not be modified " , orderId));
+        }
+        return result;
     }
 
     public Result removePeriodicOrder (Integer orderId){
         if (getOrder(orderId).getData().getType() != OrderType.PeriodicOrder){
             return new Result<>(false,orderId, String.format("The order : %d is not a periodic order , therefore the order can not be removed", orderId));
         }
-        orders.remove(getOrder(orderId));
+        Order order=getOrder(orderId).getData();
+        orders.remove(order);
+        mapper.delete(order);
         return new Result<>(true,orderId, String.format("The periodic order : %d has been removed", orderId));
     }
 
     public Result updateDayToDeliver(Integer orderid , Integer dayToDeliver){
-        return getOrder(orderid).getData().updateDayToDeliver(dayToDeliver);
+        Result result=getOrder(orderid).getData().updateDayToDeliver(dayToDeliver);
+        Order order = getOrder(orderid).getData();
+        mapper.update(order);
+        return result;
 }
 
     public Result<LinkedList<String>> issuePeriodicOrder(){

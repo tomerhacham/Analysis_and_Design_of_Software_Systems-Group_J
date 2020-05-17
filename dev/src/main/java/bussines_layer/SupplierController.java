@@ -1,6 +1,7 @@
 package bussines_layer;
 
 import bussines_layer.enums.supplierType;
+import data_access_layer.Mapper;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -21,10 +22,12 @@ public class SupplierController {
     // static variable single_instance of type Singleton
     private static SupplierController instance = null;
     private HashMap<Integer , SupplierCard> suppliers;   //supplierID --> supplierCard
+    private Mapper mapper;
 
     //constructor
     private SupplierController(){
         suppliers = new HashMap<Integer, SupplierCard>();
+        this.mapper=Mapper.getInstance();
     }
 
     // static method to create instance of Singleton class
@@ -73,6 +76,7 @@ public class SupplierController {
         else{
             suppliers.put(supplierCard.getId() , supplierCard);
             result=new Result<>(true, supplierCard, String.format("Supplier %s has been Added", supplierCard));
+            this.mapper.create(supplierCard);
         }
         return result;
     }
@@ -95,6 +99,7 @@ public class SupplierController {
             SupplierCard sc = suppliers.get(id);
             sc.setSupplierName(newName);
             result=new Result<>(true,sc, String.format("Supplier %d has been edited", id) );
+            mapper.update(sc);
         }
         return result;
     }
@@ -114,6 +119,7 @@ public class SupplierController {
             SupplierCard sc = suppliers.get(id);
             sc.setAddress(newAddress);
             result=new Result(true,sc, String.format("Supplier %d has been edited", id) );
+            mapper.update(sc);
         }
         return result;
     }
@@ -133,6 +139,7 @@ public class SupplierController {
             SupplierCard sc = suppliers.get(id);
             sc.setEmail(newEmail);
             result=new Result(true,sc, String.format("Supplier %d has been edited", id) );
+            mapper.update(sc);
         }
         return result;
     }
@@ -152,6 +159,7 @@ public class SupplierController {
             SupplierCard sc = suppliers.get(id);
             sc.setPhoneNumber(newPhoneNum);
             result=new Result(true,sc, String.format("Supplier %d has been edited", id) );
+            mapper.update(sc);
         }
         return result;
     }
@@ -171,6 +179,7 @@ public class SupplierController {
             SupplierCard sc = suppliers.get(id);
             sc.setBankAccountNum(newBankAccount);
             result=new Result(true,sc, String.format("Supplier %d has been edited", id) );
+            mapper.update(sc);
         }
         return result;
     }
@@ -190,6 +199,7 @@ public class SupplierController {
             SupplierCard sc = suppliers.get(id);
             sc.setPayment(newPayment);
             result=new Result(true,sc, String.format("Supplier %d has been edited", id) );
+            mapper.update(sc);
         }
         return result;
     }
@@ -201,13 +211,14 @@ public class SupplierController {
      * @return
      */
     public Result DeleteContactName(Integer id , String name2Delete){
-        Result result;
+        Result result=null;
         if ( !isExist(id).isOK()){
             result=new Result(false,null, String.format("Could not find supplier with ID %d",id ));
         }
         else {
             SupplierCard sc = suppliers.get(id);
-            return sc.deleteContactName(name2Delete);
+            Result result1= sc.deleteContactName(name2Delete);
+            if (result1.isOK()){mapper.delete_contact(name2Delete,sc); result=result1;}
         }
         return result;
     }
@@ -225,6 +236,7 @@ public class SupplierController {
         else{
             SupplierCard sc = suppliers.get(id);
             sc.setContactsName(contactsName);
+            for (String contact:contactsName){mapper.create_contact(contact,sc);}
             result=new Result(true, sc, String.format("Contacts name's has added to supplier ID:%d", id));
         }
         return result;
@@ -247,6 +259,7 @@ public class SupplierController {
             } else {
                 suppliers.get(id).setType(type);
                 result = new Result<>(true, id, String.format("Supplier ID:%d type has been set to %s", id, type.name()));
+                mapper.update(suppliers.get(id));
             }
         }
         return result;

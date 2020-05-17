@@ -265,6 +265,16 @@ public class Contract {
         return result;
     }
 
+    public Result<CatalogProduct> getCatalogProductByID(Integer CatalogID){
+        Result result;
+        if(products.containsKey(CatalogID)){
+            result=new Result(true, products.get(CatalogID),"");
+        }
+        else{
+            result=new Result(false, null,"");
+        }
+        return result;
+    }
     //#endregion
 
     //#region CostEngineering
@@ -293,7 +303,7 @@ public class Contract {
     /**
      * add cost engineering to this contract
      */
-    public Result addCostEngineering() {
+    public Result<CostEngineering> addCostEngineering() {
         Result result;
         if (costEngineering != null){
             result=new Result(false,null, String.format("There is already cost engineering associate to contract ID:%d", contractID));
@@ -308,9 +318,10 @@ public class Contract {
     /**
      * remove the cost engineering associate with the contract
      */
-    public Result removeCostEngineering() {
+    public Result<CostEngineering> removeCostEngineering() {
+        CostEngineering toreturn=costEngineering;
         costEngineering = null;
-        return new Result(true, null, String.format("Cost engineering has benn removed from contract ID:%d", contractID));
+        return new Result(true, toreturn, String.format("Cost engineering has benn removed from contract ID:%d", contractID));
     }
 
     /**

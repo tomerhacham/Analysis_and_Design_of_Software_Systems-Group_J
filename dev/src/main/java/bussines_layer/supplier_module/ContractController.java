@@ -4,6 +4,7 @@ import bussines_layer.Result;
 import bussines_layer.SupplierCard;
 import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.inventory_module.GeneralProduct;
+import data_access_layer.Mapper;
 import javafx.util.Pair;
 
 
@@ -12,12 +13,15 @@ import java.util.LinkedList;
 public class ContractController {
 
     private LinkedList<Contract> contracts;
-    private Integer contractidCounter;
     private Integer branchID;
+    private Integer next_id;
+    private Mapper mapper;
 
     public ContractController(Integer branchID) {
-        contracts = new LinkedList<>();
-        contractidCounter = 0;
+        this.mapper=Mapper.getInstance();
+        this.contracts=mapper.loadContracts(branchID);
+        if(contracts.isEmpty()){contracts = new LinkedList<>();}
+        this.next_id=mapper.loadID("contract");
         this.branchID = branchID;
     }
 
@@ -61,10 +65,10 @@ public class ContractController {
             return new Result<>(false, supplier, String.format("Contract for supplier %s already exists", supplier));
         }
         //create and add new contract
-        Contract c = new Contract(supplier, contractidCounter, branchID , categories);
-        contractidCounter++;
+        Contract c = new Contract(supplier, getNext_id(), branchID , categories);
         supplier.incNumOfContract();
         contracts.add(c);
+        mapper.create(c);
         return new Result<>(true, supplier, String.format("New contract with supplier %s added successfully", supplier));
     }
 
@@ -79,6 +83,7 @@ public class ContractController {
             return new Result<>(false, null, String.format("There is no contract with supplier %s", supplier));
         }
         contracts.remove(toRemove);
+        mapper.delete(toRemove);
         supplier.decNumOfContract();
         return new Result<>(true, supplier, String.format("Contract with supplier %s removed successfully \n NOTICE - All periodic orders with this suppliers had been deleted except for those who are expected to be delivered tomorrow  ", supplier));
     }
@@ -99,7 +104,9 @@ public class ContractController {
         if (c == null) {
             return new Result<>(false, null, String.format("No contract found for supplier %d", supplierID));
         }
-        return c.addProduct(product);
+        Result result= c.addProduct(product);
+        if(result.isOK()){mapper.addCatalogProduct(c,product);}
+        return result;
     }
 
     /**
@@ -113,7 +120,10 @@ public class ContractController {
         if (findContract(supplierID).getData() == null) {
             return new Result<>(false, null, String.format("Contract with supplier (ID: %d) not found", supplierID));
         }
-        return findContract(supplierID).getData().removeProduct(product);
+        Result result= findContract(supplierID).getData().removeProduct(product);
+        Contract contract = findContract(supplierID).getData();
+        if(result.isOK()){mapper.deleteCatalogProduct(contract,product);}
+        return result;
     }
 
     /**
@@ -159,7 +169,10 @@ public class ContractController {
         if (res == null) {
             return res;
         }
-        return res.getData().addCategory(category);
+        Result result= res.getData().addCategory(category);
+        Contract contract=res.getData();
+        if(result.isOK()){mapper.addCategoryToContract(contract,category);}
+        return result;
     }
 
     public Result removeCategory (Integer supplierID, String category){
@@ -167,7 +180,10 @@ public class ContractController {
         if (res.getData() == null) {
             return res;
         }
-        return res.getData().removeCategory(category);
+        Result result= res.getData().removeCategory(category);
+        Contract contract=res.getData();
+        if(result.isOK()){mapper.deleteCategoryFromContract(contract,category);}
+        return result;
     }
 
     //endregion
@@ -180,7 +196,10 @@ public class ContractController {
         if (res.getData() == null) {
             return res;
         }
-        return res.getData().addCostEngineering();
+        Result<CostEngineering> result=res.getData().addCostEngineering();
+        CostEngineering costEngineering=result.getData();
+        if (result.isOK()){mapper.create(costEngineering);}
+        return result;
     }
 
     public Result removeCostEngineering (Integer supplierID){
@@ -188,7 +207,10 @@ public class ContractController {
         if (res.getData() == null) {
             return res;
         }
-        return res.getData().removeCostEngineering();
+        Result<CostEngineering> result= res.getData().removeCostEngineering();
+        CostEngineering costEngineering=result.getData();
+        if(result.isOK()){mapper.delete(costEngineering);}
+        return result;
     }
 
     public Result updateMinQuantity(Integer supplierID , Integer catalogID , Integer minQuantity){
@@ -196,7 +218,10 @@ public class ContractController {
         if (res.getData() == null) {
             return res;
         }
-        return res.getData().updateMinQuantity(catalogID, minQuantity);
+        Result result= res.getData().updateMinQuantity(catalogID, minQuantity);
+        CostEngineering costEngineering=res.getData().getCostEngineering();
+        if (result.isOK()){mapper.update(costEngineering);}
+        return result;
     }
 
     public Result updatePriceAfterSale(Integer supplierID , Integer catalogID , Float price){
@@ -204,7 +229,10 @@ public class ContractController {
         if (res.getData() == null) {
             return res;
         }
-        return res.getData().updatePriceAfterSale(catalogID, price);
+        Result result= res.getData().updatePriceAfterSale(catalogID, price);
+        CostEngineering costEngineering=res.getData().getCostEngineering();
+        if (result.isOK()){mapper.update(costEngineering);}
+        return result;
     }
 
     public Result addProductToCostEng(Integer supplierID , Integer catalogID , Integer minQuantity , Float price){
@@ -212,7 +240,11 @@ public class ContractController {
         if (res.getData() == null) {
             return res;
         }
-        return res.getData().addProductToCostEng(catalogID , minQuantity, price);
+        Result result= res.getData().addProductToCostEng(catalogID , minQuantity, price);
+        CostEngineering costEngineering=res.getData().getCostEngineering();
+        CatalogProduct catalogProduct = res.getData().getCatalogProductByID(catalogID).getData();
+        if (result.isOK() && costEngineering!=null && catalogProduct!=null){mapper.addProductToCostEngineering(catalogProduct,costEngineering);}
+        return result;
     }
 
     public Result removeProductFromCostEng(Integer supplierID , Integer catalogID){
@@ -220,11 +252,24 @@ public class ContractController {
         if (res.getData() == null) {
             return res;
         }
-        return res.getData().removeProductFromCostEng(catalogID);
+        Result result= res.getData().removeProductFromCostEng(catalogID);
+        CostEngineering costEngineering=res.getData().getCostEngineering();
+        CatalogProduct catalogProduct = res.getData().getCatalogProductByID(catalogID).getData();
+        if (result.isOK() && costEngineering!=null && catalogProduct!=null){mapper.deleteProductFromCostEngineering(catalogProduct,costEngineering);}
+        return result;
     }
 
     //endregion
-
+    /**
+     * allocate the next free ID
+     * @return
+     */
+    private Integer getNext_id() {
+        Integer next = next_id;
+        this.next_id++;
+        mapper.writeID("contract",next_id);
+        return next;
+    }
 
     public Integer getBranchID() {
         return branchID;

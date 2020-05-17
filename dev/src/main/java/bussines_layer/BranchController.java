@@ -383,6 +383,9 @@ public class BranchController {
         //after changing the day - check if there are periodic orders to send
         return issuePeriodicOrder();
     }
+    public void clearDB(){
+        mapper.clearDatabase();
+    }
 
     @Override
     public String toString() {
