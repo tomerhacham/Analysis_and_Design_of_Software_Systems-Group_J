@@ -83,12 +83,7 @@ public class Scheduler {
         //return availableWorkers;
    // }
 
-    /*
-        //change tests so that we wont use it in the test
-    public TreeSet<WeeklySchedule> getSchedule()//TODO:Mapper-(?)pull from "Shift" table
-    {
-        return schedule;
-    }*/
+
 
     public String addWorkerToPositionInShift(String pos,String id)
     {
@@ -419,8 +414,18 @@ public class Scheduler {
         if (mapper.deleteShiftAvailableWorkers(worker.getId(),date,partOfDay)){
             List<Worker> workerList =getAvailableWorkersForShiftNOPull(date,partOfDay);
             if(workerList!=null)
-                workerList.remove(worker);
+            {
+                int index=-1;
+                for(Worker oldWorker:workerList)
+                {
+                   if(oldWorker.getId().equals(worker.getId())){
+                        index=workerList.indexOf(oldWorker);
+                        break;
+                   }
+                }
+                workerList.remove(index);
             return null;
+            }
         }
         return "The worker is not available for this shift";
     }

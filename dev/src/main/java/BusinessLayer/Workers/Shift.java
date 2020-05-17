@@ -39,11 +39,6 @@ public class Shift {
                 this.occupation.put(pos,temp);
             }
         }
-        else
-        {
-            //TODO::...
-        }
-
     }
     public String getId() {
         return id;
