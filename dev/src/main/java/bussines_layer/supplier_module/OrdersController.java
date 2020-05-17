@@ -182,24 +182,29 @@ public class OrdersController {
 
     public Result updateDayToDeliver(Integer orderid , Integer dayToDeliver){
         return getOrder(orderid).getData().updateDayToDeliver(dayToDeliver);
-    }
+}
 
     public Result<LinkedList<String>> issuePeriodicOrder(){
 
-        Integer day = BranchController.system_curr_date.getDay();
+        Integer sys_day = BranchController.system_curr_date.getDay();
         LinkedList<String> periodicOrdersToIsuue = new LinkedList<>();
 
         for (Order order : orders) {
-            if ((order.getType()== OrderType.PeriodicOrder) && order.getDayToDeliver().getData().equals(day-1)){
+            //issue one day before delivery date
+            Integer order_day =  order.getDayToDeliver().getData();
+            if (order_day == 1) { order_day=7;}
+            else { order_day = order_day-1;}
+
+            if ((order.getType()== OrderType.PeriodicOrder) && (order_day).equals(sys_day)){
                 periodicOrdersToIsuue.add(issueOrder(order).getData());
                 issueOrder(order);
             }
-    }
+        }
 
         if(periodicOrdersToIsuue.size()>0){
-            return new Result<>(true,periodicOrdersToIsuue, String.format("All periodic orders with %d as their delivery day had been sent to order", day));
+            return new Result<>(true,periodicOrdersToIsuue, String.format("All periodic orders that delivery day is tomorrow had been reported"));
         }
-        return new Result<>(false,null, String.format("There are no periodic orders with %d as their delivery day ",day));
+        return new Result<>(false,null, String.format("There are no periodic orders to issue"));
     }
 
     //endregion

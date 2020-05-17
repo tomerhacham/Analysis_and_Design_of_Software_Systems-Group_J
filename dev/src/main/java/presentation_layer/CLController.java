@@ -1804,7 +1804,9 @@ public class CLController {
     static private String[] getInputParserbyComma(Scanner sc){
         String user_input = getNextLine(sc);
         //System.out.println(user_input);
-        String[] toreturn = user_input.split(",");
+        String user_input_no_space = user_input.replaceAll(" ,",",");
+        user_input_no_space = user_input_no_space.replaceAll(", ",",");
+        String[] toreturn = user_input_no_space.split(",");
         return toreturn;
     }
     static public Date convertStringToDate(String sdate){
