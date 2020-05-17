@@ -751,6 +751,8 @@ public class Mapper {
             TableUtils.clearTable(this.conn,OrderDTO.class);
             TableUtils.clearTable(this.conn,SaleDTO.class);
             TableUtils.clearTable(this.conn,SpecificProductDTO.class);
+            IDsDTO ids = new IDsDTO(1,1,1,1,1,1,1);
+            ids_dao.create(ids);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
