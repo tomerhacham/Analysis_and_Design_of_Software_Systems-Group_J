@@ -152,7 +152,7 @@ public class OrdersController {
     public Result<Integer> createPeriodicOrder(SupplierCard supplier,Integer dayToDeliver){
         orderidCounter++;
         orders.add(new Order(branch_id,orderidCounter , supplier ,OrderType.PeriodicOrder,dayToDeliver ));
-        return new Result(true,orderidCounter, String.format("The new order id is  : %d" ,orderidCounter));
+        return new Result<>(true,orderidCounter, String.format("The new order id is  : %d" ,orderidCounter));
     }
 
     public Result removeProductFromPeriodicOrder(Integer orderID , CatalogProduct product) {

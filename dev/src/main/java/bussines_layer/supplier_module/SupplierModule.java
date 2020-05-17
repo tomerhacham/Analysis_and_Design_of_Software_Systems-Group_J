@@ -185,22 +185,33 @@ public class SupplierModule {
     //region PeriodicOrder
 
     public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<GeneralProduct , Integer>> productsAndQuantity , Integer dayToDeliver){
+        //Check if supplier exists
         Result<Contract> contractResult = contractController.findContract(supplierID);
         if (!contractResult.isOK()){
             return new Result<>(false, null, String.format("Supplier %d does not exist", supplierID));
         }
-        int orderID = ordersController.createPeriodicOrder(contractResult.getData().getSupplier(),dayToDeliver).getData();
+        //Check if supplier supplies all products
+        for (Pair<GeneralProduct,Integer> pair : productsAndQuantity) {
+            CatalogProduct cp = pair.getKey().getSupplierCatalogProduct(supplierID);
+            Result<Float> result = contractResult.getData().getProductPrice(pair.getKey().getGpID());
+            if (!result.isOK()) {
+                return result;
+            } else if (cp == null) {
+                return new Result<>(false, null, String.format("Catalog product (GP ID: %d) for supplier (ID: %d) does not exists", pair.getKey().getGpID(), supplierID));
+            }
+        }
+        //Create periodic order
+        Integer orderID = ordersController.createPeriodicOrder(contractResult.getData().getSupplier(),dayToDeliver).getData();
         Result<Order> resultOrder = ordersController.getOrder(orderID);
         if (!resultOrder.isOK()){
             return new Result<>(false, null, String.format("Order %d does not exist", orderID));
         }
+        //Add all products to order
         for (Pair<GeneralProduct,Integer> pair : productsAndQuantity) {
             CatalogProduct cp = pair.getKey().getSupplierCatalogProduct(supplierID);
-            Float price = contractResult.getData().getProductPrice(pair.getKey().getGpID()).getData();
-            if (cp != null && price != null){    //if cp supplied by this supplier
-                resultOrder.getData().addProduct(cp, pair.getValue(),price);
-            }
-
+            Integer quantity = pair.getValue();
+            Float price = contractResult.getData().getProductPriceConsideringQuantity(pair.getKey().getGpID(), quantity).getData();
+            resultOrder.getData().addProduct(cp, quantity,price);
         }
         return new Result<>(true, ordersController.getOrder(orderID), String.format("The periodic order has been generated from the product list successfully: %s", productsAndQuantity));
     }
