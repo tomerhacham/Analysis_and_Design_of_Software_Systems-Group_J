@@ -28,7 +28,7 @@ public class OrderDAO {
             this.identityMap=new HashMap<>();
             this.dao = DaoManager.createDao(conn,OrderDTO.class);
             this.catalog_product_in_order_dao=DaoManager.createDao(conn,catalog_product_in_orderDTO.class);
-            this.dao.setObjectCache(true);
+            //this.dao.setObjectCache(true); TODO update Tomer
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

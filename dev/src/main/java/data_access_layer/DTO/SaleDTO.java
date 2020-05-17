@@ -26,8 +26,8 @@ public class SaleDTO {
     Boolean active;
     @DatabaseField(columnName = "branch_id",foreign = true,foreignAutoRefresh = true,foreignColumnName = "branch_id")
     BranchDTO branch;
-    @ForeignCollectionField(eager = false)
-    ForeignCollection<general_product_on_saleDTO> general_product_on_sale;
+    /*@ForeignCollectionField(eager = false)
+    ForeignCollection<general_product_on_saleDTO> general_product_on_sale;*/ //TODO update Tomer
 
     //Constructor
     public SaleDTO(Integer sale_id, discountType type, Date start, Date end, Boolean active, BranchDTO branch) {
@@ -76,9 +76,10 @@ public class SaleDTO {
         return branch;
     }
 
+    /*
     public ForeignCollection<general_product_on_saleDTO> getGeneral_product_on_sale() {
         return general_product_on_sale;
-    }
+    }*/ //TODO update Tomer
 
     public discountType convertStringTOEnum(String location){
         if (location.equals("fix")){

@@ -29,7 +29,7 @@ public class CatalogProductDAO {
         try {
             this.identityMap=new HashMap<>();
             this.dao= DaoManager.createDao(conn,CatalogProductDTO.class);
-            this.dao.setObjectCache(true);
+            //this.dao.setObjectCache(true); //TODO update Tomer
             this.catalog_product_in_general_products_dao=DaoManager.createDao(conn,catalog_product_in_general_productDTO.class);
         } catch (SQLException throwables) {
             throwables.printStackTrace();

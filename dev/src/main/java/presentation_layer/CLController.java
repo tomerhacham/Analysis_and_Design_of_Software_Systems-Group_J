@@ -45,14 +45,14 @@ public class CLController {
                     String msg = String.format("Old date: %s\t", BranchController.system_curr_date);
 
                     Result<LinkedList<String>> periodicOrdersToPrint = branchController.simulateNextDay(numOfDays);
-                    if (periodicOrdersToPrint.getData() == null){ // if there are no periodic orders to print at this day
-                        System.out.println(periodicOrdersToPrint.getMessage());
-                    }
-                    else{
+//                    if (periodicOrdersToPrint.getData() == null){ // if there are no periodic orders to print at this day
+//                        System.out.println(periodicOrdersToPrint.getMessage());
+//                    }
+                    //else{
                         for (String str:periodicOrdersToPrint.getData()) {
                             System.out.println(str);
                         }
-                    }
+                    //}
                     msg = msg.concat(String.format("New date: %s\n", BranchController.system_curr_date));
                     System.out.println(msg);
                     break;
@@ -174,10 +174,11 @@ public class CLController {
         String menu = "";
         menu = menu.concat("Choose branch (By ID):\n");
         Integer option = 1;
-        for (Branch b : branchController.getBranches().values()){
-            menu = menu.concat(String.format("%d) %s (type: %d)\n", option, b.getName(), b.getBranchId()));
+        for(Integer branch_id : branchController.getBranches().keySet()){
+            menu = menu.concat(String.format("%d) %s (type: %d)\n", option, branchController.getBranches().get(branch_id), branch_id));
             option++;
         }
+
         menu = menu.concat(String.format("%d) Return\n", option));
         menu = menu.concat(String.format("%d) Exit\n\n", option+1));
         while(true){

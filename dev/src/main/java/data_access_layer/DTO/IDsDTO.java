@@ -3,7 +3,7 @@ package data_access_layer.DTO;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(tableName = "IDs")
+@DatabaseTable(tableName = "id")
 public class IDsDTO {
     //fields
     @DatabaseField(id = true, columnName = "key")

@@ -25,7 +25,7 @@ public class SpecificProductDAO {
         try {
             this.identityMap=new HashMap<>();
             this.dao = DaoManager.createDao(conn,SpecificProductDTO.class);
-            this.dao.setObjectCache(true);
+            //this.dao.setObjectCache(true); TODO update Tomer
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
