@@ -190,10 +190,11 @@ public class OrdersController {
         LinkedList<String> periodicOrdersToIsuue = new LinkedList<>();
 
         for (Order order : orders) {
-            if ((order.getType()== OrderType.PeriodicOrder) && order.getDayToDeliver().getData()==day){
+            if ((order.getType()== OrderType.PeriodicOrder) && order.getDayToDeliver().getData().equals(day-1)){
                 periodicOrdersToIsuue.add(issueOrder(order).getData());
+                issueOrder(order);
             }
-        }
+    }
 
         if(periodicOrdersToIsuue.size()>0){
             return new Result<>(true,periodicOrdersToIsuue, String.format("All periodic orders with %d as their delivery day had been sent to order", day));
