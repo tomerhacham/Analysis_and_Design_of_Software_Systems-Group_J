@@ -196,8 +196,9 @@ public class SupplierModule {
         }
         for (Pair<GeneralProduct,Integer> pair : productsAndQuantity) {
             CatalogProduct cp = pair.getKey().getSupplierCatalogProduct(supplierID);
-            if (cp != null){    //if cp supplied by this supplier
-                resultOrder.getData().addProduct(cp, pair.getValue(), contractController.findContract(supplierID).getData().getProductPrice(pair.getKey().getGpID()).getData() );
+            Float price = contractResult.getData().getProductPrice(pair.getKey().getGpID()).getData();
+            if (cp != null && price != null){    //if cp supplied by this supplier
+                resultOrder.getData().addProduct(cp, pair.getValue(),price);
             }
 
         }
@@ -222,7 +223,7 @@ public class SupplierModule {
         }
 
         if(order.getProductsAndQuantity().keySet().contains(product)){
-            return new Result(false,product, String.format("The order %d already has this product in the order , it is only possible to update the quantity " , orderId));
+            return new Result<>(false,product, String.format("The order %d already has this product in the order , it is only possible to update the quantity " , orderId));
         }
         ordersController.addProductToOrder(orderId , product , quantity , price.getData());
         return new Result<>(true,product, String.format("The product %s has been added to the order:%d", product.getName() , orderId));
