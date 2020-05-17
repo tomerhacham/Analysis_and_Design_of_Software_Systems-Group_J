@@ -46,6 +46,7 @@ public class CLController {
                     System.out.println(branchController.simulateNextDay(numOfDays).getMessage());
                     msg = msg.concat(String.format("New date: %s\n", BranchController.system_curr_date));
                     System.out.println(msg);
+                    break;
                 case 4:
                     Exit();
                     return;
@@ -1680,18 +1681,19 @@ public class CLController {
         if (param.length == 1) {
             Integer supplierID = Integer.parseInt(param[0]);
             menu = "Order will be made once a week. Choose delivery day (1- Sunday, 6- Friday):\n";
+            System.out.println(menu);
             param = getInputParserbyComma(sc);
             if (param.length == 1) {
                 Integer day = Integer.parseInt(param[0]);
+                printEnterProductsToPOrder(products);
                 Result res = branchController.createPeriodicOrder(supplierID, products, day);
                 System.out.println(res.getMessage());
             } else {
                 System.out.println("Invalid number of parameters");
             }
-            printEnterProductsToPOrder(products);
 
         }else {
-            System.out.println("Invalid number of parameters for supplier ID");
+            System.out.println("Invalid number of parameters");
         }
 
 
@@ -1706,7 +1708,7 @@ public class CLController {
             Integer gpID = Integer.parseInt(param[0]);
             Integer quantity = Integer.parseInt(param[1]);
             products.add(new Pair<>(gpID, quantity));
-            menu="Add more products to order?";
+            menu="Add more products to order?\n";
             menu=menu.concat("1) Yes\n");
             menu=menu.concat("2) No\n");
             System.out.println(menu);
@@ -1750,7 +1752,7 @@ public class CLController {
         menu=menu.concat("4) Print all branches\n");
         menu=menu.concat("5) Print all suppliers\n");
         menu=menu.concat("6) Return\n");
-        menu=menu.concat("7) exit\n\n");
+        menu=menu.concat("7) Exit\n");
         while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -1816,7 +1818,6 @@ public class CLController {
     }
     private static Integer getNextInt(Scanner sc){
         while(!sc.hasNext()){}
-        //PlayBeep();
         return Integer.parseInt(sc.nextLine());
     }
     private static String getNextLine(Scanner sc){

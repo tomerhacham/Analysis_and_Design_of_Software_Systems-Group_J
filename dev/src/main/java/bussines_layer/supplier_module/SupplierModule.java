@@ -186,12 +186,20 @@ public class SupplierModule {
 
     public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<GeneralProduct , Integer>> productsAndQuantity , Integer dayToDeliver){
         Result<Contract> contractResult = contractController.findContract(supplierID);
-        if (!contractResult.isOK()){return new Result<>(false, null, String.format("Supplier %d does not exist", supplierID));}
+        if (!contractResult.isOK()){
+            return new Result<>(false, null, String.format("Supplier %d does not exist", supplierID));
+        }
         int orderID = ordersController.createPeriodicOrder(contractResult.getData().getSupplier(),dayToDeliver).getData();
         Result<Order> resultOrder = ordersController.getOrder(orderID);
-        if (!resultOrder.isOK()){return new Result<>(false, null, String.format("Order %d does not exist", orderID));}
-        for (Pair<GeneralProduct , Integer> pair : productsAndQuantity) {
-            resultOrder.getData().addProduct(pair.getKey().getSupplierCatalogProduct( supplierID) , pair.getValue() , contractController.findContract(supplierID).getData().getProductPrice(pair.getKey().getGpID()).getData() );
+        if (!resultOrder.isOK()){
+            return new Result<>(false, null, String.format("Order %d does not exist", orderID));
+        }
+        for (Pair<GeneralProduct,Integer> pair : productsAndQuantity) {
+            CatalogProduct cp = pair.getKey().getSupplierCatalogProduct(supplierID);
+            if (cp != null){    //if cp supplied by this supplier
+                resultOrder.getData().addProduct(cp, pair.getValue(), contractController.findContract(supplierID).getData().getProductPrice(pair.getKey().getGpID()).getData() );
+            }
+
         }
         return new Result<>(true, ordersController.getOrder(orderID), String.format("The periodic order has been generated from the product list successfully: %s", productsAndQuantity));
     }
