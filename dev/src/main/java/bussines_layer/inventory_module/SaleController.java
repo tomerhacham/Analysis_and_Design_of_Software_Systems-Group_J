@@ -2,6 +2,7 @@ package bussines_layer.inventory_module;
 
 import bussines_layer.Result;
 import bussines_layer.enums.discountType;
+import data_access_layer.Mapper;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -12,11 +13,14 @@ public class SaleController {
     private Integer next_id;
     private List<Sale> sales;
     private Integer branchId;
+    private Mapper mapper;
 
     //Constructor
     public SaleController(Integer branchId) {
-        this.next_id=1;
-        this.sales =new LinkedList<>();
+        this.mapper=Mapper.getInstance();
+        this.next_id=mapper.loadID("sale");
+        this.sales=mapper.loadSales(branchId);
+        if(sales.isEmpty()){this.sales =new LinkedList<>();}
         this.branchId = branchId;
     }
 
@@ -32,6 +36,7 @@ public class SaleController {
         List list = category.getAllGeneralProduct();
         Sale new_sale = new Sale(getNext_id(),list, type , branchId);
         sales.add(new_sale);
+        mapper.create(new_sale);
         return new_sale.setDiscount(amount);
         }
         else{
@@ -51,6 +56,7 @@ public class SaleController {
             dummy_list.add(generalProduct);
             Sale new_sale = new Sale(getNext_id(), dummy_list, type , branchId);
             sales.add(new_sale);
+            mapper.create(new_sale);
             return new_sale.setDiscount(amount);
         }
         else{
@@ -71,6 +77,7 @@ public class SaleController {
             List list = category.getAllGeneralProduct();
             Sale new_sale = new Sale(getNext_id(), list, type, start, end , branchId);
             sales.add(new_sale);
+            mapper.create(new_sale);
             return new_sale.setDiscount(amount);
         }
         else{
@@ -92,6 +99,7 @@ public class SaleController {
             dummy_list.add(generalProduct);
             Sale new_sale = new Sale(getNext_id(), dummy_list, type, start, end , branchId);
             sales.add(new_sale);
+            mapper.create(new_sale);
             return new_sale.setDiscount(amount);
         }
         else{
@@ -106,6 +114,7 @@ public class SaleController {
     public Result removeSale(Integer sale_id){
         Sale sale = searchSalebyId(sale_id);
         if (sale!=null){
+            mapper.delete(sale);
             return sale.removeSale();
         }
         else{
@@ -130,9 +139,10 @@ public class SaleController {
      * @return
      */
     private Integer getNext_id() {
-        Integer ret = next_id;
+        Integer next = next_id;
         this.next_id++;
-        return ret;
+        mapper.writeID("sale",next_id);
+        return next;
     }
     /**
      * searching a sale by its ID

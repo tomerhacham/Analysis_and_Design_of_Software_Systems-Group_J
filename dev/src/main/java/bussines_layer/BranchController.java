@@ -4,6 +4,7 @@ import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.inventory_module.GeneralProduct;
 import bussines_layer.inventory_module.Report;
 import bussines_layer.inventory_module.Sale;
+import data_access_layer.Mapper;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -15,12 +16,14 @@ public class BranchController {
     private Branch currBranch;        //current branch active
     private Integer next_id;    //next id available for new branch
     public static Date system_curr_date;
+    private Mapper mapper;
 
     public BranchController (){
+        mapper=Mapper.getInstance();
         branches= new HashMap<>();
         supplierController = SupplierController.getInstance();
         currBranch = null;
-        next_id = 1;
+        next_id = mapper.loadID("branch");
         system_curr_date = new Date();
     }
 
@@ -328,7 +331,7 @@ public class BranchController {
         if(allPeriodicOrdersFromAllBranches.size()>0){
             return new Result<>(true,allPeriodicOrdersFromAllBranches, String.format("All periodic orders with %d as their delivery day had been sent to order", system_curr_date.getDay()));
         }
-        return new Result<>(true,null, String.format("There are no periodic orders with %d as their delivery day ",system_curr_date.getDay()));
+        return new Result<>(false,null, String.format("There are no periodic orders with %d as their delivery day ",system_curr_date.getDay()));
     }
 
     //endregion
@@ -350,7 +353,10 @@ public class BranchController {
      * @return ID for next Branch
      */
     private Integer getNextId() {
-        return next_id++;
+        Integer next = next_id;
+        this.next_id++;
+        mapper.writeID("branch",next_id);
+        return next;
     }
     private boolean checkBranchExists(Integer branch_id){
         return branches.containsKey(branch_id);

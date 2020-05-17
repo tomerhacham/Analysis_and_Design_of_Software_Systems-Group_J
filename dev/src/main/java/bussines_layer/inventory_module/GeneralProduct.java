@@ -146,7 +146,7 @@ public class GeneralProduct {
     //endregion
 
     //region Methods
-    public Result addProduct(Integer product_id, Date expiration_date){
+    public Result<SpecificProduct> addProduct(Integer product_id, Date expiration_date){
         SpecificProduct product = new SpecificProduct(branchId,this.gpID,product_id, Location.warehouse,expiration_date);
         boolean res= products.add(product);
         Result<SpecificProduct> result;
@@ -160,7 +160,7 @@ public class GeneralProduct {
         return result;
     }
 
-    public Result removeProduct(Integer product_id){
+    public Result<SpecificProduct> removeProduct(Integer product_id){
         SpecificProduct toRemove = getProductbyID(product_id);
         Result<SpecificProduct> result;
         if (toRemove!=null){

@@ -120,4 +120,7 @@ public class GeneralProductDAO {
     }
 
 
+    public void clearCache() {
+        this.identityMap.clear();
+    }
 }

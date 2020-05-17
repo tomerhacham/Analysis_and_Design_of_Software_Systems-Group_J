@@ -89,4 +89,7 @@ public class CategoryDAO {
         }catch (Exception e){e.printStackTrace();}
     }
 
+    public void clearCache() {
+        this.identityMap.clear();
+    }
 }

@@ -17,6 +17,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Singleton class to communicate with the DB
+ */
 public class Mapper {
     //fields:
     private ConnectionSource conn;
@@ -32,8 +35,10 @@ public class Mapper {
     private CostEngineeringDAO cost_engineering_dao;
     private Dao<IDsDTO, Integer> ids_dao;
 
+    private static Mapper instance=null;
+
     //Constructor
-    public Mapper() {
+    private Mapper() {
         String databaseUrl = "jdbc:sqlite:SuperLi.db";
         try (ConnectionSource conn = new JdbcConnectionSource(databaseUrl)) {
             this.conn = conn;
@@ -53,6 +58,10 @@ public class Mapper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public static Mapper getInstance(){
+        if(instance==null){instance=new Mapper();}
+        return instance;
     }
 
     //region Methods
@@ -88,6 +97,39 @@ public class Mapper {
         }
         return id;
     }
+
+    public void writeID(String controller_name,Integer id){
+        try {
+            IDsDTO iDs = ids_dao.queryForId(1);
+            switch(controller_name) {
+                case "category":
+                    iDs.setCategory_next_id(id);
+                    break;
+                case "product":
+                    iDs.setProduct_next_id(id);
+                    break;
+                case "sale":
+                    iDs.setSale_next_id(id);
+                    break;
+                case "contract":
+                    iDs.setContract_next_id(id);
+                    break;
+                case "order":
+                    iDs.setOrder_next_id(id);
+                    break;
+                case "branch":
+                    iDs.setBranch_next_id(id);
+                    break;
+                case "supplier":
+                    iDs.setSupplier_next_id(id);
+                    break;
+            }
+            ids_dao.createOrUpdate(iDs);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
 
     public LinkedList<SupplierCard> loadSuppliers() {
         LinkedList<SupplierCard> supplierCards = new LinkedList<>();
@@ -657,6 +699,19 @@ public class Mapper {
     //endregion
     //endregion
 
+    public void clearCache(){
+        catalog_product_dao.clearCache();
+        general_product_dao.clearCache();
+        specific_product_dao.clearCache();
+        category_dao.clearCache();
+        sale_dao.clearCache();
+        order_dao.clearCache();
+        contract_dao.clearCache();
+        supplier_dao.clearCache();
+        branch_dao.clearCache();
+        cost_engineering_dao.clearCache();
+
+    }
     //endregion
 }
 

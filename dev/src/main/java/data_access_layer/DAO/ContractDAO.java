@@ -153,5 +153,9 @@ public class ContractDAO {
             throwables.printStackTrace();
         }
     }
+
+    public void clearCache() {
+        this.identityMap.clear();
+    }
     //endregion
 }

@@ -142,5 +142,9 @@ public class CostEngineeringDAO {
             throwables.printStackTrace();
         }
     }
+
+    public void clearCache() {
+        this.identityMap.clear();
+    }
     //endregion
 }

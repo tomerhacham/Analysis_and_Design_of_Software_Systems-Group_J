@@ -1,6 +1,7 @@
 package bussines_layer.inventory_module;
 
 import bussines_layer.Result;
+import data_access_layer.Mapper;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -10,12 +11,15 @@ public class CategoryController {
     private Integer branch_id;
     private Integer next_id;
     private List<Category> main_categories;
+    private Mapper mapper;
 
     //Constructor
     public CategoryController(Integer branch_id) {
+        this.mapper=Mapper.getInstance();
         this.branch_id=branch_id;
-        this.next_id=1;
-        this.main_categories=new LinkedList<>();
+        this.next_id=mapper.loadID("category");
+        this.main_categories=mapper.loadCategories(branch_id);
+        if (main_categories.isEmpty()){main_categories=new LinkedList<>();}
     }
 
 
@@ -30,6 +34,7 @@ public class CategoryController {
         Result<Category> result;
         if (res){
             result=new Result(res,new_category,"New category "+name+"("+new_category.getId()+")"+" has been added");
+            mapper.create(new_category);
         }
         else{
             result=new Result(res,new_category,"There was a problem with adding new category: "+name);
@@ -48,6 +53,7 @@ public class CategoryController {
         Result<Category> result;
         if(pre_cat!=null){
             result = pre_cat.addSubCategory(name,getNext_id());
+            if(result.isOK()){mapper.create(result.getData());}
         }
         else{
             result = new Result<>(false,pre_cat,"Could not add sub-category: "+name);
@@ -70,6 +76,7 @@ public class CategoryController {
                 res = main_categories.remove(toRemove);
                 if (res) {
                     result = new Result<>(res, toRemove, "Category "+toRemove.getName()+" has been deleted");
+                    mapper.delete(toRemove);
                 } else {
                     result = new Result<>(res, toRemove, "There was a problem deleting the category: "+toRemove.getName());
                 }
@@ -149,9 +156,10 @@ public class CategoryController {
      * @return
      */
     private Integer getNext_id() {
-        Integer ret= next_id;
+        Integer next = next_id;
         this.next_id++;
-        return ret;
+        mapper.writeID("category",next_id);
+        return next;
     }
     @Override
     public String toString() {
@@ -162,5 +170,4 @@ public class CategoryController {
         }
         return toReturn;
     }
-
 }

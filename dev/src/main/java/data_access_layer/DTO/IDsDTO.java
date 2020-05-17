@@ -66,5 +66,32 @@ public class IDsDTO {
         return supplier_next_id;
     }
 
+    public void setCategory_next_id(Integer category_next_id) {
+        this.category_next_id = category_next_id;
+    }
+
+    public void setProduct_next_id(Integer product_next_id) {
+        this.product_next_id = product_next_id;
+    }
+
+    public void setSale_next_id(Integer sale_next_id) {
+        this.sale_next_id = sale_next_id;
+    }
+
+    public void setContract_next_id(Integer contract_next_id) {
+        this.contract_next_id = contract_next_id;
+    }
+
+    public void setOrder_next_id(Integer order_next_id) {
+        this.order_next_id = order_next_id;
+    }
+
+    public void setBranch_next_id(Integer branch_next_id) {
+        this.branch_next_id = branch_next_id;
+    }
+
+    public void setSupplier_next_id(Integer supplier_next_id) {
+        this.supplier_next_id = supplier_next_id;
+    }
     //endregion
 }

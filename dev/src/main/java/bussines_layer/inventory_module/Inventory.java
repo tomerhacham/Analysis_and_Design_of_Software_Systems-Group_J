@@ -130,7 +130,6 @@ public class Inventory {
         dummy_list.add(generalProduct);
         return reportController.makeReport(dummy_list, convertStringToReportType(type));
     }
-
     public Result<Report> makeReportByCategory(Integer category_id, String type){
         Category category;
         if(category_id==0){

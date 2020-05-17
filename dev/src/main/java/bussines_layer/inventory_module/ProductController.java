@@ -1,6 +1,7 @@
 package bussines_layer.inventory_module;
 
 import bussines_layer.Result;
+import data_access_layer.Mapper;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -11,10 +12,12 @@ public class ProductController {
     private Integer next_id;
     private List<GeneralProduct> generalProducts;
     private Integer branchId;
+    private Mapper mapper;
 
     public ProductController(Integer branchId) {
+        this.mapper=Mapper.getInstance();
         generalProducts = new LinkedList<>();
-        this.next_id = 1;
+        this.next_id = this.mapper.loadID("product");
         this.branchId = branchId;
     }
 
@@ -34,6 +37,7 @@ public class ProductController {
             result = category.removeGeneralProduct(toRemove);
             if (result.isOK()) {
                 generalProducts.remove(toRemove);
+                mapper.delete(toRemove);
             }
         } else {
             result = new Result<Integer>(false, gpID, "Could not find general product by it gpID");
@@ -59,6 +63,7 @@ public class ProductController {
         Result result = category.addGeneralProduct(newProduct);
         if (result.isOK()) {
             generalProducts.add(newProduct);
+            mapper.create(newProduct);
         }
         return result;
     }
@@ -69,6 +74,7 @@ public class ProductController {
         if (toEdit != null) {
             toEdit.setName(new_name);
             result = new Result<GeneralProduct>(true, toEdit, "Name of general product has been changed");
+            mapper.update(toEdit);
         } else {
             result = new Result<Integer>(false, gpID, "Could not find general product");
         }
@@ -81,6 +87,7 @@ public class ProductController {
         if (toEdit != null) {
             if (toEdit.setSupplierPrice(new_supplier_price, supplier_id)) {
                 result = new Result<GeneralProduct>(true, toEdit, "Supplier price of general product has been changed");
+                mapper.update(toEdit);
             } else {
                 result = new Result<Integer>(false, gpID, String.format("Could not find catalog product with supplier id %d", supplier_id));
             }
@@ -96,6 +103,7 @@ public class ProductController {
         if (toEdit != null) {
             toEdit.setRetailPrice(new_retail_price);
             result = new Result<GeneralProduct>(true, toEdit, "Retail price of general product has been changed");
+            mapper.update(toEdit);
         } else {
             result = new Result<Integer>(false, gpID, "Could not find general product");
         }
@@ -108,6 +116,7 @@ public class ProductController {
         if (toEdit != null) {
             toEdit.setQuantity(new_quantity);
             result = new Result<GeneralProduct>(true, toEdit, "Quantity price of general product has been changed");
+            mapper.update(toEdit);
         } else {
             result = new Result<Integer>(false, gpID, "Could not find general product");
         }
@@ -120,6 +129,7 @@ public class ProductController {
         if (toEdit != null) {
             toEdit.setMinQuantity(new_min_quantity);
             result = new Result<GeneralProduct>(true, toEdit, "Min quantity price of general product has been changed");
+            mapper.update(toEdit);
         } else {
             result = new Result<Integer>(false, gpID, "Could not find general product");
         }
@@ -139,16 +149,17 @@ public class ProductController {
      */
     public Result addSpecificProduct(Integer gpID, Date expiration_date, Integer quantity) {
         GeneralProduct generalProduct = searchGeneralProductByGpID(gpID);
-        Result result = null;
+        Result<SpecificProduct> result = null;
         String msg = "";
         if (generalProduct != null) {
             for (int i = 0; i < quantity; i++) {
                 result = generalProduct.addProduct(getNext_id(), expiration_date);
+                if (result.isOK()){mapper.create(result.getData());}
                 msg = msg.concat(result.getMessage().concat("\n"));
             }
             result.setMessage(msg);
         } else {
-            result = new Result<Integer>(false, gpID, String.format("Could not find general product %d",gpID));
+            result = new Result(false, null, String.format("Could not find general product %d",gpID));
         }
         return result;
     }
@@ -161,11 +172,12 @@ public class ProductController {
      */
     public Result removeSpecificProduct(Integer specific_product_id) {
         GeneralProduct generalProduct = searchGeneralProductbySpecificProductID(specific_product_id);
-        Result result = null;
+        Result<SpecificProduct> result = null;
         if (generalProduct != null) {
             result = generalProduct.removeProduct(specific_product_id);
+            if (result.isOK()){mapper.delete(result.getData());}
         } else {
-            result = new Result<Integer>(false, specific_product_id, "Could not find general product with the same catalog ID");
+            result = new Result(false, null, String.format("Could not find specific product ID:%d", specific_product_id));
         }
         return result;
     }
@@ -178,11 +190,12 @@ public class ProductController {
      */
     public Result markAsFlaw(Integer specific_product_id) {
         GeneralProduct generalProduct = searchGeneralProductbySpecificProductID(specific_product_id);
-        Result result = null;
+        Result<SpecificProduct> result = null;
         if (generalProduct != null) {
             result = generalProduct.markAsFlaw(specific_product_id);
+            if(result.isOK()){mapper.update(result.getData());}
         } else {
-            result = new Result<Integer>(false, specific_product_id, "Could not find general product with the same catalog ID");
+            result = new Result(false, null, String.format("Could not find specific product ID:%d", specific_product_id));
         }
         return result;
     }
@@ -195,11 +208,12 @@ public class ProductController {
      */
     public Result moveLocation(Integer specific_product_id) {
         GeneralProduct generalProduct = searchGeneralProductbySpecificProductID(specific_product_id);
-        Result result = null;
+        Result<SpecificProduct> result = null;
         if (generalProduct != null) {
             result = generalProduct.moveLocation(specific_product_id);
+            if(result.isOK()){mapper.update(result.getData());}
         } else {
-            result = new Result<Integer>(false, specific_product_id, "Could not find general product with the same catalog ID");
+            result = new Result(false, null, String.format("Could not find specific product ID:%d", specific_product_id));
         }
         return result;
     }
@@ -237,9 +251,10 @@ public class ProductController {
      * @return
      */
     private Integer getNext_id() {
-        Integer ret = next_id;
+        Integer next = next_id;
         this.next_id++;
-        return ret;
+        mapper.writeID("product",next_id);
+        return next;
     }
     //endregion
 
