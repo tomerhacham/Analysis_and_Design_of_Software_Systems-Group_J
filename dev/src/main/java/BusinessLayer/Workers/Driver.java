@@ -38,4 +38,11 @@ public class Driver extends Worker {
     return license.equals(needed_licence);
 }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Worker worker = (Worker) o;
+        return getId().equals(worker.getId());
+    }
 }

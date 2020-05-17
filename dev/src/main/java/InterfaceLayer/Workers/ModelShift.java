@@ -73,7 +73,17 @@ public class ModelShift {
         SimpleDateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy");
         String DateString = myFormat.format(date);
         return DateString+"\t"+partOfday+'\n'+
-                printOccupation();
+                printOccupation()+
+                printDrivers();
+    }
+
+    private String printDrivers() {
+        String output="";
+        output+='\t'+"drivers- ["+drivers.size()+"]\t";
+        for(ModelWorker mw:drivers)
+            output+=mw.name+',';
+        output+='\n';
+        return output;
     }
 
     private String printOccupation() {

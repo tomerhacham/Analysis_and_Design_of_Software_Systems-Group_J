@@ -273,15 +273,21 @@ public class Mapper {
     }
 
     // delete specific row
-    public void deleteShiftAvailableWorkers(String WorkerId, Date date, boolean timeOfDay) {
+    public boolean deleteShiftAvailableWorkers(String WorkerId, Date date, boolean timeOfDay) {
         int part_of_day=0;
         if (timeOfDay ) {
             part_of_day = 1;
         }
         try {
-            Shift_availableWorkers_DAO.executeRaw("DELETE FROM Shift_availableWorkers WHERE workerID='" + WorkerId + "' AND ShiftDate='" + formatter.format(date) + "' And partOfDay=" + part_of_day);
+            int deleted = Shift_availableWorkers_DAO.executeRaw("DELETE FROM Shift_availableWorkers WHERE workerID='" + WorkerId + "' AND ShiftDate='" + formatter.format(date) + "' And partOfDay=" + part_of_day);
+            if(deleted==1)
+            {
+                return true;
+            }
+            return false;
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            return false;
         }
     }
 

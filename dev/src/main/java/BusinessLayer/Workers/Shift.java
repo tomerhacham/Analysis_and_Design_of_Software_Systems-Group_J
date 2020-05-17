@@ -165,7 +165,6 @@ public class Shift {
     public void addDriverToShift(Driver driver)
     {
         scheduledDrivers.add(driver);
-        //availableWorkers.remove(driver);
     }
 
     public Driver removeDriver(String id)

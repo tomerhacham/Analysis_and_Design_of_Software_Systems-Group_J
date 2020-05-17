@@ -98,6 +98,7 @@ public class ScheduleController {
     }
     public void test(RosterController rc)
     {
+        /*
         List<String>positions1=new ArrayList<>();
         positions1.add("manager");
         positions1.add("storage man");
@@ -115,7 +116,7 @@ public class ScheduleController {
         rc.addWorker("Avi",100,startDate1,positions2);
         List<ModelWorker> workers=rc.displayWorkers();
         Date shiftDate1=parseDate("20/05/2020");
-        Date shiftDate2=parseDate("21/05/2020");
+
         this.addAvailableWorker(shiftDate1,morning,workers.get(0).id);
         this.addAvailableWorker(shiftDate1,night,workers.get(1).id);
         this.addAvailableWorker(shiftDate1,morning,workers.get(2).id);
@@ -135,12 +136,14 @@ public class ScheduleController {
         this.addWorkerToPositionInShift("storage man",workers.get(1).id);
         this.addWorkerToPositionInShift("security guard",workers.get(5).id);
         this.submitShift();
+        */
+        Date shiftDate2=parseDate("21/05/2020");
         scheduler.chooseDriverForTransport(shiftDate2,morning,"A");
         scheduler.chooseDriverForTransport(shiftDate2,morning,"B");
-        editShift(shiftDate2,morning);
-        scheduler.getCurrentEditedShift().removeWorkerFromPosition("driver",workers.get(2).id,scheduler.cloneAvailableWorkersForShift());
-        this.submitShift();
-        scheduler.removeDriverFromTransport(shiftDate2,morning,workers.get(3).id);
+        //editShift(shiftDate2,morning);
+        //scheduler.getCurrentEditedShift().removeWorkerFromPosition("driver",workers.get(2).id,scheduler.cloneAvailableWorkersForShift());
+        //this.submitShift();
+        //scheduler.removeDriverFromTransport(shiftDate2,morning,workers.get(3).id);
 //        System.out.println(scheduler.StorageManInShift(shiftDate2,morning));
     }
 

@@ -395,6 +395,20 @@ public class Scheduler {
 
         return workerList;
     }
+    private List<Worker> getAvailableWorkersForShiftNOPull(Date date,boolean partOfDay)
+    {
+        LazyList<Worker> workerList = null;
+        if (availableWorkers.containsKey(date))
+        {
+            if (partOfDay == morning)
+            {
+                workerList = availableWorkers.get(date).getMorning();
+            }
+            else
+                workerList = availableWorkers.get(date).getNight();
+        }
+        return workerList;
+    }
     public String removeAvailableWorker(Date date,boolean partOfDay,String id)
     {
         Worker worker=getWorkerById(id);
@@ -402,8 +416,10 @@ public class Scheduler {
             return  "Invalid worker id";
         if(isWorkerScheduled(worker,date,partOfDay))
             return "Unable to remove availability because the worker is already scheduled for this shift";
-        if (getAvailableWorkersForShift(date,partOfDay).remove(worker)){
-            mapper.deleteShiftAvailableWorkers(worker.getId(),date,partOfDay);
+        if (mapper.deleteShiftAvailableWorkers(worker.getId(),date,partOfDay)){
+            List<Worker> workerList =getAvailableWorkersForShiftNOPull(date,partOfDay);
+            if(workerList!=null)
+                workerList.remove(worker);
             return null;
         }
         return "The worker is not available for this shift";
@@ -463,8 +479,13 @@ public class Scheduler {
         Shift shift=findShift(date,partOfDay);
         if(shift==null)
             return false;
-        if(worker instanceof Driver&&shift.getScheduledDrivers().contains((Driver)worker))
-            return true;
+        //if(worker instanceof Driver&&shift.getScheduledDrivers().contains((Driver)worker))
+        //    return true;
+        for(Worker oldWorker: shift.getScheduledDrivers())
+        {
+            if(oldWorker.getId().equals(worker.getId()))
+                return true;
+        }
         Map<String,FixedSizeList<Worker>> occupation=shift.getOccupation();
         for(String pos:worker.getPositions())
         {
@@ -523,14 +544,11 @@ public class Scheduler {
             if(w.positions.contains("driver")&&w.getLicense().equals(license))
             {
                 d= (Driver)w;
-                shift.addDriverToShift(d);
                 mapper.addShiftDriver(d.getId(),shift.getId());
-                break;
+                removeAvailableWorker(date, timeOfDay, d.getId());
+                shift.addDriverToShift(d);
+                return d.getId();
             }
-        }
-        if(d!=null) {
-            removeAvailableWorker(date, timeOfDay, d.getId());
-            return d.getId();
         }
         return null;
     }
