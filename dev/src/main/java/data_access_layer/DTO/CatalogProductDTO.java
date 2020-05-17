@@ -11,7 +11,7 @@ public class CatalogProductDTO {
     Integer catalogID;
     @DatabaseField(columnName = "GPID")
     Integer gpID;
-    @DatabaseField(foreign = true, foreignColumnName = "branch_id",columnName = "branch_id")
+    @DatabaseField(foreign = true,foreignAutoRefresh = true ,foreignColumnName = "branch_id",columnName = "branch_id")
     BranchDTO branch_id;
     @DatabaseField(columnName = "supplier_price")
     Float supplier_price;

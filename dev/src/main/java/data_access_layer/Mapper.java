@@ -6,6 +6,9 @@ import bussines_layer.inventory_module.*;
 import bussines_layer.supplier_module.Contract;
 import bussines_layer.supplier_module.CostEngineering;
 import bussines_layer.supplier_module.Order;
+import com.j256.ormlite.jdbc.JdbcDatabaseConnection;
+import com.j256.ormlite.stmt.DeleteBuilder;
+import com.j256.ormlite.support.DatabaseConnection;
 import com.j256.ormlite.table.TableUtils;
 import data_access_layer.DAO.*;
 import data_access_layer.DTO.*;
@@ -15,28 +18,31 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import sun.java2d.loops.FillRect;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Singleton class to communicate with the DB
  */
 public class Mapper {
     //fields:
-    private ConnectionSource conn;
-    private CatalogProductDAO catalog_product_dao;
-    private GeneralProductDAO general_product_dao;
-    private SpecificProductDAO specific_product_dao;
-    private CategoryDAO category_dao;
-    private SaleDAO sale_dao;
-    private OrderDAO order_dao;
-    private ContractDAO contract_dao;
-    private SupplierDAO supplier_dao;
-    private BranchDAO branch_dao;
-    private CostEngineeringDAO cost_engineering_dao;
-    private Dao<IDsDTO, Integer> ids_dao;
+    public ConnectionSource conn;
+    public CatalogProductDAO catalog_product_dao;
+    public GeneralProductDAO general_product_dao;
+    public SpecificProductDAO specific_product_dao;
+    public CategoryDAO category_dao;
+    public SaleDAO sale_dao;
+    public OrderDAO order_dao;
+    public ContractDAO contract_dao;
+    public SupplierDAO supplier_dao;
+    public BranchDAO branch_dao;
+    public CostEngineeringDAO cost_engineering_dao;
+    public Dao<IDsDTO, Integer> ids_dao;
 
     private static Mapper instance=null;
 
@@ -44,7 +50,13 @@ public class Mapper {
     private Mapper() {
         String databaseUrl = "jdbc:sqlite:src/main/java/data_access_layer/SuperLi.db";
         try (ConnectionSource conn = new JdbcConnectionSource(databaseUrl)) {
+            /*Properties properties=new Properties();
+            properties.setProperty("PRAGMA foreign_keys", "ON");
+            Connection connection = DriverManager.getConnection("jdbc:sqlite:src/main/java/data_access_layer/SuperLi.db",properties);
+            DatabaseConnection cone = new JdbcDatabaseConnection(DriverManager.getConnection(databaseUrl, properties));
+            ConnectionSource c = new JdbcConnectionSource()*/
             this.conn = conn;
+            this.branch_dao=new BranchDAO(conn);
             this.catalog_product_dao = new CatalogProductDAO(conn);
             this.general_product_dao = new GeneralProductDAO(conn);
             this.specific_product_dao = new SpecificProductDAO(conn);
@@ -53,7 +65,6 @@ public class Mapper {
             this.order_dao=new OrderDAO(conn);
             this.contract_dao = new ContractDAO(conn);
             this.supplier_dao=new SupplierDAO(conn);
-            this.branch_dao=new BranchDAO(conn);
             this.cost_engineering_dao=new CostEngineeringDAO(conn);
             this.ids_dao = DaoManager.createDao(conn, IDsDTO.class);
 
@@ -176,7 +187,7 @@ public class Mapper {
     }
     //region load categories
 
-    private LinkedList<Category> LoadSubCategories(Integer branch_id, Integer id) {
+    public LinkedList<Category> LoadSubCategories(Integer branch_id, Integer id) {
         LinkedList<Category> sub_categories = new LinkedList<>();
         try {
             List<CategoryDTO> dto_sub_categories = category_dao.dao.queryBuilder().where().eq("branch_id", branch_id).and().eq("super_category_id", id).query();
@@ -191,7 +202,7 @@ public class Mapper {
         return sub_categories;
     }
 
-    private LinkedList<Category> LoadSubSubCategories(Integer branch_id, Integer category_id) {
+    public LinkedList<Category> LoadSubSubCategories(Integer branch_id, Integer category_id) {
         LinkedList<Category> sub_sub_categories = new LinkedList<>();
         try {
             List<CategoryDTO> dto_sub_sub_categories = category_dao.dao.queryBuilder().where().eq("branch_id", branch_id).and().eq("super_category_id", category_id).query();
@@ -205,7 +216,7 @@ public class Mapper {
         return sub_sub_categories;
     }
 
-    private LinkedList<GeneralProduct> loadGeneralProduct(Integer branch_id, Integer category_id){
+    public LinkedList<GeneralProduct> loadGeneralProduct(Integer branch_id, Integer category_id){
         LinkedList<GeneralProduct> generalProducts = new LinkedList<>();
         try {
             List<GeneralProductDTO> generalProductDTOS = general_product_dao.dao.queryBuilder().where().eq("branch_id",branch_id).and().eq("category_id",category_id).query();
@@ -222,7 +233,7 @@ public class Mapper {
         return generalProducts;
     }
 
-    private LinkedList<SpecificProduct> loadSpecificProducts(Integer gpID, Integer branch_id) {
+    public LinkedList<SpecificProduct> loadSpecificProducts(Integer gpID, Integer branch_id) {
         LinkedList<SpecificProduct> specificProducts = new LinkedList<>();
         try {
             List<SpecificProductDTO> DTos  = specific_product_dao.dao.queryBuilder().where().eq("GPID",gpID).and().eq("branch_id",branch_id).query();
@@ -235,7 +246,7 @@ public class Mapper {
         return specificProducts;
     }
 
-    private LinkedList<CatalogProduct> loadCatalogProducts(Integer gpID, Integer branch_id) {
+    public LinkedList<CatalogProduct> loadCatalogProducts(Integer gpID, Integer branch_id) {
         LinkedList<CatalogProduct> catalogProducts = new LinkedList<>();
         try {
             List<catalog_product_in_general_productDTO> binding  = catalog_product_dao.catalog_product_in_general_products_dao.queryBuilder().where().eq("GPID",gpID).and().eq("branch_id",branch_id).query();
@@ -368,7 +379,13 @@ public class Mapper {
      * @param branch
      */
     public void delete(Branch branch){
+        general_product_dao.deleteByBranch(branch);
+        category_dao.deleteByBranch(branch);
+        sale_dao.deleteByBranch(branch);
+        contract_dao.deleteByBranch(branch);
+        order_dao.deleteByBranch(branch);
         branch_dao.delete(branch);
+        clearCache();
     }
     //endregion
 

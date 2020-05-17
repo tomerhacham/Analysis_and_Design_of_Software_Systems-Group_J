@@ -99,12 +99,11 @@ public class CatalogProductDAO {
             // only delete the rows on "contract_id" and "branch_id" and "catalog_id"
             deleteBuilder.where().eq("GPID", catalogProduct.getGpID()).and().eq("branch_id" , catalogProduct.getBranch_id()).and().eq("catalog_id" , catalogProduct.getCatalogID());
             deleteBuilder.delete();
-            System.err.println(String.format("[Writing] %s", catalogProductDTO));
-            //CASCADE?
-//            DeleteBuilder<catalog_product_in_general_productDTO,Void> deleteBuilder = catalog_product_in_general_products_dao.deleteBuilder();
-//            // only delete the rows on "catalog_id" and "GPID" and "branch_id"
-//            deleteBuilder.where().eq("catalog_id" , catalogProduct.getCatalogID()).and().eq("GPID" , generalProduct.getGpID()).and().eq("branch_id" , generalProduct.getBranch_id());
-//            deleteBuilder.delete();
+            //System.err.println(String.format("[Writing] %s", catalogProductDTO));
+            DeleteBuilder<catalog_product_in_general_productDTO,Void> deleteBuilder1 = catalog_product_in_general_products_dao.deleteBuilder();
+            // only delete the rows on "catalog_id" and "GPID" and "branch_id"
+            deleteBuilder1.where().eq("catalog_id" , catalogProduct.getCatalogID()).and().eq("branch_id" , catalogProduct.getBranch_id());
+            deleteBuilder1.delete();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

@@ -6,8 +6,10 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
+import data_access_layer.DTO.ContractDTO;
 import data_access_layer.DTO.SupplierDTO;
 import data_access_layer.DTO.contact_of_supplierDTO;
+import data_access_layer.Mapper;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -142,8 +144,15 @@ public class SupplierDAO {
         try{
             if(identityMap.containsKey(supplier.getId())){identityMap.remove(supplier.getId());}
             SupplierDTO supplierDTO = new SupplierDTO(supplier);
+            for(String contact:supplier.getContactsName()){
+                delete_contact(contact,supplier);
+            }
+            List<ContractDTO> contractDTOS = Mapper.getInstance().contract_dao.dao.queryBuilder().where().eq("supplier_id",supplier.getId()).query();
+            for(ContractDTO contractDTO:contractDTOS){
+                Mapper.getInstance().delete(Mapper.getInstance().find_Contract(contractDTO.getContract_id(),contractDTO.getBranch().getBranch_id()));
+            }
             dao.delete(supplierDTO);
-            System.err.println(String.format("[DELETE] %s", supplierDTO));
+            //System.err.println(String.format("[DELETE] %s", supplierDTO));
         }catch (Exception e){e.printStackTrace();}
     }
     //region Utilities

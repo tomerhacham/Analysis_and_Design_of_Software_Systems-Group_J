@@ -18,12 +18,12 @@ public class BranchController {
     public static Date system_curr_date;
     private Mapper mapper;
 
-    public BranchController (){
+    public BranchController (Boolean external_initialize){
         mapper=Mapper.getInstance();
         branches= new HashMap<>();
         supplierController = SupplierController.getInstance();
         currBranch = null;
-        next_id = mapper.loadID("branch");
+        if(!external_initialize){next_id = mapper.loadID("branch");}
         system_curr_date = new Date();
     }
 
@@ -394,6 +394,10 @@ public class BranchController {
             toReturn = toReturn.concat(String.format("ID:%d Name:%s\n",id,branches.get(id)));
         }
         return toReturn;
+    }
+
+    public void loadID() {
+        this.next_id=next_id = mapper.loadID("branch");
     }
     //endregion
 }

@@ -14,7 +14,7 @@ public class general_product_on_saleDTO {
     Integer GPID;
     @DatabaseField(columnName = "sale_id")
     Integer sale_id;
-    @DatabaseField(foreign = true, foreignColumnName = "branch_id",columnName = "branch_id")
+    @DatabaseField(foreign = true,foreignAutoRefresh = true ,foreignColumnName = "branch_id",columnName = "branch_id")
     BranchDTO branch_id;
 
     //Constructor

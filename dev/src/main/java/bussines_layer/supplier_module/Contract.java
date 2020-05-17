@@ -38,6 +38,7 @@ public class Contract {
     public Contract(ContractDTO contractDTO) {
         this.contractID=contractDTO.getContract_id();
         this.branchID=contractDTO.getBranch().getBranch_id();
+        this.products=new HashMap<>();
     }
 
     public int getSupplierID() {

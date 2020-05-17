@@ -1,20 +1,21 @@
 package data_access_layer.DAO;
 
+import bussines_layer.Branch;
 import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.supplier_module.Contract;
+import bussines_layer.supplier_module.CostEngineering;
 import bussines_layer.supplier_module.Order;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
-import data_access_layer.DTO.ContractDTO;
-import data_access_layer.DTO.OrderDTO;
-import data_access_layer.DTO.catalog_product_in_contractDTO;
-import data_access_layer.DTO.categories_in_contractDTO;
+import data_access_layer.DTO.*;
+import data_access_layer.Mapper;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 
 public class ContractDAO {
     //fields:
@@ -60,7 +61,10 @@ public class ContractDAO {
         try {
             if (!identityMap.containsKey(contract.getBranchID())){identityMap.put(contract.getContractID(),contract);}
             dao.create(contractDTO);
-            for (CatalogProduct catalogProduct:contract.getProducts().getData()){addCatalogProduct(contract,catalogProduct);}
+            for(String category:contract.getCategories()){
+                categories_in_contractDTO dto = new categories_in_contractDTO(contract,category);
+                categories_in_contract_dao.create(dto);
+            }
             System.err.println(String.format("[Writing] %s", contractDTO));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -74,12 +78,24 @@ public class ContractDAO {
     public void delete(Contract contract){
         try{
             if (identityMap.containsKey(contract.getContractID())){identityMap.remove(contract.getContractID(),contract);}
-            ContractDTO contractDTO = new ContractDTO(contract);
+            //ContractDTO contractDTO = new ContractDTO(contract);
+            if(contract.getProducts().getData()!=null){
+                for(CatalogProduct catalogProduct:contract.getProducts().getData()){
+                    deleteCatalogProduct(contract,catalogProduct);
+                }
+            }
+            if(contract.getCategories()!=null){
+                for(String category:contract.getCategories()){
+                    deleteCategoryFromContract(contract,category);
+                }
+            }
+            Mapper.getInstance().delete(contract.getCostEngineering());
+
             DeleteBuilder<ContractDTO,Void> deleteBuilder = dao.deleteBuilder();
             // only delete the rows on "contract_id" and "branch_id" and "catalog_id"
             deleteBuilder.where().eq("contract_id",contract.getContractID()).and().eq("branch_id" ,contract.getBranchID()).and().eq("supplier_id",contract.getSupplierID());
             deleteBuilder.delete();
-            System.err.println(String.format("[Delete] %s", contractDTO));
+            //System.err.println(String.format("[Delete] %s", contractDTO));
             //catalog_product_in_contract are deleted due to cascade
         }catch (Exception e){e.printStackTrace();}
     }
@@ -156,6 +172,17 @@ public class ContractDAO {
 
     public void clearCache() {
         this.identityMap.clear();
+    }
+
+    public void deleteByBranch(Branch branch) {
+        try {
+            List<ContractDTO> list = dao.queryBuilder().where().eq("branch_id",branch.getBranchId()).query();
+            for(ContractDTO dto:list){
+                delete(find(dto.getContract_id(),branch.getBranchId()));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
     //endregion
 }

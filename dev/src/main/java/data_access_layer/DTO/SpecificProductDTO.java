@@ -22,7 +22,7 @@ public class SpecificProductDTO {
     private Boolean flaw_flag;
     @DatabaseField(columnName = "GPID")
     private Integer generalProduct;
-    @DatabaseField(foreign = true,foreignColumnName = "branch_id",columnName = "branch_id")
+    @DatabaseField(foreign = true,foreignAutoRefresh = true,foreignColumnName = "branch_id",columnName = "branch_id")
     private BranchDTO branch_id;
 
     //Constructors

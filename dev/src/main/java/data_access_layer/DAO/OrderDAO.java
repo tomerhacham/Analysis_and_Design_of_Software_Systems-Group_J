@@ -1,5 +1,6 @@
 package data_access_layer.DAO;
 
+import bussines_layer.Branch;
 import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.supplier_module.Order;
 import com.j256.ormlite.dao.Dao;
@@ -8,6 +9,7 @@ import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import data_access_layer.DTO.CatalogProductDTO;
+import data_access_layer.DTO.ContractDTO;
 import data_access_layer.DTO.OrderDTO;
 import data_access_layer.DTO.catalog_product_in_orderDTO;
 
@@ -43,6 +45,13 @@ public class OrderDAO {
             try {
                 order = new Order(dao.queryBuilder().where().eq("order_id",order_id).and().eq("branch_id",branch_id).queryForFirst());
                 identityMap.put(order_id,order);
+                //todo:suppliercard;
+                List<catalog_product_in_orderDTO> catalog_product_in_orderDTOS = catalog_product_in_order_dao.queryBuilder().where().eq("order_id",order_id).and().eq("branch_id",branch_id).query();
+                HashMap<CatalogProduct, Integer> productsAndQuantity = new HashMap<>(); // <product , quantity>
+                HashMap<CatalogProduct , Float> productsAndPrice = new HashMap<>(); //<product, price>
+                for(catalog_product_in_orderDTO dto:catalog_product_in_orderDTOS){
+
+                }
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -109,6 +118,9 @@ public class OrderDAO {
         try{
             if (identityMap.containsKey(order.getOrderID())){identityMap.remove(order.getOrderID(),order);}
             OrderDTO orderDTO = new OrderDTO(order);
+            for(CatalogProduct catalogProduct:order.getProductsAndPrice().keySet()){
+                delete(order,catalogProduct);
+            }
             DeleteBuilder<OrderDTO,Void> deleteBuilder = dao.deleteBuilder();
             // only delete the rows on "contract_id" and "branch_id" and "catalog_id"
             deleteBuilder.where().eq("order_id", order.getOrderID()).and().eq("branch_id" ,order.getBranch_id());
@@ -155,6 +167,17 @@ public class OrderDAO {
         String string="";
         for (Object object:list){string=string.concat(object.toString().concat("\n"));}
         return string;
+    }
+
+    public void deleteByBranch(Branch branch) {
+        try {
+            List<OrderDTO> list = dao.queryBuilder().where().eq("branch_id",branch.getBranchId()).query();
+            for(OrderDTO dto:list){
+                delete(find(dto.getOrder_id(),branch.getBranchId()));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
     //endregion
 }

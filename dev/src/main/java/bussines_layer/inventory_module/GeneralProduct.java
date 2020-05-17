@@ -4,6 +4,7 @@ import bussines_layer.Result;
 import bussines_layer.enums.Location;
 import bussines_layer.enums.ReportType;
 import data_access_layer.DTO.GeneralProductDTO;
+import data_access_layer.Mapper;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -22,6 +23,7 @@ public class GeneralProduct {
     private List<SpecificProduct> products;
     private List<CatalogProduct> catalog_products;
     private Integer branchId;
+    private Mapper mapper=Mapper.getInstance();
 
     public GeneralProduct(GeneralProductDTO generalProductDTO) {
         this.category_id=generalProductDTO.getCategory_id();
@@ -355,6 +357,7 @@ public class GeneralProduct {
     public Result<CatalogProduct> addCatalogProduct(Integer catalogID, Integer gpID, Float supplier_price, Integer supplier_id, String supplier_category , String name){
         CatalogProduct toAdd = new CatalogProduct(this.branchId,catalogID, gpID, supplier_price, supplier_id, supplier_category , name);
         catalog_products.add(toAdd);
+        mapper.create(toAdd);
         return new Result<>(true,toAdd,"Catalog Product " + name + " of supplier " + supplier_id + " added successfully");
     }
 

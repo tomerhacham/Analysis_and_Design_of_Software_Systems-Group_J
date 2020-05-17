@@ -1,5 +1,6 @@
 package data_access_layer.DAO;
 
+import bussines_layer.Branch;
 import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.inventory_module.GeneralProduct;
 import bussines_layer.inventory_module.Sale;
@@ -9,10 +10,8 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
-import data_access_layer.DTO.OrderDTO;
-import data_access_layer.DTO.SaleDTO;
-import data_access_layer.DTO.catalog_product_in_orderDTO;
-import data_access_layer.DTO.general_product_on_saleDTO;
+import data_access_layer.DTO.*;
+import data_access_layer.Mapper;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -44,6 +43,12 @@ public class SaleDAO {
             try {
                 sale = new Sale(dao.queryBuilder().where().eq("sale_id",sale_id).and().eq("branch_id",branch_id).queryForFirst());
                 identityMap.put(sale_id,sale);
+                List<general_product_on_saleDTO> general_product_on_saleDTOS = general_product_on_sale_dao.queryBuilder().where().eq("sale_id",sale_id).and().eq("branch_id",branch_id).query();
+                LinkedList<GeneralProduct> generalProducts=new LinkedList<>();
+                for(general_product_on_saleDTO dto:general_product_on_saleDTOS){
+                    generalProducts.add(Mapper.getInstance().find_GeneralProduct(dto.getGPID(),branch_id));
+                }
+                sale.setProducts_on_sale(generalProducts);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -95,15 +100,27 @@ public class SaleDAO {
     public void delete(Sale sale){
         try{
             if (identityMap.containsKey(sale.getSale_id())){identityMap.remove(sale.getSale_id(),sale);}
-            SaleDTO saleDTO = new SaleDTO(sale);
+            //SaleDTO saleDTO = new SaleDTO(sale);
             DeleteBuilder<SaleDTO,Void> deleteBuilder = dao.deleteBuilder();
             // only delete the rows on "contract_id" and "branch_id" and "catalog_id"
             deleteBuilder.where().eq("sale_id",sale.getSale_id()).and().eq("branch_id" ,sale.getBranch_id());
             deleteBuilder.delete();
-            System.err.println(String.format("[Delete] %s", saleDTO));
+            cascadeDeleteGeneralProductsOnSale(sale);
+            //System.err.println(String.format("[Delete] %s", saleDTO));
             //catalog_product_in_order are deleted due to cascade
         }catch (Exception e){e.printStackTrace();}
     }
+
+    private void cascadeDeleteGeneralProductsOnSale(Sale sale) {
+            DeleteBuilder<general_product_on_saleDTO,Void> deleteBuilder=general_product_on_sale_dao.deleteBuilder();
+        try {
+            deleteBuilder.where().eq("sale_id",sale.getSale_id()).and().eq("branch_id" ,sale.getBranch_id());
+            deleteBuilder.delete();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
     //region Utilities
     private String concatObjectList(List list){
         String string="";
@@ -111,5 +128,16 @@ public class SaleDAO {
         return string;
     }
     public void clearCache(){this.identityMap.clear();}
+
+    public void deleteByBranch(Branch branch) {
+        try {
+            List<SaleDTO> list = dao.queryBuilder().where().eq("branch_id",branch.getBranchId()).query();
+            for(SaleDTO dto:list){
+                delete(find(dto.getSale_id(),branch.getBranchId()));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
     //endregion
 }

@@ -14,7 +14,7 @@ import java.util.Date;
 @DatabaseTable(tableName = "Sale")
 public class SaleDTO {
     //fields:
-    @DatabaseField(id=true,columnName = "sale_id")
+    @DatabaseField(columnName = "sale_id")
     Integer sale_id;
     @DatabaseField(columnName = "type",dataType = DataType.ENUM_TO_STRING)
     discountType type;
@@ -24,20 +24,10 @@ public class SaleDTO {
     Date end;
     @DatabaseField(columnName = "active")
     Boolean active;
-    @DatabaseField(columnName = "branch_id",foreign = true,foreignAutoRefresh = true,foreignColumnName = "branch_id")
+    @DatabaseField(columnName = "branch_id",foreign =true, foreignColumnName = "branch_id",foreignAutoRefresh = true)
     BranchDTO branch;
-    /*@ForeignCollectionField(eager = false)
-    ForeignCollection<general_product_on_saleDTO> general_product_on_sale;*/ //TODO update Tomer
 
-    //Constructor
-    public SaleDTO(Integer sale_id, discountType type, Date start, Date end, Boolean active, BranchDTO branch) {
-        this.sale_id = sale_id;
-        this.type = type;
-        this.start = start;
-        this.end = end;
-        this.active = active;
-        this.branch = branch;
-    }
+
     public SaleDTO(Sale sale){
         this.sale_id=sale.getSale_id();
         this.type=convertStringTOEnum(sale.getType().name());

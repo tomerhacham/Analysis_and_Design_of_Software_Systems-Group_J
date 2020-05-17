@@ -19,7 +19,7 @@ public class CategoryDTO {
     Integer super_category;
     @DatabaseField(columnName = "level")
     Integer level;
-    @DatabaseField(foreign = true, foreignColumnName = "branch_id",columnName = "branch_id")
+    @DatabaseField(foreign = true, foreignAutoRefresh = true,foreignColumnName = "branch_id",columnName = "branch_id")
     BranchDTO branch_id;
 
     /*@ForeignCollectionField(eager = false,foreignFieldName = "category_id")

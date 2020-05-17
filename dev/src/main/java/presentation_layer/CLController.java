@@ -20,14 +20,14 @@ public class CLController {
     private static BranchController branchController;
 
     public CLController(){
-        branchController = new BranchController();
+        //branchController = new BranchController();
         sc = new Scanner(System.in);    //System.in is a standard input stream
     }
 
     public static void displayMenu() {
         printLogo();
-        //printInitializeMenu();
-        initialize();
+        printInitializeMenu();
+        //initialize();
         while(true) {
             printSuperLiMenu();
             Integer option = getNextInt(sc);
@@ -91,6 +91,7 @@ public class CLController {
                     initialize();
                     return;
                 case 2:
+                    branchController=new BranchController(false);
                     return;
                 case 3:
                     Exit();
@@ -1846,7 +1847,9 @@ public class CLController {
     //region initialize
     private static void initialize() {
         System.err.println("Warning: all of the data in the DB will be erase\n");
+        branchController=new BranchController(true);
         branchController.clearDB();
+        branchController.loadID();
         // Open and switch to initial branch
         Branch initialBranch = branchController.createNewBranch("Initial branch").getData();
         branchController.switchBranch(initialBranch.getBranchId());
