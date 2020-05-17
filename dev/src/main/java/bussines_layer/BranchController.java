@@ -373,7 +373,7 @@ public class BranchController {
     private boolean checkBranchExists(Integer branch_id){
         return branches.containsKey(branch_id);
     }
-    public Result simulateNextDay(Integer numOfDays){
+    public Result<LinkedList<String>> simulateNextDay(Integer numOfDays){
         String msg = String.format("Old date: %s. ", system_curr_date);
         Calendar cal = Calendar.getInstance();
         cal.setTime(system_curr_date);

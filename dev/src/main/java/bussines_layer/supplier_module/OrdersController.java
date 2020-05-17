@@ -186,7 +186,6 @@ public class OrdersController {
 
             if ((order.getType()== OrderType.PeriodicOrder) && (order_day).equals(sys_day)){
                 periodicOrdersToIsuue.add(issueOrder(order).getData());
-                issueOrder(order);
             }
         }
 

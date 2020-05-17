@@ -43,7 +43,16 @@ public class CLController {
                     System.out.println(sim);
                     Integer numOfDays = getNextInt(sc);
                     String msg = String.format("Old date: %s\t", BranchController.system_curr_date);
-                    System.out.println(branchController.simulateNextDay(numOfDays).getMessage());
+
+                    Result<LinkedList<String>> periodicOrdersToPrint = branchController.simulateNextDay(numOfDays);
+                    if (periodicOrdersToPrint.getData() == null){ // if there are no periodic orders to print at this day
+                        System.out.println(periodicOrdersToPrint.getMessage());
+                    }
+                    else{
+                        for (String str:periodicOrdersToPrint.getData()) {
+                            System.out.println(str);
+                        }
+                    }
                     msg = msg.concat(String.format("New date: %s\n", BranchController.system_curr_date));
                     System.out.println(msg);
                     break;
