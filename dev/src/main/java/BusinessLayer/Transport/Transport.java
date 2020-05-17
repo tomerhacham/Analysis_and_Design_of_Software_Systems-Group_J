@@ -62,7 +62,7 @@ public class Transport {
     public void setWeight() {
         TotalWeight=0;
         for (ProductFile f:DestFiles.values()) {
-            TotalWeight=+f.getTotalWeight();
+            TotalWeight += f.getTotalWeight();
         }
     }
 
