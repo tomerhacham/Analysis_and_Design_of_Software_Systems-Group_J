@@ -11,7 +11,7 @@ import java.util.*;
 
 public class BranchController {
 
-    private HashMap<Integer, Branch> branches;      //<Id,Branch>
+    private HashMap<Integer, String> branches;      //<Id,Branch>
     private SupplierController supplierController;
     private Branch currBranch;        //current branch active
     private Integer next_id;    //next id available for new branch
@@ -83,13 +83,16 @@ public class BranchController {
     //region Branch
     public Result<Branch> createNewBranch(String name){
         Branch toAdd = new Branch(getNextId(), name);
-        branches.put(toAdd.getBranchId(), toAdd);
+        branches.put(toAdd.getBranchId(), name);
+        mapper.create(toAdd);
         return new Result<>(true, toAdd, String.format("New branch (ID: %d) created successfully", toAdd.getBranchId()));
     }
 
     public Result switchBranch(Integer branch_id){
         if (checkBranchExists(branch_id)){
-            currBranch = branches.get(branch_id);
+            mapper.clearCache();
+            currBranch = mapper.find_Branch(branch_id);
+            currBranch.loadData();
             return new Result<>(true, currBranch, String.format("Switched to Branch %d successfully", currBranch.getBranchId()));
         }
         return new Result<>(false, null, String.format("Branch with ID %d not found", branch_id));
@@ -103,13 +106,15 @@ public class BranchController {
             return new Result<>(false, null, String.format("Branch with ID %d not found", branch_id));
         }
         branches.remove(branch_id);
+        mapper.delete(mapper.find_Branch(branch_id));
         return new Result<>(true, branch_id, String.format("Branch (ID: %d) removed successfully", branch_id));
     }
 
     public Result editBranchName(Integer branch_id, String newName){
         if (checkBranchExists(branch_id)){
-            Branch b = branches.get(branch_id);
+            Branch b =mapper.find_Branch(branch_id);
             b.setName(newName);
+            mapper.update(b);
             return new Result<>(true, b, String.format("Branch (ID: %d) name changed successfully to: %s", branch_id, newName));
         }
         return new Result<>(false, null, String.format("Branch with ID %d not found", branch_id));
@@ -322,7 +327,14 @@ public class BranchController {
     public Result<LinkedList<String>> issuePeriodicOrder(){
         LinkedList<String> allPeriodicOrdersFromAllBranches = new LinkedList<>();
         for (Integer branchid : branches.keySet()) {
-            LinkedList<String> periodicOrderFromBranch = branches.get(branchid).issuePeriodicOrder().getData();
+            Branch branch;
+            if(!branchid.equals(currBranch.getBranchId())){
+                mapper.clearCache();
+                branch=mapper.find_Branch(branchid);
+                branch.loadData();
+            }
+            else{branch=currBranch;}
+            LinkedList<String> periodicOrderFromBranch = branch.issuePeriodicOrder().getData();
             if(periodicOrderFromBranch!=null){ // the list can be null only if for this branch there are no periodic orders to send at this day
                 allPeriodicOrdersFromAllBranches.addAll(periodicOrderFromBranch);
             }
@@ -337,7 +349,7 @@ public class BranchController {
     //endregion
 
     //region Getters & Setters
-    public HashMap<Integer, Branch> getBranches() {
+    public HashMap<Integer, String> getBranches() {
         return branches;
     }
 
@@ -375,11 +387,10 @@ public class BranchController {
     @Override
     public String toString() {
         String toReturn = "";
-        for (Branch b : branches.values()){
-            toReturn = toReturn.concat(b.toString()+"\n");
+        for (Integer id : branches.keySet()){
+            toReturn = toReturn.concat(String.format("ID:%d Name:%s\n",id,branches.get(id)));
         }
         return toReturn;
     }
-
     //endregion
 }

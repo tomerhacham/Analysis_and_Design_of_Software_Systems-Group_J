@@ -11,7 +11,6 @@ import java.util.LinkedList;
 import javafx.util.Pair;
 
 /**
- * Singleton FacadeController.
  * Represent the Interface layer of the system.
  *
  * No functionality.
@@ -24,24 +23,16 @@ import javafx.util.Pair;
 public class SupplierModule {
 
     // static variable single_instance of type Singleton
-    private static SupplierModule instance = null;
     private Integer branchId;
     private ContractController contractController;
     private OrdersController ordersController;
 
-    private SupplierModule(Integer branchId){
+    public SupplierModule(Integer branchId){
         this.branchId = branchId;
         contractController = new ContractController(branchId);
-        ordersController = OrdersController.getInstance(branchId);
+        ordersController = new OrdersController(branchId);
     }
 
-    // static method to create instance of Singleton class
-    public static SupplierModule getInstance(Integer branchId){
-        if (instance == null)
-            instance = new SupplierModule(branchId);
-
-        return instance;
-    }
 
     //region Contract Controller
 
@@ -121,7 +112,7 @@ public class SupplierModule {
     }
 
     public Result<HashMap<CatalogProduct, Integer>> getProductsToAcceptOrder(Integer orderID){
-        return OrdersController.getInstance(branchId).getProductsToAcceptOrder(orderID);
+        return this.ordersController.getProductsToAcceptOrder(orderID);
     }
 
     public Result<LinkedList<String>> displayAllOrders(){

@@ -16,7 +16,8 @@ public class ProductController {
 
     public ProductController(Integer branchId) {
         this.mapper=Mapper.getInstance();
-        generalProducts = new LinkedList<>();
+        this.generalProducts=mapper.loadGeneralProducts(branchId);
+        if(generalProducts.isEmpty()){generalProducts=new LinkedList<>();}
         this.next_id = this.mapper.loadID("product");
         this.branchId = branchId;
     }

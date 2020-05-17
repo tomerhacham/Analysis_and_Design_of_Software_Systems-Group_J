@@ -21,7 +21,7 @@ public class Branch {
     public Branch(Integer branch_id, String name) {
         this.branch_id = branch_id;
         inventory = new Inventory(branch_id);
-        supplierModule = SupplierModule.getInstance(branch_id);
+        supplierModule = new SupplierModule(branch_id);
         this.name = name;
     }
     public Branch(BranchDTO branchDTO){
@@ -301,7 +301,10 @@ public class Branch {
     }
     //endregion
 
-
+    public void loadData(){
+        this.inventory=new Inventory(this.branch_id);
+        this.supplierModule = new SupplierModule(branch_id);
+    }
     @Override
     public String toString() {
         return "" +

@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
- * Singleton OrdersController.
  * Responsible of all the Orders in the system.
  * Holds documentation of all the Orders.
  *
@@ -23,13 +22,11 @@ import java.util.LinkedList;
 //Singleton
 public class OrdersController {
 
-    // static variable single_instance of type Singleton
-    private static OrdersController instance = null;
     private LinkedList<Order> orders;
     private int orderidCounter;
     private Integer branch_id;
 
-    private OrdersController(Integer branch_id){
+    public OrdersController(Integer branch_id){
         this.branch_id = branch_id;
         orders = new LinkedList<>();
         orderidCounter = 0;
@@ -37,14 +34,6 @@ public class OrdersController {
 
 
     //region methods
-
-    // static method to create instance of Singleton class
-    public static OrdersController getInstance(Integer branch_id){
-        if (instance == null)
-            instance = new OrdersController(branch_id);
-
-        return instance;
-    }
 
     //get specific order from the systems order list
     public Result<Order> getOrder(int orderid){

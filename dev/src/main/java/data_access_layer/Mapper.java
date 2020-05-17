@@ -12,6 +12,8 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
+import sun.java2d.loops.FillRect;
+
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -162,7 +164,7 @@ public class Mapper {
         try {
             List<CategoryDTO> dto_main_categories = category_dao.dao.queryBuilder().where().eq("branch_id", branch_id).and().eq("super_category_id", 0).query();
             for (CategoryDTO main_cat_dto : dto_main_categories) {
-                Category category = new Category(main_cat_dto);
+                Category category = find_Category(main_cat_dto.getId(),branch_id);
                 category.setSub_categories(LoadSubCategories(branch_id, category.getId()));
                 main_categories.add(category);
             }
@@ -178,7 +180,7 @@ public class Mapper {
         try {
             List<CategoryDTO> dto_sub_categories = category_dao.dao.queryBuilder().where().eq("branch_id", branch_id).and().eq("super_category_id", id).query();
             for (CategoryDTO sub_cat_dto : dto_sub_categories) {
-                Category category = new Category(sub_cat_dto);
+                Category category = find_Category(sub_cat_dto.getId(),branch_id);
                 category.setSub_categories(LoadSubSubCategories(branch_id, category.getId()));
                 sub_categories.add(category);
             }
@@ -193,7 +195,7 @@ public class Mapper {
         try {
             List<CategoryDTO> dto_sub_sub_categories = category_dao.dao.queryBuilder().where().eq("branch_id", branch_id).and().eq("super_category_id", category_id).query();
             for (CategoryDTO sub_sub_cat_dto : dto_sub_sub_categories) {
-                Category category = new Category(sub_sub_cat_dto);
+                Category category = find_Category(sub_sub_cat_dto.getId(),branch_id);
                 category.setGeneralProducts(loadGeneralProduct(branch_id,category_id));
             }
         } catch (SQLException throwables) {
@@ -207,7 +209,7 @@ public class Mapper {
         try {
             List<GeneralProductDTO> generalProductDTOS = general_product_dao.dao.queryBuilder().where().eq("branch_id",branch_id).and().eq("category_id",category_id).query();
             for(GeneralProductDTO dto:generalProductDTOS){
-                GeneralProduct generalProduct= general_product_dao.find(dto.getGPID(),category_id,branch_id);
+                GeneralProduct generalProduct= find_GeneralProductbyCategory(dto.getGPID(),category_id,branch_id);
                 generalProduct.setCatalog_products(loadCatalogProducts(generalProduct.getGpID(),generalProduct.getBranch_id()));
                 generalProduct.setProducts(loadSpecificProducts(generalProduct.getGpID(),generalProduct.getBranch_id()));
                 generalProducts.add(generalProduct);
@@ -224,7 +226,7 @@ public class Mapper {
         try {
             List<SpecificProductDTO> DTos  = specific_product_dao.dao.queryBuilder().where().eq("GPID",gpID).and().eq("branch_id",branch_id).query();
             for(SpecificProductDTO sp:DTos){
-                specificProducts.add(specific_product_dao.find(sp.getId(),branch_id));
+                specificProducts.add(find_SpecificProduct(sp.getId(),branch_id));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -237,7 +239,7 @@ public class Mapper {
         try {
             List<catalog_product_in_general_productDTO> binding  = catalog_product_dao.catalog_product_in_general_products_dao.queryBuilder().where().eq("GPID",gpID).and().eq("branch_id",branch_id).query();
             for(catalog_product_in_general_productDTO cpg:binding){
-                catalogProducts.add(catalog_product_dao.find(cpg.getCatalogID(),branch_id));
+                catalogProducts.add(find_CatalogProduct(cpg.getCatalogID(),branch_id));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -251,7 +253,7 @@ public class Mapper {
         try {
             List<SaleDTO> saleDTOS = sale_dao.dao.queryBuilder().where().eq("branch_id",branch_id).query();
             for(SaleDTO saleDTO:saleDTOS){
-                sales.add(sale_dao.find(saleDTO.getSale_id(),branch_id));
+                sales.add(find_Sale(saleDTO.getSale_id(),branch_id));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -264,7 +266,7 @@ public class Mapper {
         try {
             List<OrderDTO> orderDTOS = order_dao.dao.queryBuilder().where().eq("branch_id",branch_id).query();
             for(OrderDTO orderDTO:orderDTOS){
-                orders.add(order_dao.find(orderDTO.getOrder_id(),branch_id));
+                orders.add(find_Order(orderDTO.getOrder_id(),branch_id));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -277,11 +279,11 @@ public class Mapper {
         try {
             List<ContractDTO> contractDTOS = contract_dao.dao.queryBuilder().where().eq("branch_id",branch_id).query();
             for(ContractDTO contractDTO:contractDTOS){
-                Contract contract = contract_dao.find(contractDTO.getContract_id(),branch_id);
+                Contract contract = find_Contract(contractDTO.getContract_id(),branch_id);
                 contract.setCategories(loadContractCategories(contract.getContractID(),branch_id));
                 contract.setCostEngineering(loadCostEngineering(contract.getContractID(),branch_id));
                 contract.setProducts(loadCatalogProductsInContract(contract.getContractID(),branch_id));
-                contract.setSupplier(supplier_dao.find(contractDTO.getSupplier_id()));
+                contract.setSupplier(find_Supplier(contractDTO.getSupplier_id()));
                 contracts.add(contract);
             }
         } catch (SQLException throwables) {
@@ -296,7 +298,7 @@ public class Mapper {
         try {
             List<catalog_product_in_contractDTO> catalog_product_in_contractDTOS = contract_dao.catalog_product_in_contract_dao.queryBuilder().where().eq("branch_id",branch_id).and().eq("contract_id",contractID).query();
             for (catalog_product_in_contractDTO dto:catalog_product_in_contractDTOS){
-                catalogProducts.put(dto.getCatalog_id(),catalog_product_dao.find(dto.getCatalog_id(),branch_id));
+                catalogProducts.put(dto.getCatalog_id(),find_CatalogProduct(dto.getCatalog_id(),branch_id));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -305,7 +307,7 @@ public class Mapper {
     }
 
     private CostEngineering loadCostEngineering(Integer contract_id, Integer branch_id) {
-        return cost_engineering_dao.find(contract_id,branch_id);
+        return find_CostEngineering(contract_id,branch_id);
     }
 
     private LinkedList<String> loadContractCategories(Integer contractID, Integer branch_id) {
@@ -322,6 +324,19 @@ public class Mapper {
     }
     //endregion
 
+    //TODO: Warning! the CategoryController must be instate before the ProductController
+    public LinkedList<GeneralProduct> loadGeneralProducts(Integer branch_id){
+        LinkedList<GeneralProduct> generalProducts=new LinkedList<>();
+        try {
+            List<GeneralProductDTO>  generalProductDTOS = general_product_dao.dao.queryBuilder().where().eq("branch_id",branch_id).query();
+            for(GeneralProductDTO dto:generalProductDTOS){
+                generalProducts.add(find_GeneralProduct(dto.getGPID(),branch_id));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return generalProducts;
+    }
 
     //region CRUD section
     //region Branch Management
@@ -521,6 +536,9 @@ public class Mapper {
     //region General Product Management
     public GeneralProduct find_GeneralProduct(Integer general_product_id, Integer branch_id){
         return general_product_dao.find(general_product_id,branch_id);
+    }
+    public GeneralProduct find_GeneralProductbyCategory(Integer general_product_id, Integer category_id,Integer branch_id){
+        return general_product_dao.find(general_product_id,category_id,branch_id);
     }
     /**
      * write general product to the DB
