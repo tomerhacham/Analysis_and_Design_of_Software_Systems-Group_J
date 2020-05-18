@@ -40,8 +40,16 @@ public class CostEngineeringDAO {
         else{
             try {
                 List<CostEngineeringDTO> costEngineeringDTOS = dao.queryBuilder().where().eq("contract_id", contract_id).and().eq("branch_id",branch_id).query();
-                costEngineering = new CostEngineering(costEngineeringDTOS);
-                identityMap.put(costEngineering.getContract_id() , costEngineering);
+                if(costEngineeringDTOS != null && !costEngineeringDTOS.isEmpty()) {
+                    HashMap<Integer , Integer> minQuntity = new HashMap<>();
+                    HashMap<Integer , Float> newPrice = new HashMap<>();
+                    for (CostEngineeringDTO dto:costEngineeringDTOS){
+                        minQuntity.put(dto.getCatalog_id(),dto.getMin_quantity());
+                        newPrice.put(dto.getCatalog_id(),dto.getDiscount_price());
+                    }
+                    costEngineering = new CostEngineering(contract_id,branch_id,minQuntity,newPrice);
+                    identityMap.put(costEngineering.getContract_id(), costEngineering);
+                }
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -95,16 +103,14 @@ public class CostEngineeringDAO {
      */
     public void delete (CostEngineering costEngineering ){
         HashMap<Integer , Integer> minQuntity = costEngineering.getMinQuntity(); // <catalogid , quantity>
-        HashMap<Integer , Float> newPrice = costEngineering.getNewPrice(); // <catalogid , newPrice>
-
         try {
             for (Integer catalogid : minQuntity.keySet()) {
-                CostEngineeringDTO costEngineeringDTO = new CostEngineeringDTO(costEngineering , catalogid , minQuntity.get(catalogid) , newPrice.get(catalogid) );
+                //CostEngineeringDTO costEngineeringDTO = new CostEngineeringDTO(costEngineering , catalogid , minQuntity.get(catalogid) , newPrice.get(catalogid) );
                 DeleteBuilder<CostEngineeringDTO,Void> deleteBuilder = dao.deleteBuilder();
                 // only delete the rows on "contract_id" and "branch_id" and "catalog_id"
                 deleteBuilder.where().eq("contract_id", costEngineering.getContract_id()).and().eq("branch_id" , costEngineering.getBranch_id()).and().eq("catalog_id" , catalogid);
                 deleteBuilder.delete();
-                System.err.println(String.format("[Deleting] %s", costEngineeringDTO));
+                //System.err.println(String.format("[Deleting] %s", costEngineeringDTO));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();

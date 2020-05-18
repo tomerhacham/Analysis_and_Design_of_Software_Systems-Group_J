@@ -4,19 +4,18 @@ import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.inventory_module.GeneralProduct;
 import bussines_layer.inventory_module.SpecificProduct;
 import bussines_layer.supplier_module.Contract;
+import bussines_layer.supplier_module.Order;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
-import data_access_layer.DTO.CatalogProductDTO;
-import data_access_layer.DTO.CostEngineeringDTO;
-import data_access_layer.DTO.catalog_product_in_general_productDTO;
-import data_access_layer.DTO.categories_in_contractDTO;
+import data_access_layer.DTO.*;
 import javafx.util.Pair;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 
 public class CatalogProductDAO {
     HashMap<Integer, CatalogProduct> identityMap; //assuming that all the object are relevant for the currently active branch in the business layer
@@ -42,8 +41,11 @@ public class CatalogProductDAO {
         }
         else{
             try {
-                catalogProduct = new CatalogProduct(dao.queryBuilder().where().eq("catalog_id",catalog_id).and().eq("branch_id",branch_id).queryForFirst());
-                identityMap.put(catalog_id,catalogProduct);
+                CatalogProductDTO catalogProductDTO = dao.queryBuilder().where().eq("catalog_id",catalog_id).and().eq("branch_id",branch_id).queryForFirst();
+                if (catalogProductDTO!=null) {
+                    catalogProduct = new CatalogProduct(catalogProductDTO);
+                    identityMap.put(catalog_id, catalogProduct);
+                }
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -104,6 +106,7 @@ public class CatalogProductDAO {
             // only delete the rows on "catalog_id" and "GPID" and "branch_id"
             deleteBuilder1.where().eq("catalog_id" , catalogProduct.getCatalogID()).and().eq("branch_id" , catalogProduct.getBranch_id());
             deleteBuilder1.delete();
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -112,6 +115,22 @@ public class CatalogProductDAO {
     //region Utilities
     public void clearCache(){
         this.identityMap.clear();
+    }
+
+    public void deleteByBranch(Integer branch_id) {
+        try {
+            List<CatalogProductDTO> list = dao.queryBuilder().where().eq("branch_id",branch_id).query();
+            if (list !=null && !list.isEmpty()) {
+                for (CatalogProductDTO dto : list) {
+                    CatalogProduct catalogProduct = find(dto.getCatalogID(),branch_id);
+                    if (catalogProduct!=null){
+                        delete(catalogProduct);
+                    }
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
     //endregion
 }

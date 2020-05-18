@@ -43,8 +43,11 @@ public class SpecificProductDAO {
         }
         else{
             try {
-                specificProduct = new SpecificProduct(dao.queryBuilder().where().eq("branch_id",branch_id).and().eq("specific_product_id",specific_product_id).queryForFirst());
-                identityMap.put(specific_product_id,specificProduct);
+                SpecificProductDTO dto = dao.queryBuilder().where().eq("branch_id",branch_id).and().eq("specific_product_id",specific_product_id).queryForFirst();
+                if (dto!=null) {
+                    specificProduct = new SpecificProduct(dto);
+                    identityMap.put(specific_product_id, specificProduct);
+                }
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -97,7 +100,7 @@ public class SpecificProductDAO {
             // only delete the rows on "contract_id" and "branch_id" and "catalog_id"
             deleteBuilder.where().eq("GPID", specificProduct.getGpId()).and().eq("branch_id" , specificProduct.getBranch_id()).and().eq("specific_product_id" , specificProduct.getId());
             deleteBuilder.delete();
-            System.err.println(String.format("[Writing] %s", specificProductDTO));
+            //System.err.println(String.format("[Writing] %s", specificProductDTO));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

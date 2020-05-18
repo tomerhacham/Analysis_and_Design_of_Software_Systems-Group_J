@@ -26,8 +26,8 @@ public class SupplierController {
 
     //constructor
     private SupplierController(){
-        suppliers = new HashMap<Integer, SupplierCard>();
         this.mapper=Mapper.getInstance();
+        suppliers = mapper.loadSuppliers();
     }
 
     // static method to create instance of Singleton class

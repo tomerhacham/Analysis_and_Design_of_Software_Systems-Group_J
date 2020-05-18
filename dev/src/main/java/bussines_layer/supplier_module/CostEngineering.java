@@ -26,15 +26,11 @@ public class CostEngineering {
         minQuntity = new HashMap<Integer, Integer>();
         newPrice = new HashMap<Integer, Float>();
     }
-    public CostEngineering(List<CostEngineeringDTO> product_in_cost_engineering){
-        this.branch_id = product_in_cost_engineering.get(0).getBranch().getBranch_id();
-        this.contract_id = product_in_cost_engineering.get(0).getContract_id();
-        this.minQuntity = new HashMap<>();
-        this.newPrice = new HashMap<>();
-        for (CostEngineeringDTO costEngineeringDTO:product_in_cost_engineering){
-            minQuntity.put(costEngineeringDTO.getCatalog_id(),costEngineeringDTO.getMin_quantity());
-            newPrice.put(costEngineeringDTO.getCatalog_id(),costEngineeringDTO.getDiscount_price());
-        }
+    public CostEngineering(Integer contract_id,Integer branch_id, HashMap<Integer , Integer> minQuntity,HashMap<Integer , Float> newPrice ){
+        this.contract_id=contract_id;
+        this.branch_id=branch_id;
+        this.minQuntity=minQuntity;
+        this.newPrice=newPrice;
     }
 
 

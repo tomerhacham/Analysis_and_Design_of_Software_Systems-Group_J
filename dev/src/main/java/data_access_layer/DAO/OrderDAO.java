@@ -12,6 +12,7 @@ import data_access_layer.DTO.CatalogProductDTO;
 import data_access_layer.DTO.ContractDTO;
 import data_access_layer.DTO.OrderDTO;
 import data_access_layer.DTO.catalog_product_in_orderDTO;
+import data_access_layer.Mapper;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -43,14 +44,25 @@ public class OrderDAO {
         }
         else{
             try {
-                order = new Order(dao.queryBuilder().where().eq("order_id",order_id).and().eq("branch_id",branch_id).queryForFirst());
-                identityMap.put(order_id,order);
-                //todo:suppliercard;
-                List<catalog_product_in_orderDTO> catalog_product_in_orderDTOS = catalog_product_in_order_dao.queryBuilder().where().eq("order_id",order_id).and().eq("branch_id",branch_id).query();
-                HashMap<CatalogProduct, Integer> productsAndQuantity = new HashMap<>(); // <product , quantity>
-                HashMap<CatalogProduct , Float> productsAndPrice = new HashMap<>(); //<product, price>
-                for(catalog_product_in_orderDTO dto:catalog_product_in_orderDTOS){
-
+                OrderDTO dto = dao.queryBuilder().where().eq("order_id",order_id).and().eq("branch_id",branch_id).queryForFirst();
+                if(dto!=null) {
+                    order = new Order(dto);
+                    identityMap.put(order_id, order);
+                    List<catalog_product_in_orderDTO> catalog_product_in_orderDTOS = catalog_product_in_order_dao.queryBuilder().where().eq("order_id", order_id).and().eq("branch_id", branch_id).query();
+                    if (catalog_product_in_orderDTOS != null && !catalog_product_in_orderDTOS.isEmpty()) {
+                        HashMap<CatalogProduct, Integer> productsAndQuantity = new HashMap<>(); // <product , quantity>
+                        HashMap<CatalogProduct, Float> productsAndPrice = new HashMap<>(); //<product, price>
+                        for (catalog_product_in_orderDTO catalog_dto : catalog_product_in_orderDTOS) {
+                            CatalogProduct catalogProduct = Mapper.getInstance().find_CatalogProduct(catalog_dto.getCatalog_id(), catalog_dto.getBranch_id());
+                            if(catalogProduct!=null){
+                                productsAndQuantity.put(catalogProduct, catalog_dto.getQuantity());
+                                productsAndPrice.put(catalogProduct, catalog_dto.getPrice());
+                            }
+                        }
+                        order.setSupplier(Mapper.getInstance().find_Supplier(dto.getSupplier()));
+                        order.setProductsAndPrice(productsAndPrice);
+                        order.setProductsAndQuantity(productsAndQuantity);
+                    }
                 }
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
@@ -125,7 +137,7 @@ public class OrderDAO {
             // only delete the rows on "contract_id" and "branch_id" and "catalog_id"
             deleteBuilder.where().eq("order_id", order.getOrderID()).and().eq("branch_id" ,order.getBranch_id());
             deleteBuilder.delete();
-            System.err.println(String.format("[Delete] %s", orderDTO));
+            //System.err.println(String.format("[Delete] %s", orderDTO));
             //catalog_product_in_order are deleted due to cascade
         }catch (Exception e){e.printStackTrace();}
     }
@@ -169,11 +181,16 @@ public class OrderDAO {
         return string;
     }
 
-    public void deleteByBranch(Branch branch) {
+    public void deleteByBranch(Integer branch_id) {
         try {
-            List<OrderDTO> list = dao.queryBuilder().where().eq("branch_id",branch.getBranchId()).query();
-            for(OrderDTO dto:list){
-                delete(find(dto.getOrder_id(),branch.getBranchId()));
+            List<OrderDTO> list = dao.queryBuilder().where().eq("branch_id",branch_id).query();
+            if (list !=null && !list.isEmpty()) {
+                for (OrderDTO dto : list) {
+                    Order order = find(dto.getOrder_id(),branch_id);
+                    if (order!=null){
+                        delete(order);
+                    }
+                }
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();

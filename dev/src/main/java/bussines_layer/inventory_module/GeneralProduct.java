@@ -20,10 +20,10 @@ public class GeneralProduct {
     private Float sale_price;
     private Integer quantity;
     private Integer min_quantity;
-    private List<SpecificProduct> products;
-    private List<CatalogProduct> catalog_products;
     private Integer branchId;
     private Mapper mapper=Mapper.getInstance();
+    private List<SpecificProduct> products;
+    private List<CatalogProduct> catalog_products;
 
     public GeneralProduct(GeneralProductDTO generalProductDTO) {
         this.category_id=generalProductDTO.getCategory_id();

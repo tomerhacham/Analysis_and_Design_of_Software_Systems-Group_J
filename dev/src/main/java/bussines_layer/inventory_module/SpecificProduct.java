@@ -26,7 +26,7 @@ public class SpecificProduct {
     }
     public SpecificProduct(SpecificProductDTO specificProductDTO){
         this.branch_id=specificProductDTO.getBranch_id().getBranch_id();
-        this.gpId=specificProductDTO.getId();
+        this.gpId=specificProductDTO.getGeneralProduct();
         this.id=specificProductDTO.getId();
         this.location=specificProductDTO.getLocation();
         this.expiration_date=specificProductDTO.getExpiration_date();

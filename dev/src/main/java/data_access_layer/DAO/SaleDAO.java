@@ -41,14 +41,22 @@ public class SaleDAO {
         }
         else{
             try {
-                sale = new Sale(dao.queryBuilder().where().eq("sale_id",sale_id).and().eq("branch_id",branch_id).queryForFirst());
-                identityMap.put(sale_id,sale);
-                List<general_product_on_saleDTO> general_product_on_saleDTOS = general_product_on_sale_dao.queryBuilder().where().eq("sale_id",sale_id).and().eq("branch_id",branch_id).query();
-                LinkedList<GeneralProduct> generalProducts=new LinkedList<>();
-                for(general_product_on_saleDTO dto:general_product_on_saleDTOS){
-                    generalProducts.add(Mapper.getInstance().find_GeneralProduct(dto.getGPID(),branch_id));
+                SaleDTO S = dao.queryBuilder().where().eq("sale_id",sale_id).and().eq("branch_id",branch_id).queryForFirst();
+                if (S!= null) {
+                    sale = new Sale(S);
+                    identityMap.put(sale_id, sale);
+                    List<general_product_on_saleDTO> general_product_on_saleDTOS = general_product_on_sale_dao.queryBuilder().where().eq("sale_id", sale_id).and().eq("branch_id", branch_id).query();
+                    if (general_product_on_saleDTOS != null && !general_product_on_saleDTOS.isEmpty()) {
+                        LinkedList<GeneralProduct> generalProducts = new LinkedList<>();
+                        for (general_product_on_saleDTO dto : general_product_on_saleDTOS) {
+                            GeneralProduct generalProduct = Mapper.getInstance().find_GeneralProduct(dto.getGPID(), branch_id);
+                            if(generalProduct!=null) {
+                                generalProducts.add(generalProduct);
+                            }
+                        }
+                        sale.setProducts_on_sale(generalProducts);
+                    }
                 }
-                sale.setProducts_on_sale(generalProducts);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -129,11 +137,16 @@ public class SaleDAO {
     }
     public void clearCache(){this.identityMap.clear();}
 
-    public void deleteByBranch(Branch branch) {
+    public void deleteByBranch(Integer branch_id) {
         try {
-            List<SaleDTO> list = dao.queryBuilder().where().eq("branch_id",branch.getBranchId()).query();
-            for(SaleDTO dto:list){
-                delete(find(dto.getSale_id(),branch.getBranchId()));
+            List<SaleDTO> list = dao.queryBuilder().where().eq("branch_id",branch_id).query();
+            if (list != null && !list.isEmpty()) {
+                for (SaleDTO dto : list) {
+                    Sale sale = find(dto.getSale_id(), branch_id);
+                    if (sale!=null) {
+                        delete(sale);
+                    }
+                }
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();

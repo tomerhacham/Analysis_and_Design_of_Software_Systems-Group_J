@@ -15,6 +15,7 @@ import data_access_layer.Mapper;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ContractDAO {
@@ -43,8 +44,15 @@ public class ContractDAO {
         }
         else{
             try {
-                contract = new Contract(dao.queryBuilder().where().eq("contract_id",contract_id).and().eq("branch_id",branch_id).queryForFirst());
-                identityMap.put(contract_id,contract);
+                ContractDTO contractDTO = dao.queryBuilder().where().eq("contract_id",contract_id).and().eq("branch_id",branch_id).queryForFirst();
+                if(contractDTO != null) {
+                    contract = new Contract(contractDTO);
+                    contract.setCategories(loadContractCategories(contractDTO.getContract_id(), branch_id));
+                    contract.setCostEngineering(loadCostEngineering(contractDTO.getContract_id(), branch_id));
+                    contract.setProducts(loadCatalogProductsInContract(contractDTO.getContract_id(), branch_id));
+                    contract.setSupplier(Mapper.getInstance().find_Supplier(contractDTO.getSupplier_id()));
+                    identityMap.put(contract_id, contract);
+                }
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -89,7 +97,10 @@ public class ContractDAO {
                     deleteCategoryFromContract(contract,category);
                 }
             }
-            Mapper.getInstance().delete(contract.getCostEngineering());
+            CostEngineering costEngineering = contract.getCostEngineering();
+            if (costEngineering!=null) {
+                Mapper.getInstance().delete(costEngineering);
+            }
 
             DeleteBuilder<ContractDTO,Void> deleteBuilder = dao.deleteBuilder();
             // only delete the rows on "contract_id" and "branch_id" and "catalog_id"
@@ -174,15 +185,60 @@ public class ContractDAO {
         this.identityMap.clear();
     }
 
-    public void deleteByBranch(Branch branch) {
+    public void deleteByBranch(Integer branch_id) {
         try {
-            List<ContractDTO> list = dao.queryBuilder().where().eq("branch_id",branch.getBranchId()).query();
-            for(ContractDTO dto:list){
-                delete(find(dto.getContract_id(),branch.getBranchId()));
+            List<ContractDTO> list = dao.queryBuilder().where().eq("branch_id",branch_id).query();
+            if(list!=null && !list.isEmpty()) {
+                for (ContractDTO dto : list) {
+                    Contract contract = find(dto.getContract_id(),branch_id);
+                    if (contract!=null) {
+                        delete(contract);
+                    }
+                }
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    }
+    //endregion
+
+    //region load contract
+
+    public HashMap<Integer, CatalogProduct> loadCatalogProductsInContract(Integer contractID, Integer branch_id) {
+        HashMap<Integer,CatalogProduct> catalogProducts = new HashMap<>();
+        try {
+            List<catalog_product_in_contractDTO> catalog_product_in_contractDTOS = catalog_product_in_contract_dao.queryBuilder().where().eq("branch_id",branch_id).and().eq("contract_id",contractID).query();
+            if(catalog_product_in_contractDTOS != null && !catalog_product_in_contractDTOS.isEmpty()) {
+                for (catalog_product_in_contractDTO dto : catalog_product_in_contractDTOS) {
+                    CatalogProduct catalogProduct = Mapper.getInstance().find_CatalogProduct(dto.getCatalog_id(),branch_id);
+                    if (catalogProduct!=null) {
+                        catalogProducts.put(catalogProduct.getCatalogID(),catalogProduct);
+                    }
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return catalogProducts;
+    }
+
+    public CostEngineering loadCostEngineering(Integer contract_id, Integer branch_id) {
+        return Mapper.getInstance().find_CostEngineering(contract_id,branch_id);
+    }
+
+    public LinkedList<String> loadContractCategories(Integer contractID, Integer branch_id) {
+        LinkedList<String> categories = new LinkedList<>();
+        try {
+            List<categories_in_contractDTO> categories_in_contractDTOS = categories_in_contract_dao.queryBuilder().where().eq("contract_id",contractID).and().eq("branch_id",branch_id).query();
+            if(categories_in_contractDTOS != null && !categories_in_contractDTOS.isEmpty()) {
+                for (categories_in_contractDTO dto : categories_in_contractDTOS) {
+                    categories.add(dto.getCategory());
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return categories;
     }
     //endregion
 }

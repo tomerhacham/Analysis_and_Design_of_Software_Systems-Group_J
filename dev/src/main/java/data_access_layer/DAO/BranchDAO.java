@@ -9,6 +9,7 @@ import com.sun.java.swing.plaf.windows.WindowsDesktopIconUI;
 import data_access_layer.DTO.BranchDTO;
 import data_access_layer.DTO.SupplierDTO;
 import data_access_layer.DTO.contact_of_supplierDTO;
+import data_access_layer.Mapper;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -41,8 +42,12 @@ public class BranchDAO {
         }
         else{
             try {
-                branch = new Branch(dao.queryForId(branch_id));
-                identityMap.put(branch_id,branch);
+                BranchDTO branchDTO = dao.queryForId(branch_id);
+                if(branchDTO != null) {
+                    branch = new Branch(branchDTO);
+                    branch.loadData();
+                    identityMap.put(branch_id, branch);
+                }
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -74,12 +79,18 @@ public class BranchDAO {
     }
     /**
      * delete Branch from the DB
-     * @param branch
+     * @param branch_id
      */
-    public void delete(Branch branch){
-        if(identityMap.containsKey(branch.getBranchId())){identityMap.remove(branch.getBranchId(),branch);}
+    public void delete(Integer branch_id){
+        //if(identityMap.containsKey(branch_id){identityMap.remove(branch.getBranchId(),branch);}
         try{
-            BranchDTO branchDTO=new BranchDTO(branch);
+            BranchDTO branchDTO=new BranchDTO(branch_id);
+            Mapper.getInstance().general_product_dao.deleteByBranch(branch_id);
+            Mapper.getInstance().sale_dao.deleteByBranch(branch_id);
+            Mapper.getInstance().contract_dao.deleteByBranch(branch_id);
+            Mapper.getInstance().category_dao.deleteByBranch(branch_id);
+            Mapper.getInstance().order_dao.deleteByBranch(branch_id);
+            Mapper.getInstance().catalog_product_dao.deleteByBranch(branch_id);
             dao.delete(branchDTO);
         }catch (Exception e){e.printStackTrace();}
     }

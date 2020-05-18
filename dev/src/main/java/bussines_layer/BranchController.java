@@ -19,12 +19,12 @@ public class BranchController {
     private Mapper mapper;
 
     public BranchController (Boolean external_initialize){
-        mapper=Mapper.getInstance();
-        branches= new HashMap<>();
-        supplierController = SupplierController.getInstance();
-        currBranch = null;
-        if(!external_initialize){next_id = mapper.loadID("branch");}
         system_curr_date = new Date();
+        mapper=Mapper.getInstance();
+        if(!external_initialize){next_id = mapper.loadID("branch");}
+        supplierController = SupplierController.getInstance();
+        branches= mapper.loadBranches();
+        currBranch = null;
     }
 
     //region Supplier Controller
@@ -91,8 +91,7 @@ public class BranchController {
     public Result switchBranch(Integer branch_id){
         if (checkBranchExists(branch_id)){
             mapper.clearCache();
-            currBranch = mapper.find_Branch(branch_id);
-            currBranch.loadData();
+            currBranch = mapper.loadBranch(branch_id);
             return new Result<>(true, currBranch, String.format("Switched to Branch %d successfully", currBranch.getBranchId()));
         }
         return new Result<>(false, null, String.format("Branch with ID %d not found", branch_id));
@@ -106,7 +105,8 @@ public class BranchController {
             return new Result<>(false, null, String.format("Branch with ID %d not found", branch_id));
         }
         branches.remove(branch_id);
-        mapper.delete(mapper.find_Branch(branch_id));
+        //mapper.delete(mapper.find_Branch(branch_id));
+        mapper.delete(branch_id);
         return new Result<>(true, branch_id, String.format("Branch (ID: %d) removed successfully", branch_id));
     }
 

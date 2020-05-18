@@ -1,6 +1,7 @@
 package data_access_layer.DAO;
 
 import bussines_layer.SupplierCard;
+import bussines_layer.supplier_module.Contract;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.stmt.DeleteBuilder;
@@ -49,12 +50,17 @@ public class SupplierDAO {
             try {
                 SupplierDTO dto = dao.queryForId(supplier_id);
                 LinkedList<String> contactNames = new LinkedList<>();
-                for(contact_of_supplierDTO contact:dto.getContact_list()){
-                    contactNames.add(contact.getName());
+                if(dto!=null) {
+                    List<contact_of_supplierDTO> contact_of_supplierDTOS = contacts_of_supplier_dao.queryBuilder().where().eq("supplier_id", supplier_id).query();
+                    if (contact_of_supplierDTOS != null && !contact_of_supplierDTOS.isEmpty()) {
+                        for (contact_of_supplierDTO contact : contact_of_supplierDTOS) {
+                            contactNames.add(contact.getName());
+                        }
+                    }
+                    SupplierCard _supplierCard = new SupplierCard(dto, contactNames);
+                    identityMap.put(supplier_id, _supplierCard);
+                    supplierCard = _supplierCard;
                 }
-                SupplierCard _supplierCard = new SupplierCard(dto,contactNames);
-                identityMap.put(supplier_id,_supplierCard);
-                supplierCard=_supplierCard;
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -131,7 +137,7 @@ public class SupplierDAO {
             // only delete the rows on "order_id" and "catalog_id"
             deleteBuilder.where().eq("supplier_id" , supplier.getId()).and().eq("name" , contact);
             deleteBuilder.delete();
-            System.err.println(String.format("[DELETE] %s", contact));
+            //System.err.println(String.format("[DELETE] %s", contact));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -148,8 +154,13 @@ public class SupplierDAO {
                 delete_contact(contact,supplier);
             }
             List<ContractDTO> contractDTOS = Mapper.getInstance().contract_dao.dao.queryBuilder().where().eq("supplier_id",supplier.getId()).query();
-            for(ContractDTO contractDTO:contractDTOS){
-                Mapper.getInstance().delete(Mapper.getInstance().find_Contract(contractDTO.getContract_id(),contractDTO.getBranch().getBranch_id()));
+            if(contractDTOS!=null && !contractDTOS.isEmpty()) {
+                for (ContractDTO contractDTO : contractDTOS) {
+                    Contract contract = Mapper.getInstance().find_Contract(contractDTO.getContract_id(),contractDTO.getBranch().getBranch_id());
+                    if(contract!=null){
+                        Mapper.getInstance().delete(contract);
+                    }
+                }
             }
             dao.delete(supplierDTO);
             //System.err.println(String.format("[DELETE] %s", supplierDTO));
