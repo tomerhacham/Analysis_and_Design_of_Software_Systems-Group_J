@@ -63,8 +63,8 @@ public class CatalogProductDAO {
         try {
             catalog_product_in_general_products_dao.create(catalog_product_in_general_productDTO);
             dao.create(catalogProductDTO);
-            System.err.println(String.format("[Writing] %s", catalog_product_in_general_productDTO));
-            System.err.println(String.format("[Writing] %s", catalogProductDTO));
+            //System.err.println(String.format("[Writing] %s", catalog_product_in_general_productDTO));
+            //System.err.println(String.format("[Writing] %s", catalogProductDTO));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -84,7 +84,7 @@ public class CatalogProductDAO {
                 updateBuilder.updateColumnValue("supplier_category" ,catalogProduct.getSupplierCategory());
                 updateBuilder.updateColumnValue("name" ,catalogProduct.getName());
                 updateBuilder.update();
-            System.err.println(String.format("[Writing] %s", catalogProductDTO));
+            //System.err.println(String.format("[Writing] %s", catalogProductDTO));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

@@ -158,7 +158,9 @@ public class SupplierModule {
 
             for (Pair<CatalogProduct , Float> pair : cpPrice){
                 for (GeneralProduct gp:report.getProducts() ) {
-                    if(gp.getCatalogID(supplierCard.getId()).equals(pair.getKey().getCatalogID())){
+                    Integer gp_catalog_id = gp.getCatalogID(supplierCard.getId());
+                    Integer supplier_catalog_id = pair.getKey().getCatalogID();
+                    if(gp_catalog_id!=null && supplier_catalog_id!=null && gp_catalog_id.equals(supplier_catalog_id)){
                         ordersController.addProductToOrder(orderid , pair.getKey() , gp.quantityToOrder() , pair.getValue());
                     }
                 }
@@ -204,7 +206,7 @@ public class SupplierModule {
             Float price = contractResult.getData().getProductPriceConsideringQuantity(pair.getKey().getGpID(), quantity).getData();
             resultOrder.getData().addProduct(cp, quantity,price);
         }
-        return new Result<>(true, ordersController.getOrder(orderID), String.format("The periodic order has been generated from the product list successfully: %s", productsAndQuantity));
+        return new Result<>(true, ordersController.getOrder(orderID), String.format("The periodic order (ID: %d) has been generated from the product list successfully: %s", orderID ,productsAndQuantity));
     }
 
     public Result removePeriodicOrder(Integer orderId) {

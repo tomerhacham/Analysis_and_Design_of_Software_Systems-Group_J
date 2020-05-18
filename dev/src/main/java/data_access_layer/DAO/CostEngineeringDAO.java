@@ -70,7 +70,7 @@ public class CostEngineeringDAO {
             for (Integer catalogid : minQuntity.keySet()) {
                 CostEngineeringDTO costEngineeringDTO = new CostEngineeringDTO(costEngineering , catalogid , minQuntity.get(catalogid) , newPrice.get(catalogid) );
                 dao.create(costEngineeringDTO);
-                System.err.println(String.format("[Writing] %s", costEngineeringDTO));
+                //System.err.println(String.format("[Writing] %s", costEngineeringDTO));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -126,7 +126,7 @@ public class CostEngineeringDAO {
         try {
             CostEngineeringDTO costEngineeringDTO = new CostEngineeringDTO(costEngineering , product.getCatalogID() , costEngineering.getMinQuntity().get(product.getCatalogID()) , costEngineering.getNewPrice().get(product.getCatalogID()) );
             dao.create(costEngineeringDTO);
-            System.err.println(String.format("[Writing] %s", costEngineeringDTO));
+            //System.err.println(String.format("[Writing] %s", costEngineeringDTO));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

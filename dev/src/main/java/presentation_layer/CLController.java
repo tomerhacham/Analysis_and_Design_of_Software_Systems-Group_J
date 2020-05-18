@@ -27,7 +27,6 @@ public class CLController {
     public static void displayMenu() {
         printLogo();
         printInitializeMenu();
-        //initialize();
         while(true) {
             printSuperLiMenu();
             Integer option = getNextInt(sc);
@@ -39,20 +38,19 @@ public class CLController {
                     printSuppliersMenu();
                     break;
                 case 3:
-                    String sim = "Choose how many days to simulate:\n";
+                    String sim = "Simulating next day...\n";
                     System.out.println(sim);
-                    Integer numOfDays = getNextInt(sc);
                     String msg = String.format("Old date: %s\t", BranchController.system_curr_date);
 
-                    Result<LinkedList<String>> periodicOrdersToPrint = branchController.simulateNextDay(numOfDays);
-//                    if (periodicOrdersToPrint.getData() == null){ // if there are no periodic orders to print at this day
-//                        System.out.println(periodicOrdersToPrint.getMessage());
-//                    }
-                    //else{
-                        for (String str:periodicOrdersToPrint.getData()) {
+                    Result<LinkedList<String>> periodicOrdersToPrint = branchController.simulateNextDay();
+                    if (periodicOrdersToPrint.getData() == null){ // if there are no periodic orders to print at this day
+                        System.out.println(periodicOrdersToPrint.getMessage());
+                    }
+                    else{
+                        for (String str : periodicOrdersToPrint.getData()) {
                             System.out.println(str);
                         }
-                    //}
+                    }
                     msg = msg.concat(String.format("New date: %s\n", BranchController.system_curr_date));
                     System.out.println(msg);
                     break;
@@ -80,9 +78,9 @@ public class CLController {
     static private void printInitializeMenu() {
         String menu = "";
         menu = menu.concat("Choose one of the options:\n");
-        menu = menu.concat("1) Run system with initial data\n");
-        menu = menu.concat("2) Run system blank\n");
-        menu = menu.concat("3) Exit\n\n");
+        menu = menu.concat("1) Restart system DB with initial data\n");
+        menu = menu.concat("2) Run system with current DB\n");
+        menu = menu.concat("3) Exit\n");
         System.out.println(menu);
         Integer option = getNextInt(sc);
         while (true) {
@@ -107,7 +105,7 @@ public class CLController {
         menu = menu.concat("1) Branch Management\n");
         menu = menu.concat("2) Suppliers Management\n");
         menu = menu.concat("3) Simulate to next day\n");
-        menu = menu.concat("4) Exit\n\n");
+        menu = menu.concat("4) Exit\n");
         System.out.println(menu);
     }
 
@@ -121,7 +119,7 @@ public class CLController {
         menu = menu.concat("3) Remove branch\n");
         menu = menu.concat("4) Edit branch name\n");
         menu = menu.concat("5) Return\n");
-        menu = menu.concat("6) Exit\n\n");
+        menu = menu.concat("6) Exit\n");
         while (true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -181,7 +179,7 @@ public class CLController {
         }
 
         menu = menu.concat(String.format("%d) Return\n", option));
-        menu = menu.concat(String.format("%d) Exit\n\n", option+1));
+        menu = menu.concat(String.format("%d) Exit\n", option+1));
         while(true){
             System.out.println(menu);
             Integer input = getNextInt(sc);
@@ -222,7 +220,7 @@ public class CLController {
         menu = menu.concat("1) Create new supplier card\n");
         menu = menu.concat("2) Edit supplier card details\n");
         menu = menu.concat("3) Return\n");
-        menu = menu.concat("4) Exit\n\n");
+        menu = menu.concat("4) Exit\n");
         while (true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -467,7 +465,7 @@ public class CLController {
         menu=menu.concat("6) Supplier Contracts management\n");
         menu=menu.concat("7) System status\n");
         menu=menu.concat("8) Return\n");
-        menu=menu.concat("9) Exit\n\n");
+        menu=menu.concat("9) Exit\n");
         while (true){
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -511,7 +509,7 @@ public class CLController {
         menu=menu.concat("3) Mark flaw specific product\n");
         menu=menu.concat("4) Change location of specific product\n");
         menu=menu.concat("5) Return\n");
-        menu=menu.concat("6) exit\n\n");
+        menu=menu.concat("6) exit\n");
         while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -580,7 +578,7 @@ public class CLController {
         menu=menu.concat("4) Edit quantity\n");
         menu=menu.concat("5) Edit minimum quantity\n");
         menu=menu.concat("6) Return\n");
-        menu=menu.concat("7) Exit\n\n");
+        menu=menu.concat("7) Exit\n");
 
         while(true) {
             System.out.println(menu);
@@ -832,7 +830,7 @@ public class CLController {
         menu=menu.concat("2) Issue in-stock report\n");
         menu=menu.concat("3) Issue damaged&expired report\n");
         menu=menu.concat("4) Return\n");
-        menu=menu.concat("5) Exit\n\n");
+        menu=menu.concat("5) Exit\n");
         while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -861,7 +859,7 @@ public class CLController {
         menu=menu.concat("1) By category\n");
         menu=menu.concat("2) By general product\n");
         menu=menu.concat("3) Return\n");
-        menu=menu.concat("4) Exit\n\n");
+        menu=menu.concat("4) Exit\n");
         while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -944,7 +942,7 @@ public class CLController {
         menu=menu.concat("1) By category\n");
         menu=menu.concat("2) By general product\n");
         menu=menu.concat("3) Return\n");
-        menu=menu.concat("4) Exit\n\n");
+        menu=menu.concat("4) Exit\n");
         while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -1005,7 +1003,7 @@ public class CLController {
         menu=menu.concat("1) By category\n");
         menu=menu.concat("2) By general product\n");
         menu=menu.concat("3) Return\n");
-        menu=menu.concat("4) Exit\n\n");
+        menu=menu.concat("4) Exit\n");
         while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -1069,7 +1067,7 @@ public class CLController {
         menu=menu.concat("2) Cancel sale\n");
         menu=menu.concat("3) Check sales status\n");
         menu=menu.concat("4) Return\n");
-        menu=menu.concat("5) Exit\n\n");
+        menu=menu.concat("5) Exit\n");
         while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -1099,7 +1097,7 @@ public class CLController {
         menu=menu.concat("1) By category\n");
         menu=menu.concat("2) By general product\n");
         menu=menu.concat("3) Return\n");
-        menu=menu.concat("4) Exit\n\n");
+        menu=menu.concat("4) Exit\n");
         while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -1707,6 +1705,7 @@ public class CLController {
             param = getInputParserbyComma(sc);
             if (param.length == 1) {
                 Integer day = Integer.parseInt(param[0]);
+                day--;
                 printEnterProductsToPOrder(products);
                 Result res = branchController.createPeriodicOrder(supplierID, products, day);
                 System.out.println(res.getMessage());
@@ -1857,8 +1856,8 @@ public class CLController {
     //region initialize
     private static void initialize() {
         System.err.println("Warning: all of the data in the DB will be erase\n");
+        BranchController.clearDB();
         branchController=new BranchController(true);
-        branchController.clearDB();
         branchController.loadID();
         // Open and switch to initial branch
         Branch initialBranch = branchController.createNewBranch("Initial branch").getData();
@@ -1871,8 +1870,8 @@ public class CLController {
         //                  Shampoo
         //                      500ml
         //                      750ml
-        //              Meet%Fish
-        //                  Meet
+        //              Meat%Fish
+        //                  Meat
         //                      1/2kg
         //                      1kg
         //                  Fish
@@ -1884,11 +1883,11 @@ public class CLController {
         Result res_cat_shampoo = branchController.addSubCategory(((Category)res_cat_hygiene.getData()).getId(), "Shampoo");
         Result res_cat_500ml = branchController.addSubCategory(((Category)res_cat_shampoo.getData()).getId(), "500ml");
         Result res_cat_750ml = branchController.addSubCategory(((Category)res_cat_shampoo.getData()).getId(), "750ml");
-        Result res_cat_mnf = branchController.addMainCategory("Meet%Fish");
-        Result res_cat_meet = branchController.addSubCategory(((Category)res_cat_mnf.getData()).getId(), "Meet");
+        Result res_cat_mnf = branchController.addMainCategory("Meat%Fish");
+        Result res_cat_meat = branchController.addSubCategory(((Category)res_cat_mnf.getData()).getId(), "Meat");
         Result res_cat_fish = branchController.addSubCategory(((Category)res_cat_mnf.getData()).getId(), "Fish");
-        Result meet_half_kg = branchController.addSubCategory(((Category)res_cat_meet.getData()).getId(), "1/2kg");
-        Result meet_one_kg = branchController.addSubCategory(((Category)res_cat_meet.getData()).getId(), "1kg");
+        Result meat_half_kg = branchController.addSubCategory(((Category)res_cat_meat.getData()).getId(), "1/2kg");
+        Result meat_one_kg = branchController.addSubCategory(((Category)res_cat_meat.getData()).getId(), "1kg");
         Result fish_half_kg = branchController.addSubCategory(((Category)res_cat_fish.getData()).getId(), "1/2kg");
         Result fish_one_kg = branchController.addSubCategory(((Category)res_cat_fish.getData()).getId(), "1kg");
 
@@ -1912,7 +1911,7 @@ public class CLController {
 
         LinkedList <String> categories = new LinkedList<>();
         categories.add("Hygiene");
-        categories.add("Meet");
+        categories.add("Meat");
 
         //create contract
         branchController.addContract(supplierID, categories);
@@ -1955,19 +1954,19 @@ public class CLController {
 
         String manufacture = "Moosh";
         gpID = 104;
-        name = "Moosh packed ground meet 1/2kg";
+        name = "Moosh packed ground meat 1/2kg";
         sup_price = 30.0f;
         Float ret_price = 40.0f;
         catalogID = 13;
-        branchController.addGeneralProduct(((Category)meet_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meet");
+        branchController.addGeneralProduct(((Category)meat_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meat");
         branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),4);
-        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Meet");
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Meat");
 
 //-------------------------------------------
 
 
         gpID = 104;
-        name = "Moosh packed ground meet 1/2kg";
+        name = "Moosh packed ground meat 1/2kg";
         sup_price = 32.5f;
         catalogID = 20;
         supplierID = 2;
@@ -1976,30 +1975,30 @@ public class CLController {
         contact.add("Yossi");
 
         LinkedList <String> categories2 = new LinkedList<>();
-        categories2.add("Meet");
+        categories2.add("Meat");
         categories2.add("Fish");
 
 
-        //Create supplier niceToMeet
-        branchController.createSupplierCard("niceToMeet" , "mesada 37 beer-sheva" , "niceToMeat@gmail.com" , "087594456" ,
+        //Create supplier niceToMeat
+        branchController.createSupplierCard("niceToMeat" , "mesada 37 beer-sheva" , "niceToMeat@gmail.com" , "087594456" ,
                 supplierID, "09754432", "CreditCard" , contact2, "by order");
 
         //create contract
         branchController.addContract(supplierID, categories2);
 
-        ////branchController.addGeneralProduct(((Category)meet_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meet");
-        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Meet");
+        ////branchController.addGeneralProduct(((Category)meat_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meat");
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Meat");
 
         manufacture = "Moosh";
         gpID = 201;
-        name = "Moosh packed ground meet 1kg";
+        name = "Moosh packed ground meat 1kg";
         sup_price = 40.0f;
         ret_price = 45.0f;
         catalogID = 24;
 
-        branchController.addGeneralProduct(((Category)meet_one_kg.getData()).getId(), manufacture,name,sup_price,ret_price,3,catalogID,gpID,supplierID,"Meet");
+        branchController.addGeneralProduct(((Category)meat_one_kg.getData()).getId(), manufacture,name,sup_price,ret_price,3,catalogID,gpID,supplierID,"Meat");
 
-        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Meet");
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Meat");
 
 
         manufacture = "Lakerda";
@@ -2008,7 +2007,7 @@ public class CLController {
         sup_price = 10.0f;
         ret_price = 13.0f;
         catalogID = 21;
-        branchController.addGeneralProduct(((Category)fish_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meet");
+        branchController.addGeneralProduct(((Category)fish_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meat");
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Fish");
 
 

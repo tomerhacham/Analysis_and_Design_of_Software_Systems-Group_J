@@ -46,13 +46,16 @@ public class CategoryDAO {
                 if(categoryDTO !=null) {
                     category = new Category(categoryDTO);
                     if (category.getLevel() == 1) {
-                        category.setSub_categories(LoadSubCategories(branch_id, category_id));
+                        LinkedList<Category> sub_cat = LoadSubCategories(branch_id, category_id);
+                        category.setSub_categories(sub_cat);
                     }
                     else if (category.getLevel() == 2) {
-                        category.setSub_categories(LoadSubSubCategories(branch_id, category_id));
+                        LinkedList<Category> sub_cat = LoadSubSubCategories(branch_id, category_id);
+                        category.setSub_categories(sub_cat);
                     }
                     else if (category.getLevel() == 3) {
-                        category.setGeneralProducts(loadGeneralProduct(branch_id, category_id));
+                        List<GeneralProduct> generalProducts=loadGeneralProduct(branch_id, category_id);
+                        category.setGeneralProducts(generalProducts);
                     }
                     identityMap.put(category_id, category);
                 }
@@ -71,7 +74,7 @@ public class CategoryDAO {
         CategoryDTO categoryDTO = new CategoryDTO(category);
         try {
             dao.create(categoryDTO);
-            System.err.println(String.format("[Writing] %s", categoryDTO));
+            //System.err.println(String.format("[Writing] %s", categoryDTO));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -91,7 +94,7 @@ public class CategoryDAO {
             updateBuilder.updateColumnValue("level" ,category.getLevel());
             updateBuilder.updateColumnValue("super_category_id" ,category.getSuper_category_id());
             updateBuilder.update();
-            System.err.println(String.format("[Update] %s", categoryDTO));
+            //System.err.println(String.format("[Update] %s", categoryDTO));
         }catch (Exception e){e.printStackTrace();}
     }
     /**
@@ -143,7 +146,8 @@ public class CategoryDAO {
                 for (CategoryDTO sub_cat_dto : dto_sub_categories) {
                     Category category = find(sub_cat_dto.getId(), branch_id);
                     if(category!=null) {
-                        category.setSub_categories(LoadSubSubCategories(branch_id, category.getId()));
+                        //LinkedList<Category> sub_cat = LoadSubSubCategories(branch_id, category.getId());
+                        //category.setSub_categories(sub_cat);
                         sub_categories.add(category);
                     }
                 }
@@ -162,7 +166,9 @@ public class CategoryDAO {
                 for (CategoryDTO sub_sub_cat_dto : dto_sub_sub_categories) {
                     Category category = find(sub_sub_cat_dto.getId(), branch_id);
                     if (category!=null) {
-                        category.setGeneralProducts(loadGeneralProduct(branch_id, category_id));
+                        //LinkedList<GeneralProduct>  generalProducts = loadGeneralProduct(branch_id, category_id);
+                        //category.setGeneralProducts(generalProducts);
+                        sub_sub_categories.add(category);
                     }
                 }
             }

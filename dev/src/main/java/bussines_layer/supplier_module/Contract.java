@@ -92,11 +92,11 @@ public class Contract {
     public Result addCategory(String category) {
         Result result;
         if (isCategoryExist(category)) {
-            result=new Result(false,category, String.format("Category: %s already exist in contract ID:%d", category,contractID));
+            result=new Result<>(false,category, String.format("Category: %s already exist in contract ID:%d", category,contractID));
         }
         else{
             categories.add(category);
-            result=new Result(true, category, String.format("Category %s has been added to contract ID:%d", category,contractID));
+            result=new Result<>(true, category, String.format("Category %s has been added to contract ID:%d", category,contractID));
         }
         return result;
     }
@@ -108,7 +108,7 @@ public class Contract {
     public Result removeCategory(String category){
         Result result;
         if (!isCategoryExist(category)) {
-            result=new Result(false, category, String.format("Could not find category: %s in contract ID:%d", category,contractID));
+            result=new Result<>(false, category, String.format("Could not find category: %s in contract ID:%d", category,contractID));
         }
         else {
             categories.remove(category);
@@ -122,7 +122,7 @@ public class Contract {
             for (CatalogProduct p : toRemove) {
                 removeProduct(p);
             }
-            result=new Result(true,category, String.format("Category: %s has beem removed from contract ID:%d", category,contractID));
+            result=new Result<>(true,category, String.format("Category: %s has beem removed from contract ID:%d", category,contractID));
         }
         return result;
     }
@@ -305,13 +305,13 @@ public class Contract {
      * add cost engineering to this contract
      */
     public Result<CostEngineering> addCostEngineering() {
-        Result result;
+        Result<CostEngineering> result;
         if (costEngineering != null){
-            result=new Result(false,null, String.format("There is already cost engineering associate to contract ID:%d", contractID));
+            result=new Result<>(false,null, String.format("There is already cost engineering associate to contract ID:%d", contractID));
         }
         else {
             this.costEngineering = new CostEngineering(contractID,branchID);
-            result=new Result(true, this.costEngineering, String.format("Cost engineering has been associate to contract ID:%d.", contractID));
+            result=new Result<>(true, this.costEngineering, String.format("Cost engineering has been associate to contract ID:%d.", contractID));
         }
         return result;
     }
@@ -322,7 +322,7 @@ public class Contract {
     public Result<CostEngineering> removeCostEngineering() {
         CostEngineering toreturn=costEngineering;
         costEngineering = null;
-        return new Result(true, toreturn, String.format("Cost engineering has benn removed from contract ID:%d", contractID));
+        return new Result<>(true, toreturn, String.format("Cost engineering has benn removed from contract ID:%d", contractID));
     }
 
     /**
@@ -342,7 +342,7 @@ public class Contract {
     public Result updateMinQuantity(Integer catalogid , Integer minQuantity){
         Result result;
         if (!isProductExist(catalogid , true)){
-            result=new Result(false,catalogid, String.format("Could not find CatalogID:%d under contarct ID:%d", catalogid,contractID));
+            result=new Result<>(false,catalogid, String.format("Could not find CatalogID:%d under contarct ID:%d", catalogid,contractID));
         }
         else {
             result=costEngineering.updateMinQuantity(catalogid, minQuantity);

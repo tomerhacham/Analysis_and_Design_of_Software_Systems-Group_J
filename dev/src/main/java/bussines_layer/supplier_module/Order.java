@@ -1,4 +1,5 @@
 package bussines_layer.supplier_module;
+import bussines_layer.BranchController;
 import bussines_layer.Result;
 import bussines_layer.SupplierCard;
 import bussines_layer.enums.OrderStatus;
@@ -40,6 +41,7 @@ public class Order {
         this.type = type;
         this.status=OrderStatus.inProcess;
         this.dayToDeliver = null;
+        this.issuedDate = BranchController.system_curr_date;
     }
 
     //constructor to periodic order
@@ -52,6 +54,7 @@ public class Order {
         this.type = type;
         this.status=OrderStatus.inProcess;
         this.dayToDeliver = dayToDeliver;
+        this.issuedDate = BranchController.system_curr_date;
     }
 
     public Order(OrderDTO orderDTO){
@@ -163,7 +166,7 @@ public class Order {
             toDisplay = toDisplay +"No Products In This Order\n";
         }
         else{
-            toDisplay = toDisplay.concat(String.format("Order Total Amount: %.02f\nDo Not Forget To Send The Order To The supplier !\n", getTotalAmount().getData()));
+            toDisplay = toDisplay.concat(String.format("Order Total Amount: %.02f\nDo not forget to send the order to the supplier !\n", getTotalAmount().getData()));
         }
         return new Result<>(true, toDisplay, String.format(" The Order Is Ready And Has Been Sent Back To The Employee: %s", toDisplay));
     }

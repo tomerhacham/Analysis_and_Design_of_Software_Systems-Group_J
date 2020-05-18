@@ -198,8 +198,10 @@ public class Category {
     @Override
     public String toString() {
         String toReturn=tabs()+"-".concat(name).concat("("+id+")").concat("\n");
-        for (Category category:sub_categories) {
-            toReturn=toReturn.concat(category.toString());
+        if (sub_categories != null){
+            for (Category category:sub_categories) {
+                toReturn=toReturn.concat(category.toString());
+            }
         }
         return toReturn;
     }

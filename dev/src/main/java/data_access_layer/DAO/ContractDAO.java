@@ -73,7 +73,7 @@ public class ContractDAO {
                 categories_in_contractDTO dto = new categories_in_contractDTO(contract,category);
                 categories_in_contract_dao.create(dto);
             }
-            System.err.println(String.format("[Writing] %s", contractDTO));
+            //System.err.println(String.format("[Writing] %s", contractDTO));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -122,7 +122,7 @@ public class ContractDAO {
         try {
             if (identityMap.containsKey(contract.getContractID())){identityMap.replace(contract.getContractID(),contract);}
             catalog_product_in_contract_dao.create(catalog_product_in_contractDTO);
-            System.err.println(String.format("[Writing] %s", catalog_product_in_contractDTO));
+            //System.err.println(String.format("[Writing] %s", catalog_product_in_contractDTO));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -158,7 +158,7 @@ public class ContractDAO {
         try {
             if (identityMap.containsKey(contract.getContractID())){identityMap.replace(contract.getContractID(),contract);}
             categories_in_contract_dao.create(categories_in_contractDTO);
-            System.err.println(String.format("[Writing] %s", categories_in_contractDTO));
+            //System.err.println(String.format("[Writing] %s", categories_in_contractDTO));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
