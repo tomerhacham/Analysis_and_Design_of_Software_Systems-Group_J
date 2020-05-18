@@ -1,6 +1,7 @@
 package BusinessLayer.Workers;
 
 import DataAccessLayer.Mapper;
+import InterfaceLayer.Transport.FacadeController;
 
 import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
@@ -126,6 +127,7 @@ public class Scheduler {
                         mapper.deleteShiftDriver(driverToRemove.getId(),originalShift.getId());
                         originalShift.addDriverToShift(replacementDriver);
                         addAvailableWorker(date,timeOfDay,driverToRemove.getId());
+                        FacadeController.getInstance().changeDriverInTransport(driverToRemove.getId(),replacementDriver.getId(),date,timeOfDay);
                         return null;
                     }
                 }
