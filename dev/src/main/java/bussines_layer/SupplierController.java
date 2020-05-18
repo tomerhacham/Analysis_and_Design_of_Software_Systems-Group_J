@@ -315,7 +315,7 @@ public class SupplierController {
     public Result isExist (Integer id){
         Result result;
         if ( ! suppliers.containsKey(id)){
-            result=new Result<>(false,id, String.format("here's No Such Supplie with ID:%d in the System", id));
+            result=new Result<>(false,id, String.format("There's no supplier with ID: %d", id));
         }
         else{
             result=new Result<>(true, id,"Supplier found");

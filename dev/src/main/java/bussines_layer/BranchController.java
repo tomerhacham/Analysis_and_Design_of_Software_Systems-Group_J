@@ -245,6 +245,10 @@ public class BranchController {
         return currBranch.removeContract(result.getData());
     }
     public Result addProductToContract(Integer supplierID, Integer catalogID, Integer gpID, Float supplier_price, String supplier_category){
+        Result result = isExistSupplier(supplierID);
+        if (!result.isOK()){        //No supplier found with ID
+            return result;
+        }
         return currBranch.addProductToContract(supplierID, catalogID, gpID, supplier_price, supplier_category);
     }
     public Result removeProductFromContract(Integer supplierID, Integer gpID){
