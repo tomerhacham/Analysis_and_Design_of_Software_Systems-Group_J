@@ -1,4 +1,5 @@
 package bussines_layer.supplier_module;
+import bussines_layer.BranchController;
 import bussines_layer.Result;
 import bussines_layer.SupplierCard;
 import bussines_layer.enums.OrderStatus;
@@ -40,6 +41,7 @@ public class Order {
         this.type = type;
         this.status=OrderStatus.inProcess;
         this.dayToDeliver = null;
+        this.issuedDate = BranchController.system_curr_date;
     }
 
     //constructor to periodic order

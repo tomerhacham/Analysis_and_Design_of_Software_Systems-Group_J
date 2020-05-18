@@ -76,9 +76,9 @@ public class SaleDAO {
                 general_product_on_sale.add(new general_product_on_saleDTO(sale, generalProduct));
             }
             dao.create(saleDTO);
-            System.err.println(String.format("[Writing] %s", saleDTO));
+            //System.err.println(String.format("[Writing] %s", saleDTO));
             general_product_on_sale_dao.create(general_product_on_sale);
-            System.err.println(String.format("[Writing] %s", concatObjectList(general_product_on_sale)));
+            //System.err.println(String.format("[Writing] %s", concatObjectList(general_product_on_sale)));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

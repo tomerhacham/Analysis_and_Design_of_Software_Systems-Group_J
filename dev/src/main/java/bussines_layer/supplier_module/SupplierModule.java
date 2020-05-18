@@ -158,7 +158,9 @@ public class SupplierModule {
 
             for (Pair<CatalogProduct , Float> pair : cpPrice){
                 for (GeneralProduct gp:report.getProducts() ) {
-                    if(gp.getCatalogID(supplierCard.getId()).equals(pair.getKey().getCatalogID())){
+                    Integer gp_catalog_id = gp.getCatalogID(supplierCard.getId());
+                    Integer supplier_catalog_id = pair.getKey().getCatalogID();
+                    if(gp_catalog_id!=null && supplier_catalog_id!=null && gp_catalog_id.equals(supplier_catalog_id)){
                         ordersController.addProductToOrder(orderid , pair.getKey() , gp.quantityToOrder() , pair.getValue());
                     }
                 }

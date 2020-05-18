@@ -25,7 +25,7 @@ public class OrderDTO {
     OrderType type;
     @DatabaseField(columnName = "status", dataType = DataType.ENUM_TO_STRING)
     OrderStatus status;
-    @DatabaseField(columnName = "day_to_deliver")
+    @DatabaseField(columnName = "day_to_deliver", canBeNull = true)
     Integer daytodeliver;
     @DatabaseField(columnName = "issue_date", dataType = DataType.DATE_STRING)
     Date issuedDate;

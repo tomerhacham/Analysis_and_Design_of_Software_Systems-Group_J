@@ -84,8 +84,8 @@ public class OrderDAO {
         try {
             dao.create(orderDTO);
             catalog_product_in_order_dao.create(catalog_product_in_order);
-            System.err.println(String.format("[Writing] %s", orderDTO));
-            System.err.println(String.format("[Writing] %s", concatObjectList(catalog_product_in_order)));
+            //System.err.println(String.format("[Writing] %s", orderDTO));
+            //System.err.println(String.format("[Writing] %s", concatObjectList(catalog_product_in_order)));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -152,7 +152,7 @@ public class OrderDAO {
         try {
             catalog_product_in_orderDTO catalog_product_in_orderDTO = new catalog_product_in_orderDTO(order, product, quantity, price);
             catalog_product_in_order_dao.create(catalog_product_in_orderDTO);
-            System.err.println(String.format("[Writing] %s", catalog_product_in_orderDTO));
+            //System.err.println(String.format("[Writing] %s", catalog_product_in_orderDTO));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

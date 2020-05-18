@@ -101,7 +101,7 @@ public class GeneralProduct {
     }
 
     public Integer getQuantity() {
-        return quantity;
+        return products.size();
     }
 
     public void setQuantity(Integer quantity) {

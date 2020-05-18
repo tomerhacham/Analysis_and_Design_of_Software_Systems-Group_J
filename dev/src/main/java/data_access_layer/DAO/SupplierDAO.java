@@ -81,9 +81,9 @@ public class SupplierDAO {
         }
         try {
             dao.create(supplierDTO);
-            System.err.println(String.format("[Writing] %s", supplierDTO));
+            //System.err.println(String.format("[Writing] %s", supplierDTO));
             contacts_of_supplier_dao.create(contact_of_supplierDTOS);
-            System.err.println(String.format("[Writing] %s", concatObjectList(contact_of_supplierDTOS)));
+            //System.err.println(String.format("[Writing] %s", concatObjectList(contact_of_supplierDTOS)));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -119,7 +119,7 @@ public class SupplierDAO {
         contact_of_supplierDTO contact_of_supplierDTO = new contact_of_supplierDTO(supplier,contactName);
         try {
             contacts_of_supplier_dao.create(contact_of_supplierDTO);
-            System.err.println(String.format("[Writing] %s", contact_of_supplierDTO));
+            //System.err.println(String.format("[Writing] %s", contact_of_supplierDTO));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

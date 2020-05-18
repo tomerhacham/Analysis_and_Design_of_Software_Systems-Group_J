@@ -63,7 +63,7 @@ public class SpecificProductDAO {
         SpecificProductDTO specificProductDTO = new SpecificProductDTO(specificProduct);
         try {
             dao.create(specificProductDTO);
-            System.err.println(String.format("[Writing] %s", specificProductDTO));
+            //System.err.println(String.format("[Writing] %s", specificProductDTO));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -83,7 +83,7 @@ public class SpecificProductDAO {
             updateBuilder.updateColumnValue("expiration_date" ,specificProduct.getExpiration_date());
             updateBuilder.updateColumnValue("flaw_flag" ,specificProduct.getFlaw_flag());
             updateBuilder.update();
-            System.err.println(String.format("[Writing] %s", specificProductDTO));
+            //System.err.println(String.format("[Writing] %s", specificProductDTO));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
