@@ -151,17 +151,17 @@ public class SupplierCard {
         }
         if(foundName){
             ContactsName.remove(i);
-            result=new Result(true, this, String.format("Contact name has been removed from supplier %d", this.getId()));
+            result=new Result<>(true, this, String.format("Contact name has been removed from supplier %d", this.getId()));
         }
         else{
-            result = new Result(false, this, String.format("name: %s does not exist in the contact list of supplier %d", contactName,this.getId()) );
+            result = new Result<>(false, this, String.format("name: %s does not exist in the contact list of supplier %d", contactName,this.getId()) );
         }
         return result;
     }
 
     public Result addContactName (String contactName){
         ContactsName.add(contactName);
-        return new Result(true, this, String.format("%s has been added to contact list of supplier %d", contactName,this.getId()));
+        return new Result<>(true, this, String.format("%s has been added to contact list of supplier %d", contactName,this.getId()));
     }
 
     @Override
