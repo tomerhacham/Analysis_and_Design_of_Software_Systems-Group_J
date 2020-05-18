@@ -10,6 +10,11 @@ public class Scheduler {
     private TreeSet<WeeklySchedule> schedule;
     private static final boolean morning=true;
     private static final boolean night=false;
+
+    public HashMap<Date, Pair<LazyList<Worker>, LazyList<Worker>>> getAvailableWorkers() {
+        return availableWorkers;
+    }
+
     private HashMap<Date, Pair<LazyList<Worker>,LazyList<Worker>>> availableWorkers;
     private Shift currentEditedShift;
     private static Scheduler scheduler;
@@ -86,11 +91,50 @@ public class Scheduler {
     {
         if(pos==null)
             return "Invalid position";
+        if(pos.equals("driver"))
+            return replaceDriver(id);
         else
             return currentEditedShift.removeWorkerFromPosition(pos,id,cloneAvailableWorkersForShift());
     }
 
-   // public HashMap<Date, Pair<List<Worker>, List<Worker>>> getAvailableWorkers() {
+    private String replaceDriver(String id) {
+        Driver driverToRemove = null;
+        for (Driver d : currentEditedShift.getScheduledDrivers()) {
+            if (d.getId().equals(id)) {
+                driverToRemove = d;
+                break;
+            }
+        }
+        if (driverToRemove != null) {
+            Driver replacementDriver = null;
+            Date date=currentEditedShift.getDate();
+            boolean timeOfDay=currentEditedShift.getTimeOfDay();
+            for (Worker w :getAvailableWorkersForShift(date,timeOfDay)) {
+                if (w.positions.contains("driver") && w.getLicense().equals(driverToRemove.getLicense())) {
+                    replacementDriver = (Driver) w;
+                    break;
+                }
+            }
+                if(replacementDriver!=null){
+                    Shift originalShift=findShift(date,timeOfDay);
+                    currentEditedShift.addDriverToShift(replacementDriver);
+                    currentEditedShift.removeDriver(driverToRemove.getId());
+                    if(originalShift!=null) {
+                        removeAvailableWorker(date,timeOfDay,replacementDriver.getId());
+                        originalShift.removeDriver(driverToRemove.getId());
+                        mapper.addShiftDriver(replacementDriver.getId(),originalShift.getId());
+                        mapper.deleteShiftDriver(driverToRemove.getId(),originalShift.getId());
+                        originalShift.addDriverToShift(replacementDriver);
+                        addAvailableWorker(date,timeOfDay,driverToRemove.getId());
+                        return null;
+                    }
+                }
+                else
+                    return "Driver was not removed-There is no replacement for the wanted driver";
+            }
+            return "The worker is not scheduled for this shift";
+    }
+    // public HashMap<Date, Pair<List<Worker>, List<Worker>>> getAvailableWorkers() {
         //return availableWorkers;
    // }
 
