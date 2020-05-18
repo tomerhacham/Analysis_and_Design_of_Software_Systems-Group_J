@@ -123,6 +123,10 @@ public class SupplierModule {
         return ordersController.displayAllSupplierOrders(supId);
     }
 
+    public Result<LinkedList<String>> getAllwaitingOrders(){
+        return ordersController.getAllwaitingOrders();
+    }
+
     //region OutOfStockOrder
 
     public Result<String> createOutOfStockOrder(Report report){

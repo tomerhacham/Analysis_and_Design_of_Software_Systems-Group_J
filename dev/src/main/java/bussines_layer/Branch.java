@@ -1,6 +1,7 @@
 package bussines_layer;
 
 import bussines_layer.inventory_module.*;
+import bussines_layer.supplier_module.OrdersController;
 import bussines_layer.supplier_module.SupplierModule;
 import data_access_layer.DTO.BranchDTO;
 import data_access_layer.Mapper;
@@ -273,6 +274,10 @@ public class Branch {
 
     public Result<LinkedList<String>> displayAllSupplierOrders(Integer supId){
         return supplierModule.displayAllSupplierOrders(supId);
+    }
+
+    public Result<LinkedList<String>> getAllwaitingOrders(){
+        return supplierModule.getAllwaitingOrders();
     }
 
     //endregion

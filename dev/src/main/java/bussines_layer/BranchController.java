@@ -6,6 +6,7 @@ import bussines_layer.inventory_module.Report;
 import bussines_layer.inventory_module.Sale;
 import data_access_layer.Mapper;
 import javafx.util.Pair;
+import sun.awt.image.ImageWatched;
 
 import java.util.*;
 
@@ -334,10 +335,11 @@ public class BranchController {
         LinkedList<String> allPeriodicOrdersFromAllBranches = new LinkedList<>();
         for (Integer branchid : branches.keySet()) {
             Branch branch;
-            if(!branchid.equals(currBranch.getBranchId())){
+            if(currBranch==null || !branchid.equals(currBranch.getBranchId())){
                 mapper.clearCache();
                 branch=mapper.find_Branch(branchid);
                 branch.loadData();
+                if (currBranch==null){currBranch=branch;}
             }
             else{
                 branch=currBranch;
@@ -352,6 +354,27 @@ public class BranchController {
             return new Result<>(true,allPeriodicOrdersFromAllBranches, String.format("All periodic orders with %d as their delivery day had been sent to order", system_curr_date.getDay()+1));
         }
         return new Result<>(false,null, String.format("There are no periodic orders to be sent today (%d)",system_curr_date.getDay()+1));
+    }
+
+    public Result<LinkedList<String>> getAllwaitingOrders( ){
+        LinkedList<String> orderToDisplay = new LinkedList<>();
+        for(Integer branch_id:branches.keySet()){
+            Branch branch;
+            if(currBranch==null || !branch_id.equals(currBranch.getBranchId()))
+            {
+                mapper.clearCache();
+                branch = mapper.find_Branch(branch_id);
+                if (currBranch==null){currBranch=branch;}
+            }
+            else{branch=currBranch;}
+            if(branch!=null){
+                Result<LinkedList<String>> result = branch.getAllwaitingOrders();
+                if (result.isOK()){
+                    orderToDisplay.addAll(result.getData());
+                }
+            }
+        }
+        return new Result<LinkedList<String>>(true, orderToDisplay, "List of all the order awaiting to be accepted today\n");
     }
 
     //endregion
@@ -383,12 +406,27 @@ public class BranchController {
     }
 
     public Result<LinkedList<String>> simulateNextDay(){
+        Result result;
         Calendar cal = Calendar.getInstance();
         cal.setTime(system_curr_date);
         cal.add(Calendar.DATE, 1);
         system_curr_date = cal.getTime();
         //after changing the day - check if there are periodic orders to send
-        return issuePeriodicOrder();
+        Result<LinkedList<String>> awatingtobeaccepted = getAllwaitingOrders();
+        Result<LinkedList<String>> periodicorders = issuePeriodicOrder();
+        LinkedList<String> allOrdersToDisplay = new LinkedList<>();
+        //can be empty list - the false in Result need to be assign only if there was a problem in one of the fields
+        if (awatingtobeaccepted.isOK()) {
+            allOrdersToDisplay.addAll(awatingtobeaccepted.getData());
+        }
+        if(periodicorders.isOK()) {
+            allOrdersToDisplay.addAll(periodicorders.getData());
+        }
+        result = new Result(true, allOrdersToDisplay,"Orders that has to be accepted and delivered today");
+        if(!awatingtobeaccepted.isOK() && !periodicorders.isOK()){
+            result = new Result(false, null,"There are no orders waiting to be accepted or delivered today");
+        }
+        return result;
     }
     public static void clearDB(){
         Mapper.getInstance().clearDatabase();

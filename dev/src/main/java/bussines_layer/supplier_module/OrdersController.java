@@ -151,9 +151,21 @@ public class OrdersController {
     public Result<Integer> createOrder(SupplierCard supplier , OrderType type){
         Integer id = getNext_id();
         Order order = new Order(branch_id,id, supplier , type);
+        order.setStatus(OrderStatus.sent);
         orders.add(order);
         mapper.create(order);
         return new Result<>(true,id, String.format("The new order id is  : %d" ,id));
+    }
+
+    public Result<LinkedList<String>> getAllwaitingOrders(){
+        Integer day = BranchController.system_curr_date.getDay();
+        LinkedList<String> toReturn = new LinkedList<>();
+        for(Order order:orders){
+            if(order.getType().equals(OrderType.OutOfStockOrder) && (order.getIssuedDate().getDay()+1==day)){
+                toReturn.add(String.format("Order ID:%d waiting to be accepted in branch ID:%d", order.getOrderID(),branch_id));
+            }
+        }
+        return new Result<>(true, toReturn,"all orders");
     }
 
     //endregion
