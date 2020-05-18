@@ -1870,8 +1870,8 @@ public class CLController {
         //                  Shampoo
         //                      500ml
         //                      750ml
-        //              Meet%Fish
-        //                  Meet
+        //              Meat%Fish
+        //                  Meat
         //                      1/2kg
         //                      1kg
         //                  Fish
@@ -1883,11 +1883,11 @@ public class CLController {
         Result res_cat_shampoo = branchController.addSubCategory(((Category)res_cat_hygiene.getData()).getId(), "Shampoo");
         Result res_cat_500ml = branchController.addSubCategory(((Category)res_cat_shampoo.getData()).getId(), "500ml");
         Result res_cat_750ml = branchController.addSubCategory(((Category)res_cat_shampoo.getData()).getId(), "750ml");
-        Result res_cat_mnf = branchController.addMainCategory("Meet%Fish");
-        Result res_cat_meet = branchController.addSubCategory(((Category)res_cat_mnf.getData()).getId(), "Meet");
+        Result res_cat_mnf = branchController.addMainCategory("Meat%Fish");
+        Result res_cat_meat = branchController.addSubCategory(((Category)res_cat_mnf.getData()).getId(), "Meat");
         Result res_cat_fish = branchController.addSubCategory(((Category)res_cat_mnf.getData()).getId(), "Fish");
-        Result meet_half_kg = branchController.addSubCategory(((Category)res_cat_meet.getData()).getId(), "1/2kg");
-        Result meet_one_kg = branchController.addSubCategory(((Category)res_cat_meet.getData()).getId(), "1kg");
+        Result meat_half_kg = branchController.addSubCategory(((Category)res_cat_meat.getData()).getId(), "1/2kg");
+        Result meat_one_kg = branchController.addSubCategory(((Category)res_cat_meat.getData()).getId(), "1kg");
         Result fish_half_kg = branchController.addSubCategory(((Category)res_cat_fish.getData()).getId(), "1/2kg");
         Result fish_one_kg = branchController.addSubCategory(((Category)res_cat_fish.getData()).getId(), "1kg");
 
@@ -1911,7 +1911,7 @@ public class CLController {
 
         LinkedList <String> categories = new LinkedList<>();
         categories.add("Hygiene");
-        categories.add("Meet");
+        categories.add("Meat");
 
         //create contract
         branchController.addContract(supplierID, categories);
@@ -1954,19 +1954,19 @@ public class CLController {
 
         String manufacture = "Moosh";
         gpID = 104;
-        name = "Moosh packed ground meet 1/2kg";
+        name = "Moosh packed ground meat 1/2kg";
         sup_price = 30.0f;
         Float ret_price = 40.0f;
         catalogID = 13;
-        branchController.addGeneralProduct(((Category)meet_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meet");
+        branchController.addGeneralProduct(((Category)meat_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meat");
         branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),4);
-        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Meet");
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Meat");
 
 //-------------------------------------------
 
 
         gpID = 104;
-        name = "Moosh packed ground meet 1/2kg";
+        name = "Moosh packed ground meat 1/2kg";
         sup_price = 32.5f;
         catalogID = 20;
         supplierID = 2;
@@ -1975,30 +1975,30 @@ public class CLController {
         contact.add("Yossi");
 
         LinkedList <String> categories2 = new LinkedList<>();
-        categories2.add("Meet");
+        categories2.add("Meat");
         categories2.add("Fish");
 
 
-        //Create supplier niceToMeet
-        branchController.createSupplierCard("niceToMeet" , "mesada 37 beer-sheva" , "niceToMeat@gmail.com" , "087594456" ,
+        //Create supplier niceToMeat
+        branchController.createSupplierCard("niceToMeat" , "mesada 37 beer-sheva" , "niceToMeat@gmail.com" , "087594456" ,
                 supplierID, "09754432", "CreditCard" , contact2, "by order");
 
         //create contract
         branchController.addContract(supplierID, categories2);
 
-        ////branchController.addGeneralProduct(((Category)meet_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meet");
-        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Meet");
+        ////branchController.addGeneralProduct(((Category)meat_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meat");
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Meat");
 
         manufacture = "Moosh";
         gpID = 201;
-        name = "Moosh packed ground meet 1kg";
+        name = "Moosh packed ground meat 1kg";
         sup_price = 40.0f;
         ret_price = 45.0f;
         catalogID = 24;
 
-        branchController.addGeneralProduct(((Category)meet_one_kg.getData()).getId(), manufacture,name,sup_price,ret_price,3,catalogID,gpID,supplierID,"Meet");
+        branchController.addGeneralProduct(((Category)meat_one_kg.getData()).getId(), manufacture,name,sup_price,ret_price,3,catalogID,gpID,supplierID,"Meat");
 
-        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Meet");
+        branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Meat");
 
 
         manufacture = "Lakerda";
@@ -2007,7 +2007,7 @@ public class CLController {
         sup_price = 10.0f;
         ret_price = 13.0f;
         catalogID = 21;
-        branchController.addGeneralProduct(((Category)fish_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meet");
+        branchController.addGeneralProduct(((Category)fish_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meat");
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Fish");
 
 
