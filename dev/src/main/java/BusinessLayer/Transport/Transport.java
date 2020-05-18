@@ -106,7 +106,7 @@ public class Transport {
         String s = "";
         for (int i=0; i<log.size();i++)
         {
-            s=s+ (i+1) +". "+log.get(i)+"\n";
+            s=s+ "\t" + (i+1) +". "+log.get(i)+"\n";
         }
         return s;
     }

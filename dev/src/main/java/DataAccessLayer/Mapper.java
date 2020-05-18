@@ -7,6 +7,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.logger.LocalLog;
 import com.j256.ormlite.support.ConnectionSource;
 
 import java.text.SimpleDateFormat;
@@ -49,9 +50,10 @@ public class Mapper {
     public static Mapper getInstance() {
         if (instance == null) {
             try {
+                System.setProperty(LocalLog.LOCAL_LOG_LEVEL_PROPERTY, "ERROR");
                 instance = new Mapper();
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                //System.out.println(e.getMessage());
                 return null;
             }
         }

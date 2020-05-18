@@ -213,7 +213,9 @@ public class IOWorkers {
                 if(output!=null)
                     System.out.println(output);
             }
-            System.out.println("There are no workers assigned to this position");
+            else {
+                System.out.println("There are no workers assigned to this position");
+            }
         }
     }
 

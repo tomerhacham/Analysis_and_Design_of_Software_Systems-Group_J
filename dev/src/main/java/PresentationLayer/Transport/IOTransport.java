@@ -312,8 +312,8 @@ public class IOTransport {
                 }
                 else if (opt == 1){ //change truck
                     int truckID = facadeController.getTransportTruck(transportID);
-                    facadeController.addTransportLog("The truck: " + facadeController.getTruckDetails(truckID) + "\n" +
-                            "\t\twas changed.", transportID);
+                    facadeController.addTransportLog("The truck: " + facadeController.getTruckDetails(truckID) +
+                            "\twas changed.", transportID);
                     facadeController.setTransportTruck(transportID, chooseTruck(transportID));
                 }
                 else {
@@ -382,8 +382,8 @@ public class IOTransport {
             //try to remove this destination
             boolean removed =  facadeController.removeDestFromTransport(transportID, destToRemove);
             if (removed) {
-                facadeController.addTransportLog("The destination: " + facadeController.getSiteDetails(destToRemove) + "\n" +
-                        "\t\twas removed from transport.", transportID);
+                facadeController.addTransportLog("The destination: " + facadeController.getSiteDetails(destToRemove) +
+                        "\twas removed from transport.", transportID);
                 System.out.println("The destination: "+ facadeController.getSiteDetails(destToRemove)+"\n"
                                     +"was removed from transport.");
             }
@@ -402,14 +402,14 @@ public class IOTransport {
                 boolean removed =  facadeController.removeProducts(productsToRemove, fileToEdit);
                 if (removed) {
                     facadeController.addTransportLog("The products:\n" + facadeController.getProductsDetails(productsToRemove) +
-                            "\t\twas removed from destination: " + facadeController.getSiteDetails(destToEdit), transportID);
+                            "\twas removed from destination: " + facadeController.getSiteDetails(destToEdit), transportID);
                     System.out.println("the products removed from the destination");
                     float fileWeight= facadeController.getFileWeight(fileToEdit);
                     if(fileWeight==0)
                     {
                         facadeController.removeDestFromTransport(transportID, destToEdit);
-                        facadeController.addTransportLog("The destination: " + facadeController.getSiteDetails(destToEdit) + "\n" +
-                                "\t\twas removed from transport.", transportID);
+                        facadeController.addTransportLog("The destination: " + facadeController.getSiteDetails(destToEdit) +
+                                "\twas removed from transport.", transportID);
                         System.out.println("total weight of this destination is 0, destination removed from transport");
 
                     }
