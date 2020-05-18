@@ -170,7 +170,7 @@ public class Contract {
      */
     public Result setProducts(HashMap<Integer, CatalogProduct> products) {
         this.products = products;
-        return new Result(true, this, String.format("Product has been added under contract ID: %d", contractID));
+        return new Result<>(true, this, String.format("Product has been added under contract ID: %d", contractID));
     }
 
     /**
@@ -269,10 +269,10 @@ public class Contract {
     public Result<CatalogProduct> getCatalogProductByID(Integer CatalogID){
         Result result;
         if(products.containsKey(CatalogID)){
-            result=new Result(true, products.get(CatalogID),"");
+            result=new Result<>(true, products.get(CatalogID),"");
         }
         else{
-            result=new Result(false, null,"");
+            result=new Result<>(false, null,"");
         }
         return result;
     }

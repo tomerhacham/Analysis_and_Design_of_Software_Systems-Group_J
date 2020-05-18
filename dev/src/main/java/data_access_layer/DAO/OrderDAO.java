@@ -77,13 +77,12 @@ public class OrderDAO {
     public void create(Order order){
         OrderDTO orderDTO = new OrderDTO(order);
         if(!identityMap.containsKey(order.getOrderID())){identityMap.put(order.getOrderID(),order);}
-        LinkedList<catalog_product_in_orderDTO> catalog_product_in_order = new LinkedList<>();
-        for(CatalogProduct product:order.getProductsAndPrice().keySet()){
-            catalog_product_in_order.add(new catalog_product_in_orderDTO(order,product,order.getProductsAndQuantity().get(product),order.getProductsAndPrice().get(product)));
-        }
+        //LinkedList<catalog_product_in_orderDTO> catalog_product_in_order = new LinkedList<>();
         try {
             dao.create(orderDTO);
-            catalog_product_in_order_dao.create(catalog_product_in_order);
+            for(CatalogProduct product:order.getProductsAndPrice().keySet()){
+                catalog_product_in_order_dao.create(new catalog_product_in_orderDTO(order,product,order.getProductsAndQuantity().get(product),order.getProductsAndPrice().get(product)));
+            }
             //System.err.println(String.format("[Writing] %s", orderDTO));
             //System.err.println(String.format("[Writing] %s", concatObjectList(catalog_product_in_order)));
         } catch (SQLException throwables) {

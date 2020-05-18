@@ -117,7 +117,7 @@ public class OrdersController {
             if (order.getOrderID() == orderID) {
                 if (order.getStatus() == OrderStatus.sent) {
                     if (order.getType().equals(OrderType.PeriodicOrder) && !order.getDayToDeliver().getData().equals(BranchController.system_curr_date.getDay())) {//TODO CHECK +1
-                        return new Result<>(false, null, String.format("Periodic order (ID: %d) yet to be received. Current day is: %d and order should be received on: %d", orderID,BranchController.system_curr_date.getDay(),order.getDayToDeliver().getData()));
+                        return new Result<>(false, null, String.format("Periodic order (ID: %d) yet to be received. Current day is: %d and order should be received on: %d", orderID,(BranchController.system_curr_date.getDay() +1 ), (order.getDayToDeliver().getData()+1)));
                     } else {
                         order.setStatus(OrderStatus.received);
                         mapper.update(order);
@@ -212,9 +212,12 @@ public class OrdersController {
             return new Result<>(false,orderId, String.format("The order : %d is not a periodic order , therefore the order can not be removed", orderId));
         }
         Order order=getOrder(orderId).getData();
-        orders.remove(order);
-        mapper.delete(order);
-        return new Result<>(true,orderId, String.format("The periodic order : %d has been removed", orderId));
+        if (!(order.getStatus().equals(OrderStatus.sent))) {  //TODO make null pointer on load ?
+            orders.remove(order);
+            mapper.delete(order);
+            return new Result<>(true,orderId, String.format("The periodic order : %d has been removed", orderId));
+        }
+        return new Result<>(true,orderId, String.format("The periodic order : %d already been sent and therefore won't remove", orderId));
     }
 
     public Result updateDayToDeliver(Integer orderid , Integer dayToDeliver){

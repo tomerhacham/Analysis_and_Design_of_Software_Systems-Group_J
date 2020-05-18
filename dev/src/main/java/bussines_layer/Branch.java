@@ -263,6 +263,7 @@ public class Branch {
         }
         LinkedList<String> branchPeriodicOrders = new LinkedList<>();
         branchPeriodicOrders.add("-------------------Branch : "+name+"-------------------\n");
+        branchPeriodicOrders.add("Last Notice ! Don't forget to send those orders to the supplier !\n");
         branchPeriodicOrders.addAll(result.getData());
         branchPeriodicOrders.add("-------------------------------------------------------\n");
         return new Result<>(true,branchPeriodicOrders, String.format("All periodic orders with %d as their delivery day had been sent to order", BranchController.system_curr_date.getDay()+1));

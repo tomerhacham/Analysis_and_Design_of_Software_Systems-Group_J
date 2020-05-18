@@ -1745,7 +1745,7 @@ public class CLController {
             products.add(new Pair<>(gpID, quantity));
             menu="Add more products to order?\n";
             menu=menu.concat("1) Yes\n");
-            menu=menu.concat("2) No\n");
+            menu=menu.concat("2) No");
             System.out.println(menu);
             Integer option = getNextInt(sc);
             switch(option){

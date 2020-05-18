@@ -174,7 +174,7 @@ public class SupplierModule {
 
             Result<Order> resultOrder =ordersController.getOrder(orderid);
             if (!resultOrder.isOK()) { return new Result<>(false, null, String.format("Order %d does not exist", orderid));}
-            all_orders = all_orders.concat(String.format("%s\n---------------------------------------", issueOrder(resultOrder.getData()).getData()));
+            all_orders = all_orders.concat(String.format("%s\n---------------------------------------\n", issueOrder(resultOrder.getData()).getData()));
         }
         return new Result<>(true, all_orders, String.format("All orders had been generated from the report successfully: %s", report));
     }
@@ -212,7 +212,7 @@ public class SupplierModule {
             Float price = contractResult.getData().getProductPriceConsideringQuantity(pair.getKey().getGpID(), quantity).getData();
             resultOrder.getData().addProduct(cp, quantity,price);
         }
-        return new Result<>(true, ordersController.getOrder(orderID), String.format("The periodic order (ID: %d) has been generated from the product list successfully: %s", orderID ,productsAndQuantity));
+        return new Result<>(true, ordersController.getOrder(orderID), String.format("The periodic order (ID: %d) has been generated from the product list successfully:\n %s", orderID ,productsAndQuantity));
     }
 
     public Result removePeriodicOrder(Integer orderId) {
@@ -277,6 +277,7 @@ public class SupplierModule {
         }
         //All product exist in product list, need to change the prices
         Result<Float> resultPrice;
+        LinkedList< CatalogProduct> newProducts = contract.getProducts().getData();
         for (CatalogProduct product : periodicOrder.getProductsAndQuantity().keySet()) {
             resultPrice = contract.getProductPriceConsideringQuantity(product.getGpID(), periodicOrder.getProductsAndQuantity().get(product));
             periodicOrder.getProductsAndPrice().replace(product, resultPrice.getData());
