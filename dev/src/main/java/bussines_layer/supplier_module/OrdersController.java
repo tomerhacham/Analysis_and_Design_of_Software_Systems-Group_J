@@ -51,11 +51,13 @@ public class OrdersController {
 
     public LinkedList<Order> getAllOrders() { return this.orders;}
 
-    public Result addProductToOrder(int orderID , CatalogProduct product , Integer quantity , Float price){
+    public Result addProductToOrder(Integer orderID , CatalogProduct product , Integer quantity , Float price){
         Result<Order> result = getOrder(orderID);
+        Result<CatalogProduct> cp_result;
         if (result.isOK()){
-            result= result.getData().addProduct(product, quantity, price);
-            if (result.isOK()){mapper.addCatalogProductToOrder(product,result.getData(),quantity,price);}
+            Order order = result.getData();
+            cp_result = order.addProduct(product, quantity, price);
+            if (cp_result.isOK()){mapper.addCatalogProductToOrder(product,order,quantity,price);}
         }
         return result;
     }

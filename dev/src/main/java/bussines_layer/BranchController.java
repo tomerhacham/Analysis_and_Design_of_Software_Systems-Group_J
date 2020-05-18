@@ -91,7 +91,9 @@ public class BranchController {
     public Result switchBranch(Integer branch_id){
         if (checkBranchExists(branch_id)){
             mapper.clearCache();
-            currBranch = mapper.loadBranch(branch_id);
+            if (currBranch == null || !currBranch.getBranchId().equals(branch_id)) {
+                currBranch = mapper.loadBranch(branch_id);  //TODO fix load of branch
+            }
             return new Result<>(true, currBranch, String.format("Switched to Branch %d successfully", currBranch.getBranchId()));
         }
         return new Result<>(false, null, String.format("Branch with ID %d not found", branch_id));

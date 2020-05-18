@@ -92,76 +92,6 @@ public class CLController {
                     return;
                 case 2:
                     branchController=new BranchController(false);
-//                    Branch initialBranch = branchController.createNewBranch("Initial branch").getData();
-//                    branchController.switchBranch(initialBranch.getBranchId());
-//
-//                    //Add categories:
-//                    //              Hygiene
-//                    //                  Toilet Paper
-//                    //                      30 units
-//                    //                  Shampoo
-//                    //                      500ml
-//                    //                      750ml
-//                    //              Meet%Fish
-//                    //                  Meet
-//                    //                      1/2kg
-//                    //                      1kg
-//                    //                  Fish
-//                    //                      1/2kg
-//                    //                      1kg
-//                    Result res_cat_hygiene = branchController.addMainCategory("Hygiene");
-//                    Result res_cat_tp = branchController.addSubCategory(((Category)res_cat_hygiene.getData()).getId(), "Toilet paper");
-//                    Result res_cat_30 = branchController.addSubCategory(((Category)res_cat_tp.getData()).getId(), "30 units");
-//                    Result res_cat_shampoo = branchController.addSubCategory(((Category)res_cat_hygiene.getData()).getId(), "Shampoo");
-//                    Result res_cat_500ml = branchController.addSubCategory(((Category)res_cat_shampoo.getData()).getId(), "500ml");
-//                    Result res_cat_750ml = branchController.addSubCategory(((Category)res_cat_shampoo.getData()).getId(), "750ml");
-//                    Result res_cat_mnf = branchController.addMainCategory("Meet%Fish");
-//                    Result res_cat_meet = branchController.addSubCategory(((Category)res_cat_mnf.getData()).getId(), "Meet");
-//                    Result res_cat_fish = branchController.addSubCategory(((Category)res_cat_mnf.getData()).getId(), "Fish");
-//                    Result meet_half_kg = branchController.addSubCategory(((Category)res_cat_meet.getData()).getId(), "1/2kg");
-//                    Result meet_one_kg = branchController.addSubCategory(((Category)res_cat_meet.getData()).getId(), "1kg");
-//                    Result fish_half_kg = branchController.addSubCategory(((Category)res_cat_fish.getData()).getId(), "1/2kg");
-//                    Result fish_one_kg = branchController.addSubCategory(((Category)res_cat_fish.getData()).getId(), "1kg");
-//
-//                    Integer supplierID = 1;
-//                    Integer catalogID = 10;
-//                    Integer gpID = 100;
-//                    Float sup_price = 5.0f;
-//                    Float ret_price = 7.0f;
-//                    String name = "Milk 1/2 liter";
-//                    String manufacture = "tnuva";
-//
-//                    LinkedList<String> contact = new LinkedList<>();
-//                    contact.add("Moshe");
-//                    contact.add("Rachel");
-//
-//                    //Create supplier halavi-lee
-//                    branchController.createSupplierCard("halavi-lee" , "ringelbloom 97 beer-sheva" , "halavi@gmail.com" , "081234567" ,
-//                            supplierID, "0975635" , "CreditCard" , contact,"periodic");
-//
-//                    LinkedList <String> categories = new LinkedList<>();
-//                    categories.add("Dairy");
-//                    categories.add("Meat");
-//
-//                    //create contract
-//                    //branchController.addContract(supplierID, categories);
-//
-//                    branchController.addGeneralProduct(((Category)res_cat_30.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Dairy");
-//
-//                    supplierID = 2;
-//
-//                    LinkedList<String> contact2 = new LinkedList<>();
-//                    contact2.add("Shaked");
-//
-//                    //Create supplier baba
-//                    branchController.createSupplierCard("baba" , "bash" , "halavi@gmail.com" , "081234567" ,
-//                            supplierID, "0975635" , "CreditCard" , contact2,"by order");
-//
-//                    LinkedList <String> categories2 = new LinkedList<>();
-//                    categories.add("Dairy");
-//
-//                    //create contract
-//                    //branchController.addContract(supplierID, categories2);
                     return;
                 case 3:
                     Exit();
@@ -1926,10 +1856,10 @@ public class CLController {
 
     //region initialize
     private static void initialize() {
-//        System.err.println("Warning: all of the data in the DB will be erase\n");
-//        branchController=new BranchController(true);
-//        branchController.clearDB();
-//        branchController.loadID();
+        System.err.println("Warning: all of the data in the DB will be erase\n");
+        branchController=new BranchController(true);
+        branchController.clearDB();
+        branchController.loadID();
         // Open and switch to initial branch
         Branch initialBranch = branchController.createNewBranch("Initial branch").getData();
         branchController.switchBranch(initialBranch.getBranchId());

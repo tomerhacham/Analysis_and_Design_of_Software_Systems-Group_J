@@ -119,7 +119,7 @@ public class Order {
         return new Result<>(true,dayToDeliver, String.format("The delivery day it %d in the order:%d", dayToDeliver , getOrderID()));
     }
 
-    public Result addProduct(CatalogProduct product , Integer quantity , Float price){
+    public Result<CatalogProduct> addProduct(CatalogProduct product , Integer quantity , Float price){
 
         if (productsAndQuantity.containsKey(product)){
             return new Result<>(false,product, String.format("The product %s is already in the order:%d . Therefore it is not possible to add the product (only possible is to change the quantity)", product.getName() , getOrderID()));
@@ -137,9 +137,9 @@ public class Order {
         productsAndPrice.remove(product);
 
         if (productsAndQuantity.size()==0){
-            return new Result(true,product, String.format("The product %s has been removed from the order:%d , - But notice , the order now is empty and therefore is deleted", product.getName() , getOrderID()));
+            return new Result<>(true,product, String.format("The product %s has been removed from the order:%d , - But notice , the order now is empty and therefore is deleted", product.getName() , getOrderID()));
         }
-        return new Result(true,product, String.format("The product %s has been removed from the order:%d", product.getName() , getOrderID()));
+        return new Result<>(true,product, String.format("The product %s has been removed from the order:%d", product.getName() , getOrderID()));
     }
 
     public Result updateProductQuantityInPeriodicOrder(CatalogProduct product , Integer newQuantity , Float newPrice){
