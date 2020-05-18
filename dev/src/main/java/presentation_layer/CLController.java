@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static java.lang.System.exit;
+import static java.lang.System.in;
 
 public class CLController {
 
@@ -1847,8 +1848,17 @@ public class CLController {
         }
     }
     private static Integer getNextInt(Scanner sc){
-        while(!sc.hasNext()){}
-        return Integer.parseInt(sc.nextLine());
+        Integer integer=null;
+        boolean ok = false;
+        while(!ok) {
+            try {
+                while (!sc.hasNext()) {}
+                integer = Integer.parseInt(sc.nextLine());
+                ok =true;
+                }
+            catch (Exception e) {System.out.println("Try again");}
+        }
+        return integer;
     }
     private static String getNextLine(Scanner sc){
         while(!sc.hasNext()){}

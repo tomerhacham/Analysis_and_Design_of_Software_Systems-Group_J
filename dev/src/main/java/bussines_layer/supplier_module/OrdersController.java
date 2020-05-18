@@ -78,6 +78,7 @@ public class OrdersController {
 
     public Result<String> issueOrder (Order order){
         order.setStatus(OrderStatus.sent);
+        mapper.update(order);
         return order.display();
     }
 
@@ -118,6 +119,8 @@ public class OrdersController {
                     if (order.getType().equals(OrderType.PeriodicOrder) && !order.getDayToDeliver().getData().equals(BranchController.system_curr_date.getDay())) {//TODO CHECK +1
                         return new Result<>(false, null, String.format("Periodic order (ID: %d) yet to be received. Current day is: %d and order should be received on: %d", orderID,BranchController.system_curr_date.getDay(),order.getDayToDeliver().getData()));
                     } else {
+                        order.setStatus(OrderStatus.received);
+                        mapper.update(order);
                         return new Result<>(true, order.getProductsAndQuantity(), String.format("Order %d has been received", orderID));
                     }
                 } else if (order.getStatus() == OrderStatus.inProcess) {
@@ -141,7 +144,7 @@ public class OrdersController {
     private Integer getNext_id() {
         Integer next = next_id;
         this.next_id++;
-        mapper.writeID("contract",next_id);
+        mapper.writeID("order",next_id);
         return next;
     }
 
@@ -151,7 +154,6 @@ public class OrdersController {
     public Result<Integer> createOrder(SupplierCard supplier , OrderType type){
         Integer id = getNext_id();
         Order order = new Order(branch_id,id, supplier , type);
-        order.setStatus(OrderStatus.sent);
         orders.add(order);
         mapper.create(order);
         return new Result<>(true,id, String.format("The new order id is  : %d" ,id));

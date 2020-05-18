@@ -99,13 +99,13 @@ public class OrderDAO {
             if (identityMap.containsKey(order.getOrderID())){identityMap.replace(order.getOrderID(),order);}
             OrderDTO orderDTO = new OrderDTO(order);
             UpdateBuilder<OrderDTO, Void> updateBuilder = dao.updateBuilder();
-            updateBuilder.where().eq("order_id", order.getOrderID()).and().eq("branch_id" ,order.getBranch_id());
+            updateBuilder.where().eq("order_id", orderDTO.getOrder_id()).and().eq("branch_id" ,orderDTO.getBranch_id());
             // update the field(s)
-            updateBuilder.updateColumnValue("supplier_id" ,order.getSupplierID());
-            updateBuilder.updateColumnValue("issue_date" ,order.getIssuedDate());
-            updateBuilder.updateColumnValue("day_to_deliver" ,order.getDayToDeliver());
-            updateBuilder.updateColumnValue("status" ,order.getStatus());
-            updateBuilder.updateColumnValue("type" ,order.getType());
+            updateBuilder.updateColumnValue("supplier_id" ,orderDTO.getSupplier());
+            updateBuilder.updateColumnValue("issue_date" ,orderDTO.getIssuedDate());
+            updateBuilder.updateColumnValue("day_to_deliver" ,orderDTO.getDaytodeliver());
+            updateBuilder.updateColumnValue("status" ,orderDTO.getStatus());
+            updateBuilder.updateColumnValue("type" ,orderDTO.getType());
             updateBuilder.update();
 
             HashMap<CatalogProduct , Integer> productAndQuantity = order.getProductsAndQuantity();

@@ -8,6 +8,8 @@ import bussines_layer.inventory_module.Report;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+
+import data_access_layer.Mapper;
 import javafx.util.Pair;
 
 /**
@@ -281,6 +283,7 @@ public class SupplierModule {
         }
 
         periodicOrder.setSupplier(contract.getSupplier());
+        Mapper.getInstance().update(periodicOrder);
         return new Result<>(true , periodicOrder , String.format("Order %d updated successfully", orderID));
     }
 
