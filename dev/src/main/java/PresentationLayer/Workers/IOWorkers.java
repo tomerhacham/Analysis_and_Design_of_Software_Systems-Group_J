@@ -280,7 +280,7 @@ public class IOWorkers {
             boolean goBack=false;
             while(!goBack)
             {
-                System.out.println("Choose an option:");//TODO:Add display workers for shift option
+                System.out.println("Choose an option:");
                 System.out.println("1.Mark worker available for shift");
                 System.out.println("2.Unmark worker available for shift");
                 System.out.println("3.Finish");

@@ -89,7 +89,6 @@ public class Roster {
         {
             for(Worker ew:exisitingWorkers) {
                 boolean found=false;
-                Worker temp=null;
                 for (Worker w : workers) {
                     if(ew.getId().equals(w.getId())) {
                         found = true;
@@ -155,9 +154,9 @@ public class Roster {
         if(worker==null)
             return "The worker does not exist";
         String position = pos.toLowerCase();
-        String output=Scheduler.getInstance().isWorkerScheduled(worker,position);
-        if(output.length()>0)
-            return  "unable to remove the position because the worker is scheduled to fill it on:\n"+output+"\n";
+        boolean output=Scheduler.getInstance().isWorkerScheduled(worker.getId());
+        if(output)
+            return  "unable to remove the position because the worker is scheduled for shifts";
         worker.removePosition(position);
         mapper.deletePosition(pos,worker.getId());
         return null;
@@ -168,7 +167,7 @@ public class Roster {
         Worker searched=null;
         for(Worker w:workers)
         {
-            if(w.getId()==id)
+            if(w.getId().equals(id))
             {
                 searched=w;
                 break;

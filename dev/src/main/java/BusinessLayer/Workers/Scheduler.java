@@ -54,19 +54,30 @@ public class Scheduler {
     }
 
     public List<Shift> getWeeklySchedulebyDate(Date date)
-    {
+    {/*
         if(date==null||schedule.size()==0||date.after(DateManipulator.addDays(schedule.last().dayStart,6)))
             return null;
         WeeklySchedule week=schedule.floor(new WeeklySchedule(date,false));
         if(week==null)
             return null;
         //return week.getShifts();
+        */
+        if(date==null)
+            return null;
+        Date dayStart=DateManipulator.getFirstDayOfWeek(date);
         List<Shift> output = new ArrayList<>();
+        Shift s=null;
         for(int i=0; i<7;i++)
         {
-            Date day=DateManipulator.addDays(week.dayStart,i);
-            output.add(findShift(day,morning));
-            output.add(findShift(day,night));
+            Date day=DateManipulator.addDays(dayStart,i);
+            s=findShift(day,morning);
+            if(s==null)
+                s=new EmptyShift(day,morning);
+            output.add(s);
+            s=findShift(day,night);
+            if(s==null)
+                s=new EmptyShift(day,night);
+            output.add(s);
         }
         return output;
     }
@@ -286,19 +297,26 @@ public class Scheduler {
             shift=mapper.getShift(date,timeOfDay);
             if(shift!=null)
             {
-                addWeeksIfAbsent(date);
-                day=findDay(date);
-                if(day==null)
+                if (setShiftToSchedule(date, timeOfDay, shift))
                     return null;
-                else if(timeOfDay==morning){
-                    day.setMorningShift(shift);
-                }
-                else{
-                    day.setNightShift(shift);
-                }
             }
         }
         return shift;
+    }
+
+    private boolean setShiftToSchedule(Date date, boolean timeOfDay, Shift shift) {
+        DailySchedule day;
+        addWeeksIfAbsent(date);
+        day=findDay(date);
+        if(day==null)
+            return true;
+        else if(timeOfDay==morning){
+            day.setMorningShift(shift);
+        }
+        else{
+            day.setNightShift(shift);
+        }
+        return false;
     }
 
     public String removeWorkerFromRoster(String id)
@@ -306,14 +324,9 @@ public class Scheduler {
         Worker w=Roster.getInstance().findWorker(id);
         if(w==null)
             return "No such worker is in the system";
-        List<Shift> scheduledShifts = isWorkerScheduled(w);
-        String output="";
-        for(Shift shift:scheduledShifts) {
-            output+= getShiftSimpleTime(shift)+", ";
-        }
-        if(output.length()>0)
-            return "Can not remove worker as they are already scheduled to work on the following shifts:\n"+
-                    output;
+        boolean isScheduled = isWorkerScheduled(w.getId());
+        if(isScheduled)
+            return "Can not remove worker as they are already scheduled to work on shifts\n";
         Roster.getInstance().removeWorker(id);
         removeAvailableWorker(w);
         return null;
@@ -457,20 +470,47 @@ public class Scheduler {
                     {
                         if(workers.contains(w)) {
                             output.add(shift);
-                        }
 
+                            //TODO::get from mapper function all shifts where worker is occupied (by ID)
+                        }
                     }
+                    if(shift.getScheduledDrivers().contains(w))
+                        output.add(shift);
+                        //TODO::get from mapper function all shifts where worker is a driver (by ID)
             }
         }
         return output;
     }
-
+    public boolean isWorkerScheduled(String id)
+    {
+        Date currentDate=new Date();
+        for(WeeklySchedule ws:schedule)
+        {
+            for(Shift shift:ws.getShifts())
+            {
+                if(shift.getDate().after(currentDate))
+                    for(List<Worker> workers:shift.getOccupation().values())
+                    {
+                        for(Worker w: workers)
+                            if(w.getId().equals(id)) {
+                                return true;
+                        }
+                    }
+                for(Worker w:shift.getScheduledDrivers())
+                    if(w.getId().equals(id))
+                        {return true;}
+            }
+        }
+         return mapper.isScheduled(id);
+    }
     /*returns a string of every shift to which the worker is scheduled for the specific position.
     * returns null if none.*/
-    public String isWorkerScheduled(Worker w, String pos)
+
+    /*
+    private String isWorkerScheduled(Worker w, String pos)
     {
         String output="";
-        List<Shift> scheduledShifts = isWorkerScheduled(w);
+        List<Shift> scheduledShifts = isWorkerScheduled(w); //TODO:change isscheduled usage
         for (Shift shift: scheduledShifts)
         {
             if(shift.getOccupation().containsKey(pos) &&
@@ -478,7 +518,8 @@ public class Scheduler {
                 output+= getShiftSimpleTime(shift)+", ";
         }
         return output;
-    }
+    }*/
+
     /*returns true if the worker is scheduled for the specific shift */
     private boolean isWorkerScheduled(Worker worker,Date date,boolean partOfDay){
         Shift shift=findShift(date,partOfDay);

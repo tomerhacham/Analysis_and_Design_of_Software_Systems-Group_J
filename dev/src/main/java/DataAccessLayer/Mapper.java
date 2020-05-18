@@ -164,7 +164,7 @@ public class Mapper {
         }
     }
 
-    public void addPosition(String position, String workerID) //TODO:rquires testing
+    public void addPosition(String position, String workerID)
     {
         try {
             Worker_DTO worker_dto = worker_DAO.queryForId(workerID);
@@ -681,6 +681,29 @@ public class Mapper {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
+        }
+    }
+
+    public boolean isScheduled(String id){
+        //check if a worker or a driver is scheduled to a shift
+        //return true - if it scheduled, false if not
+        try{
+            List<Occupation_DTO> occupation_dtos = Occupation_DAO.queryForEq("workerID", id);
+            if(!occupation_dtos.isEmpty())
+            {
+                return true;
+            }
+            List<ShiftDriver_DTO> shiftDriver_dtos = Shift_Driver_DAO.queryForEq("driverID", id);
+            if(!shiftDriver_dtos.isEmpty())
+            {
+                return true;
+            }
+            return false;
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            return false;
         }
     }
 

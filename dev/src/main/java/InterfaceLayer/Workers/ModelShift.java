@@ -17,7 +17,7 @@ public class ModelShift {
     public ModelShift(EmptyShift es) {
         occupation = new HashMap<>();
         availableWorkers = new ArrayList<>();
-        drivers=new ArrayList<>();
+        drivers=null;
         date=es.getDate();
         if(es.getTimeOfDay()==true)
             partOfday="Empty morning shift";
@@ -78,6 +78,8 @@ public class ModelShift {
     }
 
     private String printDrivers() {
+        if(drivers==null)
+            return "";
         String output="";
         output+='\t'+"drivers- ["+drivers.size()+"]\t";
         for(ModelWorker mw:drivers)
