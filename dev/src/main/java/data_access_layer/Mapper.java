@@ -298,7 +298,7 @@ public class Mapper {
     }
     /**
      * delete Branch from the DB
-     * @param branch
+     * @param branch_id
      */
     public void delete(Integer branch_id){
         branch_dao.delete(branch_id);
