@@ -38,12 +38,11 @@ public class CLController {
                     printSuppliersMenu();
                     break;
                 case 3:
-                    String sim = "Choose how many days to simulate:\n";
+                    String sim = "Simulating next day...\n";
                     System.out.println(sim);
-                    Integer numOfDays = getNextInt(sc);
                     String msg = String.format("Old date: %s\t", BranchController.system_curr_date);
 
-                    Result<LinkedList<String>> periodicOrdersToPrint = branchController.simulateNextDay(numOfDays);
+                    Result<LinkedList<String>> periodicOrdersToPrint = branchController.simulateNextDay();
                     if (periodicOrdersToPrint.getData() == null){ // if there are no periodic orders to print at this day
                         System.out.println(periodicOrdersToPrint.getMessage());
                     }
@@ -106,7 +105,7 @@ public class CLController {
         menu = menu.concat("1) Branch Management\n");
         menu = menu.concat("2) Suppliers Management\n");
         menu = menu.concat("3) Simulate to next day\n");
-        menu = menu.concat("4) Exit\n\n");
+        menu = menu.concat("4) Exit\n");
         System.out.println(menu);
     }
 
@@ -120,7 +119,7 @@ public class CLController {
         menu = menu.concat("3) Remove branch\n");
         menu = menu.concat("4) Edit branch name\n");
         menu = menu.concat("5) Return\n");
-        menu = menu.concat("6) Exit\n\n");
+        menu = menu.concat("6) Exit\n");
         while (true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -180,7 +179,7 @@ public class CLController {
         }
 
         menu = menu.concat(String.format("%d) Return\n", option));
-        menu = menu.concat(String.format("%d) Exit\n\n", option+1));
+        menu = menu.concat(String.format("%d) Exit\n", option+1));
         while(true){
             System.out.println(menu);
             Integer input = getNextInt(sc);
@@ -221,7 +220,7 @@ public class CLController {
         menu = menu.concat("1) Create new supplier card\n");
         menu = menu.concat("2) Edit supplier card details\n");
         menu = menu.concat("3) Return\n");
-        menu = menu.concat("4) Exit\n\n");
+        menu = menu.concat("4) Exit\n");
         while (true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -466,7 +465,7 @@ public class CLController {
         menu=menu.concat("6) Supplier Contracts management\n");
         menu=menu.concat("7) System status\n");
         menu=menu.concat("8) Return\n");
-        menu=menu.concat("9) Exit\n\n");
+        menu=menu.concat("9) Exit\n");
         while (true){
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -510,7 +509,7 @@ public class CLController {
         menu=menu.concat("3) Mark flaw specific product\n");
         menu=menu.concat("4) Change location of specific product\n");
         menu=menu.concat("5) Return\n");
-        menu=menu.concat("6) exit\n\n");
+        menu=menu.concat("6) exit\n");
         while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -579,7 +578,7 @@ public class CLController {
         menu=menu.concat("4) Edit quantity\n");
         menu=menu.concat("5) Edit minimum quantity\n");
         menu=menu.concat("6) Return\n");
-        menu=menu.concat("7) Exit\n\n");
+        menu=menu.concat("7) Exit\n");
 
         while(true) {
             System.out.println(menu);
@@ -831,7 +830,7 @@ public class CLController {
         menu=menu.concat("2) Issue in-stock report\n");
         menu=menu.concat("3) Issue damaged&expired report\n");
         menu=menu.concat("4) Return\n");
-        menu=menu.concat("5) Exit\n\n");
+        menu=menu.concat("5) Exit\n");
         while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -860,7 +859,7 @@ public class CLController {
         menu=menu.concat("1) By category\n");
         menu=menu.concat("2) By general product\n");
         menu=menu.concat("3) Return\n");
-        menu=menu.concat("4) Exit\n\n");
+        menu=menu.concat("4) Exit\n");
         while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -943,7 +942,7 @@ public class CLController {
         menu=menu.concat("1) By category\n");
         menu=menu.concat("2) By general product\n");
         menu=menu.concat("3) Return\n");
-        menu=menu.concat("4) Exit\n\n");
+        menu=menu.concat("4) Exit\n");
         while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -1004,7 +1003,7 @@ public class CLController {
         menu=menu.concat("1) By category\n");
         menu=menu.concat("2) By general product\n");
         menu=menu.concat("3) Return\n");
-        menu=menu.concat("4) Exit\n\n");
+        menu=menu.concat("4) Exit\n");
         while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -1068,7 +1067,7 @@ public class CLController {
         menu=menu.concat("2) Cancel sale\n");
         menu=menu.concat("3) Check sales status\n");
         menu=menu.concat("4) Return\n");
-        menu=menu.concat("5) Exit\n\n");
+        menu=menu.concat("5) Exit\n");
         while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -1098,7 +1097,7 @@ public class CLController {
         menu=menu.concat("1) By category\n");
         menu=menu.concat("2) By general product\n");
         menu=menu.concat("3) Return\n");
-        menu=menu.concat("4) Exit\n\n");
+        menu=menu.concat("4) Exit\n");
         while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
