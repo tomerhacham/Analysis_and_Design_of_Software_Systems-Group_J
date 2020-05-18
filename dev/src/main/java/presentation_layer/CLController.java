@@ -1856,8 +1856,8 @@ public class CLController {
     //region initialize
     private static void initialize() {
         System.err.println("Warning: all of the data in the DB will be erase\n");
+        BranchController.clearDB();
         branchController=new BranchController(true);
-        branchController.clearDB();
         branchController.loadID();
         // Open and switch to initial branch
         Branch initialBranch = branchController.createNewBranch("Initial branch").getData();
