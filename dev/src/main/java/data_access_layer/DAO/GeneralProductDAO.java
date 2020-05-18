@@ -86,7 +86,7 @@ public class GeneralProductDAO {
         GeneralProductDTO generalProductDTO = new GeneralProductDTO(generalProduct);
         try {
             dao.create(generalProductDTO);
-            System.err.println(String.format("[Writing] %s", generalProductDTO));
+            //System.err.println(String.format("[Writing] %s", generalProductDTO));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
