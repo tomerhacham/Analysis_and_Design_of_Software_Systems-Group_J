@@ -1105,7 +1105,7 @@ public class Mapper {
             if(partOfDay)
                 shift=1;
             for (Transport_DTO transport_dto:transport_dtos) {
-                if(transport_dto.getDriverId().equals(prevDriverId) && transport_dto.getShift()==shift)
+                if(transport_dto.getDriverId().getWorkerID().equals(prevDriverId) && transport_dto.getShift()==shift)
                     return makeTRANSPORT(transport_dto);
             }
             return null;

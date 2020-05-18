@@ -1,10 +1,7 @@
 package PresentationLayer.Workers;
 
 
-import InterfaceLayer.Workers.ModelShift;
-import InterfaceLayer.Workers.ModelWorker;
-import InterfaceLayer.Workers.RosterController;
-import InterfaceLayer.Workers.ScheduleController;
+import InterfaceLayer.Workers.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -188,10 +185,18 @@ public class IOWorkers {
     private static void removeWorkerFromShift() {
         System.out.println("Enter position from which you want to remove a worker:");
         String pos=scanner.nextLine();
-        if(!sc.getCurrentEditedModelShift().occupation.containsKey(pos))
+        if(pos.equals("driver"))
+        {
+            System.out.println("Changes in scheduled drivers will be saved automatically");
+        }
+        if(!sc.getCurrentEditedModelShift().occupation.containsKey(pos)&& sc.getCurrentEditedModelShift().drivers.isEmpty())
             System.out.println("The position was not found");
         else {
-            List<ModelWorker> workersInpos=sc.getCurrentEditedModelShift().occupation.get(pos);
+            List<ModelWorker> workersInpos=new ArrayList<>();
+            if(!pos.equals("driver"))
+                workersInpos.addAll(sc.getCurrentEditedModelShift().occupation.get(pos));
+            else
+                workersInpos.addAll(sc.getCurrentEditedModelShift().drivers);
             if(workersInpos.size()>0) {
                 System.out.println("Eligible workers:");
                 int i = 0;

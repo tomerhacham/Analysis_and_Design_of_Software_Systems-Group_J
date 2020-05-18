@@ -92,8 +92,6 @@ public class Shift {
     }
 
     public String removeWorkerFromPosition(String position,String id,List<Worker> availableWorkers) {
-        if(position.equals("driver"))
-            return replaceDriver(id,availableWorkers);
         if(!occupation.containsKey(position))
             return "The position does not exist";
         Worker removed=occupation.get(position).findAndRemove((w)->
@@ -105,7 +103,7 @@ public class Shift {
         }
         return "The worker is not scheduled for this shift";
     }
-
+/*
     private String replaceDriver(String id,List<Worker> availableWorkers) {
         Driver removedDriver=null;
         for(Driver d:scheduledDrivers)
@@ -136,7 +134,7 @@ public class Shift {
         }
         return "The worker is not scheduled for this shift";
     }
-
+*/
     public String addWorkerToPosition(String position,String id,List<Worker> availableWorkers)
     {
         Worker w=null;
@@ -164,12 +162,15 @@ public class Shift {
 
     public Driver removeDriver(String id)
     {
-        for(Driver d:scheduledDrivers)
-        {
-            if(d.getId().equals(id))
-                return d;
+        Driver toRemove=null;
+        for(Driver d:scheduledDrivers) {
+            if (d.getId().equals(id)) {
+                toRemove = d;
+            }
         }
-        return null;
+        if(toRemove!=null)
+            scheduledDrivers.remove(toRemove);
+        return toRemove;
     }
 
     public HashMap<String, FixedSizeList<Worker>> getOccupation() {
