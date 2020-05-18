@@ -155,6 +155,7 @@ public class GeneralProduct {
         if(res){
             this.quantity++;
             result = new Result<>(res, product, "Product:"+this.name+"("+product_id+")"+" added successfully");
+            mapper.update(this);
         }
         else{
             result = new Result<>(res,product,"There was a problem in adding the product:"+product_id );
@@ -171,6 +172,7 @@ public class GeneralProduct {
            String msg="Product " +this.name+"("+product_id+")"+" has been removed from inventory";
            if(lowBoundCheck()){msg="Product has been removed from inventory\n ALERT: low quantity has been reached";}
            result = new Result(true,toRemove,msg);
+           mapper.update(this);
         }
         else{
             result = new Result(false,toRemove,"There was a problem in removing the product");
@@ -206,11 +208,13 @@ public class GeneralProduct {
 
     public Result setSale(Float sale_price){
         this.sale_price=sale_price;
+        mapper.update(this);
         return new Result<GeneralProduct>(true,this,"general product: "+name+"is on sale. new price: "+sale_price);
     }
 
     public Result cancelSale(){
         this.sale_price=new Float(-1);
+        mapper.update(this);
         return new Result<GeneralProduct>(true,this,"general product: "+name+"return to retail price: "+retail_price);
     }
 
