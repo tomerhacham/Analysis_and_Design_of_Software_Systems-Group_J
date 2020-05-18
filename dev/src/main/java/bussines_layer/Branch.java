@@ -264,7 +264,7 @@ public class Branch {
         branchPeriodicOrders.add("-------------------Branch : "+name+"-------------------\n");
         branchPeriodicOrders.addAll(result.getData());
         branchPeriodicOrders.add("-------------------------------------------------------\n");
-        return new Result<>(true,branchPeriodicOrders, String.format("All periodic orders with %d as their delivery day had been sent to order", BranchController.system_curr_date.getDay()));
+        return new Result<>(true,branchPeriodicOrders, String.format("All periodic orders with %d as their delivery day had been sent to order", BranchController.system_curr_date.getDay()+1));
     }
 
     public Result<LinkedList<String>> displayAllOrders(){

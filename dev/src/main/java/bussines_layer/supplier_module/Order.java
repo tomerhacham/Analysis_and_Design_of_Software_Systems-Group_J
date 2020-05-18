@@ -166,7 +166,7 @@ public class Order {
             toDisplay = toDisplay +"No Products In This Order\n";
         }
         else{
-            toDisplay = toDisplay.concat(String.format("Order Total Amount: %.02f\nDo Not Forget To Send The Order To The supplier !\n", getTotalAmount().getData()));
+            toDisplay = toDisplay.concat(String.format("Order Total Amount: %.02f\nDo not forget to send the order to the supplier !\n", getTotalAmount().getData()));
         }
         return new Result<>(true, toDisplay, String.format(" The Order Is Ready And Has Been Sent Back To The Employee: %s", toDisplay));
     }

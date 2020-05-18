@@ -349,9 +349,9 @@ public class BranchController {
         }
 
         if(allPeriodicOrdersFromAllBranches.size()>0){
-            return new Result<>(true,allPeriodicOrdersFromAllBranches, String.format("All periodic orders with %d as their delivery day had been sent to order", system_curr_date.getDay()));
+            return new Result<>(true,allPeriodicOrdersFromAllBranches, String.format("All periodic orders with %d as their delivery day had been sent to order", system_curr_date.getDay()+1));
         }
-        return new Result<>(false,null, String.format("There are no periodic orders with %d as their delivery day ",system_curr_date.getDay()));
+        return new Result<>(false,null, String.format("There are no periodic orders to be sent today (%d)",system_curr_date.getDay()+1));
     }
 
     //endregion
@@ -381,10 +381,11 @@ public class BranchController {
     private boolean checkBranchExists(Integer branch_id){
         return branches.containsKey(branch_id);
     }
-    public Result<LinkedList<String>> simulateNextDay(Integer numOfDays){
+
+    public Result<LinkedList<String>> simulateNextDay(){
         Calendar cal = Calendar.getInstance();
         cal.setTime(system_curr_date);
-        cal.add(Calendar.DATE, numOfDays);
+        cal.add(Calendar.DATE, 1);
         system_curr_date = cal.getTime();
         //after changing the day - check if there are periodic orders to send
         return issuePeriodicOrder();
