@@ -204,7 +204,7 @@ public class SupplierModule {
             Float price = contractResult.getData().getProductPriceConsideringQuantity(pair.getKey().getGpID(), quantity).getData();
             resultOrder.getData().addProduct(cp, quantity,price);
         }
-        return new Result<>(true, ordersController.getOrder(orderID), String.format("The periodic order has been generated from the product list successfully: %s", productsAndQuantity));
+        return new Result<>(true, ordersController.getOrder(orderID), String.format("The periodic order (ID: %d) has been generated from the product list successfully: %s", orderID ,productsAndQuantity));
     }
 
     public Result removePeriodicOrder(Integer orderId) {

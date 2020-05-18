@@ -339,7 +339,9 @@ public class BranchController {
                 branch=mapper.find_Branch(branchid);
                 branch.loadData();
             }
-            else{branch=currBranch;}
+            else{
+                branch=currBranch;
+            }
             LinkedList<String> periodicOrderFromBranch = branch.issuePeriodicOrder().getData();
             if(periodicOrderFromBranch!=null){ // the list can be null only if for this branch there are no periodic orders to send at this day
                 allPeriodicOrdersFromAllBranches.addAll(periodicOrderFromBranch);
@@ -380,12 +382,12 @@ public class BranchController {
         return branches.containsKey(branch_id);
     }
     public Result<LinkedList<String>> simulateNextDay(Integer numOfDays){
-        String msg = String.format("Old date: %s. ", system_curr_date);
+        //String msg = String.format("Old date: %s. ", system_curr_date);
         Calendar cal = Calendar.getInstance();
         cal.setTime(system_curr_date);
         cal.add(Calendar.DATE, numOfDays);
         system_curr_date = cal.getTime();
-        msg=msg.concat(String.format("New date: %s", system_curr_date));
+        //msg=msg.concat(String.format("New date: %s", system_curr_date));
         //after changing the day - check if there are periodic orders to send
         return issuePeriodicOrder();
     }

@@ -52,12 +52,12 @@ public class CostEngineering {
 
     public Result updateMinQuantity(Integer catalogid , Integer newQuantity){
         minQuntity.replace(catalogid , minQuntity.get(catalogid) , newQuantity);
-        return new Result(true,newQuantity, String.format("CatalogID:%s min quantity has been change to:%d", catalogid,newQuantity));
+        return new Result<>(true,newQuantity, String.format("CatalogID:%s min quantity has been change to:%d", catalogid,newQuantity));
     }
 
     public Result updatePriceAfterSale(Integer catalogid , Float newp){
         newPrice.replace(catalogid , newPrice.get(catalogid) , newp);
-        return new Result(true,newp, String.format("CatalogID:%s price has been change to:%d", catalogid,newp));
+        return new Result<>(true,newp, String.format("CatalogID:%s price has been change to:%d", catalogid,newp));
     }
 
     public Result removeProduct(Integer catalogid){
@@ -65,10 +65,10 @@ public class CostEngineering {
         if (minQuntity.containsKey(catalogid)){
             minQuntity.remove(catalogid);
             newPrice.remove(catalogid);
-            result=new Result(true, catalogid, String.format("CatalogID:%d has been removed", catalogid));
+            result=new Result<>(true, catalogid, String.format("CatalogID:%d has been removed", catalogid));
         }
         else{
-            result=new Result(false,catalogid, String.format("Could not find CatalogID:%d in the cost engineering", catalogid));
+            result=new Result<>(false,catalogid, String.format("Could not find CatalogID:%d in the cost engineering", catalogid));
         }
         return result;
     }
@@ -76,12 +76,12 @@ public class CostEngineering {
     public Result addProduct(Integer catalogid , Integer quantity , Float price){
         Result result;
         if (minQuntity.containsKey(catalogid) || (newPrice.containsKey(catalogid))){
-            result=new Result(false, catalogid, String.format("CatalogId:%d already exist",catalogid ));
+            result=new Result<>(false, catalogid, String.format("CatalogId:%d already exist",catalogid ));
         }
         else {
             minQuntity.put(catalogid, quantity);
             newPrice.put(catalogid, price);
-            result= new Result(true, catalogid, String.format("Catalog Product:%d has been added",catalogid ));
+            result= new Result<>(true, catalogid, String.format("Catalog Product:%d has been added",catalogid ));
         }
         return result;
     }
@@ -97,7 +97,7 @@ public class CostEngineering {
             result=new Result<>(true, price, String.format("Relevant price for CatalogID:%d", catalogId));
         }
         else{
-            result = new Result<>(false, null, String.format("Could not find CatalogID:%d in cost engineering", catalogId));
+            result = new Result<>(false, price, String.format("Could not find CatalogID:%d in cost engineering", catalogId));
         }
         return result;
     }

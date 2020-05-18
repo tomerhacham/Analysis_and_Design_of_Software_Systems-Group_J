@@ -1,4 +1,5 @@
 package bussines_layer.supplier_module;
+import bussines_layer.Branch;
 import bussines_layer.BranchController;
 import bussines_layer.Result;
 import bussines_layer.SupplierCard;
@@ -86,7 +87,7 @@ public class OrdersController {
 
         if(orders.isEmpty()){
             toDisplay.add("There Are No Orders In The System"+'\n');
-            return new Result(false,toDisplay, String.format("There Are No Orders In The System\n"));
+            return new Result<>(false,toDisplay, String.format("There Are No Orders In The System\n"));
         }
 
         for (Order o : orders){
@@ -94,7 +95,7 @@ public class OrdersController {
                 toDisplay.add(o.display().getData());
             }
         }
-        return new Result(true,toDisplay, String.format("Display all supplier Orders"));
+        return new Result<>(true,toDisplay, String.format("Display all supplier Orders"));
     }
 
     public Result<LinkedList<String>> displayAllOrders (){
@@ -112,16 +113,18 @@ public class OrdersController {
     }
 
     public Result<HashMap<CatalogProduct, Integer>> getProductsToAcceptOrder(Integer orderID) {
-        for (Order order: orders){
-            if (order.getOrderID() == orderID && order.getStatus()== OrderStatus.sent){
-                if (order.getStatus()== OrderStatus.sent){
-                    return new Result<>(true,order.getProductsAndQuantity(), String.format("Order %d has been received", orderID));
-                }
-                else if(order.getStatus()== OrderStatus.inProcess){
-                    return new Result<>(false,null, String.format("Order %d hasn't been sent", orderID));
-                }
-                else if (order.getStatus()== OrderStatus.received){
-                    return new Result<>(false,null, String.format("Order %d already received", orderID));
+        for (Order order: orders) {
+            if (order.getOrderID() == orderID) {
+                if (order.getStatus() == OrderStatus.sent) {
+                    if (order.getType().equals(OrderType.PeriodicOrder) && !order.getDayToDeliver().getData().equals(BranchController.system_curr_date.getDay())) {//TODO CHECK +1
+                        return new Result<>(false, null, String.format("Periodic order (ID: %d) yet to be received. Current day is: %d and order should be received on: %d", orderID,BranchController.system_curr_date.getDay(),order.getDayToDeliver().getData()));
+                    } else {
+                        return new Result<>(true, order.getProductsAndQuantity(), String.format("Order %d has been received", orderID));
+                    }
+                } else if (order.getStatus() == OrderStatus.inProcess) {
+                    return new Result<>(false, null, String.format("Order %d hasn't been sent", orderID));
+                } else if (order.getStatus() == OrderStatus.received) {
+                    return new Result<>(false, null, String.format("Order %d already received", orderID));
                 }
             }
         }
@@ -206,7 +209,7 @@ public class OrdersController {
         Order order = getOrder(orderid).getData();
         mapper.update(order);
         return result;
-}
+    }
 
     public Result<LinkedList<String>> issuePeriodicOrder(){
 
@@ -218,8 +221,7 @@ public class OrdersController {
             Integer order_day =  order.getDayToDeliver().getData();
             if (order_day == 1) { order_day=7;}
             else { order_day = order_day-1;}
-
-            if ((order.getType()== OrderType.PeriodicOrder) && (order_day).equals(sys_day)){
+            if ((order.getType()== OrderType.PeriodicOrder) && (order_day).equals(sys_day+1)){
                 periodicOrdersToIsuue.add(issueOrder(order).getData());
             }
         }
