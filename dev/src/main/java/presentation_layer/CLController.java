@@ -77,7 +77,7 @@ public class CLController {
 
     static private void printInitializeMenu() {
         String menu = "";
-        menu = menu.concat("Choose one of the options:\n");
+        menu = menu.concat("\nChoose one of the options:\n");
         menu = menu.concat("1) Restart system DB with initial data\n");
         menu = menu.concat("2) Run system with current DB\n");
         menu = menu.concat("3) Exit");
@@ -101,7 +101,7 @@ public class CLController {
 
     private static void printSuperLiMenu() {
         String menu = "";
-        menu = menu.concat("Choose one of the options:\n");
+        menu = menu.concat("\nChoose one of the options:\n");
         menu = menu.concat("1) Branch Management\n");
         menu = menu.concat("2) Suppliers Management\n");
         menu = menu.concat("3) Simulate to next day\n");
@@ -113,7 +113,7 @@ public class CLController {
 
     private static void printBranchesMenu() {
         String menu = "";
-        menu = menu.concat("Choose one of the options:\n");
+        menu = menu.concat("\nChoose one of the options:\n");
         menu = menu.concat("1) Choose existing branch\n");
         menu = menu.concat("2) Open new branch\n");
         menu = menu.concat("3) Remove branch\n");
@@ -176,7 +176,7 @@ public class CLController {
 
     private static void printExistingBranchesMenu() {
         String menu = "";
-        menu = menu.concat("Choose branch (By ID):\n");
+        menu = menu.concat("\nChoose branch (By ID):\n");
         Integer option = 1;
         for(Integer branch_id : branchController.getBranches().keySet()){
             menu = menu.concat(String.format("%d) %s (type: %d)\n", option, branchController.getBranches().get(branch_id), branch_id));
@@ -221,7 +221,7 @@ public class CLController {
     //region Supplier Controller
     private static void printSuppliersMenu() {
         String menu = "";
-        menu = menu.concat("Choose one of the options:\n");
+        menu = menu.concat("\nChoose one of the options:\n");
         menu = menu.concat("1) Create new supplier card\n");
         menu = menu.concat("2) Edit supplier card details\n");
         menu = menu.concat("3) Print all suppliers\n");
@@ -252,7 +252,7 @@ public class CLController {
 
     private static void printEditSupplierCardDetails() {
         String menu = "";
-        menu=menu.concat("Choose detail to edit:\n");
+        menu=menu.concat("\nChoose detail to edit:\n");
         menu=menu.concat("1) Supplier name\n");
         menu=menu.concat("2) Address\n");
         menu=menu.concat("3) Email\n");
@@ -465,7 +465,7 @@ public class CLController {
 
     static private void printMainBranchMenu() {
         String menu = "";
-        menu=menu.concat("Choose one of the options:\n");
+        menu=menu.concat("\nChoose one of the options:\n");
         menu=menu.concat("1) Products management\n");
         menu=menu.concat("2) Category management\n");
         menu=menu.concat("3) Reports management\n");
@@ -864,7 +864,7 @@ public class CLController {
     }
     //region Out of Stock Report
     static private void printOutOfStockReportMenu() {
-        String menu = "Choose one of the options\n";
+        String menu = "\nChoose one of the options\n";
         menu=menu.concat("1) By category\n");
         menu=menu.concat("2) By general product\n");
         menu=menu.concat("3) Return\n");
@@ -947,7 +947,7 @@ public class CLController {
 
     //region In-Stock Report
     static private void printInStockReportMenu() {
-        String menu = "Choose one of the options\n";
+        String menu = "\nChoose one of the options\n";
         menu=menu.concat("1) By category\n");
         menu=menu.concat("2) By general product\n");
         menu=menu.concat("3) Return\n");
@@ -1008,7 +1008,7 @@ public class CLController {
 
     //region Damaged and Expired Report
     static private void printDNEReportMenu() {
-        String menu = "Choose one of the options\n";
+        String menu = "\nChoose one of the options\n";
         menu=menu.concat("1) By category\n");
         menu=menu.concat("2) By general product\n");
         menu=menu.concat("3) Return\n");
@@ -1102,7 +1102,7 @@ public class CLController {
 
     //region Add Sale
     static private void printAddSaleMenu() {
-        String menu = "Choose one of the options\n";
+        String menu = "\nChoose one of the options\n";
         menu=menu.concat("1) By category\n");
         menu=menu.concat("2) By general product\n");
         menu=menu.concat("3) Return\n");
@@ -1243,7 +1243,7 @@ public class CLController {
     //region Supplier Contracts management
     private static void printSupplierContractsMenu() {
         String menu = "";
-        menu=menu.concat("Choose one of the options:\n");
+        menu=menu.concat("\nChoose one of the options:\n");
         menu=menu.concat("1) Add contract\n");
         menu=menu.concat("2) Remove contract\n");
         menu=menu.concat("3) Add product to contract\n");
@@ -1291,7 +1291,7 @@ public class CLController {
 
     private static void printCostEngineeringMenu() {
         String menu = "";
-        menu=menu.concat("Choose one of the options:\n");
+        menu=menu.concat("\nChoose one of the options:\n");
         menu=menu.concat("1) Add cost engineering\n");
         menu=menu.concat("2) Remove cost engineering\n");
         menu=menu.concat("3) Add product\n");
@@ -1553,7 +1553,7 @@ public class CLController {
     //region Orders Management
     private static void printOrdersMenu() {
         String menu = "";
-        menu=menu.concat("Choose one of the options:\n");
+        menu=menu.concat("\nChoose one of the options:\n");
         menu=menu.concat("1) Create periodic order\n");
         menu=menu.concat("2) Remove periodic order\n");
         menu=menu.concat("3) Add product to periodic order\n");
