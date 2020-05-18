@@ -27,7 +27,6 @@ public class CLController {
     public static void displayMenu() {
         printLogo();
         printInitializeMenu();
-        //initialize();
         while(true) {
             printSuperLiMenu();
             Integer option = getNextInt(sc);
@@ -80,9 +79,9 @@ public class CLController {
     static private void printInitializeMenu() {
         String menu = "";
         menu = menu.concat("Choose one of the options:\n");
-        menu = menu.concat("1) Run system with initial data\n");
-        menu = menu.concat("2) Run system blank\n");
-        menu = menu.concat("3) Exit\n\n");
+        menu = menu.concat("1) Restart system DB with initial data\n");
+        menu = menu.concat("2) Run system with current DB\n");
+        menu = menu.concat("3) Exit\n");
         System.out.println(menu);
         Integer option = getNextInt(sc);
         while (true) {
@@ -1707,6 +1706,7 @@ public class CLController {
             param = getInputParserbyComma(sc);
             if (param.length == 1) {
                 Integer day = Integer.parseInt(param[0]);
+                day--;
                 printEnterProductsToPOrder(products);
                 Result res = branchController.createPeriodicOrder(supplierID, products, day);
                 System.out.println(res.getMessage());

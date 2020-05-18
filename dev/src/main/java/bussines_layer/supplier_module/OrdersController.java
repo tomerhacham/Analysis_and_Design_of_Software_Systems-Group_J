@@ -219,9 +219,9 @@ public class OrdersController {
         for (Order order : orders) {
             //issue one day before delivery date
             Integer order_day =  order.getDayToDeliver().getData();
-            if (order_day == 1) { order_day=7;}
+            if (order_day == 0) { order_day=6;}
             else { order_day = order_day-1;}
-            if ((order.getType()== OrderType.PeriodicOrder) && (order_day).equals(sys_day+1)){
+            if ((order.getType()== OrderType.PeriodicOrder) && (order_day).equals(sys_day)){
                 periodicOrdersToIsuue.add(issueOrder(order).getData());
             }
         }

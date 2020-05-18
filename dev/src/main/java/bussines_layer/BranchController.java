@@ -382,12 +382,10 @@ public class BranchController {
         return branches.containsKey(branch_id);
     }
     public Result<LinkedList<String>> simulateNextDay(Integer numOfDays){
-        //String msg = String.format("Old date: %s. ", system_curr_date);
         Calendar cal = Calendar.getInstance();
         cal.setTime(system_curr_date);
         cal.add(Calendar.DATE, numOfDays);
         system_curr_date = cal.getTime();
-        //msg=msg.concat(String.format("New date: %s", system_curr_date));
         //after changing the day - check if there are periodic orders to send
         return issuePeriodicOrder();
     }
