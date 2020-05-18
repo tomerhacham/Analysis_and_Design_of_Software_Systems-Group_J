@@ -78,7 +78,6 @@ public class OrdersController {
 
     public Result<String> issueOrder (Order order){
         order.setStatus(OrderStatus.sent);
-        order.setIssuedDate(BranchController.system_curr_date);
         return order.display();
     }
 

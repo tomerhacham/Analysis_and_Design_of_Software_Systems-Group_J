@@ -54,6 +54,7 @@ public class Order {
         this.type = type;
         this.status=OrderStatus.inProcess;
         this.dayToDeliver = dayToDeliver;
+        this.issuedDate = BranchController.system_curr_date;
     }
 
     public Order(OrderDTO orderDTO){
