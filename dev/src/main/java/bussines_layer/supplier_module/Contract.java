@@ -47,6 +47,8 @@ public class Contract {
 
     public SupplierCard getSupplierCard() {return supplier; }
 
+    public HashMap<Integer, CatalogProduct> getProductsHashMap() {return products;  }
+
     public void setSupplier(SupplierCard supplier) {
         this.supplier = supplier;
     }
@@ -389,6 +391,8 @@ public class Contract {
     public boolean isCostEngExist(){
         return costEngineering!=null;
     }
+
+
 
     //#endregion
 

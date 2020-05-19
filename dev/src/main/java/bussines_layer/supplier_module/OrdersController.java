@@ -166,6 +166,9 @@ public class OrdersController {
             if(order.getType().equals(OrderType.OutOfStockOrder) && (order.getIssuedDate().getDay()+1==day)){
                 toReturn.add(String.format("Order ID:%d waiting to be accepted in branch ID:%d", order.getOrderID(),branch_id));
             }
+            if (order.getType().equals(OrderType.PeriodicOrder) && order.getStatus().equals(OrderStatus.sent) && order.getDayToDeliver().getData() == day){
+                toReturn.add(String.format("Periodic order ID:%d waiting to be accepted in branch ID:%d", order.getOrderID(),branch_id));
+            }
         }
         return new Result<>(true, toReturn,"all orders");
     }
@@ -183,13 +186,18 @@ public class OrdersController {
 
     public Result removeProductFromPeriodicOrder(Integer orderID , CatalogProduct product) {
         Result result;
-        if(getOrder(orderID).getData().getType() == OrderType.PeriodicOrder){
+        Order order= getOrder(orderID).getData();
+        if(order != null && order.getType() == OrderType.PeriodicOrder){
             result= getOrder(orderID).getData().removeProductFromPeriodicOrder(product);
-            Order order=getOrder(orderID).getData();
             if (result.isOK()){mapper.deleteCatalogProductFromOrder(order,product);}
         }
         else {
-            result = new Result<>(false, product, String.format("The order : %d is not a periodic order , therefore the product %s can not be removed", product.getName(), orderID));
+            result = new Result<>(false, product, String.format("The order : %d does not match a periodic order , therefore the product %s can not be removed", orderID, product.getName()));
+        }
+        if (order != null && order.getProductsAndQuantity().size() ==0){
+            orders.remove(order);
+            mapper.delete(order);
+            result = new Result<>(true, product, String.format("The product : %s was the only product and deleted , therefore the order %d removed", product.getName(), orderID));
         }
         return result;
     }

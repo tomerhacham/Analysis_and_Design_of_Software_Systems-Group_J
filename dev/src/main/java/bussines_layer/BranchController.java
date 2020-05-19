@@ -422,9 +422,9 @@ public class BranchController {
         if(periodicorders.isOK()) {
             allOrdersToDisplay.addAll(periodicorders.getData());
         }
-        result = new Result(true, allOrdersToDisplay,"Orders that has to be accepted and delivered today");
+        result = new Result<>(true, allOrdersToDisplay,"Orders that has to be accepted and delivered today");
         if(!awatingtobeaccepted.isOK() && !periodicorders.isOK()){
-            result = new Result(false, null,"There are no orders waiting to be accepted or delivered today");
+            result = new Result<>(false, null,"There are no orders waiting to be accepted or delivered today");
         }
         return result;
     }

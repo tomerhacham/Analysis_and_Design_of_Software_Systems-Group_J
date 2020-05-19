@@ -114,7 +114,16 @@ public class SupplierModule {
     }
 
     public Result<HashMap<CatalogProduct, Integer>> getProductsToAcceptOrder(Integer orderID){
-        return this.ordersController.getProductsToAcceptOrder(orderID);
+        Result<HashMap<CatalogProduct, Integer>> products =  this.ordersController.getProductsToAcceptOrder(orderID);
+        Order order = ordersController.getOrder(orderID).getData();
+        if (order!=null){
+            Integer supplierID = order.getSupplierID();
+            Contract c = contractController.findContract(supplierID).getData();
+            if (products.isOK() && c ==null){
+                ordersController.removePeriodicOrder(orderID);
+            }
+        }
+        return products;
     }
 
     public Result<LinkedList<String>> displayAllOrders(){
@@ -211,6 +220,7 @@ public class SupplierModule {
             Integer quantity = pair.getValue();
             Float price = contractResult.getData().getProductPriceConsideringQuantity(pair.getKey().getGpID(), quantity).getData();
             resultOrder.getData().addProduct(cp, quantity,price);
+            Mapper.getInstance().addCatalogProductToOrder(cp , resultOrder.getData(), quantity , price);
         }
         return new Result<>(true, ordersController.getOrder(orderID), String.format("The periodic order (ID: %d) has been generated from the product list successfully:\n %s", orderID ,productsAndQuantity));
     }
@@ -277,7 +287,6 @@ public class SupplierModule {
         }
         //All product exist in product list, need to change the prices
         Result<Float> resultPrice;
-        LinkedList< CatalogProduct> newProducts = contract.getProducts().getData();
         for (CatalogProduct product : periodicOrder.getProductsAndQuantity().keySet()) {
             resultPrice = contract.getProductPriceConsideringQuantity(product.getGpID(), periodicOrder.getProductsAndQuantity().get(product));
             periodicOrder.getProductsAndPrice().replace(product, resultPrice.getData());
