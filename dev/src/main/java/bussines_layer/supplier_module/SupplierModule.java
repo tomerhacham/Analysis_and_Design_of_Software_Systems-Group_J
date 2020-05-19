@@ -285,15 +285,21 @@ public class SupplierModule {
             resultProduct = contract.isProductExist(product);
             if (!resultProduct.isOK()){return new Result<>(false, null, String.format("Product %d does not exist in supplier products list", resultProduct.getData().getGpID()));}
         }
+
         //All product exist in product list, need to change the prices
+        Mapper.getInstance().delete(periodicOrder);
         Result<Float> resultPrice;
+        HashMap <Integer , CatalogProduct> newProducts = contract.getProductsHashMap();
+
         for (CatalogProduct product : periodicOrder.getProductsAndQuantity().keySet()) {
             resultPrice = contract.getProductPriceConsideringQuantity(product.getGpID(), periodicOrder.getProductsAndQuantity().get(product));
-            periodicOrder.getProductsAndPrice().replace(product, resultPrice.getData());
+            CatalogProduct newCatalogProduct = newProducts.get(product.getGpID());
+            periodicOrder.replaceDetails(product , newCatalogProduct , resultPrice.getData());
         }
 
         periodicOrder.setSupplier(contract.getSupplier());
-        Mapper.getInstance().update(periodicOrder);
+        //update db
+        Mapper.getInstance().create(periodicOrder);
         return new Result<>(true , periodicOrder , String.format("Order %d updated successfully", orderID));
     }
 

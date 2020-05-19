@@ -193,4 +193,14 @@ public class Order {
     public void setProductsAndPrice(HashMap<CatalogProduct, Float> productsAndPrice) {
         this.productsAndPrice = productsAndPrice;
     }
+
+    public void replaceDetails(CatalogProduct product, CatalogProduct newCatalogProduct, Float price) {
+        //update productsAndQuantity
+        Integer quantity = productsAndQuantity.get(product);
+        productsAndQuantity.remove(product);
+        productsAndQuantity.put(newCatalogProduct , quantity);
+        //update productsAndPrice
+        productsAndPrice.remove(product);
+        productsAndPrice.put(newCatalogProduct , price);
+    }
 }
