@@ -38,6 +38,8 @@ public class Category {
         this.name=categoryDTO.getName();
         this.level=categoryDTO.getLevel();
         this.id=categoryDTO.getId();
+        this.sub_categories = new LinkedList<>();
+        this.generalProducts =new LinkedList<>();
     }
 
     //region Setters - Getters

@@ -186,6 +186,10 @@ public class CLController {
         while(true){
             System.out.println(menu);
             Integer input = getNextInt(sc);
+            if( (input>branchController.getBranches().keySet().size()+2) || input <=0 ){
+                System.out.println("This is not valid option");
+                continue;
+            }
             if (input.equals( branchController.getBranches().keySet().size()+1)){
                 return;
             }
