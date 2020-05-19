@@ -116,7 +116,7 @@ public class OrdersController {
         for (Order order: orders) {
             if (order.getOrderID() == orderID) {
                 if (order.getStatus() == OrderStatus.sent) {
-                    if (order.getType().equals(OrderType.PeriodicOrder) && !order.getDayToDeliver().getData().equals(BranchController.system_curr_date.getDay())) {//TODO CHECK +1
+                    if (order.getType().equals(OrderType.PeriodicOrder) && !order.getDayToDeliver().getData().equals(BranchController.system_curr_date.getDay())) {
                         return new Result<>(false, null, String.format("Periodic order (ID: %d) yet to be received. Current day is: %d and order should be received on: %d", orderID,(BranchController.system_curr_date.getDay() +1 ), (order.getDayToDeliver().getData()+1)));
                     } else {
                         order.setStatus(OrderStatus.received);
