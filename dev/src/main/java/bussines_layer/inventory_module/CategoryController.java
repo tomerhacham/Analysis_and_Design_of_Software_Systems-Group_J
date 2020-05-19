@@ -71,24 +71,29 @@ public class CategoryController {
         Category toRemove = searchCategorybyId(category_id);
         boolean res = false;
         Result<Category> result=null;
-        if (toRemove.getNumberOfProducts() == 0) {
-            if (toRemove.getLevel()==1){
-                res = main_categories.remove(toRemove);
-                if (res) {
-                    result = new Result<>(res, toRemove, "Category "+toRemove.getName()+" has been deleted");
-                    mapper.delete(toRemove);
-                } else {
-                    result = new Result<>(res, toRemove, "There was a problem deleting the category: "+toRemove.getName());
+        if(toRemove!=null){
+            if (toRemove.getNumberOfProducts() == 0) {
+                if (toRemove.getLevel()==1){
+                    res = main_categories.remove(toRemove);
+                    if (res) {
+                        result = new Result<>(res, toRemove, "Category "+toRemove.getName()+" has been deleted");
+                        mapper.delete(toRemove);
+                    } else {
+                        result = new Result<>(res, toRemove, "There was a problem deleting the category: "+toRemove.getName());
+                    }
+                }
+                else{
+                    for (Category category:main_categories) {
+                        result=category.deleteCategoryRecursive(toRemove);
+                    }
                 }
             }
-            else{
-                for (Category category:main_categories) {
-                    result=category.deleteCategoryRecursive(toRemove);
-                }
+            else {
+                result = new Result<>(res, toRemove, "Could not delete category "+ toRemove.getName()+" with product still available in it");
             }
         }
-        else {
-            result = new Result<>(res, toRemove, "Could not delete category "+ toRemove.getName()+" with product still available in it");
+        else{
+            result =new Result(false,null, String.format("Could not find category ID:%d", category_id));
         }
         return result;
     }

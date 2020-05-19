@@ -42,6 +42,7 @@ public class Mapper {
     //Constructor
     private Mapper() {
         String databaseUrl = "jdbc:sqlite:src/main/java/data_access_layer/SuperLi.db";
+        //String databaseUrl = "jdbc:sqlite:SuperLi.db";
         try (ConnectionSource conn = new JdbcConnectionSource(databaseUrl)) {
             /*Properties properties=new Properties();
             properties.setProperty("PRAGMA foreign_keys", "ON");

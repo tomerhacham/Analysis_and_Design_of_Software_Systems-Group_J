@@ -81,34 +81,36 @@ public class BranchController {
 
     //region Branch
     public Result<Branch> createNewBranch(String name){
-        Branch toAdd = new Branch(getNextId(), name);
-        branches.put(toAdd.getBranchId(), name);
-        mapper.create(toAdd);
-        return new Result<>(true, toAdd, String.format("New branch (ID: %d) created successfully", toAdd.getBranchId()));
+        if(!branches.values().contains(name)) {
+            Branch toAdd = new Branch(getNextId(), name);
+            branches.put(toAdd.getBranchId(), name);
+            mapper.create(toAdd);
+            return new Result<>(true, toAdd, String.format("New branch (ID: %d) created successfully", toAdd.getBranchId()));
+        }
+        return new Result<>(false,null,"this name is already taken...");
     }
 
     public Result switchBranch(Integer branch_id){
         if (checkBranchExists(branch_id)){
             mapper.clearCache();
             if (currBranch == null || !currBranch.getBranchId().equals(branch_id)) {
-                currBranch = mapper.loadBranch(branch_id);  //TODO fix load of branch
+                currBranch = mapper.loadBranch(branch_id);
             }
-            return new Result<>(true, currBranch, String.format("Switched to Branch %d successfully", currBranch.getBranchId()));
+            return new Result<>(true, currBranch, String.format("Switched to Branch %s (ID: %d) successfully", currBranch.getName(),currBranch.getBranchId()));
         }
         return new Result<>(false, null, String.format("Branch with ID %d not found", branch_id));
     }
 
-    public Result removeBranch(Integer branch_id){
-        if (currBranch.getBranchId().equals(branch_id)){
-            return new Result<>(false, null, String.format("Can not delete current branch (ID: %d), switch and try again.", branch_id));
+    public Result removeBranch(Integer branch_id) {
+        if (checkBranchExists(branch_id)) {
+            if (currBranch!=null && currBranch.getBranchId().equals(branch_id)) {
+                return new Result<>(false, null, String.format("Can not delete current branch (ID: %d), switch and try again.", branch_id));
+            }
+            branches.remove(branch_id);
+            mapper.delete(branch_id);
+            return new Result<>(true, branch_id, String.format("Branch (ID: %d) removed successfully", branch_id));
         }
-        if (!checkBranchExists(branch_id)){
-            return new Result<>(false, null, String.format("Branch with ID %d not found", branch_id));
-        }
-        branches.remove(branch_id);
-        //mapper.delete(mapper.find_Branch(branch_id));
-        mapper.delete(branch_id);
-        return new Result<>(true, branch_id, String.format("Branch (ID: %d) removed successfully", branch_id));
+        return new Result<>(false, null, String.format("Branch with ID %d not found", branch_id));
     }
 
     public Result editBranchName(Integer branch_id, String newName){

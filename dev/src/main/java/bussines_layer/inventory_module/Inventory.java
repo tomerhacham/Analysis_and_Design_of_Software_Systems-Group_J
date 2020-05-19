@@ -126,9 +126,14 @@ public class Inventory {
     public Result<Report> makeReportByGeneralProduct(Integer gpID, String type){
 
         GeneralProduct generalProduct = productController.searchGeneralProductByGpID(gpID);
-        List<GeneralProduct> dummy_list = new LinkedList<>();
-        dummy_list.add(generalProduct);
-        return reportController.makeReport(dummy_list, convertStringToReportType(type));
+        if(generalProduct!=null) {
+            List<GeneralProduct> dummy_list = new LinkedList<>();
+            dummy_list.add(generalProduct);
+            return reportController.makeReport(dummy_list, convertStringToReportType(type));
+        }
+        else{
+            return new Result<>(false,null, String.format("No such general product ID:%d", gpID));
+        }
     }
     public Result<Report> makeReportByCategory(Integer category_id, String type){
         Category category;
@@ -138,17 +143,20 @@ public class Inventory {
         else{
             category = categoryController.searchCategorybyId(category_id);
         }
-        List<GeneralProduct> all_general_products = category.getAllGeneralProduct();
-        if (type.equals("outofstock")){
-            List<GeneralProduct> toReport = new LinkedList<>();
-            for (GeneralProduct gp : all_general_products){
-                if (gp.getQuantity() < gp.getMinQuantity()){
-                    toReport.add(gp);
+        if(category!=null) {
+            List<GeneralProduct> all_general_products = category.getAllGeneralProduct();
+            if (type.equals("outofstock")) {
+                List<GeneralProduct> toReport = new LinkedList<>();
+                for (GeneralProduct gp : all_general_products) {
+                    if (gp.getQuantity() < gp.getMinQuantity()) {
+                        toReport.add(gp);
+                    }
                 }
+                return reportController.makeReport(toReport, convertStringToReportType(type));
             }
-            return reportController.makeReport(toReport, convertStringToReportType(type));
+            return reportController.makeReport(all_general_products, convertStringToReportType(type));
         }
-        return reportController.makeReport(all_general_products, convertStringToReportType(type));
+        else{return new Result<>(false,null, String.format("No such category ID:%d", category_id));}
     }
     private ReportType convertStringToReportType(String stype){
         switch(stype){

@@ -6,6 +6,7 @@ import bussines_layer.Result;
 import bussines_layer.inventory_module.Category;
 import bussines_layer.inventory_module.Report;
 import bussines_layer.inventory_module.Sale;
+import data_access_layer.Mapper;
 import javafx.util.Pair;
 
 import java.text.ParseException;
@@ -174,25 +175,24 @@ public class CLController {
 
     private static void printExistingBranchesMenu() {
         String menu = "";
-        menu = menu.concat("\nChoose branch (By ID):\n");
+        menu = menu.concat("\nChoose branch:\n");
         Integer option = 1;
         for(Integer branch_id : branchController.getBranches().keySet()){
-            menu = menu.concat(String.format("%d) %s (type: %d)\n", option, branchController.getBranches().get(branch_id), branch_id));
+            menu = menu.concat(String.format("%d) %s (ID: %d)\n", option, branchController.getBranches().get(branch_id), branch_id));
             option++;
         }
-
-        menu = menu.concat(String.format("%d) Return\n", option));
-        menu = menu.concat(String.format("%d) Exit", option+1));
+        menu = menu.concat(String.format("%d) Return\n", branchController.getBranches().keySet().size()+1));
+        menu = menu.concat(String.format("%d) Exit", branchController.getBranches().keySet().size()+2));
         while(true){
             System.out.println(menu);
             Integer input = getNextInt(sc);
-            if (input.equals(option)){
+            if (input.equals( branchController.getBranches().keySet().size()+1)){
                 return;
             }
-            if (input.equals(option+1)){
+            if (input.equals( branchController.getBranches().keySet().size()+2)){
                 Exit();
             }
-            Result res = branchController.switchBranch(input);
+            Result res = branchController.switchBranch((Integer)branchController.getBranches().keySet().toArray()[input-1]);
             System.out.println(res.getMessage());
             if (res.isOK()) {
                 printMainBranchMenu();
@@ -575,12 +575,10 @@ public class CLController {
         String[] param;
         String menu = "editing general product\n";
         menu=menu.concat("1) Edit name\n");
-        menu=menu.concat("2) Edit supplier price\n");
-        menu=menu.concat("3) Edit retail price\n");
-        menu=menu.concat("4) Edit quantity\n");
-        menu=menu.concat("5) Edit minimum quantity\n");
-        menu=menu.concat("6) Return\n");
-        menu=menu.concat("7) Exit");
+        menu=menu.concat("2) Edit retail price\n");
+        menu=menu.concat("3) Edit minimum quantity\n");
+        menu=menu.concat("4) Return\n");
+        menu=menu.concat("5) Exit");
 
         while(true) {
             System.out.println(menu);
@@ -600,18 +598,6 @@ public class CLController {
                     }
                     break;
                 case (2):
-                    details=details.concat("[gpID],[New supplier price],[supplierID]");
-                    System.out.println(details);
-                    param = getInputParserbyComma(sc);
-                    if(param.length == 3 && param[0].matches("[0-9]+") && param[1].matches("[0-9]+") && param[2].matches("[0-9]+")) {
-                        result = branchController.editGeneralProductSupplierPrice(Integer.parseInt(param[0]), Float.parseFloat(param[1]),Integer.parseInt(param[2]));
-                        System.out.println(result.getMessage());
-                    }
-                    else{
-                        System.out.println("Invalid parameters");
-                    }
-                    break;
-                case (3):
                     details=details.concat("[gpID],[New retail price]");
                     System.out.println(details);
                     param=getInputParserbyComma(sc);
@@ -623,19 +609,7 @@ public class CLController {
                         System.out.println("Invalid parameters");
                     }
                     break;
-                case (4):
-                    details=details.concat("[gpID],[New quantity]");
-                    System.out.println(details);
-                    param = getInputParserbyComma(sc);
-                    if(param.length == 2 && param[0].matches("[0-9]+") && param[1].matches("[0-9]+")) {
-                        result=branchController.editGeneralProductQuantity(Integer.parseInt(param[0]), Integer.parseInt(param[1]));
-                        System.out.println(result.getMessage());
-                    }
-                    else{
-                        System.out.println("Invalid parameters");
-                    }
-                    break;
-                case (5):
+                case (3):
                     details=details.concat("[gpID],[New minimum quantity]");
                     System.out.println(details);
                     param = getInputParserbyComma(sc);
@@ -647,9 +621,9 @@ public class CLController {
                         System.out.println("Invalid parameters");
                     }
                     break;
-                case (6):
+                case (4):
                     return;
-                case (7):
+                case (5):
                     Exit();
                 default:
                     System.out.println("Option not valid, please retype");
