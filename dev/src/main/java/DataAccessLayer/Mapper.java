@@ -17,7 +17,7 @@ import java.util.*;
 //singleton
 public class Mapper {
     private static Mapper instance = null;
-    private String databaseUrl = "jdbc:sqlite:dev\\src\\main\\java\\DataAccessLayer\\SuperLi.db";
+    private String databaseUrl = "jdbc:sqlite:SuperLi.db";
     private static ConnectionSource conn;
     private Dao<DestFile_DTO, Integer> DestFile_DAO;
     private Dao<Driver_DTO, Integer> Driver_DAO;

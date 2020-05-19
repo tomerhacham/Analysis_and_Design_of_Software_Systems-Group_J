@@ -3,7 +3,7 @@ package TestTransportModule;
 
 import static org.junit.jupiter.api.Assertions.*;
 */
-public class DriverControllerTest {/*
+/*public class DriverControllerTest {
     //DriverController driverController;
     FacadeController facadeController;
 
@@ -44,5 +44,6 @@ public class DriverControllerTest {/*
         driverController.DeleteDriver(4);
         d = driverController.getById(4);
         assertNull(d);
-    }*/
+    }
 }
+*/
