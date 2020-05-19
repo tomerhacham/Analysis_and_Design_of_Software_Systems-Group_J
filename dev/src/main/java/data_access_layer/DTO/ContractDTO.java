@@ -2,9 +2,7 @@ package data_access_layer.DTO;
 
 
 import bussines_layer.supplier_module.Contract;
-import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "Contract")

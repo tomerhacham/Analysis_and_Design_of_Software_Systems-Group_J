@@ -1,6 +1,5 @@
 package data_access_layer.DAO;
 
-import bussines_layer.Branch;
 import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.supplier_module.Order;
 import com.j256.ormlite.dao.Dao;
@@ -8,15 +7,12 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
-import data_access_layer.DTO.CatalogProductDTO;
-import data_access_layer.DTO.ContractDTO;
 import data_access_layer.DTO.OrderDTO;
 import data_access_layer.DTO.catalog_product_in_orderDTO;
 import data_access_layer.Mapper;
 
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 public class OrderDAO {

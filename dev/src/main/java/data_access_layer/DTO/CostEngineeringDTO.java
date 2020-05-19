@@ -1,6 +1,5 @@
 package data_access_layer.DTO;
 
-import bussines_layer.supplier_module.Contract;
 import bussines_layer.supplier_module.CostEngineering;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;

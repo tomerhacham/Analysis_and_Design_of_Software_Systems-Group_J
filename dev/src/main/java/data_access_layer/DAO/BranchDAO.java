@@ -1,14 +1,10 @@
 package data_access_layer.DAO;
 
 import bussines_layer.Branch;
-import bussines_layer.SupplierCard;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
-import com.sun.java.swing.plaf.windows.WindowsDesktopIconUI;
 import data_access_layer.DTO.BranchDTO;
-import data_access_layer.DTO.SupplierDTO;
-import data_access_layer.DTO.contact_of_supplierDTO;
 import data_access_layer.Mapper;
 
 import java.sql.SQLException;

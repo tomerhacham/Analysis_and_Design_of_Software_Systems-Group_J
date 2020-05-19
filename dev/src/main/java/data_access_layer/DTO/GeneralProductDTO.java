@@ -1,12 +1,8 @@
 package data_access_layer.DTO;
 
 import bussines_layer.inventory_module.GeneralProduct;
-import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
-
-import java.util.Collection;
 
 @DatabaseTable(tableName = "GeneralProduct")
 public class GeneralProductDTO {

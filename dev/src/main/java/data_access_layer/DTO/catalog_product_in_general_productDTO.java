@@ -1,7 +1,6 @@
 package data_access_layer.DTO;
 
 import bussines_layer.inventory_module.CatalogProduct;
-import bussines_layer.inventory_module.GeneralProduct;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 

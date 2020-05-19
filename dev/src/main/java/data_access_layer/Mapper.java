@@ -6,26 +6,18 @@ import bussines_layer.inventory_module.*;
 import bussines_layer.supplier_module.Contract;
 import bussines_layer.supplier_module.CostEngineering;
 import bussines_layer.supplier_module.Order;
-import com.j256.ormlite.jdbc.JdbcDatabaseConnection;
-import com.j256.ormlite.stmt.DeleteBuilder;
-import com.j256.ormlite.stmt.query.In;
-import com.j256.ormlite.support.DatabaseConnection;
-import com.j256.ormlite.table.TableUtils;
-import data_access_layer.DAO.*;
-import data_access_layer.DTO.*;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
-import sun.java2d.loops.FillRect;
+import com.j256.ormlite.table.TableUtils;
+import data_access_layer.DAO.*;
+import data_access_layer.DTO.*;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * Singleton class to communicate with the DB
@@ -68,6 +60,8 @@ public class Mapper {
             this.supplier_dao=new SupplierDAO(conn);
             this.cost_engineering_dao=new CostEngineeringDAO(conn);
             this.ids_dao = DaoManager.createDao(conn, IDsDTO.class);
+            IDsDTO ids = new IDsDTO(1,1,1,1,1,1,1);
+            ids_dao.createIfNotExists(ids);
 
             //endregion
         } catch (Exception e) {

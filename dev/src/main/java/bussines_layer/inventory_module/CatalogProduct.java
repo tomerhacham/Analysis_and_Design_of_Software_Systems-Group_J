@@ -1,7 +1,6 @@
 package bussines_layer.inventory_module;
 
 import data_access_layer.DTO.CatalogProductDTO;
-import data_access_layer.DTO.catalog_product_in_general_productDTO;
 
 public class CatalogProduct {
 

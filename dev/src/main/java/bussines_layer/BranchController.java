@@ -1,12 +1,10 @@
 package bussines_layer;
 
 import bussines_layer.inventory_module.CatalogProduct;
-import bussines_layer.inventory_module.GeneralProduct;
 import bussines_layer.inventory_module.Report;
 import bussines_layer.inventory_module.Sale;
 import data_access_layer.Mapper;
 import javafx.util.Pair;
-import sun.awt.image.ImageWatched;
 
 import java.util.*;
 

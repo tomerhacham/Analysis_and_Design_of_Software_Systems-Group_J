@@ -1,9 +1,6 @@
 package data_access_layer.DAO;
 
-import bussines_layer.Branch;
-import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.inventory_module.Category;
-import bussines_layer.inventory_module.CategoryController;
 import bussines_layer.inventory_module.GeneralProduct;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
@@ -12,8 +9,6 @@ import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import data_access_layer.DTO.CategoryDTO;
 import data_access_layer.DTO.GeneralProductDTO;
-import data_access_layer.DTO.SaleDTO;
-import data_access_layer.DTO.SpecificProductDTO;
 import data_access_layer.Mapper;
 
 import java.sql.SQLException;

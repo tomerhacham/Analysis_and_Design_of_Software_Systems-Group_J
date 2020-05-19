@@ -6,7 +6,6 @@ import bussines_layer.enums.discountType;
 import data_access_layer.DTO.SaleDTO;
 
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Sale {

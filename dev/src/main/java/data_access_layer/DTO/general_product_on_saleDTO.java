@@ -4,7 +4,6 @@ package data_access_layer.DTO;
 import bussines_layer.inventory_module.GeneralProduct;
 import bussines_layer.inventory_module.Sale;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.stmt.query.In;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "general_products_on_sale")

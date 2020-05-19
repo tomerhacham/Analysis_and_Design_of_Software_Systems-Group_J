@@ -1,8 +1,6 @@
 package data_access_layer.DAO;
 
 import bussines_layer.inventory_module.CatalogProduct;
-import bussines_layer.inventory_module.GeneralProduct;
-import bussines_layer.supplier_module.Contract;
 import bussines_layer.supplier_module.CostEngineering;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
@@ -10,11 +8,9 @@ import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import data_access_layer.DTO.CostEngineeringDTO;
-import data_access_layer.DTO.GeneralProductDTO;
 
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 public class CostEngineeringDAO {

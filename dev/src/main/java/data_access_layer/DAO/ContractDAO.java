@@ -1,16 +1,15 @@
 package data_access_layer.DAO;
 
-import bussines_layer.Branch;
 import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.supplier_module.Contract;
 import bussines_layer.supplier_module.CostEngineering;
-import bussines_layer.supplier_module.Order;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.stmt.DeleteBuilder;
-import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
-import data_access_layer.DTO.*;
+import data_access_layer.DTO.ContractDTO;
+import data_access_layer.DTO.catalog_product_in_contractDTO;
+import data_access_layer.DTO.categories_in_contractDTO;
 import data_access_layer.Mapper;
 
 import java.sql.SQLException;

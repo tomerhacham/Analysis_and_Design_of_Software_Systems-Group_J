@@ -1,5 +1,5 @@
 package bussines_layer.supplier_module;
-import bussines_layer.Branch;
+
 import bussines_layer.BranchController;
 import bussines_layer.Result;
 import bussines_layer.SupplierCard;

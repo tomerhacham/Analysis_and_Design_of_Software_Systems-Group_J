@@ -3,10 +3,8 @@ package bussines_layer.supplier_module;
 import bussines_layer.Result;
 import bussines_layer.SupplierCard;
 import bussines_layer.inventory_module.CatalogProduct;
-import bussines_layer.inventory_module.GeneralProduct;
 import data_access_layer.Mapper;
 import javafx.util.Pair;
-
 
 import java.util.LinkedList;
 
