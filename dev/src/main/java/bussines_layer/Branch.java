@@ -1,7 +1,9 @@
 package bussines_layer;
 
+import bussines_layer.employees_module.EmployeesModule;
 import bussines_layer.inventory_module.*;
 import bussines_layer.supplier_module.SupplierModule;
+import bussines_layer.transport_module.TransportModule;
 import data_access_layer.DTO.BranchDTO;
 import javafx.util.Pair;
 
@@ -16,12 +18,16 @@ public class Branch {
     private Integer branch_id;
     private Inventory inventory;
     private SupplierModule supplierModule;
+    private TransportModule transportModule;
+    private EmployeesModule employeesModule;
 
     //Constructor
     public Branch(Integer branch_id, String name) {
         this.branch_id = branch_id;
         inventory = new Inventory(branch_id);
         supplierModule = new SupplierModule(branch_id);
+        transportModule = new TransportModule(branch_id);
+        employeesModule=new EmployeesModule(branch_id);
         this.name = name;
     }
     public Branch(BranchDTO branchDTO){

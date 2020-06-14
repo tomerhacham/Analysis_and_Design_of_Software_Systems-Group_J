@@ -35,6 +35,10 @@ public class Mapper {
     public SupplierDAO supplier_dao;
     public BranchDAO branch_dao;
     public CostEngineeringDAO cost_engineering_dao;
+    public EmployeesDAO employees_dao;
+    public ShiftsDAO shifts_dao;
+    public TransportDAO transport_dao;
+    public TruckDAO truck_dao;
     public Dao<IDsDTO, Integer> ids_dao;
 
     private static Mapper instance=null;
@@ -44,11 +48,6 @@ public class Mapper {
         String databaseUrl = "jdbc:sqlite:src/main/java/data_access_layer/SuperLi.db";
         //String databaseUrl = "jdbc:sqlite:SuperLi.db";
         try (ConnectionSource conn = new JdbcConnectionSource(databaseUrl)) {
-            /*Properties properties=new Properties();
-            properties.setProperty("PRAGMA foreign_keys", "ON");
-            Connection connection = DriverManager.getConnection("jdbc:sqlite:src/main/java/data_access_layer/SuperLi.db",properties);
-            DatabaseConnection cone = new JdbcDatabaseConnection(DriverManager.getConnection(databaseUrl, properties));
-            ConnectionSource c = new JdbcConnectionSource()*/
             this.conn = conn;
             this.branch_dao=new BranchDAO(conn);
             this.catalog_product_dao = new CatalogProductDAO(conn);
@@ -60,6 +59,10 @@ public class Mapper {
             this.contract_dao = new ContractDAO(conn);
             this.supplier_dao=new SupplierDAO(conn);
             this.cost_engineering_dao=new CostEngineeringDAO(conn);
+            this.employees_dao=new EmployeesDAO(conn);
+            this.shifts_dao=new ShiftsDAO(conn);
+            this.transport_dao=new TransportDAO(conn);
+            this.truck_dao=new TruckDAO(conn);
             this.ids_dao = DaoManager.createDao(conn, IDsDTO.class);
             IDsDTO ids = new IDsDTO(1,1,1,1,1,1,1);
             ids_dao.createIfNotExists(ids);
@@ -644,6 +647,15 @@ public class Mapper {
         supplier_dao.delete(supplier);
     }
     //endregion
+
+    //region Employees Management
+    //todo: add here all the functionality of the other Mapper
+    //endregion
+
+    //region Transport Management
+    //todo: add here all the functionality of the other Mapper
+    //endregion
+
     //endregion
 
     public void clearCache(){
