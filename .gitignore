@@ -87,6 +87,7 @@ out/
 
 # mpeltonen/sbt-idea plugin
 dev.idea_modules/
+
 .idea_modules/
 
 # JIRA plugin
