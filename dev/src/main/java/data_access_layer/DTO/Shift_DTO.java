@@ -1,6 +1,6 @@
 package data_access_layer.DTO;
 
-import BusinessLayer.Workers.Shift;
+import bussines_layer.Branch;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
@@ -21,16 +21,20 @@ public class Shift_DTO {
     @DatabaseField(columnName = "partOfDay", uniqueCombo = true, index = true, canBeNull = false)
     private int partOfDay;
 
+    @DatabaseField(columnName = "BranchID", canBeNull = false)
+    Integer branch;
+
     @ForeignCollectionField(eager = false)
     private ForeignCollection<Occupation_DTO> occupation;
 
     @ForeignCollectionField(eager = false)
     private ForeignCollection<ShiftDriver_DTO> drivers_in_shift;
 
-    public Shift_DTO(String shiftID, Date Date, int partOfDay){
+    public Shift_DTO(String shiftID, Date Date, int partOfDay, Integer branch){
         ShiftID=shiftID;
         date = Date;
         this.partOfDay = partOfDay;
+        this.branch=branch;
     }
 
     public Shift_DTO(){}
@@ -73,5 +77,13 @@ public class Shift_DTO {
 
     public void setDrivers_in_shift(ForeignCollection<ShiftDriver_DTO> drivers_in_shift) {
         this.drivers_in_shift = drivers_in_shift;
+    }
+
+    public Integer getBranch_id() {
+        return branch;
+    }
+
+    public void setBranch_id(Integer branch_id) {
+        this.branch = branch_id;
     }
 }

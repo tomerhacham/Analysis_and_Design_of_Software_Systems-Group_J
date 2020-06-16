@@ -5,16 +5,18 @@ import InterfaceLayer.Workers.ScheduleController;
 
 import java.util.Date;
 import java.util.HashMap;
+//TODO:not a singleton -> constructor that get branch id -> load all Trucks in that branch ?
 
 public class TransportModule {
 //this class transfer functionality between the businessLayer and the presentationLayer
 
     private static TransportModule instance = null;
-    private static SiteController siteController = SiteController.getInstance();
+  //  private static SiteController siteController = SiteController.getInstance();
     private static TransportController transportController = TransportController.getInstance();
     private static TruckController truckController = TruckController.getInstance();
-    private static ProductsController productsController = ProductsController.getInstance();
-    private static ScheduleController scheduleController = ScheduleController.getInstance();
+  //  private static ProductsController productsController = ProductsController.getInstance();
+    private static ScheduleController scheduleController = ScheduleController.getInstance();//TODO:check where the functions will be
+
 
     private FacadeController(){}
 
@@ -56,58 +58,58 @@ public class TransportModule {
     }
 
 
-    //site controller functions
-    public String getAllSitesDetails() {
-        return siteController.getAllSitesDetails();
-    }
+//    //site controller functions
+//    public String getAllSitesDetails() {
+//        return siteController.getAllSitesDetails();
+//    }
+//
+//    public String getAvailableSites(int sourceID, HashMap<Integer,Integer> destfile) {
+//        return siteController.getAvailableSites(sourceID, destfile);
+//    }
+//
+//    public String getSiteDetails(int siteID) {
+//        return siteController.getSiteDetails(siteID);
+//    }
+//
+//    public void createSite(String address, String phone_number, String contact, int shipping_area) {
+//        siteController.CreateSite(address, phone_number, contact, shipping_area);
+//    }
+//
+//    public boolean deleteSite(int siteToDelete) {
+//        return siteController.DeleteSite(siteToDelete);
+//    }
+//
+//    public boolean checkIfSiteExist(int siteID)
+//    {
+//        return siteController.checkIfSiteExist(siteID);
+//    }
+//
+//    public boolean checkIfSiteExistAndValid(int siteID, int sourceID, HashMap<Integer,Integer>destFile){
+//        return siteController.checkIfAvailable(siteID, sourceID, destFile);
+//    }
+//
 
-    public String getAvailableSites(int sourceID, HashMap<Integer,Integer> destfile) {
-        return siteController.getAvailableSites(sourceID, destfile);
-    }
-
-    public String getSiteDetails(int siteID) {
-        return siteController.getSiteDetails(siteID);
-    }
-
-    public void createSite(String address, String phone_number, String contact, int shipping_area) {
-        siteController.CreateSite(address, phone_number, contact, shipping_area);
-    }
-
-    public boolean deleteSite(int siteToDelete) {
-        return siteController.DeleteSite(siteToDelete);
-    }
-
-    public boolean checkIfSiteExist(int siteID)
-    {
-        return siteController.checkIfSiteExist(siteID);
-    }
-
-    public boolean checkIfSiteExistAndValid(int siteID, int sourceID, HashMap<Integer,Integer>destFile){
-        return siteController.checkIfAvailable(siteID, sourceID, destFile);
-    }
-
-
-    //product controller functions
-    public int createProductsFile() {
-        return productsController.CreateFile();
-    }
-
-    public void createProduct(String productName, float productWeight, int fileID, int quantity) {
-        productsController.CreateProduct(productName, productWeight, fileID, quantity);
-    }
-
-    public boolean removeProducts(String[] productsToRemove, Integer fileToEdit) {
-        return productsController.removeProducts(productsToRemove, fileToEdit);
-    }
-
-    public String getProductsDetails(String[] productsToRemove) {
-        return productsController.getProductsDetails(productsToRemove);
-    }
-
-    public float getFileWeight(int fileID){
-        return productsController.getFileWeight(fileID);
-    }
-
+//    //product controller functions
+//    public int createProductsFile() {
+//        return productsController.CreateFile();
+//    }
+//
+//    public void createProduct(String productName, float productWeight, int fileID, int quantity) {
+//        productsController.CreateProduct(productName, productWeight, fileID, quantity);
+//    }
+//
+//    public boolean removeProducts(String[] productsToRemove, Integer fileToEdit) {
+//        return productsController.removeProducts(productsToRemove, fileToEdit);
+//    }
+//
+//    public String getProductsDetails(String[] productsToRemove) {
+//        return productsController.getProductsDetails(productsToRemove);
+//    }
+//
+//    public float getFileWeight(int fileID){
+//        return productsController.getFileWeight(fileID);
+//    }
+//
 
     //transport controller functions
     public String getAllTransportsDetails() {
@@ -130,13 +132,13 @@ public class TransportModule {
         return transportController.DeleteTransportFromDB(transportToDelete);
     }
 
-    public void setTransportSource(int transportID, int sourceID) {
-        transportController.setTransportSource(sourceID, transportID);
-    }
-
-    public void setTransportDestFiles(int transportID, HashMap<Integer, Integer> destFiles) {
-        transportController.setTransportDestFiles(destFiles, transportID);
-    }
+//    public void setTransportSource(int transportID, int sourceID) {
+//        transportController.setTransportSource(sourceID, transportID);
+//    }
+//
+//    public void setTransportDestFiles(int transportID, HashMap<Integer, Integer> destFiles) {
+//        transportController.setTransportDestFiles(destFiles, transportID);
+//    }
 
     public void setTransportTruck(int transportID, int truckID) {
         transportController.setTransportTruck(truckID, transportID);
@@ -155,9 +157,9 @@ public class TransportModule {
         return transportController.getTotalWeight(transport_ID);
     }
 
-    public String getProductsByDest(int transportID) {
-        return transportController.getProductByDest(transportID);
-    }
+//  //  public String getProductsByDest(int transportID) {
+//        return transportController.getProductByDest(transportID);
+//    }
 
     public Date getTransportDate(int transportID) {
         return transportController.getTransportDate(transportID);
@@ -167,13 +169,13 @@ public class TransportModule {
         return transportController.getTransportTruck(transportID);
     }
 
-    public int getDestFileID(int transportID, int destToEdit) {
-        return transportController.getFileID(transportID, destToEdit);
-    }
+//    public int getDestFileID(int transportID, int destToEdit) {
+//        return transportController.getFileID(transportID, destToEdit);
+//    }
 
-    public boolean removeDestFromTransport(int transportID, int destToRemove) {
-        return transportController.removeDestinationFromTransport(destToRemove, transportID);
-    }
+//    public boolean removeDestFromTransport(int transportID, int destToRemove) {
+//        return transportController.removeDestinationFromTransport(destToRemove, transportID);
+//    }
 
     public void addTransportLog(String message, int transportID) {
         transportController.addToLog(message, transportID);
@@ -191,9 +193,9 @@ public class TransportModule {
         transportController.removeDatesFromTruck(transportID);
     }
 
-    public boolean checkIfDestInFile(int transportID, int destToEdit) {
-        return transportController.checkIfDestInFile(transportID, destToEdit);
-    }
+//    public boolean checkIfDestInFile(int transportID, int destToEdit) {
+//        return transportController.checkIfDestInFile(transportID, destToEdit);
+//    }
 
     public boolean getTransportShift(int transportID)
     {
