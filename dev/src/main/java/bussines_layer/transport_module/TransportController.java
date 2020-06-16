@@ -1,19 +1,19 @@
 package bussines_layer.transport_module;
 
+import data_access_layer.Mapper;
 
-import DataAccessLayer.Mapper;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.*;
-
+//TODO:not a singleton -> constructor that get branch id -> load all transports in that branch ?
+// add the pending order list...
 public class TransportController {
     private static TransportController instance = null;
-    private static SiteController siteController = SiteController.getInstance();
-    private static ProductsController productsController = ProductsController.getInstance();
     private static TruckController truckController = TruckController.getInstance();
     private static Mapper mapper = Mapper.getInstance();
     private Hashtable<Integer, Transport> transports;
     private int Id_Counter;
+    private int branch_id;
 
     private TransportController() {
         transports = new Hashtable<>();
@@ -55,10 +55,6 @@ public class TransportController {
         if(transports.containsKey(transportToSubmit))
         {
             Transport t =transports.get(transportToSubmit);
-            HashMap<Site,ProductFile> destFile = t.getDestFiles();
-            for (ProductFile pf:destFile.values() ) {
-                mapper.addProductFile(pf);
-            }
             mapper.addTransport(t);
         }
 
@@ -152,65 +148,66 @@ public class TransportController {
         }
     }
 
-    //if a transport exist in the system sets its source
-    public void setTransportSource(int source, int id) {
-        if(transports.containsKey(id))
-        {
-            Site s = siteController.getById(source);
-            if(s!=null)
-                transports.get(id).setSource(s);
-        }
-    }
+//    //if a transport exist in the system sets its source
+//    public void setTransportSource(int source, int id) {
+//        if(transports.containsKey(id))
+//        {
+//            Site s = siteController.getById(source);
+//            if(s!=null)
+//                transports.get(id).setSource(s);
+//        }
+//    }
 
     //if a transport exist in the system sets its total weight
+    //TODO:can set the total weight only from the order?
     public void setTransportWeight(int id) {
         if(transports.containsKey(id)) {
-            transports.get(id).setWeight();
+            transports.get(id).setTotalWeight();
         }
     }
 
-    //if a transport exist in the system sets its destination file
-    public void setTransportDestFiles(HashMap<Integer, Integer> destFiles, int id) {
-        if(transports.containsKey(id)) {
-            HashMap<Site, ProductFile> D_F = new HashMap<>();
-            for (int i : destFiles.keySet()) {
-                Site s = siteController.getById(i);
-                ProductFile f = productsController.getFileByID(destFiles.get(i));
-                if (s != null && f != null) {
-                    D_F.put(s, f);
-                }
-            }
-            transports.get(id).setDestFiles(D_F);
-        }
-    }
+//    //if a transport exist in the system sets its destination file
+//    public void setTransportDestFiles(HashMap<Integer, Integer> destFiles, int id) {
+//        if(transports.containsKey(id)) {
+//            HashMap<Site, ProductFile> D_F = new HashMap<>();
+//            for (int i : destFiles.keySet()) {
+//                Site s = siteController.getById(i);
+//                ProductFile f = productsController.getFileByID(destFiles.get(i));
+//                if (s != null && f != null) {
+//                    D_F.put(s, f);
+//                }
+//            }
+//            transports.get(id).setDestFiles(D_F);
+//        }
+//    }
 
     //if a transport exist in the system, get the File for a specific destination
-    public int getFileID(int transport_id, int dest_id) {
-        if(transports.containsKey(transport_id))
-        {
-            Site s= siteController.getById(dest_id);
-            if(s!=null)
-            {
-                ProductFile f =transports.get(transport_id).getFileByDest(s);
-                if(f!=null)
-                {
-                    return f.getFileID();
-                }
-            }
-        }
-        return -1;
-    }
+//    public int getFileID(int transport_id, int dest_id) {
+//        if(transports.containsKey(transport_id))
+//        {
+//            Site s= siteController.getById(dest_id);
+//            if(s!=null)
+//            {
+//                ProductFile f =transports.get(transport_id).getFileByDest(s);
+//                if(f!=null)
+//                {
+//                    return f.getFileID();
+//                }
+//            }
+//        }
+//        return -1;
+//    }
 
     //if a transport exist in the system, remove a destination from its destFile
-    public boolean removeDestinationFromTransport(int site_id, int t_id) {
-        if (transports.containsKey(t_id)) {
-            Site s =siteController.getById(site_id);
-            if(s!=null) {
-                return transports.get(t_id).removeFromDestFiles(s);
-            }
-        }
-        return false;
-    }
+//    public boolean removeDestinationFromTransport(int site_id, int t_id) {
+//        if (transports.containsKey(t_id)) {
+//            Site s =siteController.getById(site_id);
+//            if(s!=null) {
+//                return transports.get(t_id).removeFromDestFiles(s);
+//            }
+//        }
+//        return false;
+//    }
 
     //add a string to a transport log
     public void addToLog(String s, Integer id) {
@@ -241,17 +238,17 @@ public class TransportController {
     }
 
     //check if a specific destination is in the destFile of a transport
-    public boolean checkIfDestInFile(int transportID, int destToEdit) {
-        if(transports.containsKey(transportID))
-        {
-            Site s = siteController.getById(destToEdit);
-            if(s!= null)
-            {
-                return transports.get(transportID).checkIfDestInFile(s);
-            }
-        }
-        return false;
-    }
+//    public boolean checkIfDestInFile(int transportID, int destToEdit) {
+//        if(transports.containsKey(transportID))
+//        {
+//            Site s = siteController.getById(destToEdit);
+//            if(s!= null)
+//            {
+//                return transports.get(transportID).checkIfDestInFile(s);
+//            }
+//        }
+//        return false;
+//    }
 
     //get the total weight in the transport, if it exist in the system
     public float getTotalWeight(int transport_id) {
@@ -261,18 +258,18 @@ public class TransportController {
         return 0;
     }
 
-    //get details of the product for each destination in a given transport
-    public String getProductByDest(int transportId)
-    {
-        String s = "";
-        if(transports.containsKey(transportId)){
-            HashMap<Site,ProductFile> destFiles = transports.get(transportId).getDestFiles();
-            for (Site site:destFiles.keySet()) {
-                s = s + "\tdestination id: "+site.getId()+" "+ productsController.geFileDetails(destFiles.get(site).getFileID())+"\n";
-            }
-        }
-        return s;
-    }
+//    //get details of the product for each destination in a given transport
+//    public String getProductByDest(int transportId)
+//    {
+//        String s = "";
+//        if(transports.containsKey(transportId)){
+//            HashMap<Site,ProductFile> destFiles = transports.get(transportId).getDestFiles();
+//            for (Site site:destFiles.keySet()) {
+//                s = s + "\tdestination id: "+site.getId()+" "+ productsController.geFileDetails(destFiles.get(site).getFileID())+"\n";
+//            }
+//        }
+//        return s;
+//    }
 
     public boolean getTransportShift(int transportID)
     {
@@ -298,7 +295,7 @@ public class TransportController {
 
     public Boolean isTransportExist(Date d, Boolean partOfDay)
     {
-        return mapper.getTransportByShift(d, partOfDay) != null;
+        return mapper.getTransportByShift(d, partOfDay, branch_id) != null;
         /*
         for (Transport t:transports.values()) {
             if(t.getDate()==d&&t.getShift()==partOfDay)

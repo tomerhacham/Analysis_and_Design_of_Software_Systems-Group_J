@@ -3,6 +3,7 @@ package data_access_layer.DTO;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
+import com.j256.ormlite.stmt.query.In;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "Truck")
@@ -26,22 +27,28 @@ public class Truck_DTO {
     @DatabaseField(columnName = "driversLicense", canBeNull = false)
     private String drivers_license;
 
+    @DatabaseField(columnName = "c", canBeNull = false)
+    Integer branch;
+
     @ForeignCollectionField(eager = false)
     private ForeignCollection<night_shifts_DTO> night_shifts;
 
     @ForeignCollectionField(eager = false)
     private ForeignCollection<morning_shifts_DTO> morning_shifts;
 
-    public Truck_DTO(int ID, String licensePlate, String Model, float netWeight, float maxWeight, String driversLicense){
+    public Truck_DTO(int ID, String licensePlate, String Model, float netWeight, float maxWeight, String driversLicense,
+                     Integer branch){
         id = ID;
         license_plate = licensePlate;
         model = Model;
         net_weight = netWeight;
         max_weight = maxWeight;
         drivers_license = driversLicense;
+        this.branch= branch;
     }
     public Truck_DTO(int ID, String licensePlate, String Model, float netWeight, float maxWeight, String driversLicense,
-                     ForeignCollection<night_shifts_DTO> night_shifts, ForeignCollection<morning_shifts_DTO> morning_shifts){
+                     ForeignCollection<night_shifts_DTO> night_shifts, ForeignCollection<morning_shifts_DTO> morning_shifts
+                    , Integer branch){
         id = ID;
         license_plate = licensePlate;
         model = Model;
@@ -50,6 +57,7 @@ public class Truck_DTO {
         drivers_license = driversLicense;
         this.night_shifts=night_shifts;
         this.morning_shifts=morning_shifts;
+        this.branch=branch;
     }
     public Truck_DTO(){}
 
@@ -111,5 +119,13 @@ public class Truck_DTO {
 
     public void setNight_shifts(ForeignCollection<night_shifts_DTO> night_shifts) {
         this.night_shifts = night_shifts;
+    }
+
+    public Integer getBranch_id() {
+        return branch;
+    }
+
+    public void setBranch(Integer branch) {
+        this.branch = branch;
     }
 }

@@ -1,4 +1,5 @@
 package data_access_layer.DTO;
+import bussines_layer.Branch;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
@@ -22,14 +23,19 @@ public class Worker_DTO {
     @DatabaseField(columnName = "salary", canBeNull = false)
     private double salary;
 
+    @DatabaseField(columnName = "BranchID", canBeNull = false)
+    Integer branch;
+
+
     @ForeignCollectionField(eager = false)
     private ForeignCollection<Position_DTO> positions;
 
-    public Worker_DTO(String id, String Name, Date startDate, Double Salary){
+    public Worker_DTO(String id, String Name, Date startDate, Double Salary, Integer branch){
         workerID = id;
         name = Name;
         start_Date = startDate;
         salary = Salary;
+        this.branch=branch;
     }
 
 
@@ -70,5 +76,13 @@ public class Worker_DTO {
 
     public void setPositions(ForeignCollection<Position_DTO> positions) {
         this.positions = positions;
+    }
+
+    public Integer getBranch_id() {
+        return branch;
+    }
+
+    public void setBranch(Integer branch) {
+        this.branch = branch;
     }
 }

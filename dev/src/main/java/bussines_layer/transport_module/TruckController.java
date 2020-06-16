@@ -1,17 +1,19 @@
 package bussines_layer.transport_module;
 
-import DataAccessLayer.Mapper;
+import data_access_layer.Mapper;
 
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
 //singleton
+//TODO:not a singleton -> constructor that get branch id -> load all Trucks in that branch ?
 public class TruckController {
     private static  TruckController instance = null;
     private static Mapper mapper = Mapper.getInstance();
     private Hashtable<Integer, Truck> trucks; // aggregates all trucks in the system <truckID, truck object>
     private int Id_Counter;
+    private int branch_id;
 
     // constructor
     private TruckController(){
@@ -40,7 +42,7 @@ public class TruckController {
         if (max_weight <= net_weight){
             return false;
         }
-        Truck t = new Truck(Id_Counter, license_plate, model, net_weight, max_weight, drivers_license);
+        Truck t = new Truck(Id_Counter, license_plate, model, net_weight, max_weight, drivers_license, branch_id);
         Id_Counter++;
         trucks.put(t.getId(),t);
         mapper.addTruck(t);
@@ -89,14 +91,14 @@ public class TruckController {
     // otherwise returns false
     // shift- morning:true, night:false
     public boolean checkIfTrucksAvailableByDate(Date d, boolean partOfDay) {
-        return mapper.checkIfTrucksAvailableByDate(d, partOfDay);
+        return mapper.checkIfTrucksAvailableByDate(d, partOfDay, branch_id);
     }
 
     // returns string of details of all the trucks in the system which have max weight
     // sufficient to weight and are available by date
     // shift- morning:true, night:false
     public String getAvailableTrucks(Date date,boolean partOfDay, float Weight) {
-        List<Truck> availableTrucks = mapper.getAvailableTrucks(date, partOfDay, Weight);
+        List<Truck> availableTrucks = mapper.getAvailableTrucks(date, partOfDay, Weight,branch_id);
         String ret = "";
         int count = 1;
         for (Truck t:availableTrucks) {

@@ -13,8 +13,9 @@ public class Truck {
     private ArrayList<Date> night_shifts;
     private ArrayList<Date> morning_shifts;
     private Integer id;
+    private int branch_id;
 
-    public Truck(Integer id, String license_plate, String model, float net_weight, float max_weight , String drivers_license)
+    public Truck(Integer id, String license_plate, String model, float net_weight, float max_weight , String drivers_license, int branch_id)
     {
         this.id=id;
         this.license_plate=license_plate;
@@ -24,6 +25,7 @@ public class Truck {
         this.drivers_license = drivers_license;
         night_shifts=new ArrayList<>();
         morning_shifts = new ArrayList<>();
+        this.branch_id=branch_id;
     }
 
     public int getId() {
@@ -101,6 +103,11 @@ public class Truck {
             }
         }
     }
+
+    public int getBranchID() {
+        return branch_id;
+    }
+
 
     public String toString()
     {

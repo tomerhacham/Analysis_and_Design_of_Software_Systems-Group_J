@@ -1,5 +1,6 @@
 package data_access_layer.DTO;
 
+import bussines_layer.Branch;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
@@ -18,9 +19,6 @@ public class Transport_DTO {
     @DatabaseField(columnName = "truckID",foreign = true, foreignColumnName = "truckID", canBeNull = false)
     private Truck_DTO Truck;
 
-    @DatabaseField(columnName = "sourceID",foreign = true, foreignColumnName = "siteID", canBeNull = false)
-    private Site_DTO Source;
-
     //driverId==WorkerID
     @DatabaseField(columnName = "driverID", foreign = true, foreignColumnName = "workerID", canBeNull = false)
     private Worker_DTO driverId;
@@ -37,22 +35,26 @@ public class Transport_DTO {
     @DatabaseField(columnName = "TotalWeight", canBeNull = false)
     private float TotalWeight;
 
-    @ForeignCollectionField(eager = false)
-    private ForeignCollection<DestFile_DTO> DestFiles;
+    @DatabaseField(columnName = "BranchID", canBeNull = false)
+    Integer branch;
+
+    @DatabaseField(columnName = "orderID", canBeNull = false)
+    private Integer orderId;
 
     @ForeignCollectionField(eager = false)
     private ForeignCollection<log_DTO> log;
 
-    public Transport_DTO(int id, Date date, int partOfDay,Truck_DTO truck, Worker_DTO driver_id, String driver_name, Site_DTO source,
-                         float totalWeight){
+    public Transport_DTO(int id, Date date, int partOfDay,Truck_DTO truck, Worker_DTO driver_id, String driver_name,
+                         float totalWeight, Integer order, Integer branch){
         transportID = id;
         Date = date;
         Shift = partOfDay;
         Truck = truck;
         driverId = driver_id;
         driverName = driver_name;
-        Source = source;
         TotalWeight = totalWeight;
+        orderId=order;
+        this.branch=branch;
     }
 
     public Transport_DTO(){}
@@ -85,20 +87,8 @@ public class Transport_DTO {
         return driverId;
     }
 
-    public Site_DTO getSource() {
-        return Source;
-    }
-
-    public ForeignCollection<DestFile_DTO> getDestFiles() {
-        return DestFiles;
-    }
-
     public ForeignCollection<log_DTO> getLog() {
         return log;
-    }
-
-    public void setDestFiles(ForeignCollection<DestFile_DTO> destFiles) {
-        DestFiles = destFiles;
     }
 
     public void setDriverName(String driverName) {
@@ -121,15 +111,27 @@ public class Transport_DTO {
         this.log = log;
     }
 
-    public void setSource(Site_DTO source) {
-        Source = source;
-    }
-
     public void setTotalWeight(float totalWeight) {
         TotalWeight = totalWeight;
     }
 
     public void setTruck(Truck_DTO truck) {
         Truck = truck;
+    }
+
+    public Integer getBranch_id() {
+        return branch;
+    }
+
+    public Integer getOrderId() {
+        return orderId;
+    }
+
+    public void setBranch_id(Integer branch_id) {
+        this.branch = branch_id;
+    }
+
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
     }
 }
