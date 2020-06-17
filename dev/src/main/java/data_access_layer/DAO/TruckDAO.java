@@ -13,10 +13,7 @@ import com.j256.ormlite.support.ConnectionSource;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class TruckDAO {
     HashMap<Integer, Truck> identityMap;
@@ -272,18 +269,18 @@ public class TruckDAO {
         }
     }
 
-    public List<Truck> getAllTrucksByBranch(int branch_id)
+    public Hashtable<Integer,Truck> getAllTrucksByBranch(int branch_id)
     {
         //return list of all trucks in the system if there are no matches - empty list if there is an error- return null
         try {
             List<Truck_DTO> truck_dtos = truck_DAO.queryForAll();
-            List<Truck> trucks = new ArrayList<>();
+            Hashtable<Integer,Truck> trucks = new Hashtable<>();
             for (Truck_DTO t:truck_dtos ) {
                if(t.getBranch_id()==branch_id) {
                    if (identityMap.containsKey(t.getId())) {
-                       trucks.add(identityMap.get(t.getId()));
+                       trucks.put(t.getId(),identityMap.get(t.getId()));
                    } else {
-                       trucks.add(makeTRUCK(t));
+                       trucks.put(t.getId(),makeTRUCK(t));
                    }
                }
             }

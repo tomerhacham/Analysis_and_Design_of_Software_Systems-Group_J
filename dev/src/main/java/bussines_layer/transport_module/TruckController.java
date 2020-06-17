@@ -9,32 +9,15 @@ import java.util.List;
 //singleton
 //TODO:not a singleton -> constructor that get branch id -> load all Trucks in that branch ?
 public class TruckController {
-    private static  TruckController instance = null;
     private static Mapper mapper = Mapper.getInstance();
     private Hashtable<Integer, Truck> trucks; // aggregates all trucks in the system <truckID, truck object>
     private int Id_Counter;
     private int branch_id;
 
-    // constructor
-    private TruckController(){
-        trucks = new Hashtable<>();
+    public TruckController(int branchId){
         Id_Counter = (int)mapper.MaxIdTrucks() + 1;
-    }
-
-    public static TruckController getInstance() {
-        if(instance == null){
-            instance = new TruckController();
-        }
-        return instance;
-    }
-
-    // returns truck by specified id if it exist in the system else return null
-    public Truck getById(int id)
-    {
-        if(trucks.containsKey(id)||getTruckFromDB(id)) {
-            return trucks.get(id);
-        }
-        return null;
+        branch_id=branchId;
+        trucks = mapper.getAllTrucksByBranch(branch_id);
     }
 
     // create new instance of truck and add it to the table
@@ -66,21 +49,12 @@ public class TruckController {
         return false;
     }
 
-    // returns string of the details of truck with the specified id
-    public String getTruckDetails(Integer id)
-    {
-        if(trucks.containsKey(id) || getTruckFromDB(id)) {
-            return trucks.get(id).toString();
-        }
-        return "";
-    }
 
     // returns string of the details of all trucks in the system
     public String getAllTrucksDetails() {
-        List<Truck> all_trucks = mapper.getAllTrucks();
         String details = "";
         int count = 1;
-        for (Truck t : all_trucks) {
+        for (Truck t : trucks.values()) {
             details = details + count + ". " + t.toString();
             count++;
         }
@@ -94,18 +68,11 @@ public class TruckController {
         return mapper.checkIfTrucksAvailableByDate(d, partOfDay, branch_id);
     }
 
-    // returns string of details of all the trucks in the system which have max weight
+    // returns list of all the trucks in the system which have max weight
     // sufficient to weight and are available by date
     // shift- morning:true, night:false
-    public String getAvailableTrucks(Date date,boolean partOfDay, float Weight) {
-        List<Truck> availableTrucks = mapper.getAvailableTrucks(date, partOfDay, Weight,branch_id);
-        String ret = "";
-        int count = 1;
-        for (Truck t:availableTrucks) {
-            ret = ret + count + ". " + t.toString();
-            count++;
-        }
-        return ret;
+    public List<Truck> getAvailableTrucks(Date date,boolean partOfDay, float Weight) {
+        return mapper.getAvailableTrucks(date, partOfDay, Weight, branch_id);
     }
 
     // adds a date to the list of occupied dates of the truck with the specified id
@@ -133,28 +100,7 @@ public class TruckController {
             mapper.deleteNightShift(date,id);
     }
 
-    // returns a string with the driver license compatible to the truck with the specified id
-    public String getDriversLicense(Integer id) {
-        if(trucks.containsKey(id)||getTruckFromDB(id)) {
-            return trucks.get(id).getDrivers_license();
-        }
-        return "";
-    }
 
-    // returns true if the truck with the specified id exist in the system
-    // shift- morning:true, night:false
-    public boolean checkIfTruckExistAndValid(int truckID, float totalWeight, Date d, boolean shift) {
-        if(trucks.containsKey(truckID) || getTruckFromDB(truckID))
-        {
-            Truck t = trucks.get(truckID);
-           return t.checkIfAvailableByWeight(totalWeight) && t.checkIfAvailableByDateAndShift(d, shift);
-        }
-        return false;
-    }
 
-    public void reset()
-    {
-        trucks.clear();
-        Id_Counter=0;
-    }
+
 }

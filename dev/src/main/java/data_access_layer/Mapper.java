@@ -828,13 +828,13 @@ public class Mapper {
 
     public void add_to_log(int transportID, String message) {transport_dao.add_to_log(transportID,message);}
 
-    public Transport getTransportToUpdate(String prevDriverId, Date date, Boolean partOfDay) {
-        return transport_dao.getTransportToUpdate(prevDriverId,date,partOfDay);
+    public Transport getTransportToUpdate(String prevDriverId, Date date, Boolean partOfDay, int branch_id) {
+        return transport_dao.getTransportToUpdate(prevDriverId,date,partOfDay,branch_id);
     }
 
     //TODO:change in business layer all usage of the functions below to receive branch_id
 
-    public List<Transport> getAllTransportsByBranchID(int branch_id) {
+    public Hashtable<Integer,Transport> getAllTransportsByBranchID(int branch_id) {
        return transport_dao.getAllTransportsByBranchID(branch_id);
     }
 
@@ -880,7 +880,7 @@ public class Mapper {
     }
 
     //TODO:change in business layer all usage of the functions below to receive branch_id
-    public List<Truck> getAllTrucksByBranch(int branch_id){return truck_dao.getAllTrucksByBranch(branch_id);}
+    public Hashtable<Integer,Truck> getAllTrucksByBranch(int branch_id){return truck_dao.getAllTrucksByBranch(branch_id);}
 
     public boolean checkIfTrucksAvailableByDate(Date date, boolean partOfDay, int branch_id){
         return truck_dao.checkIfTrucksAvailableByDate(date,partOfDay,branch_id);

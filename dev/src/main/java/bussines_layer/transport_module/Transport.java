@@ -19,11 +19,6 @@ public class Transport {
     private ArrayList<String> log;
     private int branch_id;
 
-    public Transport(int id){
-        ID = id;
-        log =new ArrayList<>();
-    }
-
     public Transport(int id, Date date, boolean partOfDay, Truck truck, String driverId, String driverName, float totalWeight, Order order, int branch_id)
     {
         ID=id;
@@ -37,14 +32,10 @@ public class Transport {
         this.order=order;
         this.branch_id=branch_id;
     }
+
     public int getID() { return ID;}
 
     public Date getDate() { return Date;}
-
-    public void setDateTime(Date date,boolean shift) {
-        Date = date;
-        Shift = shift;
-    }
 
     public Truck getTruck() {return Truck; }
 
@@ -56,14 +47,6 @@ public class Transport {
         driverId = driver_Id;
         driverName = driver_Name;
     }
-
-
-    //set the weight according to the destination file
-
-    public void setTotalWeight(float totalWeight) {
-        TotalWeight = totalWeight;
-    }
-    //if a Site exist in the system remove it from the destFile and calculate the total weight
 
     public void addToLog (String s)
     {
@@ -89,26 +72,13 @@ public class Transport {
     }
 
     @Override
-    //TODO : delete old details organize new printing
-    public String toString() {
+    public String toString() { //TODO: print all product details
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         String s = "Transport Details:\n" + "\tid: " + ID + "\tDate: " + formatter.format(Date) +
-                " \tTruckNumber: " + Truck.getLicense_plate() +
-                " \tDriver: " + driverName + "\n";
-       //         +"\tSource details:\n\t\t" + Source.toString() + "\n";
-       // if(DestFiles.size()>0) {
-//            int count = 1;
-//            s = s + "\tDestinations and products details: \n";
-//            for (Site site:DestFiles.keySet()) {
-//                s=s+"\t\t"+count+". site: "+site.toString()+"\n";
-//                s=s+"\t\tproducts File: "+DestFiles.get(site).toString();
-//                count++;
-//            }
-       // }
-//        else {
-//            s = s + "\tDestinations and products: none\n";
-//        }
-//        s = s + "\tTotalWeight: " + TotalWeight +"\n";
+                "\tTruckNumber: " + Truck.getLicense_plate() +
+                "\tDriver: " + driverName + "\n" +
+                "\tSupplier details:\n\t\t" + order.getSupplier().getSupplierName() + "\n";
+        s = s + "\tTotalWeight: " + TotalWeight +"\n";
         if(log.size()>0) {
             s = s + "\tLog messages:\n" + getLogMessages();
         }

@@ -27,7 +27,7 @@ public class Truck_DTO {
     @DatabaseField(columnName = "driversLicense", canBeNull = false)
     private String drivers_license;
 
-    @DatabaseField(columnName = "c", canBeNull = false)
+    @DatabaseField(columnName = "BranchID", canBeNull = false)
     Integer branch;
 
     @ForeignCollectionField(eager = false)

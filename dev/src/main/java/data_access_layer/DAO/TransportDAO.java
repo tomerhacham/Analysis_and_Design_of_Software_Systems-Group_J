@@ -159,14 +159,14 @@ public class TransportDAO {
         }
     }
 
-    public Transport getTransportToUpdate(String prevDriverId, Date date, Boolean partOfDay) {
+    public Transport getTransportToUpdate(String prevDriverId, Date date, Boolean partOfDay,int branch_id) {
         try {
             List<Transport_DTO> transport_dtos = transport_DAO.queryForEq("Date",date);
             int shift=0;
             if(partOfDay)
                 shift=1;
             for (Transport_DTO transport_dto:transport_dtos) {
-                if(transport_dto.getDriverId().getWorkerID().equals(prevDriverId) && transport_dto.getShift()==shift)
+                if(transport_dto.getDriverId().getWorkerID().equals(prevDriverId) && transport_dto.getShift()==shift && transport_dto.getBranch_id()==branch_id)
                     if(identityMap.containsKey(transport_dto.getTransportID()))
                     {
                         return identityMap.get(transport_dto.getTransportID());
@@ -217,17 +217,17 @@ public class TransportDAO {
         }
     }
 
-    public List<Transport> getAllTransportsByBranchID(int branch_id) {
+    public Hashtable<Integer,Transport> getAllTransportsByBranchID(int branch_id) {
         //return list of all transports in the system if there are no matches -empty list if there is an error- return null
         try {
             List<Transport_DTO> transport_dtos = transport_DAO.queryForAll();
-            List<Transport> Transports = new ArrayList<>();
+            Hashtable<Integer,Transport> Transports = new Hashtable<>();
             for (Transport_DTO transport_dto:transport_dtos) {
                 if(transport_dto.getBranch_id()==branch_id) {
                     if (identityMap.containsKey(transport_dto.getTransportID())) {
-                        Transports.add(identityMap.get(transport_dto.getTransportID()));
+                        Transports.put(transport_dto.getTransportID(),identityMap.get(transport_dto.getTransportID()));
                     } else {
-                        Transports.add(makeTRANSPORT(transport_dto));
+                        Transports.put(transport_dto.getTransportID(),makeTRANSPORT(transport_dto));
                     }
                 }
             }

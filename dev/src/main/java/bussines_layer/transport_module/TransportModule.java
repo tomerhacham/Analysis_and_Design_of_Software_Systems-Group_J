@@ -1,216 +1,160 @@
 package bussines_layer.transport_module;
-//TODO: fix all references here
-import BusinessLayer.Transport.*;
-import InterfaceLayer.Workers.ScheduleController;
+import bussines_layer.employees_module.EmployeesModule;
+import bussines_layer.supplier_module.Order;
 
+import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-//TODO:not a singleton -> constructor that get branch id -> load all Trucks in that branch ?
+import java.util.List;
 
 public class TransportModule {
-//this class transfer functionality between the businessLayer and the presentationLayer
 
-    private static TransportModule instance = null;
-  //  private static SiteController siteController = SiteController.getInstance();
-    private static TransportController transportController = TransportController.getInstance();
-    private static TruckController truckController = TruckController.getInstance();
-  //  private static ProductsController productsController = ProductsController.getInstance();
-    private static ScheduleController scheduleController = ScheduleController.getInstance();//TODO:check where the functions will be
+    private TransportController transportController ;
+    private TruckController truckController ;
+    private EmployeesModule employeesModule = null ;
+    private Integer branch_id;
 
-
-    private FacadeController(){}
-
-    public static FacadeController getInstance(){
-        if (instance == null)
-            instance = new FacadeController();
-        return instance;
+    public TransportModule(int branch_id)
+    {
+        transportController=new TransportController(branch_id);
+        truckController=new TruckController(branch_id);
+        this.branch_id=branch_id;
     }
 
-
-    //truck controller functions
-    public String getAllTrucksDetails() {
-        return truckController.getAllTrucksDetails();
+    public void setEmployeesModule(EmployeesModule employeesModule) {
+        this.employeesModule = employeesModule;
     }
 
-    public String getAvailableTrucks(int transportId, float totalWeight) {
-        Date d = transportController.getTransportDate(transportId);
-        Boolean shift = transportController.getTransportShift(transportId);
-        return truckController.getAvailableTrucks(d,shift, totalWeight);
+    //region Book Transport Transport
+
+    public String BookTransport(Order order)
+    {
+        Date date = order.getIssuedDate();
+        boolean shift ;
+        int totalWeight=0; //TODO::: ORDER / FUNCTION
+        for(int i=1; i<=7; i++)
+        {
+            //check storage man
+            if(checkIfStorageManInMorningShift(date))
+                shift=true;
+            else if (checkIfStorageManInNightShift(date))
+                shift =false;
+            else
+                continue;
+            //check driver availability
+            if(!checkIfDriversAndTrucksAvailable(date,shift))
+                continue;
+
+            List<Truck> trucks =  truckController.getAvailableTrucks(date,shift, totalWeight);
+            if(trucks.isEmpty())
+                continue;
+            for (Truck truck:trucks) {
+                String DriverId = employeesModule.chooseDriverForTransport(date, shift, truck.getDrivers_license());
+                if(DriverId == null)
+                    continue;
+                String DriverName = employeesModule.getDriverName(DriverId);
+                truckController.addDate(date,shift, truck.getId());
+                return transportController.BookTransport(date,shift,truck,DriverId,DriverName,totalWeight,order);
+            }
+        }
+        transportController.addToPendingOrder(order);
+        return "The transport book - Failed!\n The order moved to pending list. \n" +
+                "please ensure that there are available storage man, driver and a truck for further treatment.";
     }
 
-    public String getTruckDetails(int truckID) {
-        return truckController.getTruckDetails(truckID);
+    //TODO: check if works
+    public Date addDay(Date date)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, 1);
+        return cal.getTime();
     }
 
-    public boolean createTruck(String license_plate, String model, float netWeight, float maxWeight, String drivers_license) {
-        return truckController.CreateTruck(license_plate, model, netWeight, maxWeight, drivers_license);
+    public boolean checkIfStorageManInMorningShift(Date d)
+    {
+        return employeesModule.StorageManInShift(d, true);
     }
 
-    public boolean deleteTruck(int truckToDelete) {
-        return truckController.DeleteTruck(truckToDelete);
+    public boolean checkIfStorageManInNightShift(Date d)
+    {
+        return employeesModule.StorageManInShift(d, false);
     }
 
-    public boolean checkIfTruckExistAndValid(int truckID, int transportId) {
-        float totalWeight = getTotalWeight(transportId);
-        Date d = getTransportDate(transportId);
-        boolean shift = getTransportShift(transportId);
-        return truckController.checkIfTruckExistAndValid(truckID, totalWeight, d ,shift);
+    public boolean checkIfDriversAndTrucksAvailable(Date date, boolean shift)
+    {
+        boolean trucksAvailable = truckController.checkIfTrucksAvailableByDate(date , shift);
+        boolean driversAvailable = employeesModule.DriversAvailability(date , shift);
+        return driversAvailable&&trucksAvailable;
     }
 
+    //endregion
 
-//    //site controller functions
-//    public String getAllSitesDetails() {
-//        return siteController.getAllSitesDetails();
-//    }
-//
-//    public String getAvailableSites(int sourceID, HashMap<Integer,Integer> destfile) {
-//        return siteController.getAvailableSites(sourceID, destfile);
-//    }
-//
-//    public String getSiteDetails(int siteID) {
-//        return siteController.getSiteDetails(siteID);
-//    }
-//
-//    public void createSite(String address, String phone_number, String contact, int shipping_area) {
-//        siteController.CreateSite(address, phone_number, contact, shipping_area);
-//    }
-//
-//    public boolean deleteSite(int siteToDelete) {
-//        return siteController.DeleteSite(siteToDelete);
-//    }
-//
-//    public boolean checkIfSiteExist(int siteID)
-//    {
-//        return siteController.checkIfSiteExist(siteID);
-//    }
-//
-//    public boolean checkIfSiteExistAndValid(int siteID, int sourceID, HashMap<Integer,Integer>destFile){
-//        return siteController.checkIfAvailable(siteID, sourceID, destFile);
-//    }
-//
-
-//    //product controller functions
-//    public int createProductsFile() {
-//        return productsController.CreateFile();
-//    }
-//
-//    public void createProduct(String productName, float productWeight, int fileID, int quantity) {
-//        productsController.CreateProduct(productName, productWeight, fileID, quantity);
-//    }
-//
-//    public boolean removeProducts(String[] productsToRemove, Integer fileToEdit) {
-//        return productsController.removeProducts(productsToRemove, fileToEdit);
-//    }
-//
-//    public String getProductsDetails(String[] productsToRemove) {
-//        return productsController.getProductsDetails(productsToRemove);
-//    }
-//
-//    public float getFileWeight(int fileID){
-//        return productsController.getFileWeight(fileID);
-//    }
-//
-
-    //transport controller functions
+    //region Transports for IO
     public String getAllTransportsDetails() {
         return transportController.getAllTransportsDetails();
-    }
-
-    public int createTransport() {
-        return transportController.createTransport();
-    }
-
-    public void SubmitTransportToDB(int transportToSubmit) {
-         transportController.SubmitTransportToDB(transportToSubmit);
-    }
-
-    public boolean deleteTransport(int transportToDelete) {
-        return transportController.DeleteTransport(transportToDelete);
-    }
-
-    public boolean DeleteTransportFronDB(int transportToDelete) {
-        return transportController.DeleteTransportFromDB(transportToDelete);
-    }
-
-//    public void setTransportSource(int transportID, int sourceID) {
-//        transportController.setTransportSource(sourceID, transportID);
-//    }
-//
-//    public void setTransportDestFiles(int transportID, HashMap<Integer, Integer> destFiles) {
-//        transportController.setTransportDestFiles(destFiles, transportID);
-//    }
-
-    public void setTransportTruck(int transportID, int truckID) {
-        transportController.setTransportTruck(truckID, transportID);
-    }
-
-    public void setTransportWeight(int transportID) {
-        transportController.setTransportWeight(transportID);
-    }
-
-    public void setTransportDriver(int transportID, String driverID) {
-        String driverName = scheduleController.getDriverName(driverID);
-        transportController.setTransportDriver(driverID, transportID, driverName);
-    }
-
-    public float getTotalWeight( int transport_ID) {
-        return transportController.getTotalWeight(transport_ID);
-    }
-
-//  //  public String getProductsByDest(int transportID) {
-//        return transportController.getProductByDest(transportID);
-//    }
-
-    public Date getTransportDate(int transportID) {
-        return transportController.getTransportDate(transportID);
-    }
-
-    public int getTransportTruck(int transportID) {
-        return transportController.getTransportTruck(transportID);
-    }
-
-//    public int getDestFileID(int transportID, int destToEdit) {
-//        return transportController.getFileID(transportID, destToEdit);
-//    }
-
-//    public boolean removeDestFromTransport(int transportID, int destToRemove) {
-//        return transportController.removeDestinationFromTransport(destToRemove, transportID);
-//    }
-
-    public void addTransportLog(String message, int transportID) {
-        transportController.addToLog(message, transportID);
-    }
-
-    public void addDatesToTruck(int transportID) {
-        transportController.addDatesToTruck(transportID);
-    }
-
-    public void removeDatesFromDriverAndTruck( int transportID) {
-        String DriverId = transportController.getTransportDriverID(transportID);
-        Date d =transportController.getTransportDate(transportID);
-        boolean shift = transportController.getTransportShift(transportID);
-        scheduleController.removeDriverFromTransport(d, shift, DriverId);
-        transportController.removeDatesFromTruck(transportID);
-    }
-
-//    public boolean checkIfDestInFile(int transportID, int destToEdit) {
-//        return transportController.checkIfDestInFile(transportID, destToEdit);
-//    }
-
-    public boolean getTransportShift(int transportID)
-    {
-        return transportController.getTransportShift(transportID);
     }
 
     public boolean checkIfTransportExist(int transportID){
         return transportController.checkIfTransportExist(transportID);
     }
 
-    //added after mergings:
-    //shift- true:morning, false:night
+    public void removeDatesFromDriverAndTruck( int transportID) {
+        String DriverId = transportController.getTransportDriverID(transportID);
+        Date d =transportController.getTransportDate(transportID);
+        boolean shift = transportController.getTransportShift(transportID);
+        employeesModule.removeDriverFromTransport(d, shift, DriverId);
+        truckController.removeDate(d,shift, transportController.getTransportTruck(transportID));
+    }
+
+    public boolean deleteTransport(int transportToDelete) {
+        return transportController.DeleteTransport(transportToDelete);
+    }
+
+    public String getPendingOrdersDetails()
+    {
+        return transportController.getPendingOrdersDetails();
+    }
+
+    public boolean isOrderIdInPendingOrders(int orderId)
+    {
+        return transportController.isOrderIdInPendingOrders(orderId);
+    }
+
+    public String BookTransporForPendingOrders(int order_id)
+    {
+        Order order = transportController.getFromPending(order_id);
+        if(order!=null)
+        {
+            return BookTransport(order);
+        }
+        return "The order with id:"+order_id+"is not in the pending orders list.";
+    }
+    //endregion
+
+    //region Trucks for IO
+
+    public String getAllTrucksDetails() {
+        return truckController.getAllTrucksDetails();
+    }
+
+    public boolean createTruck(String license_plate, String model, float netWeight, float maxWeight, String drivers_license) {
+        return truckController.CreateTruck(license_plate, model, netWeight, maxWeight, drivers_license);
+    }
+
+
+    public boolean deleteTruck(int truckToDelete) {
+        return truckController.DeleteTruck(truckToDelete);
+    }
+
+    //endregion
+
+    public void addTransportLog(String message, int transportID) {
+        transportController.addToLog(message, transportID);
+    }
+
     public void changeDriverInTransport(String prevDriverId, String newDriverId, Date date, Boolean shift)
     {
-        String newDriverName = scheduleController.getDriverName(newDriverId);
+        String newDriverName = employeesModule.getDriverName(newDriverId);
         transportController.changeDriverInTransport(prevDriverId, newDriverId, date, shift, newDriverName);
     }
 
@@ -219,41 +163,4 @@ public class TransportModule {
         return transportController.isTransportExist(date, shift);
     }
 
-    public boolean setTransportDateTime(int id, String date, String time) throws Exception {
-        return transportController.setTransportDateTime(date, time, id);
-    }
-
-    public boolean checkIfStorageManInShift(int TransportId)
-    {
-        Date d = transportController.getTransportDate(TransportId);
-        boolean shift = transportController.getTransportShift(TransportId);
-        return scheduleController.StorageManInShift(d, shift);
-    }
-
-    public boolean checkIfDriversAndTrucksAvailable(int TransportId)
-    {
-        Date date = transportController.getTransportDate(TransportId);
-        boolean shift = transportController.getTransportShift(TransportId);
-        boolean trucksAvailable = truckController.checkIfTrucksAvailableByDate(date , shift);
-        boolean driversAvailable = scheduleController.DriversAvailability(date , shift);
-        return driversAvailable&&trucksAvailable;
-    }
-
-    public String chooseDriver(int transportId)
-    {
-        Date date = transportController.getTransportDate(transportId);
-        boolean Shift = transportController.getTransportShift(transportId);
-        int TruckID = transportController.getTransportTruck(transportId);
-        String licence = truckController.getDriversLicense(TruckID);
-        String DriverId = scheduleController.chooseDriverForTransport(date, Shift, licence);
-        if(DriverId == null)
-        {
-            return "";
-        }
-        else {
-            String DriverName = scheduleController.getDriverName(DriverId);
-            transportController.setTransportDriver(DriverId,transportId,DriverName);
-            return DriverName;
-        }
-    }
 }
