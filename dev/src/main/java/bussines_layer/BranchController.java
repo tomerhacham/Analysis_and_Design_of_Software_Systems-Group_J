@@ -444,5 +444,37 @@ public class BranchController {
     public void loadID() {
         this.next_id=next_id = mapper.loadID("branch");
     }
+
     //endregion
+
+    //
+    public String getAllTransportsDetails() {
+        return currBranch.getAllTransportsDetails();
+    }
+
+    public String getAllTrucksDetails() {
+        return currBranch.getAllTrucksDetails();
+    }
+
+    public boolean deleteTruck(int truckToDelete) {
+        return currBranch.deleteTruck(truckToDelete);
+    }
+
+    public boolean createTruck(String license_plate, String model, float netWeight, float maxWeight, String drivers_license) {
+        return currBranch.createTruck(license_plate, model, netWeight, maxWeight, drivers_license);
+    }
+
+    public String getPendingOrdersDetails() {
+        return currBranch.getPendingOrdersDetails();
+    }
+
+    public boolean isOrderIdInPendingOrders(int orderID) {
+        return currBranch.isOrderIdInPendingOrders(orderID);
+    }
+
+    public String BookTransportForPendingOrders(int orderID) {
+        return currBranch.BookTransportForPendingOrders(orderID);
+    }
+
+    //
 }

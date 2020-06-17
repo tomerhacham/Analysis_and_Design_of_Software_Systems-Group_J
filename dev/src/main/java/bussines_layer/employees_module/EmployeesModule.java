@@ -1,9 +1,18 @@
 package bussines_layer.employees_module;
 
+import bussines_layer.transport_module.TransportModule;
+
 import java.util.Date;
 //TODO: merge both of the controllers (Roaster and Scheduler)
 
 public class EmployeesModule {
+
+    private TransportModule transportModule;
+
+    public EmployeesModule(Integer branch_id) {
+        //TODO:: implement
+    }
+
     public String chooseDriverForTransport(Date date, boolean shift, String drivers_license) {
         //TODO implement
         return null;
@@ -26,5 +35,9 @@ public class EmployeesModule {
 
     public void removeDriverFromTransport(Date d, boolean shift, String driverId) {
         //TODO implement
+    }
+
+    public void setTransportModule(TransportModule transportModule) {
+        this.transportModule = transportModule;
     }
 }

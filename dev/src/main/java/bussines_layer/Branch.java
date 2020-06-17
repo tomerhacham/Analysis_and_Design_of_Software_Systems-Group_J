@@ -28,6 +28,8 @@ public class Branch {
         supplierModule = new SupplierModule(branch_id);
         transportModule = new TransportModule(branch_id);
         employeesModule=new EmployeesModule(branch_id);
+        transportModule.setEmployeesModule(employeesModule);
+        employeesModule.setTransportModule(transportModule);
         this.name = name;
     }
     public Branch(BranchDTO branchDTO){
@@ -321,6 +323,34 @@ public class Branch {
         return "" +
                 "Name:'" + name +
                 ", ID:" + branch_id;
+    }
+
+    public String getAllTransportsDetails() {
+        return transportModule.getAllTransportsDetails();
+    }
+
+    public String getAllTrucksDetails() {
+        return transportModule.getAllTrucksDetails();
+    }
+
+    public boolean deleteTruck(int truckToDelete) {
+        return transportModule.deleteTruck(truckToDelete);
+    }
+
+    public boolean createTruck(String license_plate, String model, float netWeight, float maxWeight, String drivers_license) {
+        return transportModule.createTruck(license_plate, model, netWeight, maxWeight, drivers_license);
+    }
+
+    public String getPendingOrdersDetails() {
+        return transportModule.getPendingOrdersDetails();
+    }
+
+    public boolean isOrderIdInPendingOrders(int orderID) {
+        return transportModule.isOrderIdInPendingOrders(orderID);
+    }
+
+    public String BookTransportForPendingOrders(int orderID) {
+        return transportModule.BookTransportForPendingOrders(orderID);
     }
 }
 

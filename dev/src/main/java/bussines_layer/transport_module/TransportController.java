@@ -103,6 +103,8 @@ public class TransportController {
     public void changeDriverInTransport(String prevDriverId, String newDriverId, Date date, Boolean shift, String newDriverName)
     {
         Transport t = mapper.getTransportToUpdate(prevDriverId, date, shift,branch_id);
+        String msg = "The driver:" + t.getDriverName() + "was changed.";
+        addToLog(msg, t.getID());
         transports.get(t.getID()).setDriver(newDriverId,newDriverName);
         mapper.updateTransportDriver(t.getID(), newDriverId, newDriverName);
     }

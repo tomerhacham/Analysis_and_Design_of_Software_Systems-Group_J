@@ -34,7 +34,6 @@ public class TruckDAO {
         }
     }
 
-    //todo: add in business layer branchId GETTER
     public void addTruck(Truck truck) {
         identityMap.put(truck.getId(),truck);
         Truck_DTO truck_dto = new Truck_DTO(truck.getId(), truck.getLicense_plate(), truck.getModel(),

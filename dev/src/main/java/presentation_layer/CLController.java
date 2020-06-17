@@ -1663,6 +1663,152 @@ public class CLController {
     }
     //endregion
 
+    //region Transport Management
+
+    //TODO:: call this function when necessary
+    private static void printTransportMenu() {
+        String menu = "Transports management:\n" +
+                "1) Create truck.\n" +
+                "2) Remove truck.\n" +
+                "3) Display trucks details.\n" +
+                "4) Display transports details.\n" +
+                "5) Book transport for pending order. \n" +
+                "5) Return to main menu.\n" +
+                "6) Exit.\n" ;
+        while(true) {
+            System.out.println(menu);
+            Integer option = getNextInt(sc);
+            switch (option) {
+                case (1):
+                    createTruck();
+                    break;
+                case (2):
+                    removeTruck();
+                    break;
+                case (3):
+                    DisplayTruckDetails();
+                    break;
+                case (4):
+                    DisplayTransportsDetails();
+                    break;
+                case (5):
+                    BookTransportForPendingOrder();
+                    break;
+                case (6):
+                    return;
+                case (7):
+                    Exit();
+                default:
+                    System.out.println("Option not valid, please retype");
+            }
+        }
+    }
+
+    private static void BookTransportForPendingOrder() {
+        String details = branchController.getPendingOrdersDetails();
+        if (details.equals("")){         //there are no orders in waiting list
+            System.out.println("There are no pending orders.");
+        }
+        else {
+            System.out.println(details);
+            System.out.println("Please choose order ID to re book transport:");
+            int orderID = integerParse(sc.nextLine());
+            boolean exist = branchController.isOrderIdInPendingOrders(orderID);
+            if (exist) {
+                System.out.println(branchController.BookTransportForPendingOrders(orderID));
+            }
+            else {
+                System.out.println("The order with id:" + orderID + "is not in the pending orders list.");
+            }
+        }
+    }
+
+    private static void DisplayTransportsDetails() {
+        System.out.println("Transports:\n" + branchController.getAllTransportsDetails());
+    }
+
+    private static void DisplayTruckDetails() {
+        System.out.println("Trucks:\n" + branchController.getAllTrucksDetails());
+    }
+
+    private static void removeTruck() {
+        String details = branchController.getAllTrucksDetails();
+        if (details.equals("")){         //there are no trucks in the system
+            System.out.println("There are no trucks to delete.\n");
+        }
+        else {
+            System.out.println(details);
+            System.out.println("Please choose the truck ID you wish to remove:");
+            int truckToDelete = integerParse(sc.nextLine());
+            //try to delete the given truck, if returns false the id is not in the system
+            boolean deleted = branchController.deleteTruck(truckToDelete);
+            if(deleted) {
+                System.out.println("The truck deleted successfully.\n");
+            }
+            else {
+                System.out.println("The truck ID:"+ truckToDelete+" is not in the system, operation canceled.\n");
+            }
+        }
+    }
+
+    private static void createTruck() {
+        System.out.println("Please enter the following details:\n");
+        System.out.println("License plate:");
+        String license_plate = getVal();
+        System.out.println("Model:");
+        String model = getVal();
+        System.out.println("Drivers license:");
+        String drivers_license = getVal();
+        System.out.println("Net weight of the truck:");
+        float netWeight = floatParse(sc.nextLine());
+        System.out.println("Max weight the truck can curry:");
+        float maxWeight = floatParse(sc.nextLine());
+        boolean created = branchController.createTruck(license_plate, model, netWeight, maxWeight, drivers_license);
+        while (!created){ //check that the maxWeight is bigger than the net weight
+            System.out.println("Max weight should be bigger than net weight. Please enter max weight again.");
+            maxWeight = floatParse(sc.nextLine());
+            created = branchController.createTruck(license_plate, model, netWeight, maxWeight, drivers_license);
+        }
+        System.out.println("\nThe truck added successfully.\n");
+    }
+
+    private static int integerParse(String s){
+        int ret;
+        while (true) {
+            try {
+                ret = Integer.parseInt(s);
+                return ret;
+            } catch (Exception e) {
+                System.out.println("Invalid operation. Try Again.");
+                s = sc.nextLine();
+            }
+        }
+    }
+
+    private static float floatParse(String s){
+        float ret;
+        while (true) {
+            try {
+                ret = Float.parseFloat(s);
+                return ret;
+            } catch (Exception e) {
+                System.out.println("Invalid operation. Try Again.");
+                s = sc.nextLine();
+            }
+        }
+    }
+
+    private static String getVal(){
+        String val = sc.nextLine();
+        while (val.equals("")){
+            System.out.println("Value can't be empty. Try again.");
+            val = sc.nextLine();
+        }
+        return val;
+    }
+
+    //endregion
+
     //region Data mapping
     private static void printDataMapperMenu(){
         String menu = "Data:\n";

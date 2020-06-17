@@ -6,8 +6,6 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
-//singleton
-//TODO:not a singleton -> constructor that get branch id -> load all Trucks in that branch ?
 public class TruckController {
     private static Mapper mapper = Mapper.getInstance();
     private Hashtable<Integer, Truck> trucks; // aggregates all trucks in the system <truckID, truck object>

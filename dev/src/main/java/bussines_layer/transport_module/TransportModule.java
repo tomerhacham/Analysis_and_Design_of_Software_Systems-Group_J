@@ -55,6 +55,7 @@ public class TransportModule {
                 truckController.addDate(date,shift, truck.getId());
                 return transportController.BookTransport(date,shift,truck,DriverId,DriverName,totalWeight,order);
             }
+            date = addDay(date);
         }
         transportController.addToPendingOrder(order);
         return "The transport book - Failed!\n The order moved to pending list. \n" +
@@ -120,7 +121,7 @@ public class TransportModule {
         return transportController.isOrderIdInPendingOrders(orderId);
     }
 
-    public String BookTransporForPendingOrders(int order_id)
+    public String BookTransportForPendingOrders(int order_id)
     {
         Order order = transportController.getFromPending(order_id);
         if(order!=null)
@@ -147,10 +148,6 @@ public class TransportModule {
     }
 
     //endregion
-
-    public void addTransportLog(String message, int transportID) {
-        transportController.addToLog(message, transportID);
-    }
 
     public void changeDriverInTransport(String prevDriverId, String newDriverId, Date date, Boolean shift)
     {

@@ -832,8 +832,6 @@ public class Mapper {
         return transport_dao.getTransportToUpdate(prevDriverId,date,partOfDay,branch_id);
     }
 
-    //TODO:change in business layer all usage of the functions below to receive branch_id
-
     public Hashtable<Integer,Transport> getAllTransportsByBranchID(int branch_id) {
        return transport_dao.getAllTransportsByBranchID(branch_id);
     }
@@ -879,7 +877,6 @@ public class Mapper {
         return truck_dao.TruckNotInNightShift(date,truckID);
     }
 
-    //TODO:change in business layer all usage of the functions below to receive branch_id
     public Hashtable<Integer,Truck> getAllTrucksByBranch(int branch_id){return truck_dao.getAllTrucksByBranch(branch_id);}
 
     public boolean checkIfTrucksAvailableByDate(Date date, boolean partOfDay, int branch_id){
