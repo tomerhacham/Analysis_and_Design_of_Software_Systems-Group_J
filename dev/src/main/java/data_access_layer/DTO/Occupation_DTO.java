@@ -1,6 +1,6 @@
 package data_access_layer.DTO;
 
-import BusinessLayer.Workers.Shift;
+import bussines_layer.employees_module.Shift;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 

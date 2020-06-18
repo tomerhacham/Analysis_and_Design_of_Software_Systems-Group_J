@@ -24,17 +24,17 @@ public class WeeklySchedule {
         }
     }
 
-    public List<Shift> getShifts() {
+    public List<Shift> getShifts(Integer branch_id) {
         List<Shift>output=new ArrayList<>();
         for(DailySchedule d:shifts)
         {
             Shift s=d.getMorningShift();
             if(s==null)
-                s=new EmptyShift(d.getDate(),morning);
+                s=new EmptyShift(d.getDate(),morning,branch_id);
             output.add(s);
             s=d.getNightShift();
             if(s==null)
-                s=new EmptyShift(d.getDate(),night);
+                s=new EmptyShift(d.getDate(),night,branch_id);
             output.add(s);
         }
         return output;

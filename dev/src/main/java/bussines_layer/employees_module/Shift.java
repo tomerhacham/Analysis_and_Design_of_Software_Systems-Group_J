@@ -9,16 +9,18 @@ public class Shift {
     private Date date;
     private boolean timeOfDay;
     private String id;
+    private Integer branch_id;
     //private List<Worker> availableWorkers;
     private List<Driver> scheduledDrivers;
 
 
-    public Shift(Date date, boolean timeOfday, String id)
+    public Shift(Date date, boolean timeOfday, String id,Integer branch_id)
     {
         this.id=id;
         scheduledDrivers=new ArrayList<>();
         this.timeOfDay=timeOfday;
         this.date=date;
+        this.branch_id=branch_id;
         occupation=new HashMap<>();
         occupation.put("manager",new FixedSizeList<>(1));
     }
@@ -40,6 +42,10 @@ public class Shift {
             }
         }
     }
+
+    public Integer getBranchID() {
+        return branch_id;
+    }
     public String getId() {
         return id;
     }
@@ -47,10 +53,6 @@ public class Shift {
     public void setTimeOfDay(boolean timeOfDay) {
         this.timeOfDay = timeOfDay;
     }
-
-    /*public List<Worker> getAvailableWorkers() {
-        return availableWorkers;
-    }*/
 
     public Date getDate() {
         return date;
@@ -210,4 +212,5 @@ public class Shift {
     public void addARowToOcuupation(String pos, FixedSizeList<Worker> workers) {
         this.occupation.put(pos, workers);
     }
+
 }

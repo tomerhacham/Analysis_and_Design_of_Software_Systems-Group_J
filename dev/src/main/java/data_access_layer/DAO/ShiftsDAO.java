@@ -59,7 +59,7 @@ public class ShiftsDAO {
             HashMap<String, FixedSizeList<Worker>> Occupation = shift.getOccupation();
             for (String position : Occupation.keySet()) {
                 for (Worker w : Occupation.get(position)) {
-                    addOccupation(shift.getId(), position, );
+                    addOccupation(shift.getId(), position,w.getId() );
                 }
             }
 
@@ -229,7 +229,7 @@ public class ShiftsDAO {
         if (shift_dto.getTimeOfDay() == 1) {
             partOfDay = true;
         }
-        Shift shift = new Shift(shift_dto.getDate(), partOfDay, shift_dto.getShiftID());
+        Shift shift = new Shift(shift_dto.getDate(), partOfDay, shift_dto.getShiftID(),shift_dto.getBranch_id());
         ForeignCollection<Occupation_DTO> occupation_dtos = shift_dto.getOccupation();
         HashMap<String, ArrayList<Worker>> occupation = new HashMap<>();
         for (Occupation_DTO o : occupation_dtos) {

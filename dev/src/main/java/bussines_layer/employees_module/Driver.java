@@ -1,14 +1,16 @@
 package bussines_layer.employees_module;
-import InterfaceLayer.Workers.ModelDriver;
-import InterfaceLayer.Workers.ModelWorker;
+
+import bussines_layer.employees_module.models.ModelDriver;
+import bussines_layer.employees_module.models.ModelWorker;
+
 import java.util.Date;
 
 public class Driver extends Worker {
     private String license;
 
-    public Driver(String id,String license, String name,Date startDate,double salary)
+    public Driver(String id,Integer branch_id,String license, String name,Date startDate,double salary)
     {
-        super(name,id,startDate,salary);
+        super(name,id,branch_id,startDate,salary);
         this.license = license;
         this.positions.add("driver");
     }
