@@ -447,7 +447,7 @@ public class BranchController {
 
     //endregion
 
-    //
+    //region Transport Module
     public String getAllTransportsDetails() {
         return currBranch.getAllTransportsDetails();
     }
@@ -476,5 +476,5 @@ public class BranchController {
         return currBranch.BookTransportForPendingOrders(orderID);
     }
 
-    //
+    //endregion
 }
