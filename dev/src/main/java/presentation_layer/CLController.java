@@ -1698,104 +1698,11 @@ public class CLController {
 
     //endregion
 
+
     //region Human Resources Management
-
     //TODO complete functions
-    private static void printHumanResourcesManagementMenu() {
-        String menu = "";
-        menu = menu.concat("\nChoose one of the options:\n");
-        menu = menu.concat("1) Manage Workers\n");
-        menu = menu.concat("2) Manage Workers Availability\n");
-        menu = menu.concat("3) Manage Schedule\n");
-        menu = menu.concat("4) Return\n");
-        menu = menu.concat("5) Exit");
-        while (true) {
-            System.out.println(menu);
-            Integer option = getNextInt(sc);
-            switch (option) {
-                case 1:
-                    printManageWorkersMenu();
-                    break;
-                case 2:
-                    printManageWorkersAvailability();
-                    break;
-                case 3:
-                    printManageScheduleMenu();
-                    break;
-                case 4:
-                    return;
-                case 5:
-                    Exit();
-                default:
-                    System.out.println("Option not valid, please retype");
-            }
-        }
-    }
-
     //TODO complete functions
-    private static void printManageWorkersMenu() {
-        String menu = "";
-        menu = menu.concat("\nChoose one of the options:\n");
-        menu = menu.concat("1) Display Workers\n");
-        menu = menu.concat("2) Add Worker\n");
-        menu = menu.concat("3) Add Driver\n");
-        menu = menu.concat("4) Remove Worker\n");
-        menu = menu.concat("5) Edit Worker\n");
-        menu = menu.concat("6) Return\n");
-        menu = menu.concat("7) Exit");
-        while (true) {
-            System.out.println(menu);
-            Integer option = getNextInt(sc);
-            switch (option) {
-                case 1:
-                    displayWorkers();
-                    break;
-                case 2:
-                    printAddWorker();
-                    break;
-                case 3:
-                    printAddDriver();
-                    break;
-                case 4:
-                    printRemoveWorker();
-                    break;
-                case 5:
-                    printEditDriver();
-                    break;
-                case 6:
-                    return;
-                case 7:
-                    Exit();
-                default:
-                    System.out.println("Option not valid, please retype");
-            }
-        }
-    }
-    //region HumanResourceMethods
-    //region manageWorkers
-    private static void printAddWorker() {
-        System.out.println("Please enter name:");
-        String name=WnextLine();
-        System.out.println("Please enter salary:");
-        double salary=WnextDouble();
-        System.out.println("Please enter positions separated by comma:");
-        String pos=WnextLine();
-        List<String> positions= Arrays.asList(pos.split(","));
-        Date date = getDateFromUser();
-        String output=rc.addWorker(name,salary,date,positions);
-        if(output!=null)
-            System.out.println(output);
-    }
 
-    private static void displayWorkers() {
-        int i=0;
-        for(ModelWorker mw:branchController.displayWorkers())
-        {
-            System.out.println(i+":"+mw.toString());
-            i++;
-        }
-    }
-    //endregion
 
     //TODO complete functions
     private static void printManageScheduleMenu() {
@@ -1828,8 +1735,6 @@ public class CLController {
             }
         }
     }
-
-    //TODO complete functions
     private static void printConstructShiftMenu() {
         String menu = "";
         menu = menu.concat("\nChoose one of the options:\n");
@@ -1868,6 +1773,210 @@ public class CLController {
             }
         }
     }
+    private static void printHumanResourcesManagementMenu() {
+        String menu = "";
+        menu = menu.concat("\nChoose one of the options:\n");
+        menu = menu.concat("1) Manage Workers\n");
+        menu = menu.concat("2) Manage Workers Availability\n");
+        menu = menu.concat("3) Manage Schedule\n");
+        menu = menu.concat("4) Return\n");
+        menu = menu.concat("5) Exit");
+        while (true) {
+            System.out.println(menu);
+            Integer option = getNextInt(sc);
+            switch (option) {
+                case 1:
+                    printManageWorkersMenu();
+                    break;
+                case 2:
+                    printManageWorkersAvailability();
+                    break;
+                case 3:
+                    printManageScheduleMenu();
+                    break;
+                case 4:
+                    return;
+                case 5:
+                    Exit();
+                default:
+                    System.out.println("Option not valid, please retype");
+            }
+        }
+    }
+    //region Manage Availability
+    private static void printManageWorkersAvailability() {
+    }
+    //endregion
+
+
+
+    //region Contruct Shift
+
+    //region Construct Shift Methods
+    //endregion
+    //endregion
+    //region manageWorkers
+
+    private static void printManageWorkersMenu() {
+        String menu = "";
+        menu = menu.concat("\nChoose one of the options:\n");
+        menu = menu.concat("1) Display Workers\n");
+        menu = menu.concat("2) Add Worker\n");
+        menu = menu.concat("3) Add Driver\n");
+        menu = menu.concat("4) Remove Worker\n");
+        menu = menu.concat("5) Edit Worker\n");
+        menu = menu.concat("6) Return\n");
+        menu = menu.concat("7) Exit");
+        while (true) {
+            System.out.println(menu);
+            Integer option = getNextInt(sc);
+            switch (option) {
+                case 1:
+                    displayWorkers();
+                    break;
+                case 2:
+                    printAddWorker();
+                    break;
+                case 3:
+                    printAddDriver();
+                    break;
+                case 4:
+                    printRemoveWorker();
+                    break;
+                case 5:
+                    printEditWorker();
+                    break;
+                case 6:
+                    return;
+                case 7:
+                    Exit();
+                default:
+                    System.out.println("Option not valid, please retype");
+            }
+        }
+    }
+
+
+    //region Manage Worker Methods
+    private static void printEditWorker() {
+        String id=selectWorker();
+        if(id!=null)
+        {
+            boolean goBack=false;
+            while(!goBack)
+            {
+                System.out.println(branchController.displaySingleWorker(id));
+                System.out.println("Choose an option:");
+                System.out.println("1.Edit worker's name");
+                System.out.println("2.Add position to worker");
+                System.out.println("3.Remove position from worker");
+                System.out.println("4.Change worker's salary");
+                System.out.println("5.Finish editing");
+                int opt=WnextInt();
+                switch(opt){
+                    case(1):
+                        editWorkerName(id);
+                        break;
+                    case(2):
+                        addPositionToWorker(id);
+                        break;
+                    case(3):
+                        removePosition(id);
+                        break;
+                    case(4):
+                        changeWorkerSalary(id);
+                        break;
+                    case(5):
+                        goBack=true;
+                        break;
+                }
+
+            }
+        }
+
+    }
+    private static void printRemoveWorker() {
+        String id=selectWorker();
+        String output=null;
+        if(id!=null)
+            output=branchController.removeWorkerFromRoster(id);
+        if(output!=null)
+            System.out.println(output);
+    }
+    private static void displayWorkers() {
+        int i=0;
+        for(ModelWorker mw:branchController.displayWorkers())
+        {
+            System.out.println(i+":"+mw.toString());
+            i++;
+        }
+    }
+    private static void printAddWorker() {
+        System.out.println("Please enter name:");
+        String name=WnextLine();
+        System.out.println("Please enter salary:");
+        double salary=WnextDouble();
+        System.out.println("Please enter positions separated by comma:");
+        String pos=WnextLine();
+        List<String> positions= Arrays.asList(pos.split(","));
+        Date date = getDateFromUser();
+        String output=branchController.addWorker(name,salary,date,positions);
+        if(output!=null)
+            System.out.println(output);
+    }
+    private static void printAddDriver() {
+        System.out.println("Please enter name:");
+        String name=WnextLine();
+        System.out.println("Please enter salary:");
+        double salary=WnextDouble();
+        System.out.println("Please enter a license:");
+        String lic=WnextLine();
+        Date date = getDateFromUser();
+        String output=branchController.addDriver(name,salary,date,lic);
+        if(output!=null)
+            System.out.println(output);
+    }
+
+
+
+    //region Edit Worker Methods
+
+    private static void changeWorkerSalary(String id) {
+        System.out.println("Enter new Salary:");
+        double newSalary=WnextDouble();
+        String output=branchController.editSalary(newSalary,id);
+        if(output!=null)
+            System.out.println(output);
+    }
+    private static void removePosition(String id) {
+        System.out.println("Enter position to remove:");
+        String newPosition=WnextLine();
+        String output=branchController.removePosition(newPosition,id);
+        if(output!=null)
+            System.out.println(output);
+    }
+
+    private static void addPositionToWorker(String id) {
+        System.out.println("Enter new position");
+        String newPosition=WnextLine();
+        String output=branchController.addPosition(newPosition,id);
+        if(output!=null)
+            System.out.println(output);
+    }
+    private static void editWorkerName(String id) {
+        System.out.println("Enter new name");
+        String newName=WnextLine();
+        String output=branchController.editName(newName,id);
+        if(output!=null)
+            System.out.println(output);
+    }
+
+    //endregion
+
+
+
+    //endregion
+    //endregion
     //region additional methods
     public static String WnextLine(){
         sc.skip("\\R");
@@ -1898,6 +2007,39 @@ public class CLController {
     public static String Wnext()
     {
         return sc.next();
+    }
+    private static Date getDateFromUser() {
+        Date date=null;
+        while(date==null) {
+            System.out.println("Please enter Date in format of:dd/MM/yyyy");
+            String dateStr = Wnext();
+            date=parseDate(dateStr);
+        }
+        return date;
+    }
+    public static Date parseDate(String date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date2=null;
+        try {
+            //Parsing the String
+            date2 = dateFormat.parse(date);
+        } catch (ParseException e) {
+
+        }
+        return date2;
+    }
+    private static String selectWorker() {
+        displayWorkers();
+        List<ModelWorker> mw=branchController.displayWorkers();
+        System.out.println("Please enter the number of the selected worker:");
+        int selected=WnextInt();
+        if(selected<0|selected>=mw.size())
+            System.out.println("Invalid worker's number inserted. please try again!");
+        else
+        {
+            return mw.get(selected).id;
+        }
+        return null;
     }
 
     //endregion
