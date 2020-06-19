@@ -3,6 +3,7 @@ package presentation_layer;
 import bussines_layer.Branch;
 import bussines_layer.BranchController;
 import bussines_layer.Result;
+import bussines_layer.employees_module.models.ModelShift;
 import bussines_layer.employees_module.models.ModelWorker;
 import bussines_layer.inventory_module.Category;
 import bussines_layer.inventory_module.Report;
@@ -12,6 +13,7 @@ import javafx.util.Pair;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static java.lang.System.exit;
 
@@ -1705,74 +1707,6 @@ public class CLController {
 
 
     //TODO complete functions
-    private static void printManageScheduleMenu() {
-        String menu = "";
-        menu = menu.concat("\nChoose one of the options:\n");
-        menu = menu.concat("1) Display Weekly Schedule\n");
-        menu = menu.concat("2) Construct Shift\n");
-        menu = menu.concat("3) Remove shift\n");
-        menu = menu.concat("4) Return\n");
-        menu = menu.concat("5) Exit");
-        while (true) {
-            System.out.println(menu);
-            Integer option = getNextInt(sc);
-            switch (option) {
-                case 1:
-                    displayWeeklySchedule();
-                    break;
-                case 2:
-                    printConstructShiftMenu();
-                    break;
-                case 3:
-                    printRemoveShift();
-                    break;
-                case 4:
-                    return;
-                case 5:
-                    Exit();
-                default:
-                    System.out.println("Option not valid, please retype");
-            }
-        }
-    }
-    private static void printConstructShiftMenu() {
-        String menu = "";
-        menu = menu.concat("\nChoose one of the options:\n");
-        menu = menu.concat("1) Add Position\n");
-        menu = menu.concat("2) Add Worker\n");
-        menu = menu.concat("3) Remove Position\n");
-        menu = menu.concat("4) Remove Worker\n");
-        menu = menu.concat("5) Submit Shift\n");
-        menu = menu.concat("6) Return\n");
-        menu = menu.concat("7) Exit");
-        while (true) {
-            System.out.println(menu);
-            Integer option = getNextInt(sc);
-            switch (option) {
-                case 1:
-                    printAddPosition();
-                    break;
-                case 2:
-                    printAddWorker();
-                    break;
-                case 3:
-                    printRemovePosition();
-                    break;
-                case 4:
-                    printRemoveWorker();
-                    break;
-                case 5:
-                    printSubmitShift();
-                    break;
-                case 6:
-                    return;
-                case 7:
-                    Exit();
-                default:
-                    System.out.println("Option not valid, please retype");
-            }
-        }
-    }
     private static void printHumanResourcesManagementMenu() {
         String menu = "";
         menu = menu.concat("\nChoose one of the options:\n");
@@ -1803,16 +1737,234 @@ public class CLController {
             }
         }
     }
-    //region Manage Availability
-    private static void printManageWorkersAvailability() {
+    //region Schedule
+    private static void printManageScheduleMenu() {
+        String menu = "";
+        menu = menu.concat("\nChoose one of the options:\n");
+        menu = menu.concat("1) Display Weekly Schedule\n");
+        menu = menu.concat("2) Construct Shift\n");
+        menu = menu.concat("3) Remove shift\n");
+        menu = menu.concat("4) Return\n");
+        menu = menu.concat("5) Exit");
+        while (true) {
+            System.out.println(menu);
+            Integer option = getNextInt(sc);
+            switch (option) {
+                case 1:
+                    displayWeeklySchedule();
+                    break;
+                case 2:
+                    printConstructShiftMenu();
+                    break;
+                case 3:
+                    printRemoveShift();
+                    break;
+                case 4:
+                    return;
+                case 5:
+                    Exit();
+                default:
+                    System.out.println("Option not valid, please retype");
+            }
+        }
     }
-    //endregion
 
+    //region Schedule Methods
+    private static void printRemoveShift() {
+        Date date=getDateFromUser();
+        boolean timeOfDay=getTimeOfDayFromUser();
+        String output=branchController.removeShift(date,timeOfDay);
+        if(output!=null)
+            System.out.println(output);
+    }
 
+    private static void displayWeeklySchedule() {
+        Date date=getDateFromUser();
+        List<ModelShift>mw=branchController.getWeeklyShifts(date);
+        if(mw==null)
+            System.out.println("Invalid Date or no scheduled shifts for given date");
+        else {
+            SimpleDateFormat myFormat = new SimpleDateFormat("EE MMMM dd, yyyy",Locale.US);
+            String DateString = myFormat.format(mw.get(0).date);
+            System.out.println("Displaying shifts for week of " + DateString+ ":");
+            for (ModelShift ms : mw) {
+                System.out.println(ms.minimizedView());
+            }
+        }
+    }
+    private static void printConstructShiftMenu() {
+       boolean creation=ChooseCreationOrEdit();
+        Date date=getDateFromUser();
+        String output=null;
+        boolean isMorningShift=getTimeOfDayFromUser();
+        if(creation) {
+            output=branchController.createShift(date,isMorningShift);
+        }
+        else{
+            output=branchController.editShift(date,isMorningShift);
+        }
+        if(output!=null)
+            System.out.println(output);
+        else {
+            String menu = "";
+            menu = menu.concat("\nChoose one of the options:\n");
+            menu = menu.concat("1) Add Position\n");
+            menu = menu.concat("2) Add Worker\n");
+            menu = menu.concat("3) Remove Position\n");
+            menu = menu.concat("4) Remove Worker\n");
+            menu = menu.concat("5) Submit Shift\n");
+            menu = menu.concat("6) Return\n");
+            menu = menu.concat("7) Exit");
+            while (true) {
+                System.out.println(menu);
+                Integer option = getNextInt(sc);
+                switch (option) {
+                    case 1:
+                        printAddPositionToShift();
+                        break;
+                    case 2:
+                        printAddWorkerToShift();
+                        break;
+                    case 3:
+                        printRemovePositionFromShift();
+                        break;
+                    case 4:
+                        printRemoveWorker();
+                        break;
+                    case 5:
+                        output = branchController.submitShift();
+                        if (output != null)
+                            System.out.println(output);
+                        break;
+                    case 6:
+                        return;
+                    case 7:
+                        Exit();
+                    default:
+                        System.out.println("Option not valid, please retype");
+                }
+            }
+        }
+    }
 
-    //region Contruct Shift
 
     //region Construct Shift Methods
+
+    private static boolean ChooseCreationOrEdit() {
+        String menu = "";
+        menu = menu.concat("\nChoose one of the options:\n");
+        menu = menu.concat("1) Create Shift\n");
+        menu = menu.concat("2) Edit Shift\n");
+        while (true) {
+            System.out.println(menu);
+            Integer option = getNextInt(sc);
+            switch (option) {
+                case 1:
+                    return true;
+                case 2:
+                    return false;
+                default:
+                    System.out.println("Option not valid, please retype");
+            }
+        }
+    }
+    private static void printRemovePositionFromShift() {
+        String output=null;
+        System.out.println("Enter a position:");
+        String pos=WnextLine();
+        output=branchController.removePositionFromShift(pos);
+        if(output!=null)
+            System.out.println(output);
+    }
+
+    private static void printAddWorkerToShift() {
+        System.out.println("Enter position to be occupied:");
+        String pos=WnextLine();
+        int i=0;
+        Stream<ModelWorker> smw= branchController.getCurrentEditedModelShift().availableWorkers.stream().filter((mw)->mw.positions.contains(pos));
+        ModelWorker[] relevantWorkers=smw.toArray(size-> new ModelWorker[size]);
+        if(relevantWorkers.length>0) {
+            System.out.println("Available workers for this position:");
+            for (ModelWorker mw : relevantWorkers) {
+                System.out.println(i + "." + mw.name);
+                i++;
+            }
+            int num = -1;
+            while(num<0|num>=relevantWorkers.length)
+            {
+                System.out.println("Choose number of worker:");
+                num=WnextInt();
+            }
+            String output=branchController.addWorkerToPositionInShift(pos,relevantWorkers[num].id);
+            if(output!=null)
+                System.out.println(output);
+        }
+        else
+            System.out.println("No Available workers for this position");
+    }
+    private static void printAddPositionToShift() {
+        String output=null;
+        System.out.println("Enter a position:");
+        String pos=WnextLine();
+        System.out.println("Enter quantity of workers required fot this position in this shift:");
+        int quantity=WnextInt();
+        output=branchController.addPositionToShift(pos,quantity);
+        if(output!=null)
+            System.out.println(output);
+    }
+
+    //endregion
+    //endregion
+    //endregion
+    //region Manage Availability
+
+
+    private static void printManageWorkersAvailability() {
+        String id=selectWorker();
+        if(id!=null)
+        {
+            boolean goBack=false;
+            while(!goBack)
+            {
+                System.out.println("Choose an option:");
+                System.out.println("1.Mark worker available for shift");
+                System.out.println("2.Unmark worker available for shift");
+                System.out.println("3.Finish");
+                int opt=WnextInt();
+                switch (opt){
+                    case(1):
+                        MarkWorkerAvailbleForShift(id);
+                        break;
+                    case(2):
+                        UnmarkWorkerAvailbleForShift(id);
+                        break;
+                    case(3):
+                        goBack=true;
+                        break;
+
+                }
+            }
+        }
+    }
+
+    //region Manage Availabilty mehtods
+
+    private static void UnmarkWorkerAvailbleForShift(String id) {
+        System.out.println("Enter shift date");
+        Date date=getDateFromUser();
+        boolean timeOfday = getTimeOfDayFromUser();
+        String output=branchController.removeAvailableWorker(date,timeOfday,id);
+        if(output!=null)
+            System.out.println(output);
+    }
+    private static void MarkWorkerAvailbleForShift(String id) {
+        System.out.println("Enter shift date");
+        Date date=getDateFromUser();
+        boolean timeOfday = getTimeOfDayFromUser();
+        branchController.addAvailableWorker(date,timeOfday,id);
+    }
+    //endregion
+    //endregion
     //endregion
     //endregion
     //region manageWorkers
@@ -1977,7 +2129,17 @@ public class CLController {
 
     //endregion
     //endregion
-    //region additional methods
+    //region additional
+    private static boolean getTimeOfDayFromUser() {
+        int opt = 0;
+        while (opt < 1 | opt > 2) {
+            System.out.println("Choose shift:");
+            System.out.println("1.Morning Shift");
+            System.out.println("2.Night shift");
+            opt = WnextInt();
+        }
+        return opt == 1;
+    }
     public static String WnextLine(){
         sc.skip("\\R");
         return sc.nextLine();
