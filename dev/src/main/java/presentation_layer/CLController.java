@@ -3,6 +3,7 @@ package presentation_layer;
 import bussines_layer.Branch;
 import bussines_layer.BranchController;
 import bussines_layer.Result;
+import bussines_layer.employees_module.models.ModelWorker;
 import bussines_layer.inventory_module.Category;
 import bussines_layer.inventory_module.Report;
 import bussines_layer.inventory_module.Sale;
@@ -1770,6 +1771,31 @@ public class CLController {
             }
         }
     }
+    //region HumanResourceMethods
+    //region manageWorkers
+    private static void printAddWorker() {
+        System.out.println("Please enter name:");
+        String name=WnextLine();
+        System.out.println("Please enter salary:");
+        double salary=WnextDouble();
+        System.out.println("Please enter positions separated by comma:");
+        String pos=WnextLine();
+        List<String> positions= Arrays.asList(pos.split(","));
+        Date date = getDateFromUser();
+        String output=rc.addWorker(name,salary,date,positions);
+        if(output!=null)
+            System.out.println(output);
+    }
+
+    private static void displayWorkers() {
+        int i=0;
+        for(ModelWorker mw:branchController.displayWorkers())
+        {
+            System.out.println(i+":"+mw.toString());
+            i++;
+        }
+    }
+    //endregion
 
     //TODO complete functions
     private static void printManageScheduleMenu() {
@@ -1842,6 +1868,41 @@ public class CLController {
             }
         }
     }
+    //region additional methods
+    public static String WnextLine(){
+        sc.skip("\\R");
+        return sc.nextLine();
+    }
+    public static int WnextInt(){
+        try
+        {
+            return sc.nextInt();
+        }
+        catch (InputMismatchException e)
+        {
+            sc.next();
+            return -1;
+        }
+    }
+    public static double WnextDouble(){
+        try
+        {
+            return sc.nextDouble();
+        }
+        catch (InputMismatchException e)
+        {
+            sc.next();
+            return -1;
+        }
+    }
+    public static String Wnext()
+    {
+        return sc.next();
+    }
+
+    //endregion
+
+    //endregion
     //endregion
 
     //region Logistic Management

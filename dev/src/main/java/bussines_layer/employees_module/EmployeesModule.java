@@ -154,7 +154,7 @@ public class EmployeesModule {
     {
         return roster.editName(newName,id);
     }
-    public String editSalry(double newSalary,String id)
+    public String editSalary(double newSalary,String id)
     {
         return roster.editSalary(newSalary,id);
     }
