@@ -2645,6 +2645,87 @@ public class CLController {
         branchController.createTruck("J0-38AV","1X6ZA",700,1000,"C");
         branchController.createTruck("12345678", "XX32", 1000, 2550, "C4");
 
+
+//---------------------------------------------
+
+
+        //workers
+
+            //constants
+             final boolean morning=true;
+             final boolean night=false;
+
+        List<String>positions1=new ArrayList<>();
+        positions1.add("manager");
+        positions1.add("storage man");
+        List<String>positions2=new ArrayList<>();
+        positions2.add("manager");
+
+        Date startDate1=parseDate("11/04/2020");
+        Date startDate2=parseDate("12/04/2020");
+
+        String WID1 = "0000-0000-0000-0001";
+        String WID2 = "0000-0000-0000-0002";
+        String WID3 = "0000-0000-0000-0003";
+        String WID4 = "0000-0000-0000-0004";
+        String WID5 = "0000-0000-0000-0005";
+        String WID6 = "0000-0000-0000-0006";
+        String WID7 = "0000-0000-0000-0007";
+
+
+        branchController.initAddWorker(WID1,"Gil",16,startDate1,positions1);
+        branchController.initAddWorker(WID2,"Sharon",15.9,startDate2,positions2);
+        branchController.initAddDriver(WID3,"Moshe",10,startDate1,"C4");
+        branchController.initAddDriver(WID4,"Dani",100,startDate2,"C");
+        branchController.initAddDriver(WID5,"Gadi",100,startDate2,"C1");
+
+        positions2.add("security guard");
+
+        branchController.initAddWorker(WID6,"Avi",100,startDate1,positions2);
+
+
+        List<String>positions3=new ArrayList<>();
+        positions3.add("storage man");
+        positions3.add("cashier");
+        branchController.initAddWorker(WID7,"bob",100,startDate1,positions3);
+
+
+        Date shiftDate1=parseDate("20/05/2020");
+        Date shiftDate2=parseDate("21/05/2020");
+
+        branchController.addAvailableWorker(shiftDate1,morning,WID1);
+        branchController.addAvailableWorker(shiftDate1,morning,WID7);
+        branchController.addAvailableWorker(shiftDate1,morning,WID3);
+        branchController.addAvailableWorker(shiftDate1,morning,WID4);
+
+        branchController.addAvailableWorker(shiftDate2,morning,WID1);
+        branchController.addAvailableWorker(shiftDate2,morning,WID2);
+        branchController.addAvailableWorker(shiftDate2,morning,WID3);
+        branchController.addAvailableWorker(shiftDate2,morning,WID4);
+        branchController.addAvailableWorker(shiftDate2,morning,WID5);
+        branchController.addAvailableWorker(shiftDate2,morning,WID6);
+        branchController.addAvailableWorker(shiftDate2,morning,WID7);
+
+        branchController.createShift(shiftDate1,morning);
+
+
+        branchController.addPositionToShift("cashier",1);
+        branchController.addWorkerToPositionInShift("manager",WID1);
+        branchController.addWorkerToPositionInShift("cashier",WID7);
+        branchController.submitShift();
+
+        branchController.createShift(shiftDate2,morning);
+
+        branchController.addPositionToShift("driver",1);
+        branchController.addPositionToShift("storage man",1);
+        branchController.addPositionToShift("security guard",1);
+        branchController.addPositionToShift("cashier",1);
+        branchController.addWorkerToPositionInShift("manager",WID2);
+        branchController.addWorkerToPositionInShift("storage man",WID1);
+        branchController.addWorkerToPositionInShift("security guard",WID6);
+        branchController.addWorkerToPositionInShift("cashier",WID7);
+        branchController.submitShift();
+
     }
     //endregion
 }

@@ -610,9 +610,17 @@ public class BranchController {
     {
         return currBranch.addWorker(name,salary,startDate,positions);
     }
+    public String initAddWorker(String id, String name, double salary, Date startDate,List<String>positions)
+    {
+        return currBranch.initAddWorker(id, name, salary, startDate, positions);
+    }
     public String addDriver(String name, double salary, Date startDate,String license)
     {
         return currBranch.addDriver(name,salary,startDate,license);
+    }
+    public String initAddDriver(String id, String name, double salary, Date startDate,String license)
+    {
+        return currBranch.initAddDriver(id,name,salary,startDate,license);
     }
     public String removeWorker(String id)
     {

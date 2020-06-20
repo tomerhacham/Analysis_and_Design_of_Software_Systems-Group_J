@@ -36,7 +36,20 @@ public class Roster {
             return "Invalid license input";
         Driver driver= new Driver(uuid.toString(),branch_id,license,name,startDate,salary);
         workers.add(driver);
-       mapper.addDriver(driver);
+        mapper.addDriver(driver);
+        return null;
+    }
+
+    public String initAddDriver(String id, String name, double salary, Date startDate, String license, Integer branch_id)
+    {
+        String output = checkNewWorkerInputValidity(name, salary, startDate);
+        if (output != null)
+            return output;
+        if(license==null||license.length()==0)
+            return "Invalid license input";
+        Driver driver= new Driver(id,branch_id,license,name,startDate,salary);
+        workers.add(driver);
+        mapper.addDriver(driver);
         return null;
     }
 
@@ -46,6 +59,22 @@ public class Roster {
         String output = checkNewWorkerInputValidity(name, salary, startDate);
         if (output != null) return output;
         Worker w=new Worker(name,uuid.toString(),branch_id,startDate,salary);
+        workers.add(w);
+        if(positions!=null) {
+            for (String pos : positions) {
+                if(!pos.toLowerCase().equals("driver"))
+                    w.addPosition(pos);
+            }
+        }
+        mapper.addWorker(w);
+        return null;
+    }
+
+    public String initAddWorker(String id,String name, double salary, Date startDate,Integer branch_id, List<String> positions)
+    {
+        String output = checkNewWorkerInputValidity(name, salary, startDate);
+        if (output != null) return output;
+        Worker w=new Worker(name,id,branch_id,startDate,salary);
         workers.add(w);
         if(positions!=null) {
             for (String pos : positions) {

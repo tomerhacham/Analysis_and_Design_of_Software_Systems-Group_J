@@ -4,6 +4,8 @@ import bussines_layer.employees_module.models.ModelShift;
 import bussines_layer.employees_module.models.ModelWorker;
 import bussines_layer.transport_module.TransportModule;
 
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -174,9 +176,17 @@ public class EmployeesModule {
     {
         return roster.addWorker(name,salary,startDate,branch_id,positions);
     }
+    public String initAddWorker(String id, String name, double salary, Date startDate,List<String>positions)
+    {
+        return roster.initAddWorker(id,name,salary,startDate,branch_id,positions);
+    }
     public String addDriver(String name, double salary, Date startDate,String license)
     {
         return roster.addDriver(name,salary,startDate,license,branch_id);
+    }
+    public String initAddDriver(String id,String name, double salary, Date startDate,String license)
+    {
+        return roster.initAddDriver(id,name,salary,startDate,license,branch_id);
     }
     public String removeWorker(String id)
     {
@@ -184,5 +194,101 @@ public class EmployeesModule {
     }
 
 
+    public static Date parseDate(String date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date1=null;
+        try {
+            //Parsing the String
+            date1 = dateFormat.parse(date);
+        } catch (ParseException e) {
+
+        }
+        return date1;
+    }
+
+
 //endregion
+
+
+    public void initData()
+    {
+        List<String>positions1=new ArrayList<>();
+        positions1.add("manager");
+        positions1.add("storage man");
+        List<String>positions2=new ArrayList<>();
+        positions2.add("manager");
+
+        Date startDate1=parseDate("11/04/2020");
+        Date startDate2=parseDate("12/04/2020");
+
+        String WID1 = "0000-0000-0000-0001";
+        String WID2 = "0000-0000-0000-0002";
+        String WID3 = "0000-0000-0000-0003";
+        String WID4 = "0000-0000-0000-0004";
+        String WID5 = "0000-0000-0000-0005";
+        String WID6 = "0000-0000-0000-0006";
+        String WID7 = "0000-0000-0000-0007";
+
+
+        roster.initAddWorker(WID1,"Gil",16,startDate1,branch_id,positions1);
+        roster.initAddWorker(WID2,"Sharon",15.9,startDate2,branch_id,positions2);
+        roster.initAddDriver(WID3,"Moshe",10,startDate1,"C4",branch_id);
+        roster.initAddDriver(WID4,"Dani",100,startDate2,"C",branch_id);
+        roster.initAddDriver(WID5,"Gadi",100,startDate2,"C1",branch_id);
+
+        positions2.add("security guard");
+
+        roster.initAddWorker(WID6,"Avi",100,startDate1,branch_id,positions2);
+
+
+        List<String>positions3=new ArrayList<>();
+        positions3.add("storage man");
+        positions3.add("cashier");
+        roster.initAddWorker(WID7,"bob",100,startDate1,branch_id,positions3);
+
+
+        Date shiftDate1=parseDate("20/05/2020");
+        Date shiftDate2=parseDate("21/05/2020");
+
+        addAvailableWorker(shiftDate1,morning,WID1);
+        addAvailableWorker(shiftDate1,morning,WID7);
+        addAvailableWorker(shiftDate1,morning,WID3);
+        addAvailableWorker(shiftDate1,morning,WID4);
+
+        addAvailableWorker(shiftDate2,morning,WID1);
+        addAvailableWorker(shiftDate2,morning,WID2);
+        addAvailableWorker(shiftDate2,morning,WID3);
+        addAvailableWorker(shiftDate2,morning,WID4);
+        addAvailableWorker(shiftDate2,morning,WID5);
+        addAvailableWorker(shiftDate2,morning,WID6);
+        addAvailableWorker(shiftDate2,morning,WID7);
+
+        createShift(shiftDate1,morning);
+
+
+        addPositionToShift("cashier",1);
+        addWorkerToPositionInShift("manager",WID1);
+        addWorkerToPositionInShift("cashier",WID7);
+        submitShift();
+
+        createShift(shiftDate2,morning);
+
+        addPositionToShift("driver",1);
+        addPositionToShift("storage man",1);
+        addPositionToShift("security guard",1);
+        addPositionToShift("cashier",1);
+        addWorkerToPositionInShift("manager",WID2);
+        addWorkerToPositionInShift("storage man",WID1);
+        addWorkerToPositionInShift("security guard",WID6);
+        addWorkerToPositionInShift("cashier",WID7);
+        submitShift();
+
+
+//        editShift(shiftDate2,morning);
+//        scheduler.getCurrentEditedShift().removeWorkerFromPosition("driver",workers.get(2).id,scheduler.cloneAvailableWorkersForShift());
+//        this.submitShift();
+//        scheduler.removeDriverFromTransport(shiftDate2,morning,workers.get(3).id);
+    }
+
+
 }

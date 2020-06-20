@@ -510,6 +510,15 @@ public class Branch {
         return employeesModule.removeWorker(id);
     }
 
+
+    public String initAddWorker(String id, String name, double salary, Date startDate,List<String>positions){
+        return employeesModule.initAddWorker(id, name, salary, startDate, positions);
+    }
+
+    public String initAddDriver(String id, String name, double salary, Date startDate,String license){
+        return  employeesModule.initAddDriver(id, name, salary, startDate, license);
+    }
+
     //endregion
 }
 

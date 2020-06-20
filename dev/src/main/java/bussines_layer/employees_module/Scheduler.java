@@ -14,9 +14,8 @@ public class Scheduler {
     private Mapper mapper=Mapper.getInstance();
     private Roster roster;
 
-    //constants (magic)
-    private static final boolean morning=true;
     private static final boolean night=false;
+    private static final boolean morning=true;
 
 
     public Scheduler() {
@@ -693,7 +692,6 @@ public class Scheduler {
 
     public void setRoster(Roster roster) {
         this.roster=roster;
-
     }
 
 //endregion
