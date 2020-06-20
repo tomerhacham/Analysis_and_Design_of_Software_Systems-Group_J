@@ -319,6 +319,8 @@ public class Branch {
     public void loadData(){
         this.inventory=new Inventory(this.branch_id);
         this.supplierModule = new SupplierModule(branch_id);
+        this.employeesModule=new EmployeesModule(branch_id);
+        this.transportModule=new TransportModule(branch_id);
     }
     @Override
     public String toString() {

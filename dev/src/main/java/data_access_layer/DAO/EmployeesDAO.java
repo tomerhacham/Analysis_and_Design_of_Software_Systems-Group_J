@@ -337,4 +337,6 @@ public class EmployeesDAO {
             return null;
         }
     }
+    public void clearCache() {
+        this.identityMap_workers.clear();this.identityMap_drivers.clear();    }
 }
