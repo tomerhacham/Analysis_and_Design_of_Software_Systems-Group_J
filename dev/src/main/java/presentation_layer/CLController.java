@@ -1647,10 +1647,10 @@ public class CLController {
         menu=menu.concat("[supplier ID]");
         System.out.println(menu);
         Integer supplierID = getNextInt(sc);
-        menu = "Order will be made once a week. Choose delivery day (1- Sunday, 6- Friday):";
+        menu = "Order will be made once a week. Choose delivery day (1- Sunday, 7- Saturday):";
         System.out.println(menu);
         Integer day = getNextInt(sc);
-        if (day >= 1 && day <= 6) {
+        if (day >= 1 && day <= 7) {
             day--;
             if (printEnterProductsToPOrder(products)) {
                 Result res = branchController.createPeriodicOrder(supplierID, products, day);
