@@ -1154,13 +1154,13 @@ public class CLController {
                 menu=menu.concat("[category_id],[manufacture],[retail_price],[min_quantity],[name][weight]");
                 System.out.println(menu);
                 String[] addDetails = getInputParserbyComma(sc);
-                if (addDetails.length == 6 && addDetails[0].matches("[0-9]+") && addDetails[3].matches("[0-9]+") && addDetails[5].matches("[0-9]+")){
+                if (addDetails.length == 6 && addDetails[0].matches("[0-9]+") && addDetails[3].matches("[0-9]+") && floatParse(addDetails[5])!=(-1)){
                     Integer category_id = Integer.parseInt(addDetails[0]);
                     String manufacture = addDetails[1];
                     Float ret_price = Float.parseFloat(addDetails[2]);
                     Integer min_quan = Integer.parseInt(addDetails[3]);
                     String name = addDetails[4];
-                    Float weight = Float.parseFloat(addDetails[5]);
+                    Float weight = floatParse(addDetails[5]);
                     result = branchController.addGeneralProduct(category_id,manufacture,name,sup_price,ret_price,min_quan,catalogID,gpID,supID,sup_cat, weight);
                     System.out.println(result.getMessage());
                     result = branchController.addProductToContract(supID,catalogID,gpID,sup_price,sup_cat);

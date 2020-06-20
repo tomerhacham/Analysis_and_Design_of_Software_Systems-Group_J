@@ -304,9 +304,7 @@ public class SupplierModule {
         return new Result<>(true , periodicOrder , String.format("Order %d updated successfully", orderID));
     }
 
-    public Result<LinkedList<String>> issuePeriodicOrder(){
-
-        //TODO
+    public Result<LinkedList<Order>> issuePeriodicOrder(){
         return ordersController.issuePeriodicOrder();
     }
 

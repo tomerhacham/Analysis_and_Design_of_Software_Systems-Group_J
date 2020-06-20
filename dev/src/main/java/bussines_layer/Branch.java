@@ -6,6 +6,7 @@ import bussines_layer.employees_module.models.ModelWorker;
 import bussines_layer.enums.supplierType;
 import bussines_layer.inventory_module.*;
 import bussines_layer.supplier_module.Order;
+import bussines_layer.supplier_module.OrdersController;
 import bussines_layer.supplier_module.SupplierModule;
 import bussines_layer.transport_module.TransportModule;
 import data_access_layer.DTO.BranchDTO;
@@ -281,15 +282,24 @@ public class Branch {
 
     public Result<LinkedList<String>> issuePeriodicOrder(){
 
-        Result<LinkedList<String>> result = supplierModule.issuePeriodicOrder();
+        Result<LinkedList<Order>> resultOrdersToIssue = supplierModule.issuePeriodicOrder();
+        String str = "";
 
-        if(!result.isOK()) {
-            return result;
+        if(!resultOrdersToIssue.isOK()) {
+            LinkedList<String> toreturn = new LinkedList<>();
+            toreturn.add(resultOrdersToIssue.getMessage());
+            return new Result<>(false ,  toreturn, "There are no periodic orders to issue");
         }
+
+        for (Order order:resultOrdersToIssue.getData()) {
+            str = str.concat(order.display().getData());
+            str = str.concat(bookTransportOrder(order).getData());
+        }
+
         LinkedList<String> branchPeriodicOrders = new LinkedList<>();
         branchPeriodicOrders.add("-------------------Branch : "+name+"-------------------\n");
         branchPeriodicOrders.add("Last Notice ! Don't forget to send those orders to the supplier !\n");
-        branchPeriodicOrders.addAll(result.getData());
+        branchPeriodicOrders.add(str);
         branchPeriodicOrders.add("-------------------------------------------------------\n");
         return new Result<>(true,branchPeriodicOrders, String.format("All periodic orders with %d as their delivery day had been sent to order", BranchController.system_curr_date.getDay()+1));
     }
