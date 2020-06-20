@@ -5,6 +5,7 @@ import bussines_layer.BranchController;
 import bussines_layer.Result;
 import bussines_layer.employees_module.models.ModelShift;
 import bussines_layer.employees_module.models.ModelWorker;
+import bussines_layer.employees_module.models.MyScanner;
 import bussines_layer.inventory_module.Category;
 import bussines_layer.inventory_module.Report;
 import bussines_layer.inventory_module.Sale;
@@ -21,6 +22,7 @@ public class CLController {
 
     private static Scanner sc;
     private static BranchController branchController;
+
 
     public CLController(){
         sc = new Scanner(System.in);    //System.in is a standard input stream
@@ -1709,11 +1711,7 @@ public class CLController {
     //endregion
 
     //region Human Resources Management
-    //TODO complete functions
-    //TODO complete functions
 
-
-    //TODO complete functions
     public static void printHumanResourcesManagementMenu() {
         String menu = "";
         menu = menu.concat("\nChoose one of the options:\n");
@@ -1744,6 +1742,7 @@ public class CLController {
             }
         }
     }
+
     //region Schedule
     private static void printManageScheduleMenu() {
         String menu = "";
@@ -1972,6 +1971,7 @@ public class CLController {
     }
     //endregion
 
+    //endregion
     //region manageWorkers
 
     private static void printManageWorkersMenu() {
@@ -2012,7 +2012,6 @@ public class CLController {
             }
         }
     }
-
 
     //region Manage Worker Methods
     private static void printEditWorker() {
@@ -2134,6 +2133,8 @@ public class CLController {
 
     //endregion
     //endregion
+
+
     //region additional
     private static boolean getTimeOfDayFromUser() {
         int opt = 0;
@@ -2146,13 +2147,15 @@ public class CLController {
         return opt == 1;
     }
     public static String WnextLine(){
-        sc.skip("\\R");
+        while (!sc.hasNext()) {}
         return sc.nextLine();
     }
     public static int WnextInt(){
         try
         {
-            return sc.nextInt();
+            int output= sc.nextInt();
+            sc.nextLine();
+            return  output;
         }
         catch (InputMismatchException e)
         {
@@ -2163,7 +2166,9 @@ public class CLController {
     public static double WnextDouble(){
         try
         {
-            return sc.nextDouble();
+            double output= sc.nextDouble();
+            sc.nextLine();
+            return  output;
         }
         catch (InputMismatchException e)
         {
@@ -2179,7 +2184,7 @@ public class CLController {
         Date date=null;
         while(date==null) {
             System.out.println("Please enter Date in format of:dd/MM/yyyy");
-            String dateStr = Wnext();
+            String dateStr = WnextLine();
             date=parseDate(dateStr);
         }
         return date;
@@ -2211,7 +2216,7 @@ public class CLController {
 
     //endregion
 
-    //endregion
+
     //endregion
 
 
