@@ -120,7 +120,7 @@ public class TransportController {
 
     public Boolean isTransportExist(Date d, Boolean partOfDay)
     {
-        return mapper.getTransportByShift(d, partOfDay, branch_id) != null;
+        return mapper.getTransportByShift(d, partOfDay, branch_id) ;
     }
 
     public String getTransportDriverID(int TransportID)

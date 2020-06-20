@@ -195,7 +195,7 @@ public class TransportDAO {
             return false;
         }catch (SQLException throwables) {
             throwables.printStackTrace();
-            return null;
+            return false;
         }
     }
 
