@@ -3,6 +3,7 @@ package bussines_layer.supplier_module;
 import bussines_layer.Result;
 import bussines_layer.SupplierCard;
 import bussines_layer.enums.OrderType;
+import bussines_layer.enums.supplierType;
 import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.inventory_module.GeneralProduct;
 import bussines_layer.inventory_module.Report;
@@ -199,6 +200,7 @@ public class SupplierModule {
         if (!contractResult.isOK()){
             return new Result<>(false, null, String.format("Supplier %d does not exist", supplierID));
         }
+        if(!contractResult.getData().getSupplier().getFix_day().equals(dayToDeliver)){ return new Result<>(false, null, String.format("Supplier %d does not supply at the day:%d", supplierID,dayToDeliver));}
         //Check if supplier supplies all products
         for (Pair<GeneralProduct,Integer> pair : productsAndQuantity) {
             CatalogProduct cp = pair.getKey().getSupplierCatalogProduct(supplierID);
@@ -281,6 +283,13 @@ public class SupplierModule {
         Order periodicOrder = result.getData();
         Contract contract = contractController.findContract(supplierID).getData();
         Result<CatalogProduct> resultProduct;
+        //check fix_day
+        if(contract.getSupplier().getType().equals(supplierType.fix_days)){
+            if (!periodicOrder.getDayToDeliver().equals(contract.getSupplier().getFix_day())){
+                return new Result<>(false, null, String.format("Supplier %d does not supply at the day:%d", supplierID,periodicOrder.getDayToDeliver()));
+            }
+
+        }
         //getProductPriceConsideringQuantity
         for (CatalogProduct product : periodicOrder.getProductsAndQuantity().keySet()){
             resultProduct = contract.isProductExist(product);

@@ -237,7 +237,7 @@ public class Branch {
         return new Result( false , resultOrder.getMessage() , "");
     }
 
-    public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<Integer , Integer>> productsAndQuantity , Integer date){
+    public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<Integer , Integer>> productsAndQuantity , Integer day){
         LinkedList<Pair<GeneralProduct,Integer>> products = new LinkedList<>();
         for (Pair<Integer,Integer> p : productsAndQuantity){
             Result<GeneralProduct> result = inventory.searchGeneralProductByGpID(p.getKey());
@@ -246,7 +246,7 @@ public class Branch {
             }
             products.add(new Pair<>(result.getData(),p.getValue()));
         }
-        return supplierModule.createPeriodicOrder(supplierID, products, date);
+        return supplierModule.createPeriodicOrder(supplierID, products, day);
     }
 
     public Result removePeriodicOrder(Integer orderId){
