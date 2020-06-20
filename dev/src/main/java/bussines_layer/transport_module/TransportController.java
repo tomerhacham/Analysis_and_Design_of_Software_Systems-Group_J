@@ -1,5 +1,6 @@
 package bussines_layer.transport_module;
 
+import bussines_layer.enums.OrderStatus;
 import bussines_layer.supplier_module.Order;
 import data_access_layer.Mapper;
 
@@ -17,6 +18,12 @@ public class TransportController {
         branch_id = branchId;
         transports=mapper.getAllTransportsByBranchID(branch_id);
         pending_Orders=mapper.getAllPendingOrdersForBranch(branchId);
+        if (transports == null){
+            transports = new Hashtable<>();
+        }
+        if (pending_Orders == null){
+            pending_Orders = new LinkedList<>();
+        }
     }
 
 
@@ -25,6 +32,8 @@ public class TransportController {
         Transport transport = new Transport(Id_Counter,date,partOfDay,truck,driverId,driverName,totalWeight,order,branch_id);
         transports.put(transport.getID(),transport);
         mapper.addTransport(transport);
+        order.setStatus(OrderStatus.sent);
+        mapper.update(order);
         return transport.toString();
     }
 
@@ -158,6 +167,17 @@ public class TransportController {
         return null;
     }
 
-    //TODO::daily function that delete non relevant orders
-
+    //TODO:: check if works
+    public void updatePendingOrders() {
+        for (int i = 0; i < pending_Orders.size(); i++) {
+            Order o = pending_Orders.get(i);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(o.getIssuedDate());
+            cal.add(Calendar.DATE, 7);
+            Date expDate = cal.getTime();
+            if (o.getIssuedDate().compareTo(expDate) == 0){
+                pending_Orders.remove(i);
+            }
+        }
+    }
 }

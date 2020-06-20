@@ -327,6 +327,7 @@ public class Branch {
                 ", ID:" + branch_id;
     }
 
+    //region Transport Module
     public String getAllTransportsDetails() {
         return transportModule.getAllTransportsDetails();
     }
@@ -354,6 +355,12 @@ public class Branch {
     public String BookTransportForPendingOrders(int orderID) {
         return transportModule.BookTransportForPendingOrders(orderID);
     }
+
+    public void updatePendingOrders() {
+        transportModule.updatePendingOrders();
+    }
+    //endregion
+
     //region Employee Module
     private static final boolean morning=true;
     private static final boolean night=false;

@@ -2294,7 +2294,6 @@ public class CLController {
         }
     }
 
-    //TODO check for illegal input
     private static void createTruck() {
         String menu = "Please enter the following details:\n";
         menu = menu.concat("[License plate],[Model],[Driver license],[net weight],[max weight]");
@@ -2306,14 +2305,20 @@ public class CLController {
             String drivers_license = param[2];
             float netWeight = floatParse(param[3]);
             float maxWeight = floatParse(param[4]);
-            boolean created = branchController.createTruck(license_plate, model, netWeight, maxWeight, drivers_license);
-            while (!created){   //check that the maxWeight is bigger than the net weight
-                System.out.println("Max weight should be bigger than net weight. Please enter max weight again.");
-                maxWeight = floatParse(sc.nextLine());
-                created = branchController.createTruck(license_plate, model, netWeight, maxWeight, drivers_license);
+            if (netWeight != -1 && maxWeight != -1) {
+                boolean created = branchController.createTruck(license_plate, model, netWeight, maxWeight, drivers_license);
+                while (!created) {   //check that the maxWeight is bigger than the net weight
+                    System.out.println("Max weight should be bigger than net weight. Please enter max weight again.");
+                    maxWeight = floatParse(sc.nextLine());
+                    created = branchController.createTruck(license_plate, model, netWeight, maxWeight, drivers_license);
+                }
+                System.out.println("\nThe truck added successfully.\n");
             }
-            System.out.println("\nThe truck added successfully.\n");
-        } else {
+            else {
+                System.out.println("Invalid input. Operation canceled.");
+            }
+        }
+        else {
             System.out.println("Invalid numbers of parameters");
         }
 
@@ -2423,14 +2428,14 @@ public class CLController {
 
     private static float floatParse(String s){
         float ret;
-        while (true) {
-            try {
-                ret = Float.parseFloat(s);
-                return ret;
-            } catch (Exception e) {
-                System.out.println("Invalid operation. Try Again.");
-                s = sc.nextLine();
+        try {
+            ret = Float.parseFloat(s);
+            if (ret < 0){
+                return -1;
             }
+            return ret;
+        } catch (Exception e) {
+            return -1;
         }
     }
 
@@ -2621,8 +2626,16 @@ public class CLController {
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Fish");
 
 
+//-------------------------------------------
 
-
+        // trucks
+        branchController.createTruck("12-L8","XXX",1000,1800,"C4");
+        branchController.createTruck("17-LD","X23",1050,2260,"C1");
+        branchController.createTruck("J0-38","1X6",700,1500,"C");
+        branchController.createTruck("12-23FF","XXL8",1000,2600,"C1");
+        branchController.createTruck("17-45LD","X24",1050,3260,"C1");
+        branchController.createTruck("J0-38AV","1X6ZA",700,1000,"C");
+        branchController.createTruck("12345678", "XX32", 1000, 2550, "C4");
 
     }
     //endregion

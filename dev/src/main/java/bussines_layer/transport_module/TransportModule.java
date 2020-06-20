@@ -1,7 +1,10 @@
 package bussines_layer.transport_module;
 import bussines_layer.employees_module.EmployeesModule;
+import bussines_layer.enums.OrderStatus;
+import bussines_layer.enums.OrderType;
 import bussines_layer.supplier_module.Order;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -28,40 +31,58 @@ public class TransportModule {
 
     public String BookTransport(Order order)
     {
-        Date date = order.getIssuedDate();
-        boolean shift ;
-        int totalWeight=0; //TODO::: ORDER / FUNCTION
-        for(int i=1; i<=7; i++)
-        {
-            //check storage man
-            if(checkIfStorageManInMorningShift(date))
-                shift=true;
-            else if (checkIfStorageManInNightShift(date))
-                shift =false;
-            else
-                continue;
-            //check driver availability
-            if(!checkIfDriversAndTrucksAvailable(date,shift))
-                continue;
-
-            List<Truck> trucks =  truckController.getAvailableTrucks(date,shift, totalWeight);
-            if(trucks.isEmpty())
-                continue;
-            for (Truck truck:trucks) {
-                String DriverId = employeesModule.chooseDriverForTransport(date, shift, truck.getDrivers_license());
-                if(DriverId == null)
+        int totalWeight= 0; //TODO::: ORDER / FUNCTION
+        if (order.getType() == OrderType.OutOfStockOrder) {
+            Date date = order.getIssuedDate();
+            for (int i = 1; i <= 7; i++) {
+                Date today = new Date();
+                if (today.after(date))
                     continue;
-                String DriverName = employeesModule.getDriverName(DriverId);
-                truckController.addDate(date,shift, truck.getId());
-                return transportController.BookTransport(date,shift,truck,DriverId,DriverName,totalWeight,order);
+                String ans = createTransport(date,totalWeight, order);
+                if(!ans.equals(""))
+                    return ans;
+                date = addDay(date);
             }
-            date = addDay(date);
+            transportController.addToPendingOrder(order);
+            return "The transport book - Failed!\n The order moved to pending list. \n" +
+                    "please ensure that there are available storage man, driver and a truck for further treatment.";
         }
-        transportController.addToPendingOrder(order);
-        return "The transport book - Failed!\n The order moved to pending list. \n" +
-                "please ensure that there are available storage man, driver and a truck for further treatment.";
+        else {
+            Date today = new Date();
+            String ans = createTransport(addDay(today),totalWeight, order);
+            if(!ans.equals(""))
+                return ans;
+            return "The transport book - Failed!\n Periodic order has not been issued";
+        }
     }
 
+    private String createTransport(Date date, float totalWeight, Order order)
+    {
+        boolean shift ;
+        //check storage man
+        if (checkIfStorageManInMorningShift(date))
+            shift = true;
+        else if (checkIfStorageManInNightShift(date))
+            shift = false;
+        else
+            return "";
+        //check driver availability
+        if (!checkIfDriversAndTrucksAvailable(date, shift))
+            return "";
+
+        List<Truck> trucks = truckController.getAvailableTrucks(date, shift, totalWeight);
+        if (trucks.isEmpty())
+            return "";
+        for (Truck truck : trucks) {
+            String DriverId = employeesModule.chooseDriverForTransport(date, shift, truck.getDrivers_license());
+            if (DriverId == null)
+                continue;
+            String DriverName = employeesModule.getDriverName(DriverId);
+            truckController.addDate(date, shift, truck.getId());
+            return transportController.BookTransport(date, shift, truck, DriverId, DriverName, totalWeight, order);
+        }
+        return "";
+    }
     //TODO: check if works
     public Date addDay(Date date)
     {
@@ -129,6 +150,10 @@ public class TransportModule {
             return BookTransport(order);
         }
         return "The order with id:"+order_id+"is not in the pending orders list.";
+    }
+
+    public void updatePendingOrders() {
+        transportController.updatePendingOrders();
     }
     //endregion
 
