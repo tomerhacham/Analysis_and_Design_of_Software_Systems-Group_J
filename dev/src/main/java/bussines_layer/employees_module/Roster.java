@@ -11,19 +11,15 @@ import java.util.UUID;
 
 public class Roster {
     private List<Worker>workers;
-    private static Roster roster;
     private Mapper mapper = Mapper.getInstance();
+    private Scheduler scheduler;
 
-    private Roster() {
+    public Roster() {
         workers=new ArrayList<>();
+        scheduler=new Scheduler();
+
     }
 
-    public static Roster getInstance()
-    {
-        if(roster==null)
-            roster=new Roster();
-        return roster;
-    }
 
 
     public void init(Integer branch_id) {
@@ -40,7 +36,7 @@ public class Roster {
             return "Invalid license input";
         Driver driver= new Driver(uuid.toString(),branch_id,license,name,startDate,salary);
         workers.add(driver);
-        Mapper.getInstance().addDriver(driver);
+       mapper.addDriver(driver);
         return null;
     }
 
@@ -89,8 +85,8 @@ public class Roster {
         return null;
     }
 
-    public List<Worker> getWorkers() {
-        List<Worker> exisitingWorkers=mapper.getAllWorkers();
+    public List<Worker> getWorkers(Integer branch_id) {
+        List<Worker> exisitingWorkers=mapper.getAllWorkersByBranch(branch_id);
         if(exisitingWorkers!=null)
         {
             for(Worker ew:exisitingWorkers) {
@@ -160,7 +156,7 @@ public class Roster {
         if(worker==null)
             return "The worker does not exist";
         String position = pos.toLowerCase();
-        boolean output=Scheduler.getInstance().isWorkerScheduled(worker.getId(),branch_id);
+        boolean output=scheduler.isWorkerScheduled(worker.getId(),branch_id);
         if(output)
             return  "unable to remove the position because the worker is scheduled for shifts";
         worker.removePosition(position);
@@ -200,4 +196,7 @@ public class Roster {
         }
     }
 
+    public void setScheduler(Scheduler scheduler) {
+        this.scheduler=scheduler;
+    }
 }

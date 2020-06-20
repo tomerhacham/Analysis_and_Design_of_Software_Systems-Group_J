@@ -12,12 +12,16 @@ import java.util.List;
 public class EmployeesModule {
 
     private TransportModule transportModule;
-    private Scheduler scheduler = Scheduler.getInstance();
-    private Roster roster = Roster.getInstance();
+    private Scheduler scheduler;
+    private Roster roster;
     private Integer branch_id;
 
     public EmployeesModule(Integer branch_id) {
         this.branch_id=branch_id;
+        roster=new Roster();
+        scheduler=new Scheduler();
+        scheduler.setRoster(roster);
+        roster.setScheduler(scheduler);
     }
 
     public void init(Integer branch_id)
@@ -136,7 +140,7 @@ public class EmployeesModule {
 
     public List<ModelWorker> displayWorkers()
     {
-        List<Worker> workers=roster.getWorkers();
+        List<Worker> workers=roster.getWorkers(branch_id);
         List<ModelWorker> output=new ArrayList<>();
         for(Worker w:workers)
         {

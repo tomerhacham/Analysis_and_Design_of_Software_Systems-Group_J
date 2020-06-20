@@ -11,27 +11,21 @@ public class Scheduler {
     private TreeSet<WeeklySchedule> schedule;
     private HashMap<Date, Pair<LazyList<Worker>,LazyList<Worker>>> availableWorkers;
     private Shift currentEditedShift;
-    private static Scheduler scheduler;
     private Mapper mapper=Mapper.getInstance();
+    private Roster roster;
 
     //constants (magic)
     private static final boolean morning=true;
     private static final boolean night=false;
 
 
-    private Scheduler() {
+    public Scheduler() {
         schedule=new TreeSet<>((a,b)-> {
             return a.dayStart.compareTo(b.dayStart);
         } );
         availableWorkers=new HashMap<>();
     }
 
-    public static Scheduler getInstance()
-    {
-        if(scheduler==null)
-            scheduler=new Scheduler();
-        return scheduler;
-    }
 
     public void init(Integer branch_id) {
         schedule=new TreeSet<>((a,b)-> {
@@ -313,19 +307,18 @@ public class Scheduler {
 
     private Worker getWorkerById(String id)
     {
-        Roster roster=Roster.getInstance();
         return roster.findWorker(id);
     }
 
     public String removeWorkerFromRoster(String id,Integer branch_id)
     {
-        Worker w=Roster.getInstance().findWorker(id);
+        Worker w=roster.findWorker(id);
         if(w==null)
             return "No such worker is in the system";
         boolean isScheduled = isWorkerScheduled(w.getId(),branch_id);
         if(isScheduled)
             return "Can not remove worker as they are already scheduled to work on shifts\n";
-        Roster.getInstance().removeWorker(id);
+        roster.removeWorker(id);
         removeAvailableWorker(w);
         return null;
     }
@@ -696,6 +689,11 @@ public class Scheduler {
         if(w!=null)
             return w.getName();
         return null;
+    }
+
+    public void setRoster(Roster roster) {
+        this.roster=roster;
+
     }
 
 //endregion
