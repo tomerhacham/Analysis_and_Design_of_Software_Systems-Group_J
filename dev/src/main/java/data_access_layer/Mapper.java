@@ -770,7 +770,6 @@ public class Mapper {
 
     public void updateShift(Shift shift){shifts_dao.updateShift(shift);}
 
-    //TODO:change in business layer all usage of the functions below to receive branch_id
     public Shift getShift(Date date, boolean partOfDay, int branch){return shifts_dao.getShift(date,partOfDay,branch);}
 
     //Worker
