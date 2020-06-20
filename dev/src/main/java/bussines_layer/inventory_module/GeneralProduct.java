@@ -26,7 +26,7 @@ public class GeneralProduct {
     private List<SpecificProduct> products;
     private List<CatalogProduct> catalog_products;
 
-    public GeneralProduct(GeneralProductDTO generalProductDTO) {        //TODO - add weight to DTO and to constructor
+    public GeneralProduct(GeneralProductDTO generalProductDTO) {
         this.category_id=generalProductDTO.getCategory_id();
         this.gpID = generalProductDTO.getGPID();
         this.manufacture = generalProductDTO.getManufacture();
@@ -36,6 +36,7 @@ public class GeneralProduct {
         this.quantity = generalProductDTO.getQuantity();
         this.min_quantity = generalProductDTO.getMin_quantity();
         this.branchId = generalProductDTO.getBranch_id().getBranch_id();
+        this.weight=generalProductDTO.getWeight();
     }
 
     //Constructor

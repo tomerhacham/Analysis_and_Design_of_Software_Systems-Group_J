@@ -24,7 +24,7 @@ public class CatalogProduct {
         this.name = name;
         this.weight = weight;
     }
-    public CatalogProduct(CatalogProductDTO catalogProductDTO){                 //TODO - add to DTO weight and add to the constructor
+    public CatalogProduct(CatalogProductDTO catalogProductDTO){
         this.branch_id=catalogProductDTO.getBranch_id().getBranch_id();
         this.catalogID=catalogProductDTO.getCatalogID();
         this.gpID=catalogProductDTO.getGpID();
@@ -32,6 +32,7 @@ public class CatalogProduct {
         this.supplier_id=catalogProductDTO.getSupplier_id();
         this.supplier_category=catalogProductDTO.getSupplier_category();
         this.name=catalogProductDTO.getName();
+        this.weight=catalogProductDTO.getWeight();
 
     }
 
