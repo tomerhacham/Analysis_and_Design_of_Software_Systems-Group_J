@@ -478,6 +478,8 @@ public class BranchController {
     public String BookTransportForPendingOrders(int orderID) {
         return currBranch.BookTransportForPendingOrders(orderID);
     }
+    //endregion
+
     //region Employee Module
     private static final boolean morning=true;
     private static final boolean night=false;
@@ -599,6 +601,4 @@ public class BranchController {
 
     //endregion
 
-
-    //endregion
 }
