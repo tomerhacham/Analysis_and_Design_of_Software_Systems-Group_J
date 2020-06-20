@@ -9,13 +9,16 @@ import java.util.Date;
 @DatabaseTable(tableName = "pending_orders")
 public class pending_orders_dto {
 
-    @DatabaseField(columnName = "orderID", uniqueCombo = true, canBeNull = false, foreignAutoRefresh = true)
-    private int orderID;
+    @DatabaseField(columnName = "orderID", uniqueCombo = true, canBeNull = false)
+    private Integer orderID;
 
-    @DatabaseField(columnName = "branchID", uniqueCombo = true, canBeNull = false, foreignAutoRefresh = true)
-    private int branchID;
+    @DatabaseField(columnName = "branchID", uniqueCombo = true, canBeNull = false)
+    private Integer branchID;
 
-    public pending_orders_dto(int orderID, int branchID ) {
+    public pending_orders_dto() {
+    }
+
+    public pending_orders_dto(Integer orderID, Integer branchID ) {
         this.orderID=orderID;
         this.branchID=branchID;
     }
@@ -28,11 +31,11 @@ public class pending_orders_dto {
         return orderID;
     }
 
-    public void setBranchID(int branchID) {
+    public void setBranchID(Integer branchID) {
         this.branchID = branchID;
     }
 
-    public void setOrderID(int orderID) {
+    public void setOrderID(Integer orderID) {
         this.orderID = orderID;
     }
 }

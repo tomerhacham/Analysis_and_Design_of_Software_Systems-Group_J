@@ -200,7 +200,7 @@ public class SupplierModule {
         if (!contractResult.isOK()){
             return new Result<>(false, null, String.format("Supplier %d does not exist", supplierID));
         }
-        if(!contractResult.getData().getSupplier().getFix_day().equals(dayToDeliver)){ return new Result<>(false, null, String.format("Supplier %d does not supply at the day:%d", supplierID,dayToDeliver));}
+        if(contractResult.getData().getSupplier().getType().equals(supplierType.fix_days) &&  !(contractResult.getData().getSupplier().getFix_day().equals(dayToDeliver))){ return new Result<>(false, null, String.format("Supplier %d does not supply at the day:%d", supplierID,dayToDeliver));}
         //Check if supplier supplies all products
         for (Pair<GeneralProduct,Integer> pair : productsAndQuantity) {
             CatalogProduct cp = pair.getKey().getSupplierCatalogProduct(supplierID);

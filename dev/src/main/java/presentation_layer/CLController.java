@@ -117,12 +117,12 @@ public class CLController {
 
     private static void printSuperLiMenu() {
         String menu = "";
-        menu = menu.concat("\nChoose one of the options:\n");
-        menu = menu.concat("1) SuperLi Management\n");
-        menu = menu.concat("2) Branch Management\n");
-        menu = menu.concat("3) Inventory Management\n");
-        menu = menu.concat("4) Human Resources Management\n");
-        menu = menu.concat("5) Logistic Management\n");
+        menu = menu.concat("\nChoose your position in our team:\n");
+        menu = menu.concat("1) SuperLi manager\n");
+        menu = menu.concat("2) Branch manager\n");
+        menu = menu.concat("3) Inventory manager\n");
+        menu = menu.concat("4) Human Resources manager\n");
+        menu = menu.concat("5) Logistic manager\n");
         menu = menu.concat("6) Simulate to next day\n");
         menu = menu.concat("7) Exit");
         System.out.println(menu);

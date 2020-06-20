@@ -23,6 +23,7 @@ public class TransportDAO {
     public TransportDAO(ConnectionSource conn) {
         try{
             transport_DAO = DaoManager.createDao(conn, Transport_DTO.class);
+            pending_orders_dao=DaoManager.createDao(conn,pending_orders_dto.class);
             log_DAO = DaoManager.createDao(conn, log_DTO.class);
             identityMap = new HashMap<>();
         } catch (SQLException throwables) {
