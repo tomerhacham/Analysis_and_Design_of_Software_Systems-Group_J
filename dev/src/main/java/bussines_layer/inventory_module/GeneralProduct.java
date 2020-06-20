@@ -20,6 +20,7 @@ public class GeneralProduct {
     private Float sale_price;
     private Integer quantity;
     private Integer min_quantity;
+    private Float weight;
     private Integer branchId;
     private Mapper mapper=Mapper.getInstance();
     private List<SpecificProduct> products;
@@ -35,12 +36,13 @@ public class GeneralProduct {
         this.quantity = generalProductDTO.getQuantity();
         this.min_quantity = generalProductDTO.getMin_quantity();
         this.branchId = generalProductDTO.getBranch_id().getBranch_id();
+        this.weight=generalProductDTO.getWeight();
     }
 
     //Constructor
     public GeneralProduct(String manufacture, String name, Float supplier_price,
                             Float retail_price, Integer min_quantity, Integer catalogID,
-                            Integer gpID, Integer supplier_id, String supplier_category , Integer branchId)
+                            Integer gpID, Integer supplier_id, String supplier_category , Integer branchId , Float weight)
 
     {
         this.manufacture = manufacture;
@@ -53,7 +55,8 @@ public class GeneralProduct {
         this.gpID = gpID;
         this.catalog_products = new LinkedList<>();
         this.branchId = branchId;
-        addCatalogProduct(catalogID, gpID, supplier_price, supplier_id, supplier_category , name);
+        this.weight = weight;
+        addCatalogProduct(catalogID, gpID, supplier_price, supplier_id, supplier_category , name , weight);
     }
 
     //region Getters - Setters
@@ -143,6 +146,14 @@ public class GeneralProduct {
 
     public void setCatalog_products(List<CatalogProduct> catalog_products) {
         this.catalog_products = catalog_products;
+    }
+
+    public Float getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Float weight) {
+        this.weight = weight;
     }
 
     //endregion
@@ -358,8 +369,8 @@ public class GeneralProduct {
         return null;
     }
 
-    public Result<CatalogProduct> addCatalogProduct(Integer catalogID, Integer gpID, Float supplier_price, Integer supplier_id, String supplier_category , String name){
-        CatalogProduct toAdd = new CatalogProduct(this.branchId,catalogID, gpID, supplier_price, supplier_id, supplier_category , name);
+    public Result<CatalogProduct> addCatalogProduct(Integer catalogID, Integer gpID, Float supplier_price, Integer supplier_id, String supplier_category , String name , Float weight){
+        CatalogProduct toAdd = new CatalogProduct(this.branchId,catalogID, gpID, supplier_price, supplier_id, supplier_category , name , weight);
         catalog_products.add(toAdd);
         mapper.create(toAdd);
         return new Result<>(true,toAdd,"Catalog Product " + name + " of supplier " + supplier_id + " added successfully");

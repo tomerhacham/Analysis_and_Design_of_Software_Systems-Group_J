@@ -25,6 +25,8 @@ public class GeneralProductDTO {
     Integer category_id;
     @DatabaseField(columnName = "retail_price")
     Float retail_price;
+    @DatabaseField(columnName = "weight")
+    Float weight;
     /*
     @ForeignCollectionField(eager = false)
     ForeignCollection<SpecificProductDTO> specific_products;
@@ -42,6 +44,7 @@ public class GeneralProductDTO {
         this.sale_price = generalProduct.getSale_price();
         this.retail_price=generalProduct.getRetailPrice();
         this.category_id = generalProduct.getCategory_id();
+        this.weight=generalProduct.getWeight();
     }
     public GeneralProductDTO() {}
 
@@ -84,7 +87,10 @@ public class GeneralProductDTO {
         return retail_price;
     }
 
-   /* public ForeignCollection<SpecificProductDTO> getSpecific_products() {
+    public Float getWeight() {
+        return weight;
+    }
+    /* public ForeignCollection<SpecificProductDTO> getSpecific_products() {
         return specific_products;
     }
 

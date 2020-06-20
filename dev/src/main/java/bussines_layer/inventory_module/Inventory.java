@@ -57,12 +57,12 @@ public class Inventory {
 
     //region General Product Management
     public Result addGeneralProduct(Integer category_id, String manufacture, String name, Float supplier_price, Float retail_price,
-                                    Integer min_quantity, Integer catalogID, Integer gpID, Integer supplier_id, String supplier_category){
+                                    Integer min_quantity, Integer catalogID, Integer gpID, Integer supplier_id, String supplier_category , Float weight){
         Category category = categoryController.searchCategorybyId(category_id);
         Result result;
         if (category!=null){
             result= productController.addGeneralProduct(category,manufacture, name, supplier_price, retail_price,
-                    min_quantity, catalogID, gpID, supplier_id, supplier_category);
+                    min_quantity, catalogID, gpID, supplier_id, supplier_category , weight);
         }
         else{
             result=new Result<>(false,category_id,"Could not find category");

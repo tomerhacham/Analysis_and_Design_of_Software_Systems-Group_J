@@ -12,8 +12,9 @@ public class CatalogProduct {
     private final Integer supplier_id;
     private String supplier_category;
     private String name;
+    private Float weight;
 
-    public CatalogProduct(Integer branch_id,Integer catalogID, Integer gpID, Float supplier_price, Integer supplier_id, String supplier_category , String name) {
+    public CatalogProduct(Integer branch_id,Integer catalogID, Integer gpID, Float supplier_price, Integer supplier_id, String supplier_category , String name , Float weight) {
         this.branch_id=branch_id;
         this.catalogID = catalogID;
         this.gpID = gpID;
@@ -21,6 +22,7 @@ public class CatalogProduct {
         this.supplier_id = supplier_id;
         this.supplier_category = supplier_category;
         this.name = name;
+        this.weight = weight;
     }
     public CatalogProduct(CatalogProductDTO catalogProductDTO){
         this.branch_id=catalogProductDTO.getBranch_id().getBranch_id();
@@ -30,6 +32,7 @@ public class CatalogProduct {
         this.supplier_id=catalogProductDTO.getSupplier_id();
         this.supplier_category=catalogProductDTO.getSupplier_category();
         this.name=catalogProductDTO.getName();
+        this.weight=catalogProductDTO.getWeight();
 
     }
 
@@ -64,6 +67,14 @@ public class CatalogProduct {
 
     public String getName() {
         return name;
+    }
+
+    public Float getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Float weight) {
+        this.weight = weight;
     }
 
     public void setSupplierCategory(String supplier_category) {
