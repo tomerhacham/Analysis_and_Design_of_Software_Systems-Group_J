@@ -144,7 +144,9 @@ public class TransportController {
     {
         String s="";
         for (Order o :pending_Orders) {
-            //TODO: toString
+            s = s + "Order id: " + o.getOrderID() + "\n";
+            s = s + "\tSupplier name: " + o.getSupplier().getSupplierName() + "\n";
+            s = s + "\tOrder content:\n\t\t" + o.displayProductsInOrder() + "\n";
         }
         return s;
     }

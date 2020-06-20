@@ -348,6 +348,8 @@ public class Branch {
         this.supplierModule = new SupplierModule(branch_id);
         this.employeesModule=new EmployeesModule(branch_id);
         this.transportModule=new TransportModule(branch_id);
+        transportModule.setEmployeesModule(employeesModule);
+        employeesModule.setTransportModule(transportModule);
     }
     @Override
     public String toString() {
