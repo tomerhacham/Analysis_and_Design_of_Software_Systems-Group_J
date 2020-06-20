@@ -341,7 +341,6 @@ public class BranchController {
             if(currBranch==null || !branchid.equals(currBranch.getBranchId())){
                 mapper.clearCache();
                 branch=mapper.find_Branch(branchid);
-                branch.loadData();
                 if (currBranch==null){currBranch=branch;}
             }
             else{

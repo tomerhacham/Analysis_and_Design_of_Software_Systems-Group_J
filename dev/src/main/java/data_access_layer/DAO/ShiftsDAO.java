@@ -254,5 +254,7 @@ public class ShiftsDAO {
         identityMap.put(shift.getId(),shift);
         return shift;
     }
-
+    public void clearCache() {
+        this.identityMap.clear();
+    }
 }

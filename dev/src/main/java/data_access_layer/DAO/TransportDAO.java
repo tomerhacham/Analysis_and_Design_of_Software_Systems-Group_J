@@ -272,4 +272,8 @@ public class TransportDAO {
             throwables.printStackTrace();
         }
     }
+
+    public void clearCache() {
+        this.identityMap.clear();
+    }
 }
