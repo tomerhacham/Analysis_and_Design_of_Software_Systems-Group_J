@@ -31,7 +31,7 @@ public class TransportModule {
 
     public String BookTransport(Order order)
     {
-        int totalWeight= 0; //TODO::: ORDER / FUNCTION
+        Float totalWeight= order.getTotalWeight();
         if (order.getType() == OrderType.OutOfStockOrder) {
             Date date = order.getIssuedDate();
             for (int i = 1; i <= 7; i++) {

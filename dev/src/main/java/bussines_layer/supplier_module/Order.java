@@ -208,6 +208,9 @@ public class Order {
         return new Result<>(true, total, String.format(" The orders total amount is: %f", total));
     }
 
+    public Float getTotalWeight() {
+        return totalWeight;
+    }
 
     public void setProductsAndQuantity(HashMap<CatalogProduct, Integer> productsAndQuantity) {
         this.productsAndQuantity = productsAndQuantity;
