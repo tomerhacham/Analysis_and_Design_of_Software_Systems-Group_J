@@ -429,8 +429,26 @@ public class BranchController {
         if(!awatingtobeaccepted.isOK() && !periodicorders.isOK()){
             result = new Result<>(false, null,"There are no orders waiting to be accepted or delivered today");
         }
+        updateAllPendingOrders();
         return result;
     }
+
+    private void updateAllPendingOrders() {
+        for (Integer branchid : branches.keySet()) {
+            Branch branch;
+            if (currBranch == null || !branchid.equals(currBranch.getBranchId())) {
+                mapper.clearCache();
+                branch = mapper.find_Branch(branchid);
+                branch.loadData();
+                if (currBranch == null) {
+                    currBranch = branch;
+                }
+            } else
+                branch = currBranch;
+            branch.updatePendingOrders();
+        }
+    }
+
     public static void clearDB(){
         Mapper.getInstance().clearDatabase();
     }

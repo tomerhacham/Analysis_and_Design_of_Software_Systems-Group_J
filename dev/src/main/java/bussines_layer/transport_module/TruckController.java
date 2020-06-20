@@ -16,6 +16,9 @@ public class TruckController {
         Id_Counter = (int)mapper.MaxIdTrucks() + 1;
         branch_id=branchId;
         trucks = mapper.getAllTrucksByBranch(branch_id);
+        if (trucks == null){
+            trucks = new Hashtable<>();
+        }
     }
 
     // create new instance of truck and add it to the table
