@@ -35,8 +35,10 @@ public class Branch {
         this.name = name;
     }
     public Branch(BranchDTO branchDTO){
+
         this.branch_id=branchDTO.getBranch_id();
         this.name=branchDTO.getName();
+
     }
 
     //region Inventory Module

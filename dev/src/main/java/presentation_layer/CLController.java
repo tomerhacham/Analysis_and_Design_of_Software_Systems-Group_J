@@ -1707,7 +1707,7 @@ public class CLController {
 
 
     //TODO complete functions
-    private static void printHumanResourcesManagementMenu() {
+    public static void printHumanResourcesManagementMenu() {
         String menu = "";
         menu = menu.concat("\nChoose one of the options:\n");
         menu = menu.concat("1) Manage Workers\n");
