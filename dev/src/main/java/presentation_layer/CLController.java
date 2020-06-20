@@ -1819,9 +1819,10 @@ public class CLController {
             menu = menu.concat("3) Remove Position\n");
             menu = menu.concat("4) Remove Worker\n");
             menu = menu.concat("5) Submit Shift\n");
-            menu = menu.concat("6) Return\n");
+            menu = menu.concat("6) Cancel Shift\n");
             menu = menu.concat("7) Exit");
             while (true) {
+                System.out.println(branchController.getCurrentEditedModelShift().fullView());
                 System.out.println(menu);
                 Integer option = getNextInt(sc);
                 switch (option) {
@@ -1835,14 +1836,15 @@ public class CLController {
                         printRemovePositionFromShift();
                         break;
                     case 4:
-                        printRemoveWorker();
+                        printRemoveWorkerFromShift();
                         break;
                     case 5:
                         output = branchController.submitShift();
                         if (output != null)
                             System.out.println(output);
-                        break;
+                        return;
                     case 6:
+                        branchController.cancelShift();
                         return;
                     case 7:
                         Exit();
@@ -1881,6 +1883,42 @@ public class CLController {
         output=branchController.removePositionFromShift(pos);
         if(output!=null)
             System.out.println(output);
+    }
+    private static void printRemoveWorkerFromShift() {
+        System.out.println("Enter position from which you want to remove a worker:");
+        String pos=WnextLine();
+        if(pos.equals("driver"))
+        {
+            System.out.println("Changes in scheduled drivers will be saved automatically");
+        }
+        if(!branchController.getCurrentEditedModelShift().occupation.containsKey(pos)&& branchController.getCurrentEditedModelShift().drivers.isEmpty())
+            System.out.println("The position was not found");
+        else {
+            List<ModelWorker> workersInpos=new ArrayList<>();
+            if(!pos.equals("driver"))
+                workersInpos.addAll(branchController.getCurrentEditedModelShift().occupation.get(pos));
+            else
+                workersInpos.addAll(branchController.getCurrentEditedModelShift().drivers);
+            if(workersInpos.size()>0) {
+                System.out.println("Eligible workers:");
+                int i = 0;
+                for (ModelWorker mw : workersInpos) {
+                    System.out.println(i + "." + mw.name);
+                    i++;
+                }
+                int select=-1;
+                while(select<0|select>=workersInpos.size()) {
+                    System.out.println("Enter number of worker to be removed");
+                    select = WnextInt();
+                }
+                String output=branchController.removeWorkerToPositionInShift(pos,workersInpos.get(select).id);
+                if(output!=null)
+                    System.out.println(output);
+            }
+            else {
+                System.out.println("There are no workers assigned to this position");
+            }
+        }
     }
 
     private static void printAddWorkerToShift() {
@@ -2218,7 +2256,6 @@ public class CLController {
 
 
     //endregion
-
 
     //region Logistic Management
     private static void printLogisticManagementMenu() {
