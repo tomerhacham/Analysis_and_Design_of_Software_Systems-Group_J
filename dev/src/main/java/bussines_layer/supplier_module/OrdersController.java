@@ -76,10 +76,10 @@ public class OrdersController {
         return new Result<>(true, new Float(-1), String.format(" The Order : %d dose not exist", orderID));
     }
 
-    public Result<String> issueOrder (Order order){
+    public Result<Order> issueOrder (Order order){
         order.setStatus(OrderStatus.sent);
         mapper.update(order);
-        return order.display();
+        return new Result<>(true, order, String.format(" The Order : %d has been sent", order.getOrderID()));
     }
 
     public Result<LinkedList<String>> displayAllSupplierOrders(int supId) {
@@ -235,10 +235,10 @@ public class OrdersController {
         return result;
     }
 
-    public Result<LinkedList<String>> issuePeriodicOrder(){
+    public Result<String> issuePeriodicOrder(){
 
         Integer sys_day = BranchController.system_curr_date.getDay();
-        LinkedList<String> periodicOrdersToIsuue = new LinkedList<>();
+        String periodicOrdersToIsuue = new String("");
 
         for (Order order : orders) {
             //issue one day before delivery date
@@ -247,13 +247,13 @@ public class OrdersController {
                 if (order_day == 0) { order_day=6;}
                 else { order_day = order_day-1;}
                 if ((order.getType()== OrderType.PeriodicOrder) && (order_day).equals(sys_day)){
-                    periodicOrdersToIsuue.add(issueOrder(order).getData());
+                    periodicOrdersToIsuue.concat(issueOrder(order).getData().display().getData());
                 }
             }
         }
 
-        if(periodicOrdersToIsuue.size()>0){
-            return new Result<>(true,periodicOrdersToIsuue, String.format("All periodic orders that delivery day is tomorrow had been reported"));
+        if(periodicOrdersToIsuue.length()>0){
+            return new Result<>(true,periodicOrdersToIsuue, periodicOrdersToIsuue);
         }
         return new Result<>(false,null, String.format("There are no periodic orders to issue"));
     }
