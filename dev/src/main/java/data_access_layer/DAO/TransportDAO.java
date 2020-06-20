@@ -95,7 +95,6 @@ public class TransportDAO {
             long max = transport_DAO.queryRawValue("SELECT MAX(transportID) FROM Transport");
             return max;
         }catch (SQLException throwables) {
-            throwables.printStackTrace();
             return 0;
         }
     }
