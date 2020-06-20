@@ -23,7 +23,6 @@ public class CLController {
     private static BranchController branchController;
 
     public CLController(){
-        //branchController = new BranchController();    //TODO check comment?
         sc = new Scanner(System.in);    //System.in is a standard input stream
     }
 
@@ -36,7 +35,6 @@ public class CLController {
             Integer option = getNextInt(sc);
             switch (option) {
                 case 1:
-                    printChooseBranchMenu();
                     printSuperLiManagementMenu();
                     break;
                 case 2:
