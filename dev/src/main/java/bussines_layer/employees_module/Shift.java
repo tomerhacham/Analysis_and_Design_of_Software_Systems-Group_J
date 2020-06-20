@@ -9,16 +9,18 @@ public class Shift {
     private Date date;
     private boolean timeOfDay;
     private String id;
+    private Integer branch_id;
     //private List<Worker> availableWorkers;
     private List<Driver> scheduledDrivers;
 
 
-    public Shift(Date date, boolean timeOfday, String id)
+    public Shift(Date date, boolean timeOfday, String id,Integer branch_id)
     {
         this.id=id;
         scheduledDrivers=new ArrayList<>();
         this.timeOfDay=timeOfday;
         this.date=date;
+        this.branch_id=branch_id;
         occupation=new HashMap<>();
         occupation.put("manager",new FixedSizeList<>(1));
     }
@@ -40,6 +42,10 @@ public class Shift {
             }
         }
     }
+
+    public Integer getBranchID() {
+        return branch_id;
+    }
     public String getId() {
         return id;
     }
@@ -47,10 +53,6 @@ public class Shift {
     public void setTimeOfDay(boolean timeOfDay) {
         this.timeOfDay = timeOfDay;
     }
-
-    /*public List<Worker> getAvailableWorkers() {
-        return availableWorkers;
-    }*/
 
     public Date getDate() {
         return date;
@@ -75,7 +77,6 @@ public class Shift {
     public void setAvailableWorkers(List<Worker> availableWorkers) {
         this.availableWorkers = availableWorkers;
     }
-
    */
 
     public List<Driver> getScheduledDrivers() {
@@ -103,38 +104,38 @@ public class Shift {
         }
         return "The worker is not scheduled for this shift";
     }
-/*
-    private String replaceDriver(String id,List<Worker> availableWorkers) {
-        Driver removedDriver=null;
-        for(Driver d:scheduledDrivers)
-        {
-            if(d.getId().equals(id)) {
-                removedDriver = d;
-                break;
-            }
-        }
-        if(removedDriver!=null)
-        {
-            Driver replacementDriver=null;
-            for(Worker w:availableWorkers) {
-                if (w.positions.contains("driver") && w.getLicense().equals(removedDriver.getLicense())) {
-                    replacementDriver = (Driver) w;
+    /*
+        private String replaceDriver(String id,List<Worker> availableWorkers) {
+            Driver removedDriver=null;
+            for(Driver d:scheduledDrivers)
+            {
+                if(d.getId().equals(id)) {
+                    removedDriver = d;
                     break;
                 }
             }
-            if(replacementDriver!=null) {
-                scheduledDrivers.remove(removedDriver);
-                //availableWorkers.add(removedDriver);
-                scheduledDrivers.add(replacementDriver);
-                //availableWorkers.remove(replacementDriver);
-                return null;
+            if(removedDriver!=null)
+            {
+                Driver replacementDriver=null;
+                for(Worker w:availableWorkers) {
+                    if (w.positions.contains("driver") && w.getLicense().equals(removedDriver.getLicense())) {
+                        replacementDriver = (Driver) w;
+                        break;
+                    }
                 }
-            else
-                return "Driver was not removed-There is no replacement for the wanted driver";
+                if(replacementDriver!=null) {
+                    scheduledDrivers.remove(removedDriver);
+                    //availableWorkers.add(removedDriver);
+                    scheduledDrivers.add(replacementDriver);
+                    //availableWorkers.remove(replacementDriver);
+                    return null;
+                    }
+                else
+                    return "Driver was not removed-There is no replacement for the wanted driver";
+            }
+            return "The worker is not scheduled for this shift";
         }
-        return "The worker is not scheduled for this shift";
-    }
-*/
+    */
     public String addWorkerToPosition(String position,String id,List<Worker> availableWorkers)
     {
         Worker w=null;
@@ -152,7 +153,7 @@ public class Shift {
             //availableWorkers.remove(w);
             occupation.get(position).add(w);
         }
-            return null;
+        return null;
     }
 
     public void addDriverToShift(Driver driver)
@@ -210,4 +211,5 @@ public class Shift {
     public void addARowToOcuupation(String pos, FixedSizeList<Worker> workers) {
         this.occupation.put(pos, workers);
     }
+
 }

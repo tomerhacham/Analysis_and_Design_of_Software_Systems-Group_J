@@ -1,6 +1,8 @@
 package bussines_layer;
 
 import bussines_layer.employees_module.EmployeesModule;
+import bussines_layer.employees_module.models.ModelShift;
+import bussines_layer.employees_module.models.ModelWorker;
 import bussines_layer.inventory_module.*;
 import bussines_layer.supplier_module.SupplierModule;
 import bussines_layer.transport_module.TransportModule;
@@ -352,6 +354,125 @@ public class Branch {
     public String BookTransportForPendingOrders(int orderID) {
         return transportModule.BookTransportForPendingOrders(orderID);
     }
+    //region Employee Module
+    private static final boolean morning=true;
+    private static final boolean night=false;
+
+    public void setTransportModule(TransportModule transportModule) {
+        employeesModule.setTransportModule(transportModule);
+    }
+
+    public String chooseDriverForTransport(Date date, boolean shift, String drivers_license) {
+        return employeesModule.chooseDriverForTransport(date,shift,drivers_license);
+    }
+
+    public String getDriverName(String driverId) {
+        return employeesModule.getDriverName(driverId);
+    }
+
+    public boolean StorageManInShift(Date d, boolean b) {
+        return employeesModule.StorageManInShift(d,b);
+    }
+
+    public boolean DriversAvailability(Date date, boolean shift) {
+        return employeesModule.DriversAvailability(date,shift);
+    }
+
+    public void removeDriverFromTransport(Date d, boolean shift, String driverId) {
+        employeesModule.removeDriverFromTransport(d,shift,driverId);
+    }
+
+
+
+    public String removeShift(Date date,boolean timeOfDay){
+        return employeesModule.removeShift(date,timeOfDay);
+    }
+    public String createShift(Date date, boolean timeOfDay)
+    {
+        return employeesModule.createShift(date,timeOfDay);
+    }
+    public String editShift(Date date, boolean timeOfDay)
+    {
+        return employeesModule.editShift(date, timeOfDay);
+    }
+    public ModelShift getCurrentEditedModelShift()
+    {
+        return employeesModule.getCurrentEditedModelShift();
+    }
+    public void cancelShift(){employeesModule.cancelShift();}
+    public String submitShift(){
+        return employeesModule.submitShift();
+    }
+    public String removePositionFromShift(String pos){
+        return employeesModule.removePositionFromShift(pos);
+    }
+    public String addPositionToShift(String pos,int quantity)
+    {
+        return employeesModule.addPositionToShift(pos, quantity);
+
+    }
+    public String addWorkerToPositionInShift(String pos,String id){
+        return employeesModule.addWorkerToPositionInShift(pos, id);
+    }
+    public String removeWorkerToPositionInShift(String pos,String id)
+    {
+        return employeesModule.removeWorkerToPositionInShift(pos, id);
+    }
+    public String addAvailableWorker(Date date, boolean partOfDay, String id){
+        return employeesModule.addAvailableWorker(date, partOfDay, id);
+    }
+    public String removeAvailableWorker(Date date,boolean partOfDay,String id) {
+
+        return employeesModule.removeAvailableWorker(date, partOfDay, id);
+    }
+    public List<ModelShift> getWeeklyShifts(Date date)
+    {
+        return employeesModule.getWeeklyShifts(date);
+    }
+    public String removeWorkerFromRoster(String id){
+        return employeesModule.removeWorkerFromRoster(id);
+
+    }
+    public List<ModelWorker> displayWorkers()
+    {
+        return employeesModule.displayWorkers();
+    }
+
+    public ModelWorker displaySingleWorker(String id)
+    {
+        return employeesModule.displaySingleWorker(id);
+    }
+
+    public String editName(String newName,String id)
+    {
+        return employeesModule.editName(newName,id);
+    }
+    public String editSalary(double newSalary,String id)
+    {
+        return employeesModule.editSalary(newSalary,id);
+    }
+    public String addPosition(String pos,String id)
+    {
+        return employeesModule.addPosition(pos,id);
+    }
+    public String removePosition(String pos,String id)
+    {
+        return employeesModule.removePosition(pos,id);
+    }
+    public String addWorker(String name, double salary, Date startDate,List<String>positions)
+    {
+        return employeesModule.addWorker(name,salary,startDate,positions);
+    }
+    public String addDriver(String name, double salary, Date startDate,String license)
+    {
+        return employeesModule.addDriver(name,salary,startDate,license);
+    }
+    public String removeWorker(String id)
+    {
+        return employeesModule.removeWorker(id);
+    }
+
+    //endregion
 }
 
 

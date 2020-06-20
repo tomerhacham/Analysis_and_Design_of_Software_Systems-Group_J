@@ -209,7 +209,7 @@ public class EmployeesDAO {
     private Worker makeWORKER(Worker_DTO worker_dto) {
         if(identityMap_workers.containsKey(worker_dto.getWorkerID()))
             return identityMap_workers.get(worker_dto.getWorkerID());
-        Worker worker = new Worker(worker_dto.getName(), worker_dto.getWorkerID(), worker_dto.getStart_Date(), worker_dto.getSalary());
+        Worker worker = new Worker(worker_dto.getName(), worker_dto.getWorkerID(),worker_dto.getBranch_id(), worker_dto.getStart_Date(), worker_dto.getSalary());
         ForeignCollection<Position_DTO> position_dtos = worker_dto.getPositions();
         for (Position_DTO p : position_dtos) {
             worker.addPosition(p.getPosition());
@@ -249,7 +249,7 @@ public class EmployeesDAO {
             List<Driver_DTO> driver_dtos = Driver_DAO.queryForEq("driverID", worker.getWorkerID());
             if (driver_dtos.size() == 1) {
                 Driver_DTO driver_dto = driver_dtos.get(0);
-                Driver driver = new Driver(worker.getWorkerID(), driver_dto.getLicense(), worker.getName(), worker.getStart_Date(), worker.getSalary());
+                Driver driver = new Driver(worker.getWorkerID(),worker.getBranch_id(), driver_dto.getLicense(), worker.getName(), worker.getStart_Date(), worker.getSalary());
                 ForeignCollection<Position_DTO> position_dtos = worker.getPositions();
                 for (Position_DTO p : position_dtos) {
                     driver.addPosition(p.getPosition());

@@ -1,5 +1,5 @@
 package bussines_layer.employees_module;
-import InterfaceLayer.Workers.ModelWorker;
+import bussines_layer.employees_module.models.ModelWorker;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,13 +9,15 @@ import java.util.Objects;
 public class Worker {
     private String name;
     private String id;
+    private Integer branch_id;
     private Date start_Date;
     private double salary;
     List<String> positions;
 
-    public Worker(String name, String id, Date startTime, double salary) {
+    public Worker(String name, String id,Integer branch_id, Date startTime, double salary) {
         this.name = name;
         this.id = id;
+        this.branch_id=branch_id;
         start_Date = startTime;
         this.salary = salary;
         positions=new ArrayList<>();
@@ -81,4 +83,7 @@ public class Worker {
         return id.equals(worker.id);
     }
 
+    public Integer getBranchID() {
+        return branch_id;
+    }
 }
