@@ -59,8 +59,8 @@ public class ProductController {
      * @return
      */
     public Result addGeneralProduct(Category category, String manufacture, String name, Float supplier_price, Float retail_price,
-                                        Integer min_quantity, Integer catalogID, Integer gpID, Integer supplier_id, String supplier_category) {
-        GeneralProduct newProduct = new GeneralProduct(manufacture, name, supplier_price, retail_price, min_quantity, catalogID, gpID, supplier_id, supplier_category , branchId);
+                                        Integer min_quantity, Integer catalogID, Integer gpID, Integer supplier_id, String supplier_category , Float weight) {
+        GeneralProduct newProduct = new GeneralProduct(manufacture, name, supplier_price, retail_price, min_quantity, catalogID, gpID, supplier_id, supplier_category , branchId , weight);
         Result result = category.addGeneralProduct(newProduct);
         if (result.isOK()) {
             generalProducts.add(newProduct);

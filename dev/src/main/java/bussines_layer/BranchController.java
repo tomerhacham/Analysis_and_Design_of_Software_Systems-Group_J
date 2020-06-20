@@ -34,6 +34,9 @@ public class BranchController {
     public Result createSupplierCard (String supplierName, String address, String email, String phoneNumber, Integer id, String bankAccountNum, String payment, LinkedList<String> contactsName, String type) {
         return supplierController.createSupplierCard(supplierName , address , email , phoneNumber , id , bankAccountNum , payment , contactsName, type);
     }
+    public Result createSupplierCard (String supplierName, String address, String email, String phoneNumber, Integer id, String bankAccountNum, String payment, LinkedList<String> contactsName, String type,Integer fix_day) {
+        return supplierController.createSupplierCard(supplierName , address , email , phoneNumber , id , bankAccountNum , payment , contactsName, type, fix_day);
+    }
 
     public Result changeSupplierName(Integer supid, String supplierName) {
         return supplierController.ChangeSupplierName(supid , supplierName);
@@ -149,8 +152,8 @@ public class BranchController {
 
     //region General Products
     public Result addGeneralProduct(Integer category_id, String manufacture, String name, Float supplier_price, Float retail_price,
-                                    Integer min_quantity, Integer catalogID, Integer gpID, Integer supplier_id, String supplier_category){
-        return currBranch.addGeneralProduct(category_id, manufacture, name, supplier_price, retail_price, min_quantity, catalogID, gpID, supplier_id, supplier_category);
+                                    Integer min_quantity, Integer catalogID, Integer gpID, Integer supplier_id, String supplier_category, Float weight){
+        return currBranch.addGeneralProduct(category_id, manufacture, name, supplier_price, retail_price, min_quantity, catalogID, gpID, supplier_id, supplier_category , weight);
     }
     //    public Result removeGeneralProduct(Integer category_id, Integer gpID) {
 //        return currBranch.removeGeneralProduct(category_id, gpID);
@@ -298,11 +301,12 @@ public class BranchController {
         return currBranch.acceptOrder(orderID);
     }
 
-    public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<Integer, Integer>> productsAndQuantity , Integer date){
-        return currBranch.createPeriodicOrder(supplierID, productsAndQuantity,date);
+    public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<Integer, Integer>> productsAndQuantity , Integer day){
+        return currBranch.createPeriodicOrder(supplierID, productsAndQuantity,day);
     }
 
     public Result<String> createOutOfStockOrder(Report report){
+
         return currBranch.createOutOfStockOrder(report);
     }
 
@@ -341,7 +345,6 @@ public class BranchController {
             if(currBranch==null || !branchid.equals(currBranch.getBranchId())){
                 mapper.clearCache();
                 branch=mapper.find_Branch(branchid);
-                branch.loadData();
                 if (currBranch==null){currBranch=branch;}
             }
             else{
@@ -429,8 +432,26 @@ public class BranchController {
         if(!awatingtobeaccepted.isOK() && !periodicorders.isOK()){
             result = new Result<>(false, null,"There are no orders waiting to be accepted or delivered today");
         }
+        updateAllPendingOrders();
         return result;
     }
+
+    private void updateAllPendingOrders() {
+        for (Integer branchid : branches.keySet()) {
+            Branch branch;
+            if (currBranch == null || !branchid.equals(currBranch.getBranchId())) {
+                mapper.clearCache();
+                branch = mapper.find_Branch(branchid);
+                branch.loadData();
+                if (currBranch == null) {
+                    currBranch = branch;
+                }
+            } else
+                branch = currBranch;
+            branch.updatePendingOrders();
+        }
+    }
+
     public static void clearDB(){
         Mapper.getInstance().clearDatabase();
     }

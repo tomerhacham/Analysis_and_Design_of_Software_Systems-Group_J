@@ -770,7 +770,6 @@ public class Mapper {
 
     public void updateShift(Shift shift){shifts_dao.updateShift(shift);}
 
-    //TODO:change in business layer all usage of the functions below to receive branch_id
     public Shift getShift(Date date, boolean partOfDay, int branch){return shifts_dao.getShift(date,partOfDay,branch);}
 
     //Worker
@@ -886,10 +885,9 @@ public class Mapper {
     public List<Truck> getAvailableTrucks(Date date, boolean partOfDay, float Weight, int branch_id){
         return truck_dao.getAvailableTrucks(date,partOfDay,Weight, branch_id);
     }
-
-
     //endregion
 
+    //region Utilities
     public void clearCache(){
         catalog_product_dao.clearCache();
         general_product_dao.clearCache();
@@ -901,6 +899,13 @@ public class Mapper {
         supplier_dao.clearCache();
         branch_dao.clearCache();
         cost_engineering_dao.clearCache();
+
+        transport_dao.clearCache();
+        truck_dao.clearCache();
+        employees_dao.clearCache();
+        shifts_dao.clearCache();
+
+
 
     }
 
@@ -923,6 +928,19 @@ public class Mapper {
             TableUtils.clearTable(this.conn,OrderDTO.class);
             TableUtils.clearTable(this.conn,SaleDTO.class);
             TableUtils.clearTable(this.conn,SpecificProductDTO.class);
+            TableUtils.clearTable(this.conn,Driver_DTO.class);
+            TableUtils.clearTable(this.conn,log_DTO.class);
+            TableUtils.clearTable(this.conn,morning_shifts_DTO.class);
+            TableUtils.clearTable(this.conn,night_shifts_DTO.class);
+            TableUtils.clearTable(this.conn,Occupation_DTO.class);
+            TableUtils.clearTable(this.conn,pending_orders_dto.class);
+            TableUtils.clearTable(this.conn,Position_DTO.class);
+            TableUtils.clearTable(this.conn,Shift_DTO.class);
+            TableUtils.clearTable(this.conn,ShiftDriver_DTO.class);
+            TableUtils.clearTable(this.conn,Shift_availableWorkers_DTO.class);
+            TableUtils.clearTable(this.conn,Transport_DTO.class);
+            TableUtils.clearTable(this.conn,Truck_DTO.class);
+            TableUtils.clearTable(this.conn,Worker_DTO.class);
             IDsDTO ids = new IDsDTO(1,1,1,1,1,1,1);
             ids_dao.create(ids);
         } catch (SQLException throwables) {
@@ -930,6 +948,7 @@ public class Mapper {
         }
     }
     //endregion
+
 }
 
 

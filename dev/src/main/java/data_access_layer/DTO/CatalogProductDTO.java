@@ -21,6 +21,8 @@ public class CatalogProductDTO {
     String supplier_category;
     @DatabaseField(columnName = "name")
     String name;
+    @DatabaseField(columnName = "weight")
+    Float weight;
 
     //Constructor
     public CatalogProductDTO(CatalogProduct catalogProduct) {
@@ -31,6 +33,7 @@ public class CatalogProductDTO {
         this.supplier_id=catalogProduct.getSupplierId();
         this.supplier_category=catalogProduct.getSupplierCategory();
         this.name=catalogProduct.getName();
+        this.weight=catalogProduct.getWeight();
     }
     public CatalogProductDTO() {
     }
@@ -63,6 +66,10 @@ public class CatalogProductDTO {
 
     public String getName() {
         return name;
+    }
+
+    public Float getWeight() {
+        return weight;
     }
 
     //endregion

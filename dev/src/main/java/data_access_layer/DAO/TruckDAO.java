@@ -290,4 +290,7 @@ public class TruckDAO {
             return null;
         }
     }
+    public void clearCache() {
+        this.identityMap.clear();
+    }
 }

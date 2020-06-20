@@ -3,6 +3,7 @@ package bussines_layer.supplier_module;
 import bussines_layer.Result;
 import bussines_layer.SupplierCard;
 import bussines_layer.enums.OrderType;
+import bussines_layer.enums.supplierType;
 import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.inventory_module.GeneralProduct;
 import bussines_layer.inventory_module.Report;
@@ -109,7 +110,7 @@ public class SupplierModule {
 
     //region Order Controller
 
-    public Result<String> issueOrder (Order order){
+    public Result<Order> issueOrder (Order order){
         return ordersController.issueOrder(order);
     }
 
@@ -140,8 +141,9 @@ public class SupplierModule {
 
     //region OutOfStockOrder
 
-    public Result<String> createOutOfStockOrder(Report report){
+    public Result<Order> createOutOfStockOrder(Report report){
         String all_orders = "";
+        Result<Order> resultOrder = null;
         //HashMap<SupplierCard , LinkedList<CatalogProduct , Price>>
         HashMap<SupplierCard , LinkedList<Pair<CatalogProduct , Float>>> productsForEachSupplier = new HashMap<>();
 
@@ -181,11 +183,11 @@ public class SupplierModule {
                 }
             }
 
-            Result<Order> resultOrder =ordersController.getOrder(orderid);
+            resultOrder =ordersController.getOrder(orderid);
             if (!resultOrder.isOK()) { return new Result<>(false, null, String.format("Order %d does not exist", orderid));}
-            all_orders = all_orders.concat(String.format("%s\n---------------------------------------\n", issueOrder(resultOrder.getData()).getData()));
+            all_orders = all_orders.concat(String.format("%s\n---------------------------------------\n", issueOrder(resultOrder.getData()).getData().display()));
         }
-        return new Result<>(true, all_orders, String.format("All orders had been generated from the report successfully: %s", report));
+        return new Result<>(true, resultOrder.getData()  , all_orders);
     }
 
     //endregion
@@ -198,6 +200,7 @@ public class SupplierModule {
         if (!contractResult.isOK()){
             return new Result<>(false, null, String.format("Supplier %d does not exist", supplierID));
         }
+        if(!contractResult.getData().getSupplier().getFix_day().equals(dayToDeliver)){ return new Result<>(false, null, String.format("Supplier %d does not supply at the day:%d", supplierID,dayToDeliver));}
         //Check if supplier supplies all products
         for (Pair<GeneralProduct,Integer> pair : productsAndQuantity) {
             CatalogProduct cp = pair.getKey().getSupplierCatalogProduct(supplierID);
@@ -280,6 +283,13 @@ public class SupplierModule {
         Order periodicOrder = result.getData();
         Contract contract = contractController.findContract(supplierID).getData();
         Result<CatalogProduct> resultProduct;
+        //check fix_day
+        if(contract.getSupplier().getType().equals(supplierType.fix_days)){
+            if (!periodicOrder.getDayToDeliver().equals(contract.getSupplier().getFix_day())){
+                return new Result<>(false, null, String.format("Supplier %d does not supply at the day:%d", supplierID,periodicOrder.getDayToDeliver()));
+            }
+
+        }
         //getProductPriceConsideringQuantity
         for (CatalogProduct product : periodicOrder.getProductsAndQuantity().keySet()){
             resultProduct = contract.isProductExist(product);
@@ -303,7 +313,7 @@ public class SupplierModule {
         return new Result<>(true , periodicOrder , String.format("Order %d updated successfully", orderID));
     }
 
-    public Result<LinkedList<String>> issuePeriodicOrder(){
+    public Result<LinkedList<Order>> issuePeriodicOrder(){
         return ordersController.issuePeriodicOrder();
     }
 

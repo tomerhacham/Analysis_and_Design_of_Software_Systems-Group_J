@@ -37,7 +37,6 @@ public class EmployeesDAO {
         }
     }
 
-    //TODO:: add in business layer getter fo branch id
     public void addWorker(Worker worker) {
         try {
             //creating the worker in the DB
@@ -77,7 +76,6 @@ public class EmployeesDAO {
     }
 
     //Driver
-    //TODO:: add in business layer getter fo branch id
     public void addDriver(Driver driver) {
         try {
             //creating the worker in the DB
@@ -339,4 +337,6 @@ public class EmployeesDAO {
             return null;
         }
     }
+    public void clearCache() {
+        this.identityMap_workers.clear();this.identityMap_drivers.clear();    }
 }

@@ -72,13 +72,14 @@ public class Transport {
     }
 
     @Override
-    public String toString() { //TODO: print all product details
+    public String toString() {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         String s = "Transport Details:\n" + "\tid: " + ID + "\tDate: " + formatter.format(Date) +
                 "\tTruckNumber: " + Truck.getLicense_plate() +
                 "\tDriver: " + driverName + "\n" +
-                "\tSupplier details:\n\t\t" + order.getSupplier().getSupplierName() + "\n";
+                "\tSupplier name: " + order.getSupplier().getSupplierName() + "\n";
         s = s + "\tTotalWeight: " + TotalWeight +"\n";
+        s = s + "\tOrder content:\n\t\t" + order.displayProductsInOrder();
         if(log.size()>0) {
             s = s + "\tLog messages:\n" + getLogMessages();
         }

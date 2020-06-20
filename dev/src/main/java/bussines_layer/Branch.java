@@ -3,7 +3,10 @@ package bussines_layer;
 import bussines_layer.employees_module.EmployeesModule;
 import bussines_layer.employees_module.models.ModelShift;
 import bussines_layer.employees_module.models.ModelWorker;
+import bussines_layer.enums.supplierType;
 import bussines_layer.inventory_module.*;
+import bussines_layer.supplier_module.Order;
+import bussines_layer.supplier_module.OrdersController;
 import bussines_layer.supplier_module.SupplierModule;
 import bussines_layer.transport_module.TransportModule;
 import data_access_layer.DTO.BranchDTO;
@@ -57,8 +60,8 @@ public class Branch {
 
     //region General Products
     public Result addGeneralProduct(Integer category_id, String manufacture, String name, Float supplier_price, Float retail_price,
-                                    Integer min_quantity, Integer catalogID, Integer gpID, Integer supplier_id, String supplier_category){
-        return inventory.addGeneralProduct(category_id, manufacture, name, supplier_price, retail_price, min_quantity, catalogID, gpID, supplier_id, supplier_category);
+                                    Integer min_quantity, Integer catalogID, Integer gpID, Integer supplier_id, String supplier_category , Float weight){
+        return inventory.addGeneralProduct(category_id, manufacture, name, supplier_price, retail_price, min_quantity, catalogID, gpID, supplier_id, supplier_category , weight);
     }
     public Result removeGeneralProduct(Integer category_id, Integer gpID)
     {
@@ -160,7 +163,7 @@ public class Branch {
         }
         CatalogProduct cp = gp.getSupplierCatalogProduct(supplierID);
         if (cp == null){
-            cp = gp.addCatalogProduct(catalogID, gpID, supplier_price, supplierID, supplier_category, gp.getName()).getData();
+            cp = gp.addCatalogProduct(catalogID, gpID, supplier_price, supplierID, supplier_category, gp.getName() , gp.getWeight()).getData();
         }
         return supplierModule.addProductToContract(supplierID, cp);
     }
@@ -215,11 +218,26 @@ public class Branch {
         return inventory.updateInventory(products);
     }
 
-    public Result<String> createOutOfStockOrder(Report report){
-        return supplierModule.createOutOfStockOrder(report);
+    public Result<String> bookTransportOrder (Order order){
+        if(order.getSupplier().getType()== supplierType.selfDelivery){
+            String toprint = transportModule.BookTransport(order);
+            return new Result(true , toprint , "");
+        }
+        return new Result(false , new String(" ") , "");
     }
 
-    public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<Integer , Integer>> productsAndQuantity , Integer date){
+    public Result<String> createOutOfStockOrder(Report report){
+        Result<Order> resultOrder = supplierModule.createOutOfStockOrder(report);
+        Order order = resultOrder.getData();
+        if(order!=null){
+           String transportString = bookTransportOrder(order).getData();
+           String toprint = resultOrder.getMessage().concat(transportString);
+            return new Result( true , toprint , "");
+        }
+        return new Result( false , resultOrder.getMessage() , "");
+    }
+
+    public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<Integer , Integer>> productsAndQuantity , Integer day){
         LinkedList<Pair<GeneralProduct,Integer>> products = new LinkedList<>();
         for (Pair<Integer,Integer> p : productsAndQuantity){
             Result<GeneralProduct> result = inventory.searchGeneralProductByGpID(p.getKey());
@@ -228,7 +246,7 @@ public class Branch {
             }
             products.add(new Pair<>(result.getData(),p.getValue()));
         }
-        return supplierModule.createPeriodicOrder(supplierID, products, date);
+        return supplierModule.createPeriodicOrder(supplierID, products, day);
     }
 
     public Result removePeriodicOrder(Integer orderId){
@@ -264,15 +282,24 @@ public class Branch {
 
     public Result<LinkedList<String>> issuePeriodicOrder(){
 
-        Result<LinkedList<String>> result = supplierModule.issuePeriodicOrder();
+        Result<LinkedList<Order>> resultOrdersToIssue = supplierModule.issuePeriodicOrder();
+        String str = "";
 
-        if(!result.isOK()) {
-            return result;
+        if(!resultOrdersToIssue.isOK()) {
+            LinkedList<String> toreturn = new LinkedList<>();
+            toreturn.add(resultOrdersToIssue.getMessage());
+            return new Result<>(false ,  toreturn, "There are no periodic orders to issue");
         }
+
+        for (Order order:resultOrdersToIssue.getData()) {
+            str = str.concat(order.display().getData());
+            str = str.concat(bookTransportOrder(order).getData());
+        }
+
         LinkedList<String> branchPeriodicOrders = new LinkedList<>();
         branchPeriodicOrders.add("-------------------Branch : "+name+"-------------------\n");
         branchPeriodicOrders.add("Last Notice ! Don't forget to send those orders to the supplier !\n");
-        branchPeriodicOrders.addAll(result.getData());
+        branchPeriodicOrders.add(str);
         branchPeriodicOrders.add("-------------------------------------------------------\n");
         return new Result<>(true,branchPeriodicOrders, String.format("All periodic orders with %d as their delivery day had been sent to order", BranchController.system_curr_date.getDay()+1));
     }
@@ -319,8 +346,10 @@ public class Branch {
     public void loadData(){
         this.inventory=new Inventory(this.branch_id);
         this.supplierModule = new SupplierModule(branch_id);
-        this.employeesModule=new EmployeesModule(this.branch_id);
-        this.transportModule = new TransportModule(branch_id);
+        this.employeesModule=new EmployeesModule(branch_id);
+        this.transportModule=new TransportModule(branch_id);
+        transportModule.setEmployeesModule(employeesModule);
+        employeesModule.setTransportModule(transportModule);
     }
     @Override
     public String toString() {
@@ -329,6 +358,7 @@ public class Branch {
                 ", ID:" + branch_id;
     }
 
+    //region Transport Module
     public String getAllTransportsDetails() {
         return transportModule.getAllTransportsDetails();
     }
@@ -356,6 +386,12 @@ public class Branch {
     public String BookTransportForPendingOrders(int orderID) {
         return transportModule.BookTransportForPendingOrders(orderID);
     }
+
+    public void updatePendingOrders() {
+        transportModule.updatePendingOrders();
+    }
+    //endregion
+
     //region Employee Module
     private static final boolean morning=true;
     private static final boolean night=false;
