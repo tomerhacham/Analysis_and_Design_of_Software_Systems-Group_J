@@ -1151,16 +1151,17 @@ public class CLController {
             System.out.println(result.getMessage());
             if (!result.isOK() && result.getMessage().substring(0, 23).matches("General Product with ID")){
                 menu="Enter the following details to create new General Product before adding to contract:\n";
-                menu=menu.concat("[category_id],[manufacture],[retail_price],[min_quantity],[name]");
+                menu=menu.concat("[category_id],[manufacture],[retail_price],[min_quantity],[name][weight]");
                 System.out.println(menu);
                 String[] addDetails = getInputParserbyComma(sc);
-                if (addDetails.length == 5 && addDetails[0].matches("[0-9]+") && addDetails[3].matches("[0-9]+")){
+                if (addDetails.length == 6 && addDetails[0].matches("[0-9]+") && addDetails[3].matches("[0-9]+") && addDetails[5].matches("[0-9]+")){
                     Integer category_id = Integer.parseInt(addDetails[0]);
                     String manufacture = addDetails[1];
                     Float ret_price = Float.parseFloat(addDetails[2]);
                     Integer min_quan = Integer.parseInt(addDetails[3]);
                     String name = addDetails[4];
-                    result = branchController.addGeneralProduct(category_id,manufacture,name,sup_price,ret_price,min_quan,catalogID,gpID,supID,sup_cat);
+                    Float weight = Float.parseFloat(addDetails[5]);
+                    result = branchController.addGeneralProduct(category_id,manufacture,name,sup_price,ret_price,min_quan,catalogID,gpID,supID,sup_cat, weight);
                     System.out.println(result.getMessage());
                     result = branchController.addProductToContract(supID,catalogID,gpID,sup_price,sup_cat);
                     System.out.println(result.getMessage());
@@ -2506,7 +2507,7 @@ public class CLController {
         branchController.addContract(supplierID, categories);
 
         //Create GP
-        branchController.addGeneralProduct(((Category)res_cat_30.getData()).getId(), "Niguvim",name, sup_price, 31.5f,  20,catalogID,gpID,supplierID,"Hygiene");
+        branchController.addGeneralProduct(((Category)res_cat_30.getData()).getId(), "Niguvim",name, sup_price, 31.5f,  20,catalogID,gpID,supplierID,"Hygiene" , (float)0.7);
         branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),21);
         //Add Product to contract
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Hygiene");
@@ -2516,7 +2517,7 @@ public class CLController {
         catalogID = 9;
         gpID = 101;
         //Create GP
-        branchController.addGeneralProduct(((Category)res_cat_500ml.getData()).getId(), "Crema", name, sup_price, 25.5f, 5,catalogID,gpID,supplierID,"Hygiene");
+        branchController.addGeneralProduct(((Category)res_cat_500ml.getData()).getId(), "Crema", name, sup_price, 25.5f, 5,catalogID,gpID,supplierID,"Hygiene" , (float) 0.5);
         branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),6);
         //Add Product to contract
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Hygiene");
@@ -2526,7 +2527,7 @@ public class CLController {
         catalogID = 11;
         gpID = 102;
         //Create GP
-        branchController.addGeneralProduct(((Category)res_cat_500ml.getData()).getId(), "Dove", name, sup_price, 25.5f, 5,  5,gpID,supplierID,"Hygiene");
+        branchController.addGeneralProduct(((Category)res_cat_500ml.getData()).getId(), "Dove", name, sup_price, 25.5f, 5,  5,gpID,supplierID,"Hygiene" , (float) 0.5);
         branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),6);
         //Add Product to contract
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Hygiene");
@@ -2536,7 +2537,7 @@ public class CLController {
         catalogID = 12;
         gpID = 103;
         //Create GP
-        branchController.addGeneralProduct(((Category)res_cat_500ml.getData()).getId(), "Crema", name, sup_price, 32.5f, 5,catalogID,gpID,supplierID,"Hygiene");
+        branchController.addGeneralProduct(((Category)res_cat_500ml.getData()).getId(), "Crema", name, sup_price, 32.5f, 5,catalogID,gpID,supplierID,"Hygiene" , (float) 0.75);
         branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),6);
         //Add Product to contract
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Hygiene");
@@ -2547,7 +2548,7 @@ public class CLController {
         sup_price = 30.0f;
         Float ret_price = 40.0f;
         catalogID = 13;
-        branchController.addGeneralProduct(((Category)meat_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meat");
+        branchController.addGeneralProduct(((Category)meat_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meat" , (float) 0.5);
         branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),4);
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Meat");
 
@@ -2585,7 +2586,7 @@ public class CLController {
         ret_price = 45.0f;
         catalogID = 24;
 
-        branchController.addGeneralProduct(((Category)meat_one_kg.getData()).getId(), manufacture,name,sup_price,ret_price,3,catalogID,gpID,supplierID,"Meat");
+        branchController.addGeneralProduct(((Category)meat_one_kg.getData()).getId(), manufacture,name,sup_price,ret_price,3,catalogID,gpID,supplierID,"Meat" , (float) 1);
 
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Meat");
 
@@ -2596,7 +2597,7 @@ public class CLController {
         sup_price = 10.0f;
         ret_price = 13.0f;
         catalogID = 21;
-        branchController.addGeneralProduct(((Category)fish_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meat");
+        branchController.addGeneralProduct(((Category)fish_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,5,catalogID,gpID,supplierID,"Meat" , (float) 0.5);
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Fish");
 
 
@@ -2606,7 +2607,7 @@ public class CLController {
         sup_price = 9.5f;
         ret_price = 12.0f;
         catalogID = 22;
-        branchController.addGeneralProduct(((Category)fish_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,7,catalogID,gpID,supplierID,"Fish");
+        branchController.addGeneralProduct(((Category)fish_half_kg.getData()).getId(), manufacture,name,sup_price,ret_price,7,catalogID,gpID,supplierID,"Fish" , (float) 0.5);
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Fish");
 
         manufacture = "Merluza";
@@ -2615,7 +2616,7 @@ public class CLController {
         sup_price = 15.5f;
         ret_price = 17.0f;
         catalogID = 23;
-        branchController.addGeneralProduct(((Category)fish_one_kg.getData()).getId(), manufacture,name,sup_price,ret_price,10,catalogID,gpID,supplierID,"Fish");
+        branchController.addGeneralProduct(((Category)fish_one_kg.getData()).getId(), manufacture,name,sup_price,ret_price,10,catalogID,gpID,supplierID,"Fish" , (float) 1);
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Fish");
 
 

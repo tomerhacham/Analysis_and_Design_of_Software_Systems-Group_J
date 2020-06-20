@@ -1,4 +1,4 @@
 package bussines_layer.enums;
 
 
-public enum supplierType {byOrder , periodic , selfDelivery;}
+public enum supplierType {byOrder , periodic , selfDelivery}

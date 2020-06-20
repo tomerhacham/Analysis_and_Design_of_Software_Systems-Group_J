@@ -3,7 +3,9 @@ package bussines_layer;
 import bussines_layer.employees_module.EmployeesModule;
 import bussines_layer.employees_module.models.ModelShift;
 import bussines_layer.employees_module.models.ModelWorker;
+import bussines_layer.enums.supplierType;
 import bussines_layer.inventory_module.*;
+import bussines_layer.supplier_module.Order;
 import bussines_layer.supplier_module.SupplierModule;
 import bussines_layer.transport_module.TransportModule;
 import data_access_layer.DTO.BranchDTO;
@@ -57,8 +59,8 @@ public class Branch {
 
     //region General Products
     public Result addGeneralProduct(Integer category_id, String manufacture, String name, Float supplier_price, Float retail_price,
-                                    Integer min_quantity, Integer catalogID, Integer gpID, Integer supplier_id, String supplier_category){
-        return inventory.addGeneralProduct(category_id, manufacture, name, supplier_price, retail_price, min_quantity, catalogID, gpID, supplier_id, supplier_category);
+                                    Integer min_quantity, Integer catalogID, Integer gpID, Integer supplier_id, String supplier_category , Float weight){
+        return inventory.addGeneralProduct(category_id, manufacture, name, supplier_price, retail_price, min_quantity, catalogID, gpID, supplier_id, supplier_category , weight);
     }
     public Result removeGeneralProduct(Integer category_id, Integer gpID)
     {
@@ -160,7 +162,7 @@ public class Branch {
         }
         CatalogProduct cp = gp.getSupplierCatalogProduct(supplierID);
         if (cp == null){
-            cp = gp.addCatalogProduct(catalogID, gpID, supplier_price, supplierID, supplier_category, gp.getName()).getData();
+            cp = gp.addCatalogProduct(catalogID, gpID, supplier_price, supplierID, supplier_category, gp.getName() , gp.getWeight()).getData();
         }
         return supplierModule.addProductToContract(supplierID, cp);
     }
@@ -215,8 +217,23 @@ public class Branch {
         return inventory.updateInventory(products);
     }
 
+    public Result<String> bookTransportOrder (Order order){
+        if(order.getSupplier().getType()== supplierType.selfDelivery){
+            String toprint = transportModule.BookTransport(order);
+            return new Result(true , toprint , "");
+        }
+        return new Result(false , new String(" ") , "");
+    }
+
     public Result<String> createOutOfStockOrder(Report report){
-        return supplierModule.createOutOfStockOrder(report);
+        Result<Order> resultOrder = supplierModule.createOutOfStockOrder(report);
+        Order order = resultOrder.getData();
+        if(order!=null){
+           String transportString = bookTransportOrder(order).getData();
+           String toprint = resultOrder.getMessage().concat(transportString);
+            return new Result( true , toprint , "");
+        }
+        return new Result( false , resultOrder.getMessage() , "");
     }
 
     public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<Integer , Integer>> productsAndQuantity , Integer date){

@@ -149,8 +149,8 @@ public class BranchController {
 
     //region General Products
     public Result addGeneralProduct(Integer category_id, String manufacture, String name, Float supplier_price, Float retail_price,
-                                    Integer min_quantity, Integer catalogID, Integer gpID, Integer supplier_id, String supplier_category){
-        return currBranch.addGeneralProduct(category_id, manufacture, name, supplier_price, retail_price, min_quantity, catalogID, gpID, supplier_id, supplier_category);
+                                    Integer min_quantity, Integer catalogID, Integer gpID, Integer supplier_id, String supplier_category, Float weight){
+        return currBranch.addGeneralProduct(category_id, manufacture, name, supplier_price, retail_price, min_quantity, catalogID, gpID, supplier_id, supplier_category , weight);
     }
     //    public Result removeGeneralProduct(Integer category_id, Integer gpID) {
 //        return currBranch.removeGeneralProduct(category_id, gpID);
@@ -303,6 +303,7 @@ public class BranchController {
     }
 
     public Result<String> createOutOfStockOrder(Report report){
+
         return currBranch.createOutOfStockOrder(report);
     }
 

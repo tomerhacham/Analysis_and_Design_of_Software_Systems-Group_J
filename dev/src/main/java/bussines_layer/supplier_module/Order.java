@@ -30,6 +30,7 @@ public class Order {
     private HashMap<CatalogProduct, Integer> productsAndQuantity; // <product , quantity>
     private HashMap<CatalogProduct , Float> productsAndPrice; //<product, price>
     private SupplierCard supplier;
+    private Float totalWeight;
 
 
     //constructor to out of stock order
@@ -42,6 +43,7 @@ public class Order {
         this.type = type;
         this.status=OrderStatus.inProcess;
         this.dayToDeliver = null;
+        this.totalWeight = (float)0;
         this.issuedDate = BranchController.system_curr_date;
     }
 
@@ -55,6 +57,7 @@ public class Order {
         this.type = type;
         this.status=OrderStatus.inProcess;
         this.dayToDeliver = dayToDeliver;
+        this.totalWeight = (float)0;
         this.issuedDate = BranchController.system_curr_date;
     }
 
@@ -130,6 +133,7 @@ public class Order {
         }
         productsAndQuantity.put(product , quantity);
         productsAndPrice.put(product , price);
+        addToTotalWeight(product.getWeight());
         return new Result<>(true,product, String.format("The product %s has been added to the order:%d", product.getName() , getOrderID()));
     }
 
@@ -139,6 +143,7 @@ public class Order {
         }
         productsAndQuantity.remove(product);
         productsAndPrice.remove(product);
+        subFromTotalWeight(product.getWeight());
 
         if (productsAndQuantity.size()==0){
             return new Result<>(true,product, String.format("The product %s has been removed from the order:%d , - But notice , the order now is empty and therefore is deleted", product.getName() , getOrderID()));
@@ -147,8 +152,15 @@ public class Order {
     }
 
     public Result updateProductQuantityInPeriodicOrder(CatalogProduct product , Integer newQuantity , Float newPrice){
+        Integer oldQuantity = productsAndQuantity.get(product);
+        Float subFromTotalWeight = product.getWeight()*oldQuantity;
+        Float addToTotalWeight = product.getWeight()*newQuantity;
         productsAndQuantity.replace(product , newQuantity);
         productsAndPrice.replace(product , newPrice);
+
+        subFromTotalWeight(subFromTotalWeight);
+        addToTotalWeight(addToTotalWeight);
+
         return new Result<>(true,product, String.format("The product %s has been updated in the order:%d", product.getName() , getOrderID()));
     }
 
@@ -172,6 +184,17 @@ public class Order {
         return new Result<>(true, toDisplay, String.format(" The Order Is Ready And Has Been Sent Back To The Employee: %s", toDisplay));
     }
 
+    public Result<String> displayProductsInOrder() {
+        String toDisplay = "";
+        toDisplay = toDisplay+ "Product Name\t\t\tCatalogID\t\t\tQuantity";
+
+        for (CatalogProduct p : productsAndQuantity.keySet()){
+            toDisplay = toDisplay+p.getName()+"\t\t\t"+ p.getCatalogID() +"\t\t\t"+ productsAndQuantity.get(p)+'\n';
+        }
+
+        return new Result<>(true, toDisplay, "");
+    }
+
     public Result<Float> getTotalAmount (){
         Float total = (float) 0;
         int quantity;
@@ -188,6 +211,11 @@ public class Order {
 
     public void setProductsAndQuantity(HashMap<CatalogProduct, Integer> productsAndQuantity) {
         this.productsAndQuantity = productsAndQuantity;
+        Float addToTotalWeigt  = (float) 0;
+        for (CatalogProduct p: productsAndQuantity.keySet()) {
+            addToTotalWeigt = addToTotalWeigt + p.getWeight();
+        }
+        addToTotalWeight(addToTotalWeigt);
     }
 
     public void setProductsAndPrice(HashMap<CatalogProduct, Float> productsAndPrice) {
@@ -199,8 +227,19 @@ public class Order {
         Integer quantity = productsAndQuantity.get(product);
         productsAndQuantity.remove(product);
         productsAndQuantity.put(newCatalogProduct , quantity);
+
+        subFromTotalWeight(product.getWeight());
+        addToTotalWeight(newCatalogProduct.getWeight());
+
         //update productsAndPrice
         productsAndPrice.remove(product);
         productsAndPrice.put(newCatalogProduct , price);
+    }
+
+    public void addToTotalWeight(Float weight){
+        this.totalWeight = this.totalWeight + weight;
+    }
+    public void subFromTotalWeight(Float weight){
+        this.totalWeight = this.totalWeight - weight;
     }
 }
