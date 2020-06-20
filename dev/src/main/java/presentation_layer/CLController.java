@@ -456,7 +456,7 @@ public class CLController {
     private static void printCreateSupplierCardMenu() {
         Result result;
         String menu = "Please enter the following details\n";
-        menu=menu.concat("[supplierName],[address],[Email],[PhoneNumber],[supplier_id],[BankAccountNumber],[Payment],[by order/periodic/self delivery]");
+        menu=menu.concat("[supplierName],[address],[Email],[PhoneNumber],[supplier_id],[BankAccountNumber],[Payment],[by order/fix days/self delivery],[optional: fix_day]");
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 8 && param[4].matches("[0-9]+")) {
@@ -466,7 +466,16 @@ public class CLController {
             LinkedList<String> contactsName = new LinkedList<>(Arrays.asList(contactsInput));
             result = branchController.createSupplierCard(param[0],param[1],param[2],param[3],Integer.parseInt(param[4]),param[5],param[6],contactsName,param[7]);
             System.out.println(result.getMessage());
-        } else {
+        }
+        else if (param.length == 9 && param[7].equals("fix days") && param[4].matches("[0-9]+") && param[8].matches("[1-7]")) {
+            String details= "Please enter list of contacts names: [Name1],[Name2],...\n";
+            System.out.println(details);
+            String[] contactsInput = getInputParserbyComma(sc);
+            LinkedList<String> contactsName = new LinkedList<>(Arrays.asList(contactsInput));
+            result = branchController.createSupplierCard(param[0],param[1],param[2],param[3],Integer.parseInt(param[4]),param[5],param[6],contactsName,param[7],Integer.parseInt(param[8])-1);
+            System.out.println(result.getMessage());
+        }
+        else {
             System.out.println("Invalid parameters");
         }
     }

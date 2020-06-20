@@ -24,6 +24,7 @@ public class SupplierCard {
     private supplierType type;
     private Integer numOfContract;
     private LinkedList<String> ContactsName;
+    private Integer fix_day=-1;
 
 
     public SupplierCard(String SupplierName , String Address , String Email , String PhoneNumber ,
@@ -40,6 +41,21 @@ public class SupplierCard {
         this.numOfContract =0;
         this.type = type;
     }
+    public SupplierCard(String SupplierName , String Address , String Email , String PhoneNumber ,
+                        int id , String BankAccountNum , String Payment , LinkedList<String> ContactsName, supplierType type, Integer fix_day){
+
+        this.SupplierName = SupplierName;
+        this.Address = Address;
+        this.Email = Email;
+        this.PhoneNumber = PhoneNumber;
+        this.id = id;
+        this.BankAccountNum = BankAccountNum;
+        this.Payment = Payment;
+        this.ContactsName = ContactsName;
+        this.numOfContract =0;
+        this.type = type;
+        this.fix_day=fix_day;
+    }
     public SupplierCard(SupplierDTO dto,LinkedList<String> contactsName){
         this.id=dto.getSupplier_id();
         this.SupplierName=dto.getSupplier_name();
@@ -51,6 +67,7 @@ public class SupplierCard {
         this.type=dto.getType();
         this.ContactsName=contactsName;
         this.numOfContract=dto.getContact_list().size();
+        this.fix_day=dto.getFix_day();
     }
 //#region getters_setters
 
@@ -125,6 +142,10 @@ public class SupplierCard {
     public supplierType getType () { return type; }
 
     public void setType (supplierType type) {this.type =type; }
+
+    public Integer getFix_day() {
+        return fix_day;
+    }
 
     public Integer getNumOfContract () {return numOfContract;}
 

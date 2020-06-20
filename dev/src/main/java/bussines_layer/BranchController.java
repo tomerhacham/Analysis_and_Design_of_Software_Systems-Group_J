@@ -34,6 +34,9 @@ public class BranchController {
     public Result createSupplierCard (String supplierName, String address, String email, String phoneNumber, Integer id, String bankAccountNum, String payment, LinkedList<String> contactsName, String type) {
         return supplierController.createSupplierCard(supplierName , address , email , phoneNumber , id , bankAccountNum , payment , contactsName, type);
     }
+    public Result createSupplierCard (String supplierName, String address, String email, String phoneNumber, Integer id, String bankAccountNum, String payment, LinkedList<String> contactsName, String type,Integer fix_day) {
+        return supplierController.createSupplierCard(supplierName , address , email , phoneNumber , id , bankAccountNum , payment , contactsName, type, fix_day);
+    }
 
     public Result changeSupplierName(Integer supid, String supplierName) {
         return supplierController.ChangeSupplierName(supid , supplierName);
@@ -298,8 +301,8 @@ public class BranchController {
         return currBranch.acceptOrder(orderID);
     }
 
-    public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<Integer, Integer>> productsAndQuantity , Integer date){
-        return currBranch.createPeriodicOrder(supplierID, productsAndQuantity,date);
+    public Result createPeriodicOrder(Integer supplierID , LinkedList<Pair<Integer, Integer>> productsAndQuantity , Integer day){
+        return currBranch.createPeriodicOrder(supplierID, productsAndQuantity,day);
     }
 
     public Result<String> createOutOfStockOrder(Report report){

@@ -29,6 +29,8 @@ public class SupplierDTO {
     String payment_kind;
     @DatabaseField(columnName = "type",dataType = DataType.ENUM_TO_STRING)
     supplierType type;
+    @DatabaseField(columnName = "fix_day")
+    Integer fix_day;
     @ForeignCollectionField(eager=false)
     ForeignCollection<contact_of_supplierDTO> contact_list;
 
@@ -54,6 +56,7 @@ public class SupplierDTO {
         this.bank_account_number = supplierCard.getBankAccountNum();
         this.payment_kind = supplierCard.getPayment();
         this.type=supplierCard.getType();
+        this.fix_day=supplierCard.getFix_day();
     }
     public SupplierDTO() {
     }
@@ -91,13 +94,17 @@ public class SupplierDTO {
         return type;
     }
 
+    public Integer getFix_day() {
+        return fix_day;
+    }
+
     public ForeignCollection<contact_of_supplierDTO> getContact_list() {
         return contact_list;
     }
 
     public supplierType convertEnumTString(String type){
         if(type.equals("byOrder")){return supplierType.byOrder;}
-        else if(type.equals("periodic")){return supplierType.periodic;}
+        else if(type.equals("fix_days")){return supplierType.fix_days;}
         else{return supplierType.selfDelivery;}
     }
 

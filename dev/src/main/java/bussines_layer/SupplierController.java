@@ -63,6 +63,16 @@ public class SupplierController {
                 id ,BankAccountNum ,Payment ,ContactsName, type);
         return addSupplierCardToList(supplierCard);
     }
+    public Result createSupplierCard(String SupplierName , String Address , String Email , String PhoneNumber ,
+                                     Integer id ,String BankAccountNum , String Payment , LinkedList<String> ContactsName, String typeString,Integer fix_day){
+        supplierType type = convertStringToType(typeString);
+        if (type == null){
+            return new Result<>(false,id, String.format("Type: %s of supplier invalid",typeString));
+        }
+        SupplierCard supplierCard = new SupplierCard(SupplierName, Address, Email, PhoneNumber,
+                id ,BankAccountNum ,Payment ,ContactsName, type,fix_day);
+        return addSupplierCardToList(supplierCard);
+    }
 
     /**
      * add new supplier to the list
@@ -331,8 +341,8 @@ public class SupplierController {
         supplierType type = null;
         if (t.equals("by Order") || t.equals("by order")){
             type = supplierType.byOrder;
-        } else if (t.equals("periodic") || t.equals("Periodic")){
-            type = supplierType.periodic;
+        } else if (t.equals("fix days") || t.equals("fix days")){
+            type = supplierType.fix_days;
         } else if (t.equals("self Delivery") || t.equals("self delivery")){
             type = supplierType.selfDelivery;
         } else {
