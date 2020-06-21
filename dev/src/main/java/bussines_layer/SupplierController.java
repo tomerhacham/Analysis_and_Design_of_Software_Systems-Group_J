@@ -275,6 +275,24 @@ public class SupplierController {
         return result;
     }
 
+    public Result ChangeSupplierKind(Integer id ,String typeString, Integer fix_day){
+        Result result;
+        if ( ! isExist(id).isOK()){
+            result=new Result<>(false,id, String.format("Could not find supplier ID:%d", id));
+        }
+        else {
+            supplierType type = convertStringToType(typeString);
+            if (type == null) {
+                result = new Result<>(false, id, String.format("Type: %s of supplier invalid", typeString));
+            } else {
+                suppliers.get(id).setType(type, fix_day);
+                result = new Result<>(true, id, String.format("Supplier ID:%d type has been set to %s", id, type.name()));
+                mapper.update(suppliers.get(id));
+            }
+        }
+        return result;
+    }
+
 //#endregion
 
     //region Utilities

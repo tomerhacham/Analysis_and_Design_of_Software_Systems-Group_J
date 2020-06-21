@@ -352,15 +352,21 @@ public class CLController {
     private static void printEditSupplierType() {
         Result result;
         String menu = "Please enter the following details\n";
-        menu=menu.concat("[supplierID],[SupplierType]");
+        menu=menu.concat("[supplierID],[SupplierType: by order/fix days/self delivery][optional: fix_day]");
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 2 && param[0].matches("[0-9]+")) {
             Integer supplierID = Integer.parseInt(param[0]);
             result = branchController.ChangeSupplierType(supplierID,param[1]);
             System.out.println(result.getMessage());
-        } else {
-            System.out.println("Invalid numbers of parameters");
+        } else if (param.length == 3 && param[0].matches("[0-9]+") &&  param[1].equals("fix days") &&param[2].matches("[1-7]") ){
+            Integer supplierID = Integer.parseInt(param[0]);
+            Integer fix_day = Integer.parseInt(param[2]);
+            result = branchController.ChangeSupplierType(supplierID,param[1], fix_day-1);
+            System.out.println(result.getMessage());
+        }
+        else {
+            System.out.println("Invalid parameters");
         }
     }
 
@@ -461,7 +467,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 8 && param[4].matches("[0-9]+")) {
-            String details= "Please enter list of contacts names: [Name1],[Name2],...\n";
+            String details= "Please enter list of contacts names: [Name1],[Name2],...";
             System.out.println(details);
             String[] contactsInput = getInputParserbyComma(sc);
             LinkedList<String> contactsName = new LinkedList<>(Arrays.asList(contactsInput));
@@ -469,7 +475,7 @@ public class CLController {
             System.out.println(result.getMessage());
         }
         else if (param.length == 9 && param[7].equals("fix days") && param[4].matches("[0-9]+") && param[8].matches("[1-7]")) {
-            String details= "Please enter list of contacts names: [Name1],[Name2],...\n";
+            String details= "Please enter list of contacts names: [Name1],[Name2],...";
             System.out.println(details);
             String[] contactsInput = getInputParserbyComma(sc);
             LinkedList<String> contactsName = new LinkedList<>(Arrays.asList(contactsInput));
@@ -2550,7 +2556,7 @@ public class CLController {
 
         //Create supplier halavi-lee
         branchController.createSupplierCard("halavi-lee" , "ringelbloom 97 beer-sheva" , "halavi@gmail.com" , "081234567" ,
-                supplierID, "0975635" , "CreditCard" , contact,"periodic");
+                supplierID, "0975635" , "CreditCard" , contact,"self delivery");
 
         LinkedList <String> categories = new LinkedList<>();
         categories.add("Hygiene");
@@ -2624,7 +2630,7 @@ public class CLController {
 
         //Create supplier niceToMeat
         branchController.createSupplierCard("niceToMeat" , "mesada 37 beer-sheva" , "niceToMeat@gmail.com" , "087594456" ,
-                supplierID, "09754432", "CreditCard" , contact2, "by order");
+                supplierID, "09754432", "CreditCard" , contact2, "self delivery");
 
         //create contract
         branchController.addContract(supplierID, categories2);
