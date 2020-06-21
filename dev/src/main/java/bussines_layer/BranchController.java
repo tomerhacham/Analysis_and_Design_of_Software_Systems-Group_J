@@ -73,6 +73,9 @@ public class BranchController {
     public Result ChangeSupplierType(Integer supid, String type) {
         return supplierController.ChangeSupplierKind(supid , type);
     }
+    public Result ChangeSupplierType(Integer supid, String type, Integer fix_day) {
+        return supplierController.ChangeSupplierKind(supid , type, fix_day);
+    }
 
     public Result isExistSupplier(Integer supid) {
         return supplierController.isExist(supid);
