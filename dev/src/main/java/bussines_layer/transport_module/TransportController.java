@@ -39,8 +39,10 @@ public class TransportController {
 
     public void addToPendingOrder(Order order)
     {
-        pending_Orders.add(order);
-        mapper.add_to_pending_orders(order.getOrderID(),branch_id);
+        if (!pending_Orders.contains(order)) {
+            pending_Orders.add(order);
+            mapper.add_to_pending_orders(order.getOrderID(), branch_id);
+        }
     }
 
     //if a transport exist in the system, delete it - not remove from DB
@@ -146,7 +148,7 @@ public class TransportController {
         for (Order o :pending_Orders) {
             s = s + "Order id: " + o.getOrderID() + "\n";
             s = s + "\tSupplier name: " + o.getSupplier().getSupplierName() + "\n";
-            s = s + "\tOrder content:\n\t\t" + o.displayProductsInOrder() + "\n";
+            s = s + "\tOrder content:\n\t\t" + o.displayProductsInOrder().getData() + "\n";
         }
         return s;
     }
@@ -169,7 +171,6 @@ public class TransportController {
         return null;
     }
 
-    //TODO:: check if works
     public void updatePendingOrders() {
         for (int i = 0; i < pending_Orders.size(); i++) {
             Order o = pending_Orders.get(i);
@@ -179,6 +180,17 @@ public class TransportController {
             Date expDate = cal.getTime();
             if (o.getIssuedDate().compareTo(expDate) == 0){
                 pending_Orders.remove(i);
+                mapper.removeFromPendingOrders(o.getOrderID(), branch_id);
+            }
+        }
+    }
+
+    public void removeOrderFromPending(Order order) {
+        for (int i = 0; i < pending_Orders.size(); i++) {
+            Order o = pending_Orders.get(i);
+            if (o.getOrderID() == order.getOrderID()){
+                pending_Orders.remove(i);
+                mapper.removeFromPendingOrders(order.getOrderID(), branch_id);
             }
         }
     }

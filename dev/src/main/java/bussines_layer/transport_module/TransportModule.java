@@ -1,4 +1,5 @@
 package bussines_layer.transport_module;
+import bussines_layer.BranchController;
 import bussines_layer.employees_module.EmployeesModule;
 import bussines_layer.enums.OrderStatus;
 import bussines_layer.enums.OrderType;
@@ -34,25 +35,28 @@ public class TransportModule {
         Float totalWeight= order.getTotalWeight();
         if (order.getType() == OrderType.OutOfStockOrder) {
             Date date = order.getIssuedDate();
+            Date today = BranchController.system_curr_date;
             for (int i = 1; i <= 7; i++) {
-                Date today = new Date();
-                if (today.after(date))
+                if (today.after(date)) {
+                    date = addDay(date);
                     continue;
+                }
                 String ans = createTransport(date,totalWeight, order);
                 if(!ans.equals(""))
                     return ans;
                 date = addDay(date);
             }
             transportController.addToPendingOrder(order);
-            return "The transport book - Failed!\n The order moved to pending list. \n" +
-                    "please ensure that there are available storage man, driver and a truck for further treatment.";
+            return "The transport book - Failed!\nThe order moved to pending list. \n" +
+                    "please ensure that there are available storage man, driver and a truck for further treatment.\n";
         }
         else {
-            Date today = new Date();
-            String ans = createTransport(addDay(today),totalWeight, order);
+            Date today = BranchController.system_curr_date;
+            today = addDay(today);
+            String ans = createTransport(today,totalWeight, order);
             if(!ans.equals(""))
                 return ans;
-            return "The transport book - Failed!\n Periodic order has not been issued";
+            return "The transport book - Failed!\nPeriodic order has not been issued";
         }
     }
 
@@ -83,7 +87,7 @@ public class TransportModule {
         }
         return "";
     }
-    //TODO: check if works
+
     public Date addDay(Date date)
     {
         Calendar cal = Calendar.getInstance();
@@ -147,7 +151,10 @@ public class TransportModule {
         Order order = transportController.getFromPending(order_id);
         if(order!=null)
         {
-            return BookTransport(order);
+            String ans = BookTransport(order);
+            if (!ans.equals(""))
+                transportController.removeOrderFromPending(order);
+            return ans;
         }
         return "The order with id:"+order_id+"is not in the pending orders list.";
     }
