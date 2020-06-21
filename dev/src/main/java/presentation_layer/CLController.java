@@ -355,7 +355,7 @@ public class CLController {
         menu=menu.concat("[supplierID],[SupplierType: by order/fix days/self delivery][optional: fix_day]");
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
-        if (param.length == 2 && param[0].matches("[0-9]+")) {
+        if (param.length == 2 && !(param[1].equals("fix days")) && param[0].matches("[0-9]+")) {
             Integer supplierID = Integer.parseInt(param[0]);
             result = branchController.ChangeSupplierType(supplierID,param[1]);
             System.out.println(result.getMessage());
@@ -466,7 +466,7 @@ public class CLController {
         menu=menu.concat("[supplierName],[address],[Email],[PhoneNumber],[supplier_id],[BankAccountNumber],[Payment],[by order/fix days/self delivery],[optional: fix_day]");
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
-        if (param.length == 8 && param[4].matches("[0-9]+")) {
+        if (param.length == 8 && !(param[7].equals("fix days")) &&param[4].matches("[0-9]+")) {
             String details= "Please enter list of contacts names: [Name1],[Name2],...";
             System.out.println(details);
             String[] contactsInput = getInputParserbyComma(sc);
