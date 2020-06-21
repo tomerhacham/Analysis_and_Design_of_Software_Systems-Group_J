@@ -467,7 +467,7 @@ public class CLController {
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
         if (param.length == 8 && param[4].matches("[0-9]+")) {
-            String details= "Please enter list of contacts names: [Name1],[Name2],...\n";
+            String details= "Please enter list of contacts names: [Name1],[Name2],...";
             System.out.println(details);
             String[] contactsInput = getInputParserbyComma(sc);
             LinkedList<String> contactsName = new LinkedList<>(Arrays.asList(contactsInput));
@@ -475,7 +475,7 @@ public class CLController {
             System.out.println(result.getMessage());
         }
         else if (param.length == 9 && param[7].equals("fix days") && param[4].matches("[0-9]+") && param[8].matches("[1-7]")) {
-            String details= "Please enter list of contacts names: [Name1],[Name2],...\n";
+            String details= "Please enter list of contacts names: [Name1],[Name2],...";
             System.out.println(details);
             String[] contactsInput = getInputParserbyComma(sc);
             LinkedList<String> contactsName = new LinkedList<>(Arrays.asList(contactsInput));
