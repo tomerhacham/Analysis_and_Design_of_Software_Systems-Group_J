@@ -2611,9 +2611,11 @@ public class CLController {
         branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),4);
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Meat");
 
-//-------------------------------------------
-
-
+//------------------------------------- initialize periodic order -----------------------------
+        LinkedList<Pair<Integer , Integer>> product_quantity = new LinkedList<>();
+        product_quantity.add(new Pair<>(100, 10));
+        branchController.createPeriodicOrder(1, product_quantity, 3);    //wednesday
+//--------------------------------------------
         gpID = 104;
         name = "Moosh packed ground meat 1/2kg";
         sup_price = 32.5f;
