@@ -5,7 +5,6 @@ import bussines_layer.BranchController;
 import bussines_layer.Result;
 import bussines_layer.employees_module.models.ModelShift;
 import bussines_layer.employees_module.models.ModelWorker;
-import bussines_layer.employees_module.models.MyScanner;
 import bussines_layer.inventory_module.Category;
 import bussines_layer.inventory_module.Report;
 import bussines_layer.inventory_module.Sale;
@@ -821,37 +820,35 @@ public class CLController {
         menu=menu.concat("for discount by percentage please add '%'");
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
-        if(param.length == 2 && param[0].matches("[0-9]+")) {
-            result = branchController.addSaleByCategory(Integer.parseInt(param[0]),"fix",Float.parseFloat(param[1]));
-            System.out.println(result.getMessage());
-        }
-        else if(param.length == 3 && param[0].matches("[0-9]+")){
-            result = branchController.addSaleByCategory(Integer.parseInt(param[0]),"percentage",Float.parseFloat(param[1]));
-            System.out.println(result.getMessage());
-        }
-        else if(param.length == 4 && param[0].matches("[0-9]+")){
-            Date start_date=convertStringToDate(param[2]);
-            Date end_date =convertStringToDate(param[3]);
-            if(start_date!=null && end_date!=null){
-                result = branchController.addSaleByCategory(Integer.parseInt(param[0]),"fix",Float.parseFloat(param[1]),start_date,end_date);
+        if (param[0].matches("[0-9]+") && param[1].matches("\\d+\\.?\\d+")) {
+            if (param.length == 2) {
+                result = branchController.addSaleByCategory(Integer.parseInt(param[0]), "fix", Float.parseFloat(param[1]));
                 System.out.println(result.getMessage());
-            }
-            else{
-                System.out.println("One of the dates was not inserted as the format.");
-            }
-        }
-        else if(param.length == 5 && param[0].matches("[0-9]+")){
-            Date start_date=convertStringToDate(param[3]);
-            Date end_date =convertStringToDate(param[4]);
-            if(start_date!=null && end_date!=null && param[2].equals("%")){
-                result = branchController.addSaleByCategory(Integer.parseInt(param[0]),"percentage",Float.parseFloat(param[1]),start_date,end_date);
+            } else if (param.length == 3) {
+                result = branchController.addSaleByCategory(Integer.parseInt(param[0]), "percentage", Float.parseFloat(param[1]));
                 System.out.println(result.getMessage());
+            } else if (param.length == 4) {
+                Date start_date = convertStringToDate(param[2]);
+                Date end_date = convertStringToDate(param[3]);
+                if (start_date != null && end_date != null) {
+                    result = branchController.addSaleByCategory(Integer.parseInt(param[0]), "fix", Float.parseFloat(param[1]), start_date, end_date);
+                    System.out.println(result.getMessage());
+                } else {
+                    System.out.println("One of the dates was not inserted as the format.");
+                }
+            } else if (param.length == 5) {
+                Date start_date = convertStringToDate(param[3]);
+                Date end_date = convertStringToDate(param[4]);
+                if (start_date != null && end_date != null && param[2].equals("%")) {
+                    result = branchController.addSaleByCategory(Integer.parseInt(param[0]), "percentage", Float.parseFloat(param[1]), start_date, end_date);
+                    System.out.println(result.getMessage());
+                } else {
+                    System.out.println("One of the dates was not inserted as the format or the '%' did not inserted");
+                }
+            } else {
+                System.out.println("Invalid number of parameters");
             }
-            else{
-                System.out.println("One of the dates was not inserted as the format or the '%' did not inserted");
-            }
-        }
-        else{
+        } else{
             System.out.println("Invalid parameters");
         }
     }
@@ -862,7 +859,7 @@ public class CLController {
         menu=menu.concat("for discount by percentage please add '%'");
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
-        if (param[0].matches("[0-9]+")){
+        if (param[0].matches("[0-9]+") && param[1].matches("\\d+\\.?\\d+")){
             if (param.length == 2) {
                 result = branchController.addSaleByGeneralProduct(Integer.parseInt(param[0]), "fix", Float.parseFloat(param[1]));
                 System.out.println(result.getMessage());
@@ -1018,7 +1015,7 @@ public class CLController {
         menu=menu.concat("[supplierID],[catalogID],[price]");
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
-        if (param.length == 3 && param[0].matches("[0-9]+") && param[1].matches("[0-9]+") && param[2].matches("[0-9]+")) {
+        if (param.length == 3 && param[0].matches("[0-9]+") && param[1].matches("[0-9]+") && param[2].matches("\\d+\\.?\\d+")) {
             Integer supplierID = Integer.parseInt(param[0]);
             Integer catalogID = Integer.parseInt(param[1]);
             Float price = Float.parseFloat(param[2]);
@@ -1068,7 +1065,7 @@ public class CLController {
         menu=menu.concat("[supplierID],[catalogID],[minQuantity],[price]");
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
-        if (param.length == 4 && param[0].matches("[0-9]+") && param[1].matches("[0-9]+") && param[2].matches("[0-9]+") && param[3].matches("[0-9]+")) {
+        if (param.length == 4 && param[0].matches("[0-9]+") && param[1].matches("[0-9]+") && param[2].matches("[0-9]+") && param[3].matches("\\d+\\.?\\d+")) {
             Integer supplierID = Integer.parseInt(param[0]);
             Integer catalogID = Integer.parseInt(param[1]);
             Integer minQuan = Integer.parseInt(param[2]);
@@ -1152,7 +1149,7 @@ public class CLController {
         menu=menu.concat("[supplierID],[catalogID],[gpID],[supplier_price],[supplier_category]");
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
-        if (param.length == 5 && param[0].matches("[0-9]+") && param[1].matches("[0-9]+") && param[2].matches("[0-9]+") && param[3].matches("[0-9]+")) {
+        if (param.length == 5 && param[0].matches("[0-9]+") && param[1].matches("[0-9]+") && param[2].matches("[0-9]+") && param[3].matches("\\d+\\.?\\d+")) {
             Integer supID = Integer.parseInt(param[0]);
             Integer catalogID = Integer.parseInt(param[1]);
             Integer gpID = Integer.parseInt(param[2]);
@@ -1165,13 +1162,13 @@ public class CLController {
                 menu=menu.concat("[category_id],[manufacture],[retail_price],[min_quantity],[name][weight]");
                 System.out.println(menu);
                 String[] addDetails = getInputParserbyComma(sc);
-                if (addDetails.length == 6 && addDetails[0].matches("[0-9]+") && addDetails[3].matches("[0-9]+") && floatParse(addDetails[5])!=(-1)){
+                if (addDetails.length == 6 && addDetails[0].matches("[0-9]+") && addDetails[2].matches("\\d+\\.?\\d+") && addDetails[3].matches("[0-9]+") && addDetails[5].matches("\\d+\\.?\\d+")){
                     Integer category_id = Integer.parseInt(addDetails[0]);
                     String manufacture = addDetails[1];
                     Float ret_price = Float.parseFloat(addDetails[2]);
                     Integer min_quan = Integer.parseInt(addDetails[3]);
                     String name = addDetails[4];
-                    Float weight = floatParse(addDetails[5]);
+                    Float weight = Float.parseFloat(addDetails[5]);
                     result = branchController.addGeneralProduct(category_id,manufacture,name,sup_price,ret_price,min_quan,catalogID,gpID,supID,sup_cat, weight);
                     System.out.println(result.getMessage());
                     result = branchController.addProductToContract(supID,catalogID,gpID,sup_price,sup_cat);
@@ -1321,7 +1318,7 @@ public class CLController {
                     details=details.concat("[gpID],[New retail price]");
                     System.out.println(details);
                     param=getInputParserbyComma(sc);
-                    if(param.length == 2 && param[0].matches("[0-9]+") && param[1].matches("[0-9]+")) {
+                    if(param.length == 2 && param[0].matches("[0-9]+") && param[1].matches("\\d+\\.?\\d+")) {
                         result = branchController.editGeneralProductRetailPrice(Integer.parseInt(param[0]), Float.parseFloat(param[1]));
                         System.out.println(result.getMessage());
                     }
@@ -2428,9 +2425,9 @@ public class CLController {
     //region Utilities
     static private String[] getInputParserbyComma(Scanner sc){
         String user_input = getNextLine(sc);
-        user_input = user_input.replaceAll("\\s+,", ",").replaceAll(",\\s+", ",");
-        String[] toreturn = user_input.split(",");
-        return toreturn;
+        user_input = user_input.replaceAll("\\s+,", ",").replaceAll(",\\s+", ",").replaceAll(",,", ",");
+        return Arrays.stream(user_input.split(","))
+                .filter(e -> !e.equals("")).toArray(String[]::new);
     }
 
     static public Date convertStringToDate(String sdate){
