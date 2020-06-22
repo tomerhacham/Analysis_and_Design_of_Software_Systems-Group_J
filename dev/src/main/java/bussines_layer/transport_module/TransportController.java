@@ -30,6 +30,7 @@ public class TransportController {
     public String BookTransport(Date date, boolean partOfDay, Truck truck, String driverId, String driverName, float totalWeight, Order order)
     {
         Transport transport = new Transport(Id_Counter,date,partOfDay,truck,driverId,driverName,totalWeight,order,branch_id);
+        Id_Counter++;
         transports.put(transport.getID(),transport);
         mapper.addTransport(transport);
         order.setStatus(OrderStatus.sent);
