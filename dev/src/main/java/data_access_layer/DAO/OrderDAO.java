@@ -27,7 +27,6 @@ public class OrderDAO {
             this.identityMap=new HashMap<>();
             this.dao = DaoManager.createDao(conn,OrderDTO.class);
             this.catalog_product_in_order_dao=DaoManager.createDao(conn,catalog_product_in_orderDTO.class);
-            //this.dao.setObjectCache(true); TODO update Tomer
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -58,6 +57,7 @@ public class OrderDAO {
                         order.setSupplier(Mapper.getInstance().find_Supplier(dto.getSupplier()));
                         order.setProductsAndPrice(productsAndPrice);
                         order.setProductsAndQuantity(productsAndQuantity);
+                        order.setTotalWeight(dto.getTotalweight());
                     }
                 }
             } catch (SQLException throwables) {
@@ -101,6 +101,7 @@ public class OrderDAO {
             updateBuilder.updateColumnValue("day_to_deliver" ,orderDTO.getDaytodeliver());
             updateBuilder.updateColumnValue("status" ,orderDTO.getStatus());
             updateBuilder.updateColumnValue("type" ,orderDTO.getType());
+            updateBuilder.updateColumnValue("total_weight" , orderDTO.getTotalweight());
             updateBuilder.update();
 
             HashMap<CatalogProduct , Integer> productAndQuantity = order.getProductsAndQuantity();

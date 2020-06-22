@@ -143,6 +143,11 @@ public class SupplierCard {
 
     public void setType (supplierType type) {this.type =type; }
 
+    public void setType (supplierType type, Integer fix_day) {
+        this.type =type;
+        this.fix_day = fix_day;
+    }
+
     public Integer getFix_day() {
         return fix_day;
     }

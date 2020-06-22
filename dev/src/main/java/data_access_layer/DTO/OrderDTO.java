@@ -26,6 +26,8 @@ public class OrderDTO {
     Integer daytodeliver;
     @DatabaseField(columnName = "issue_date", dataType = DataType.DATE_STRING)
     Date issuedDate;
+    @DatabaseField(columnName = "total_weight")
+    Float totalweight;
 
     /*@ForeignCollectionField(eager = false)
     ForeignCollection<catalog_product_in_orderDTO> catalog_product_in_order;*/
@@ -39,6 +41,7 @@ public class OrderDTO {
         this.status=order.getStatus();
         this.daytodeliver= (Integer) order.getDayToDeliver().getData();
         this.issuedDate= order.getIssuedDate();
+        this.totalweight = order.getTotalWeight();
     }
     public OrderDTO() {}
 
@@ -72,6 +75,10 @@ public class OrderDTO {
         return branch_id;
     }
 
+    public Float getTotalweight() {
+        return totalweight;
+    }
+
     /*public ForeignCollection<catalog_product_in_orderDTO> getCatalog_product_in_order() {
         return catalog_product_in_order;
     }*/
@@ -95,6 +102,7 @@ public class OrderDTO {
                 ", status=" + status.name() +
                 ", daytodeliver=" + daytodeliver +
                 ", issuedDate=" + issuedDate +
+                "totalWeight="+totalweight+
                 '}';
     }
     //endregion

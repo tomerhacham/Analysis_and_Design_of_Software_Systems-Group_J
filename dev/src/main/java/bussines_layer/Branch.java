@@ -231,7 +231,7 @@ public class Branch {
         Order order = resultOrder.getData();
         if(order!=null){
            String transportString = bookTransportOrder(order).getData();
-           String toprint = resultOrder.getMessage().concat(transportString);
+           String toprint = order.display().getData().concat(transportString);
             return new Result( true , toprint , "");
         }
         return new Result( false , resultOrder.getMessage() , "");

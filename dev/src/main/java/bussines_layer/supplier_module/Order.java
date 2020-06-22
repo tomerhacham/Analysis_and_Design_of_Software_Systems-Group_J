@@ -68,6 +68,7 @@ public class Order {
         this.dayToDeliver = orderDTO.getDaytodeliver();
         this.issuedDate = orderDTO.getIssuedDate();
         this.branch_id = orderDTO.getBranch_id().getBranch_id();
+        this.totalWeight = orderDTO.getTotalweight();
     }
 
     public int getOrderID() {
@@ -210,6 +211,10 @@ public class Order {
 
     public Float getTotalWeight() {
         return totalWeight;
+    }
+
+    public void setTotalWeight(Float totalWeight) {
+        this.totalWeight = totalWeight;
     }
 
     public void setProductsAndQuantity(HashMap<CatalogProduct, Integer> productsAndQuantity) {

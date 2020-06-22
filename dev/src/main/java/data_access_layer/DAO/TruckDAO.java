@@ -185,11 +185,11 @@ public class TruckDAO {
             long numOfOccupaied;
             if(partOfDay)//morning
             {
-                numOfOccupaied = morning_shifts_DAO.queryRawValue("SELECT count(truckID) FROM morningShifts WHERE date='"+formatter.format(date)+"' AND BranchID="+branch_id);
+                numOfOccupaied = morning_shifts_DAO.queryRawValue("SELECT count(truckID) FROM morningShifts WHERE date='"+formatter.format(date) + "'");
             }
             else //night
             {
-                numOfOccupaied = morning_shifts_DAO.queryRawValue("SELECT count(truckID) FROM nightShifts WHERE date='"+formatter.format(date)+"' AND BranchID="+branch_id);
+                numOfOccupaied = night_shifts_DAO.queryRawValue("SELECT count(truckID) FROM nightShifts WHERE date='"+formatter.format(date) + "'");
             }
             return numOfTrucks>numOfOccupaied;
         }catch (Exception e)

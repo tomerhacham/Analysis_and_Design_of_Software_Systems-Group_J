@@ -5,7 +5,6 @@ import bussines_layer.BranchController;
 import bussines_layer.Result;
 import bussines_layer.employees_module.models.ModelShift;
 import bussines_layer.employees_module.models.ModelWorker;
-import bussines_layer.employees_module.models.MyScanner;
 import bussines_layer.inventory_module.Category;
 import bussines_layer.inventory_module.Report;
 import bussines_layer.inventory_module.Sale;
@@ -353,15 +352,21 @@ public class CLController {
     private static void printEditSupplierType() {
         Result result;
         String menu = "Please enter the following details\n";
-        menu=menu.concat("[supplierID],[SupplierType]");
+        menu=menu.concat("[supplierID],[SupplierType: by order/fix days/self delivery][optional: fix_day]");
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
-        if (param.length == 2 && param[0].matches("[0-9]+")) {
+        if (param.length == 2 && !(param[1].equals("fix days")) && param[0].matches("[0-9]+")) {
             Integer supplierID = Integer.parseInt(param[0]);
             result = branchController.ChangeSupplierType(supplierID,param[1]);
             System.out.println(result.getMessage());
-        } else {
-            System.out.println("Invalid numbers of parameters");
+        } else if (param.length == 3 && param[0].matches("[0-9]+") &&  param[1].equals("fix days") &&param[2].matches("[1-7]") ){
+            Integer supplierID = Integer.parseInt(param[0]);
+            Integer fix_day = Integer.parseInt(param[2]);
+            result = branchController.ChangeSupplierType(supplierID,param[1], fix_day-1);
+            System.out.println(result.getMessage());
+        }
+        else {
+            System.out.println("Invalid parameters");
         }
     }
 
@@ -461,8 +466,8 @@ public class CLController {
         menu=menu.concat("[supplierName],[address],[Email],[PhoneNumber],[supplier_id],[BankAccountNumber],[Payment],[by order/fix days/self delivery],[optional: fix_day]");
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
-        if (param.length == 8 && param[4].matches("[0-9]+")) {
-            String details= "Please enter list of contacts names: [Name1],[Name2],...\n";
+        if (param.length == 8 && !(param[7].equals("fix days")) &&param[4].matches("[0-9]+")) {
+            String details= "Please enter list of contacts names: [Name1],[Name2],...";
             System.out.println(details);
             String[] contactsInput = getInputParserbyComma(sc);
             LinkedList<String> contactsName = new LinkedList<>(Arrays.asList(contactsInput));
@@ -470,7 +475,7 @@ public class CLController {
             System.out.println(result.getMessage());
         }
         else if (param.length == 9 && param[7].equals("fix days") && param[4].matches("[0-9]+") && param[8].matches("[1-7]")) {
-            String details= "Please enter list of contacts names: [Name1],[Name2],...\n";
+            String details= "Please enter list of contacts names: [Name1],[Name2],...";
             System.out.println(details);
             String[] contactsInput = getInputParserbyComma(sc);
             LinkedList<String> contactsName = new LinkedList<>(Arrays.asList(contactsInput));
@@ -821,37 +826,35 @@ public class CLController {
         menu=menu.concat("for discount by percentage please add '%'");
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
-        if(param.length == 2 && param[0].matches("[0-9]+")) {
-            result = branchController.addSaleByCategory(Integer.parseInt(param[0]),"fix",Float.parseFloat(param[1]));
-            System.out.println(result.getMessage());
-        }
-        else if(param.length == 3 && param[0].matches("[0-9]+")){
-            result = branchController.addSaleByCategory(Integer.parseInt(param[0]),"percentage",Float.parseFloat(param[1]));
-            System.out.println(result.getMessage());
-        }
-        else if(param.length == 4 && param[0].matches("[0-9]+")){
-            Date start_date=convertStringToDate(param[2]);
-            Date end_date =convertStringToDate(param[3]);
-            if(start_date!=null && end_date!=null){
-                result = branchController.addSaleByCategory(Integer.parseInt(param[0]),"fix",Float.parseFloat(param[1]),start_date,end_date);
+        if (param[0].matches("[0-9]+") && param[1].matches("\\d+\\.?\\d+")) {
+            if (param.length == 2) {
+                result = branchController.addSaleByCategory(Integer.parseInt(param[0]), "fix", Float.parseFloat(param[1]));
                 System.out.println(result.getMessage());
-            }
-            else{
-                System.out.println("One of the dates was not inserted as the format.");
-            }
-        }
-        else if(param.length == 5 && param[0].matches("[0-9]+")){
-            Date start_date=convertStringToDate(param[3]);
-            Date end_date =convertStringToDate(param[4]);
-            if(start_date!=null && end_date!=null && param[2].equals("%")){
-                result = branchController.addSaleByCategory(Integer.parseInt(param[0]),"percentage",Float.parseFloat(param[1]),start_date,end_date);
+            } else if (param.length == 3) {
+                result = branchController.addSaleByCategory(Integer.parseInt(param[0]), "percentage", Float.parseFloat(param[1]));
                 System.out.println(result.getMessage());
+            } else if (param.length == 4) {
+                Date start_date = convertStringToDate(param[2]);
+                Date end_date = convertStringToDate(param[3]);
+                if (start_date != null && end_date != null) {
+                    result = branchController.addSaleByCategory(Integer.parseInt(param[0]), "fix", Float.parseFloat(param[1]), start_date, end_date);
+                    System.out.println(result.getMessage());
+                } else {
+                    System.out.println("One of the dates was not inserted as the format.");
+                }
+            } else if (param.length == 5) {
+                Date start_date = convertStringToDate(param[3]);
+                Date end_date = convertStringToDate(param[4]);
+                if (start_date != null && end_date != null && param[2].equals("%")) {
+                    result = branchController.addSaleByCategory(Integer.parseInt(param[0]), "percentage", Float.parseFloat(param[1]), start_date, end_date);
+                    System.out.println(result.getMessage());
+                } else {
+                    System.out.println("One of the dates was not inserted as the format or the '%' did not inserted");
+                }
+            } else {
+                System.out.println("Invalid number of parameters");
             }
-            else{
-                System.out.println("One of the dates was not inserted as the format or the '%' did not inserted");
-            }
-        }
-        else{
+        } else{
             System.out.println("Invalid parameters");
         }
     }
@@ -862,7 +865,7 @@ public class CLController {
         menu=menu.concat("for discount by percentage please add '%'");
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
-        if (param[0].matches("[0-9]+")){
+        if (param[0].matches("[0-9]+") && param[1].matches("\\d+\\.?\\d+")){
             if (param.length == 2) {
                 result = branchController.addSaleByGeneralProduct(Integer.parseInt(param[0]), "fix", Float.parseFloat(param[1]));
                 System.out.println(result.getMessage());
@@ -1018,7 +1021,7 @@ public class CLController {
         menu=menu.concat("[supplierID],[catalogID],[price]");
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
-        if (param.length == 3 && param[0].matches("[0-9]+") && param[1].matches("[0-9]+") && param[2].matches("[0-9]+")) {
+        if (param.length == 3 && param[0].matches("[0-9]+") && param[1].matches("[0-9]+") && param[2].matches("\\d+\\.?\\d+")) {
             Integer supplierID = Integer.parseInt(param[0]);
             Integer catalogID = Integer.parseInt(param[1]);
             Float price = Float.parseFloat(param[2]);
@@ -1068,7 +1071,7 @@ public class CLController {
         menu=menu.concat("[supplierID],[catalogID],[minQuantity],[price]");
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
-        if (param.length == 4 && param[0].matches("[0-9]+") && param[1].matches("[0-9]+") && param[2].matches("[0-9]+") && param[3].matches("[0-9]+")) {
+        if (param.length == 4 && param[0].matches("[0-9]+") && param[1].matches("[0-9]+") && param[2].matches("[0-9]+") && param[3].matches("\\d+\\.?\\d+")) {
             Integer supplierID = Integer.parseInt(param[0]);
             Integer catalogID = Integer.parseInt(param[1]);
             Integer minQuan = Integer.parseInt(param[2]);
@@ -1152,7 +1155,7 @@ public class CLController {
         menu=menu.concat("[supplierID],[catalogID],[gpID],[supplier_price],[supplier_category]");
         System.out.println(menu);
         String[] param = getInputParserbyComma(sc);
-        if (param.length == 5 && param[0].matches("[0-9]+") && param[1].matches("[0-9]+") && param[2].matches("[0-9]+") && param[3].matches("[0-9]+")) {
+        if (param.length == 5 && param[0].matches("[0-9]+") && param[1].matches("[0-9]+") && param[2].matches("[0-9]+") && param[3].matches("\\d+\\.?\\d+")) {
             Integer supID = Integer.parseInt(param[0]);
             Integer catalogID = Integer.parseInt(param[1]);
             Integer gpID = Integer.parseInt(param[2]);
@@ -1165,13 +1168,13 @@ public class CLController {
                 menu=menu.concat("[category_id],[manufacture],[retail_price],[min_quantity],[name][weight]");
                 System.out.println(menu);
                 String[] addDetails = getInputParserbyComma(sc);
-                if (addDetails.length == 6 && addDetails[0].matches("[0-9]+") && addDetails[3].matches("[0-9]+") && floatParse(addDetails[5])!=(-1)){
+                if (addDetails.length == 6 && addDetails[0].matches("[0-9]+") && addDetails[2].matches("\\d+\\.?\\d+") && addDetails[3].matches("[0-9]+") && addDetails[5].matches("\\d+\\.?\\d+")){
                     Integer category_id = Integer.parseInt(addDetails[0]);
                     String manufacture = addDetails[1];
                     Float ret_price = Float.parseFloat(addDetails[2]);
                     Integer min_quan = Integer.parseInt(addDetails[3]);
                     String name = addDetails[4];
-                    Float weight = floatParse(addDetails[5]);
+                    Float weight = Float.parseFloat(addDetails[5]);
                     result = branchController.addGeneralProduct(category_id,manufacture,name,sup_price,ret_price,min_quan,catalogID,gpID,supID,sup_cat, weight);
                     System.out.println(result.getMessage());
                     result = branchController.addProductToContract(supID,catalogID,gpID,sup_price,sup_cat);
@@ -1321,7 +1324,7 @@ public class CLController {
                     details=details.concat("[gpID],[New retail price]");
                     System.out.println(details);
                     param=getInputParserbyComma(sc);
-                    if(param.length == 2 && param[0].matches("[0-9]+") && param[1].matches("[0-9]+")) {
+                    if(param.length == 2 && param[0].matches("[0-9]+") && param[1].matches("\\d+\\.?\\d+")) {
                         result = branchController.editGeneralProductRetailPrice(Integer.parseInt(param[0]), Float.parseFloat(param[1]));
                         System.out.println(result.getMessage());
                     }
@@ -1819,9 +1822,10 @@ public class CLController {
             menu = menu.concat("3) Remove Position\n");
             menu = menu.concat("4) Remove Worker\n");
             menu = menu.concat("5) Submit Shift\n");
-            menu = menu.concat("6) Return\n");
+            menu = menu.concat("6) Cancel Shift\n");
             menu = menu.concat("7) Exit");
             while (true) {
+                System.out.println(branchController.getCurrentEditedModelShift().fullView());
                 System.out.println(menu);
                 Integer option = getNextInt(sc);
                 switch (option) {
@@ -1835,14 +1839,15 @@ public class CLController {
                         printRemovePositionFromShift();
                         break;
                     case 4:
-                        printRemoveWorker();
+                        printRemoveWorkerFromShift();
                         break;
                     case 5:
                         output = branchController.submitShift();
                         if (output != null)
                             System.out.println(output);
-                        break;
+                        return;
                     case 6:
+                        branchController.cancelShift();
                         return;
                     case 7:
                         Exit();
@@ -1881,6 +1886,42 @@ public class CLController {
         output=branchController.removePositionFromShift(pos);
         if(output!=null)
             System.out.println(output);
+    }
+    private static void printRemoveWorkerFromShift() {
+        System.out.println("Enter position from which you want to remove a worker:");
+        String pos=WnextLine();
+        if(pos.equals("driver"))
+        {
+            System.out.println("Changes in scheduled drivers will be saved automatically");
+        }
+        if(!branchController.getCurrentEditedModelShift().occupation.containsKey(pos)&& branchController.getCurrentEditedModelShift().drivers.isEmpty())
+            System.out.println("The position was not found");
+        else {
+            List<ModelWorker> workersInpos=new ArrayList<>();
+            if(!pos.equals("driver"))
+                workersInpos.addAll(branchController.getCurrentEditedModelShift().occupation.get(pos));
+            else
+                workersInpos.addAll(branchController.getCurrentEditedModelShift().drivers);
+            if(workersInpos.size()>0) {
+                System.out.println("Eligible workers:");
+                int i = 0;
+                for (ModelWorker mw : workersInpos) {
+                    System.out.println(i + "." + mw.name);
+                    i++;
+                }
+                int select=-1;
+                while(select<0|select>=workersInpos.size()) {
+                    System.out.println("Enter number of worker to be removed");
+                    select = WnextInt();
+                }
+                String output=branchController.removeWorkerToPositionInShift(pos,workersInpos.get(select).id);
+                if(output!=null)
+                    System.out.println(output);
+            }
+            else {
+                System.out.println("There are no workers assigned to this position");
+            }
+        }
     }
 
     private static void printAddWorkerToShift() {
@@ -2219,7 +2260,6 @@ public class CLController {
 
     //endregion
 
-
     //region Logistic Management
     private static void printLogisticManagementMenu() {
         String menu = "";
@@ -2391,9 +2431,9 @@ public class CLController {
     //region Utilities
     static private String[] getInputParserbyComma(Scanner sc){
         String user_input = getNextLine(sc);
-        user_input = user_input.replaceAll("\\s+,", ",").replaceAll(",\\s+", ",");
-        String[] toreturn = user_input.split(",");
-        return toreturn;
+        user_input = user_input.replaceAll("\\s+,", ",").replaceAll(",\\s+", ",").replaceAll(",,", ",");
+        return Arrays.stream(user_input.split(","))
+                .filter(e -> !e.equals("")).toArray(String[]::new);
     }
 
     static public Date convertStringToDate(String sdate){
@@ -2516,7 +2556,7 @@ public class CLController {
 
         //Create supplier halavi-lee
         branchController.createSupplierCard("halavi-lee" , "ringelbloom 97 beer-sheva" , "halavi@gmail.com" , "081234567" ,
-                supplierID, "0975635" , "CreditCard" , contact,"periodic");
+                supplierID, "0975635" , "CreditCard" , contact,"self delivery");
 
         LinkedList <String> categories = new LinkedList<>();
         categories.add("Hygiene");
@@ -2571,9 +2611,11 @@ public class CLController {
         branchController.addSpecificProduct(gpID, convertStringToDate("11/04/2025"),4);
         branchController.addProductToContract(supplierID,catalogID,gpID,sup_price,"Meat");
 
-//-------------------------------------------
-
-
+//------------------------------------- initialize periodic order -----------------------------
+        LinkedList<Pair<Integer , Integer>> product_quantity = new LinkedList<>();
+        product_quantity.add(new Pair<>(100, 10));
+        branchController.createPeriodicOrder(1, product_quantity, 3);    //wednesday
+//--------------------------------------------
         gpID = 104;
         name = "Moosh packed ground meat 1/2kg";
         sup_price = 32.5f;
@@ -2590,7 +2632,7 @@ public class CLController {
 
         //Create supplier niceToMeat
         branchController.createSupplierCard("niceToMeat" , "mesada 37 beer-sheva" , "niceToMeat@gmail.com" , "087594456" ,
-                supplierID, "09754432", "CreditCard" , contact2, "by order");
+                supplierID, "09754432", "CreditCard" , contact2, "self delivery");
 
         //create contract
         branchController.addContract(supplierID, categories2);

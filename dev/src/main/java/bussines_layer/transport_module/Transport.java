@@ -79,7 +79,7 @@ public class Transport {
                 "\tDriver: " + driverName + "\n" +
                 "\tSupplier name: " + order.getSupplier().getSupplierName() + "\n";
         s = s + "\tTotalWeight: " + TotalWeight +"\n";
-        s = s + "\tOrder content:\n\t\t" + order.displayProductsInOrder();
+        s = s + "\tOrder content:\n\t\t" + order.displayProductsInOrder().getData();
         if(log.size()>0) {
             s = s + "\tLog messages:\n" + getLogMessages();
         }
