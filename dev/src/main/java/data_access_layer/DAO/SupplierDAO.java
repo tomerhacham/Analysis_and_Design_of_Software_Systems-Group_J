@@ -96,13 +96,9 @@ public class SupplierDAO {
             SupplierDTO supplierDTO = new SupplierDTO(supplier);
             dao.update(supplierDTO);
             identityMap.replace(supplier.getId(),supplier);
-            UpdateBuilder<contact_of_supplierDTO, Void> updateBuilder = contacts_of_supplier_dao.updateBuilder();
-            for(String contactNamde : supplier.getContactsName()){
-                // set criterias
-                updateBuilder.where().eq("supplier_id", supplier.getId());
-                // update the field(s)
-                updateBuilder.updateColumnValue("name" ,contactNamde);
-                updateBuilder.update();
+            for(String contactName : supplier.getContactsName()){
+                delete_contact(contactName,supplier);
+                create_contact(contactName,supplier);
             }
         }
         catch (Exception e){e.printStackTrace();}
