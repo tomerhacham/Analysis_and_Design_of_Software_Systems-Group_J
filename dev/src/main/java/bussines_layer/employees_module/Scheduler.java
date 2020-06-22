@@ -98,6 +98,8 @@ public class Scheduler {
 
     public String addWorkerToPositionInShift(String pos,String id,Integer branch_id)
     {
+        if (pos!=null&&pos.equals("driver"))
+            return "scheduling drivers is done only through Transport management";
         return currentEditedShift.addWorkerToPosition(pos.toLowerCase(),id,cloneAvailableWorkersForShift(branch_id));
     }
 
@@ -602,7 +604,7 @@ public class Scheduler {
     private String isWorkerScheduled(Worker w, String pos)
     {
         String output="";
-        List<Shift> scheduledShifts = isWorkerScheduled(w); //TODO:change isscheduled usage
+        List<Shift> scheduledShifts = isWorkerScheduled(w);
         for (Shift shift: scheduledShifts)
         {
             if(shift.getOccupation().containsKey(pos) &&
