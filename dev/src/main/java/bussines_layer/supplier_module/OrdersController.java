@@ -5,11 +5,15 @@ import bussines_layer.Result;
 import bussines_layer.SupplierCard;
 import bussines_layer.enums.OrderStatus;
 import bussines_layer.enums.OrderType;
+import bussines_layer.enums.supplierType;
 import bussines_layer.inventory_module.CatalogProduct;
 import data_access_layer.Mapper;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+
+import static bussines_layer.BranchController.system_curr_date;
+import static bussines_layer.enums.supplierType.byOrder;
 
 /**
  * Responsible of all the Orders in the system.
@@ -116,8 +120,8 @@ public class OrdersController {
         for (Order order: orders) {
             if (order.getOrderID() == orderID) {
                 if (order.getStatus() == OrderStatus.sent) {
-                    if (order.getType().equals(OrderType.PeriodicOrder) && !order.getDayToDeliver().getData().equals(BranchController.system_curr_date.getDay())) {
-                        return new Result<>(false, null, String.format("Periodic order (ID: %d) yet to be received. Current day is: %d and order should be received on: %d", orderID,(BranchController.system_curr_date.getDay() +1 ), (order.getDayToDeliver().getData()+1)));
+                    if (order.getType().equals(OrderType.PeriodicOrder) && !order.getDayToDeliver().getData().equals(system_curr_date.getDay())) {
+                        return new Result<>(false, null, String.format("Periodic order (ID: %d) yet to be received. Current day is: %d and order should be received on: %d", orderID,(system_curr_date.getDay() +1 ), (order.getDayToDeliver().getData()+1)));
                     } else {
                         order.setStatus(OrderStatus.received);
                         mapper.update(order);
@@ -160,7 +164,7 @@ public class OrdersController {
     }
 
     public Result<LinkedList<String>> getAllwaitingOrders(){
-        Integer day = BranchController.system_curr_date.getDay();
+        Integer day = system_curr_date.getDay();
         LinkedList<String> toReturn = new LinkedList<>();
         for(Order order:orders){
             if(order.getType().equals(OrderType.OutOfStockOrder) && (order.getIssuedDate().getDay()+1==day)){
@@ -180,6 +184,14 @@ public class OrdersController {
         Integer id = getNext_id();
         Order order = new Order(branch_id,id , supplier ,OrderType.PeriodicOrder,dayToDeliver );
         orders.add(order);
+        SupplierCard choosenSupplier = order.getSupplier();
+        switch(choosenSupplier.getType()) {
+            case byOrder: order.setStatus(OrderStatus.sent);break;
+            case fix_days: if(choosenSupplier.getFix_day().equals(system_curr_date.getDay()+1))
+                            {  order.setStatus(OrderStatus.sent); }
+                            break;
+            case selfDelivery: break; //TODO: einav and shira need to do book transport
+        }
         mapper.create(order);
         return new Result<>(true,id, String.format("The new order id is  : %d" ,id));
     }
@@ -237,9 +249,8 @@ public class OrdersController {
 
     public Result<LinkedList<Order>> issuePeriodicOrder(){
 
-        Integer sys_day = BranchController.system_curr_date.getDay();
+        Integer sys_day = system_curr_date.getDay();
         LinkedList<Order> ordersToIssue = new LinkedList<>();
-
         for (Order order : orders) {
             //issue one day before delivery date
             if (order.getType().equals(OrderType.PeriodicOrder)){       //Issue order one day before delivery day

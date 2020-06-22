@@ -260,6 +260,7 @@ public class Branch {
         }
         return supplierModule.addProductToPeriodicOrder(orderId, result.getData(),quantity);
     }
+
     public Result updateProductQuantityInPeriodicOrder(Integer orderId , Integer gpID , Integer newQuantity){
         Result<GeneralProduct> result = searchGeneralProductByGpID(gpID);
         if (!result.isOK()){
@@ -281,10 +282,8 @@ public class Branch {
     }
 
     public Result<LinkedList<String>> issuePeriodicOrder(){
-
         Result<LinkedList<Order>> resultOrdersToIssue = supplierModule.issuePeriodicOrder();
-        String str = "";
-
+            String str = "";
         if(!resultOrdersToIssue.isOK()) {
             LinkedList<String> toreturn = new LinkedList<>();
             toreturn.add(resultOrdersToIssue.getMessage());
@@ -319,44 +318,6 @@ public class Branch {
     //endregion
 
     //endregion
-
-    //region Getters & setters
-
-    public Integer getBranchId() {
-        return branch_id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setInventory(Inventory inventory) {
-        this.inventory = inventory;
-    }
-
-    public void setSupplierModule(SupplierModule supplierModule) {
-        this.supplierModule = supplierModule;
-    }
-    //endregion
-
-    public void loadData(){
-        this.inventory=new Inventory(this.branch_id);
-        this.supplierModule = new SupplierModule(branch_id);
-        this.employeesModule=new EmployeesModule(branch_id);
-        this.transportModule=new TransportModule(branch_id);
-        transportModule.setEmployeesModule(employeesModule);
-        employeesModule.setTransportModule(transportModule);
-    }
-    @Override
-    public String toString() {
-        return "" +
-                "Name:'" + name +
-                ", ID:" + branch_id;
-    }
 
     //region Transport Module
     public String getAllTransportsDetails() {
@@ -520,6 +481,44 @@ public class Branch {
     }
 
     //endregion
+
+    //region Getters & setters
+
+    public Integer getBranchId() {
+        return branch_id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
+    }
+
+    public void setSupplierModule(SupplierModule supplierModule) {
+        this.supplierModule = supplierModule;
+    }
+    //endregion
+    public void loadData(){
+        this.inventory=new Inventory(this.branch_id);
+        this.supplierModule = new SupplierModule(branch_id);
+        this.employeesModule=new EmployeesModule(branch_id);
+        this.transportModule=new TransportModule(branch_id);
+        transportModule.setEmployeesModule(employeesModule);
+        employeesModule.setTransportModule(transportModule);
+    }
+    @Override
+    public String toString() {
+        return "" +
+                "Name:'" + name +
+                ", ID:" + branch_id;
+    }
+
 }
 
 
