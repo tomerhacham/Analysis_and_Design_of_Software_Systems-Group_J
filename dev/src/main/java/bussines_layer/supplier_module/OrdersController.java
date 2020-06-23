@@ -81,8 +81,10 @@ public class OrdersController {
     }
 
     public Result<Order> issueOrder (Order order){
-        order.setStatus(OrderStatus.sent);
-        mapper.update(order);
+        if(!(order.getSupplier().getType().equals(supplierType.selfDelivery))){
+            order.setStatus(OrderStatus.sent);
+            mapper.update(order);
+        }
         return new Result<>(true, order, String.format(" The Order : %d has been sent", order.getOrderID()));
     }
 
@@ -167,11 +169,13 @@ public class OrdersController {
         Integer day = system_curr_date.getDay();
         LinkedList<String> toReturn = new LinkedList<>();
         for(Order order:orders){
-            if(order.getType().equals(OrderType.OutOfStockOrder) && (order.getIssuedDate().getDay()+1==day)){
-                toReturn.add(String.format("Order ID:%d waiting to be accepted in branch ID:%d", order.getOrderID(),branch_id));
-            }
-            if (order.getType().equals(OrderType.PeriodicOrder) && order.getStatus().equals(OrderStatus.sent) && order.getDayToDeliver().getData() == day){
-                toReturn.add(String.format("Periodic order ID:%d waiting to be accepted in branch ID:%d", order.getOrderID(),branch_id));
+            if(order.getSupplier().getType().equals(supplierType.fix_days) && order.getSupplier().getFix_day().equals(day)) {
+                if (order.getType().equals(OrderType.OutOfStockOrder) && (order.getIssuedDate().getDay() + 1 == day)) {
+                    toReturn.add(String.format("Order ID:%d waiting to be accepted in branch ID:%d", order.getOrderID(), branch_id));
+                }
+                if (order.getType().equals(OrderType.PeriodicOrder) && order.getStatus().equals(OrderStatus.sent) && order.getDayToDeliver().getData() == day) {
+                    toReturn.add(String.format("Periodic order ID:%d waiting to be accepted in branch ID:%d", order.getOrderID(), branch_id));
+                }
             }
         }
         return new Result<>(true, toReturn,"all orders");
@@ -184,14 +188,6 @@ public class OrdersController {
         Integer id = getNext_id();
         Order order = new Order(branch_id,id , supplier ,OrderType.PeriodicOrder,dayToDeliver );
         orders.add(order);
-        SupplierCard choosenSupplier = order.getSupplier();
-        switch(choosenSupplier.getType()) {
-            case byOrder: order.setStatus(OrderStatus.sent);break;
-            case fix_days: if(choosenSupplier.getFix_day().equals(system_curr_date.getDay()+1))
-                            {  order.setStatus(OrderStatus.sent); }
-                            break;
-            case selfDelivery: break; //TODO: einav and shira need to do book transport
-        }
         mapper.create(order);
         return new Result<>(true,id, String.format("The new order id is  : %d" ,id));
     }

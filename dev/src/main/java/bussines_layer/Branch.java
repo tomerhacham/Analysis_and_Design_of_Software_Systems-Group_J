@@ -3,6 +3,7 @@ package bussines_layer;
 import bussines_layer.employees_module.EmployeesModule;
 import bussines_layer.employees_module.models.ModelShift;
 import bussines_layer.employees_module.models.ModelWorker;
+import bussines_layer.enums.OrderStatus;
 import bussines_layer.enums.supplierType;
 import bussines_layer.inventory_module.*;
 import bussines_layer.supplier_module.Order;
@@ -16,6 +17,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+
+import static bussines_layer.BranchController.system_curr_date;
 
 public class Branch {
     //fields:
@@ -291,10 +294,12 @@ public class Branch {
         }
 
         for (Order order:resultOrdersToIssue.getData()) {
-            str = str.concat(order.display().getData());
-            str = str.concat(bookTransportOrder(order).getData());
-        }
 
+            str = str.concat(order.display().getData());
+            if(order.getSupplier().getType().equals(supplierType.selfDelivery)){
+                str = str.concat(bookTransportOrder(order).getData());
+            }
+        }
         LinkedList<String> branchPeriodicOrders = new LinkedList<>();
         branchPeriodicOrders.add("-------------------Branch : "+name+"-------------------\n");
         branchPeriodicOrders.add("Last Notice ! Don't forget to send those orders to the supplier !\n");

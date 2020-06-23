@@ -180,14 +180,14 @@ public class Order {
             toDisplay = toDisplay +"No Products In This Order\n";
         }
         else{
-            toDisplay = toDisplay.concat(String.format("Order Total Amount: %.02f\n", getTotalAmount().getData()));
+            toDisplay = toDisplay.concat(String.format("Order Total Amount: %.02f\n\n", getTotalAmount().getData()));
         }
         return new Result<>(true, toDisplay, String.format(" The Order Is Ready And Has Been Sent Back To The Employee: %s", toDisplay));
     }
 
     public Result<String> displayProductsInOrder() {
         String toDisplay = "";
-        toDisplay = toDisplay+ "Product Name\t\t\tCatalogID\t\t\tQuantity";
+        toDisplay = toDisplay+ "Product Name\t\t\tCatalogID\t\t\tQuantity\n";
 
         for (CatalogProduct p : productsAndQuantity.keySet()){
             toDisplay = toDisplay+p.getName()+"\t\t\t"+ p.getCatalogID() +"\t\t\t"+ productsAndQuantity.get(p)+'\n';
