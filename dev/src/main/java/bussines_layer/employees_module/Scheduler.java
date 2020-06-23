@@ -270,7 +270,7 @@ public class Scheduler {
         return null;
     }
 
-    private Shift findShift(Date date,boolean timeOfDay,Integer branch_id)
+    public Shift findShift(Date date,boolean timeOfDay,Integer branch_id)
     {
         Shift shift=null;
         DailySchedule day=findDay(date);
@@ -305,7 +305,6 @@ public class Scheduler {
         return output;
     }
 
-
     private Worker getWorkerById(String id)
     {
         return roster.findWorker(id);
@@ -324,6 +323,15 @@ public class Scheduler {
         return null;
     }
 
+    public void clearAllSchedule(Integer branch_id){//test purposes (clears every LOADED shift for a specific branch)
+        for(WeeklySchedule ws:schedule)
+        {
+            for(Shift shift: ws.getShifts(branch_id))
+            {
+                removeShift(shift.getDate(),shift.getTimeOfDay(),branch_id);
+            }
+        }
+     }
 //endregion
 
 

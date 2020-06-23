@@ -17,7 +17,6 @@ public class Roster {
     public Roster() {
         workers=new ArrayList<>();
         scheduler=new Scheduler();
-
     }
 
 
@@ -220,7 +219,7 @@ public class Roster {
         List<Worker>existingWorkers=mapper.getAllWorkers();
         if(existingWorkers!=null) {
             for (Worker w : existingWorkers) {
-                mapper.deleteWorker(w.getId());
+                removeWorker(w.getId());
             }
         }
     }
