@@ -1,5 +1,4 @@
-package bussines_layer.transport_module;
-
+import bussines_layer.transport_module.TruckController;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
