@@ -160,7 +160,7 @@ public class ProductController {
             }
             result.setMessage(msg);
         } else {
-            result = new Result(false, null, String.format("Could not find general product %d",gpID));
+            result = new Result<>(false, null, String.format("Could not find general product %d",gpID));
         }
         return result;
     }

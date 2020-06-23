@@ -2499,7 +2499,7 @@ public class CLController {
     //endregion
 
     //region initialize
-    private static void initialize() {
+    public static void initialize() {
         System.err.println("Warning: all of the data in the DB will be erase\n");
         BranchController.clearDB();
         branchController=new BranchController(true);
