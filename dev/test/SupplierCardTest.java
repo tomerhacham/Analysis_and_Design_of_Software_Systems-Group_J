@@ -1,4 +1,3 @@
-package java;
 import bussines_layer.Branch;
 import bussines_layer.SupplierCard;
 import bussines_layer.SupplierController;
