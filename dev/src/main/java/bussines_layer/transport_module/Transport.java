@@ -84,7 +84,7 @@ public class Transport {
             s = s + "\tLog messages:\n" + getLogMessages();
         }
         else {
-            s = s + "\tLog messages: none";
+            s = s + "\tLog messages: none\n";
         }
         return s;
     }

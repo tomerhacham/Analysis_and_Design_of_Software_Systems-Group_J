@@ -230,11 +230,15 @@ public class Branch {
     }
 
     public Result<String> createOutOfStockOrder(Report report){
-        Result<Order> resultOrder = supplierModule.createOutOfStockOrder(report);
-        Order order = resultOrder.getData();
-        if(order!=null){
-           String transportString = bookTransportOrder(order).getData();
-           String toprint = order.display().getData().concat(transportString);
+        Result<LinkedList<Order>> resultOrder = supplierModule.createOutOfStockOrder(report);
+        LinkedList<Order> orders = resultOrder.getData();
+        if(orders!=null){
+            String transportString = "";
+            String toprint = "---------------------------------------------------------------\n";
+            for (Order or : orders) {
+                transportString = bookTransportOrder(or).getData().concat("\n");
+                toprint = toprint.concat(or.display().getData().concat(transportString)).concat("---------------------------------------------------------------\n");
+            }
             return new Result( true , toprint , "");
         }
         return new Result( false , resultOrder.getMessage() , "");
