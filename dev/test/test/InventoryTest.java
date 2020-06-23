@@ -1,108 +1,76 @@
 package test;
 
 import bussines_layer.*;
+import bussines_layer.inventory_module.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import presentation_layer.CLController;
 
-import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class InventoryTest {
-   Inventory inv = new Inventory();
+   static private BranchController bc = new BranchController(false);
+
+   @BeforeAll
+   static void setUp(){
+       CLController.initialize();
+       //Result<Branch> res = bc.createNewBranch("Testing");
+       bc.switchBranch(1);
+   }
 
     @Test
     void addMainCategory() {
-        Result result = inv.addMainCategory("Main_cat_test");
+        Result result = bc.addMainCategory("Main_cat_test");
         assertTrue(result.isOK());
+        bc.removeCategory(((Category)result.getData()).getId());
     }
 
     @Test
     void addSubCategory() {
-        Category dummy_main = (Category)(inv.addMainCategory("Main_cat_test")).getData();
-        Result result_sub = inv.addSubCategory(dummy_main.getId(),"Sub_cat_test");
+        Category dummy_main = (Category)(bc.addMainCategory("Main_cat_test")).getData();
+        Result result_sub = bc.addSubCategory(dummy_main.getId(),"Sub_cat_test");
         assertTrue(result_sub.isOK());
+        bc.removeCategory(dummy_main.getId());
+        bc.removeCategory(((Category)result_sub.getData()).getId());
     }
 
     @Test
     void removeCategory() {
-        Category dummy_main = (Category)(inv.addMainCategory("Main_cat_test")).getData();
-        Category dummy_sub = (Category)(inv.addSubCategory(dummy_main.getId(),"Sub_cat_test")).getData();
-        Result result = inv.removeCategory(dummy_sub.getId());
+        Category dummy_main = (Category)(bc.addMainCategory("Main_cat_test")).getData();
+        Category dummy_sub = (Category)(bc.addSubCategory(dummy_main.getId(),"Sub_cat_test")).getData();
+        Result result = bc.removeCategory(dummy_sub.getId());
+        assertTrue(result.isOK());
+        result = bc.removeCategory(dummy_main.getId());
         assertTrue(result.isOK());
     }
 
     @Test
     void editCategoryname() {
-        Category dummy_main = (Category)(inv.addMainCategory("Main_cat_test")).getData();
-        Result result = inv.editCategoryname(dummy_main.getId(),"Main_cat_edit");
+        Category dummy_main = (Category)(bc.addMainCategory("Main_cat_test")).getData();
+        bc.editCategoryName(dummy_main.getId(),"Main_cat_edit");
         assertEquals(dummy_main.getName(),"Main_cat_edit");
+        bc.removeCategory(dummy_main.getId());
     }
 
-    @Test
-    void addGeneralProduct() {
-        Category dummy_main = (Category)(inv.addMainCategory("Main_cat_test")).getData();
-        Category dummy_sub = (Category)(inv.addSubCategory(dummy_main.getId(),"Sub_cat_test")).getData();
-        Category dummy_sub_sub = (Category)(inv.addSubCategory(dummy_sub.getId(),"Sub_sub_cat_test")).getData();
-        Result result = inv.addGeneralProduct(dummy_sub_sub.getId(),"man","123","testgp",10.5f,10.5f,1);
-        assertTrue(result.isOK());
-    }
-
-    @Test
-    void removeGeneralProduct() {
-        Category dummy_main = (Category)(inv.addMainCategory("Main_cat_test")).getData();
-        Category dummy_sub = (Category)(inv.addSubCategory(dummy_main.getId(),"Sub_cat_test")).getData();
-        Category dummy_sub_sub = (Category)(inv.addSubCategory(dummy_sub.getId(),"Sub_sub_cat_test")).getData();
-        GeneralProduct generalProduct =(GeneralProduct) (inv.addGeneralProduct(dummy_sub_sub.getId(),"man","123","testgp",10.5f,10.5f,1)).getData();
-        Result result = inv.removeGeneralProduct(dummy_sub_sub.getId(),generalProduct.getCatalogID());
-        assertTrue(result.isOK());
-    }
-
-    @Test
-    void addSpecificProduct() {
-        Category dummy_main = (Category)(inv.addMainCategory("Main_cat_test")).getData();
-        Category dummy_sub = (Category)(inv.addSubCategory(dummy_main.getId(),"Sub_cat_test")).getData();
-        Category dummy_sub_sub = (Category)(inv.addSubCategory(dummy_sub.getId(),"Sub_sub_cat_test")).getData();
-        GeneralProduct generalProduct =(GeneralProduct) (inv.addGeneralProduct(dummy_sub_sub.getId(),"man","123","testgp",10.5f,10.5f,1)).getData();
-        Result result = inv.addSpecificProduct(generalProduct.getCatalogID(),new Date(),1);
-        assertTrue(result.isOK());
-        assertTrue(generalProduct.getQuantity()==1);
-    }
-
-    @Test
-    void removeSpecificProduct() {
-        Category dummy_main = (Category)(inv.addMainCategory("Main_cat_test")).getData();
-        Category dummy_sub = (Category)(inv.addSubCategory(dummy_main.getId(),"Sub_cat_test")).getData();
-        Category dummy_sub_sub = (Category)(inv.addSubCategory(dummy_sub.getId(),"Sub_sub_cat_test")).getData();
-        GeneralProduct generalProduct =(GeneralProduct) (inv.addGeneralProduct(dummy_sub_sub.getId(),"man","123","testgp",10.5f,10.5f,1)).getData();
-        SpecificProduct specificProduct = (SpecificProduct)(inv.addSpecificProduct(generalProduct.getCatalogID(),new Date(),1)).getData();
-        Result result = inv.removeSpecificProduct(specificProduct.getId());
-        assertTrue(result.isOK());
-        Result another_remove_res = inv.removeSpecificProduct(specificProduct.getId());
-        assertFalse(another_remove_res.isOK());
-        assertTrue(generalProduct.getQuantity()==0);
-    }
 
     @Test
     void markAsFlaw() {
-        Category dummy_main = (Category)(inv.addMainCategory("Main_cat_test")).getData();
-        Category dummy_sub = (Category)(inv.addSubCategory(dummy_main.getId(),"Sub_cat_test")).getData();
-        Category dummy_sub_sub = (Category)(inv.addSubCategory(dummy_sub.getId(),"Sub_sub_cat_test")).getData();
-        GeneralProduct generalProduct =(GeneralProduct) (inv.addGeneralProduct(dummy_sub_sub.getId(),"man","123","testgp",10.5f,10.5f,1)).getData();
-        SpecificProduct specificProduct =(SpecificProduct)( inv.addSpecificProduct(generalProduct.getCatalogID(),new Date(),1)).getData();
-        Result result = inv.markAsFlaw(specificProduct.getId());
+        Result result = bc.markAsFlaw(1);
         assertTrue(result.isOK());
-        assertTrue(specificProduct.isFlaw());
+        assertTrue(((SpecificProduct)result.getData()).isFlaw());
     }
 
     @Test
     void moveLocation() {
-        Category dummy_main = (Category)(inv.addMainCategory("Main_cat_test")).getData();
-        Category dummy_sub = (Category)(inv.addSubCategory(dummy_main.getId(),"Sub_cat_test")).getData();
-        Category dummy_sub_sub = (Category)(inv.addSubCategory(dummy_sub.getId(),"Sub_sub_cat_test")).getData();
-        GeneralProduct generalProduct =(GeneralProduct) (inv.addGeneralProduct(dummy_sub_sub.getId(),"man","123","testgp",10.5f,10.5f,1)).getData();
-        SpecificProduct specificProduct =(SpecificProduct)( inv.addSpecificProduct(generalProduct.getCatalogID(),new Date(),1)).getData();
-        Result result = inv.moveLocation(specificProduct.getId());
+        Result result = bc.moveLocation(1);
         assertTrue(result.isOK());
-        assertEquals(specificProduct.getLocation().name(),"store");
+        assertEquals(((SpecificProduct)result.getData()).getLocation().name(),"store");
+    }
+
+    @AfterAll
+    static void tearDown(){
+       BranchController.clearDB();
     }
 }
