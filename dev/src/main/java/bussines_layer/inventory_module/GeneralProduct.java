@@ -182,11 +182,11 @@ public class GeneralProduct {
            this.quantity--;
            String msg="Product " +this.name+"("+product_id+")"+" has been removed from inventory";
            if(lowBoundCheck()){msg="Product has been removed from inventory\n ALERT: low quantity has been reached";}
-           result = new Result(true,toRemove,msg);
+           result = new Result<>(true,toRemove,msg);
            mapper.update(this);
         }
         else{
-            result = new Result(false,toRemove,"There was a problem in removing the product");
+            result = new Result<>(false,toRemove,"There was a problem in removing the product");
         }
         return result;
     }
@@ -199,7 +199,7 @@ public class GeneralProduct {
             result=new Result<>(true,product,"product:"+this.name+"("+product_id+")"+" marked as flaw");
         }
         else{
-            result = new Result(false,product,"There was a problem marking the product");
+            result = new Result<>(false,product,"There was a problem marking the product");
         }
         return result;
     }
@@ -212,7 +212,7 @@ public class GeneralProduct {
             result=new Result<>(true,product,"product:"+this.name+"("+product_id+")"+" moved to the "+product.getLocation().name());
         }
         else{
-            result = new Result(false,product,"There was a problem moving the product");
+            result = new Result<>(false,product,"There was a problem moving the product");
         }
         return result;
     }
