@@ -141,11 +141,60 @@ public class SupplierModule {
 
     //region OutOfStockOrder
 
-    public Result<Order> createOutOfStockOrder(Report report){
+//    public Result<Order> createOutOfStockOrder(Report report){
+//        String all_orders = "";
+//        Result<Order> resultOrder = null;
+//        //HashMap<SupplierCard , LinkedList<CatalogProduct , Price>>
+//        HashMap<SupplierCard , LinkedList<Pair<CatalogProduct , Float>>> productsForEachSupplier = new HashMap<>();
+//
+//        for (GeneralProduct product: report.getProducts()) {
+//            //Pair<SupplierCard , Price>
+//            Pair<SupplierCard, Float> supplierAndPrice = contractController.getBestSupplierForProduct(product.getGpID() , product.quantityToOrder());
+//            SupplierCard supplierCard = supplierAndPrice.getKey();
+//
+//            if(supplierCard != null){
+//                if(productsForEachSupplier.containsKey(supplierCard)){
+//                    productsForEachSupplier.get(supplierCard).add( new Pair<>(product.getSupplierCatalogProduct(supplierCard.getId()) , supplierAndPrice.getValue()));
+//                }
+//                else{
+//                    LinkedList<Pair<CatalogProduct , Float>> productsAndPrice = new LinkedList<>();
+//                    productsAndPrice.add(new Pair<>(product.getSupplierCatalogProduct(supplierCard.getId()) , supplierAndPrice.getValue()));
+//                    productsForEachSupplier.put(supplierCard , productsAndPrice);
+//                }
+//            }
+//            else{
+//                return new Result<>(false, null, String.format("There is no supplier with product: %s", product));
+//            }
+//        }
+//
+//        //for each supplier(contract) get its catalog product and check the quantity needed throw the General Product
+//        for (SupplierCard supplierCard: productsForEachSupplier.keySet()) {
+//            Integer orderid = ordersController.createOrder(supplierCard , OrderType.OutOfStockOrder).getData();//(contract.getSupplierID() , productsForEachSupplier.get(contract));
+//
+//            LinkedList<Pair<CatalogProduct , Float>> cpPrice = productsForEachSupplier.get(supplierCard);
+//
+//            for (Pair<CatalogProduct , Float> pair : cpPrice){
+//                for (GeneralProduct gp:report.getProducts() ) {
+//                    Integer gp_catalog_id = gp.getCatalogID(supplierCard.getId());
+//                    Integer supplier_catalog_id = pair.getKey().getCatalogID();
+//                    if(gp_catalog_id!=null && supplier_catalog_id!=null && gp_catalog_id.equals(supplier_catalog_id)){
+//                        ordersController.addProductToOrder(orderid , pair.getKey() , gp.quantityToOrder() , pair.getValue());
+//                    }
+//                }
+//            }
+//
+//            resultOrder =ordersController.getOrder(orderid);
+//            if (!resultOrder.isOK()) { return new Result<>(false, null, String.format("Order %d does not exist", orderid));}
+//            all_orders = all_orders.concat(String.format("%s\n---------------------------------------\n", issueOrder(resultOrder.getData()).getData()));
+//        }
+//        return new Result<>(true, resultOrder.getData()  , all_orders);
+//    }
+
+    public Result<LinkedList<Order>> createOutOfStockOrder(Report report){
+
         String all_orders = "";
-        Result<Order> resultOrder = null;
-        //HashMap<SupplierCard , LinkedList<CatalogProduct , Price>>
         HashMap<SupplierCard , LinkedList<Pair<CatalogProduct , Float>>> productsForEachSupplier = new HashMap<>();
+        LinkedList<Order> allOrders = new LinkedList<>();
 
         for (GeneralProduct product: report.getProducts()) {
             //Pair<SupplierCard , Price>
@@ -169,7 +218,7 @@ public class SupplierModule {
 
         //for each supplier(contract) get its catalog product and check the quantity needed throw the General Product
         for (SupplierCard supplierCard: productsForEachSupplier.keySet()) {
-            Integer orderid = ordersController.createOrder(supplierCard , OrderType.OutOfStockOrder).getData();//(contract.getSupplierID() , productsForEachSupplier.get(contract));
+            Integer orderid = ordersController.createOrder(supplierCard , OrderType.OutOfStockOrder).getData();//(contract.getSupplierID() , productsForEachSupplier.get(contract))
 
             LinkedList<Pair<CatalogProduct , Float>> cpPrice = productsForEachSupplier.get(supplierCard);
 
@@ -182,13 +231,20 @@ public class SupplierModule {
                     }
                 }
             }
-
-            resultOrder =ordersController.getOrder(orderid);
-            if (!resultOrder.isOK()) { return new Result<>(false, null, String.format("Order %d does not exist", orderid));}
-            all_orders = all_orders.concat(String.format("%s\n---------------------------------------\n", issueOrder(resultOrder.getData()).getData().display()));
+            Result<Order> result_order = ordersController.getOrder(orderid);
+            if(result_order.isOK()){
+                allOrders.add(result_order.getData());
+            }
         }
-        return new Result<>(true, resultOrder.getData()  , all_orders);
+
+        for (Order o: allOrders) {
+            all_orders = all_orders.concat(String.format("%s\n---------------------------------------\n", issueOrder(o).getData().display()));
+        }
+
+        return new Result<>(true, allOrders , all_orders);
+
     }
+
 
     //endregion
 

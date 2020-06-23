@@ -274,11 +274,10 @@ public class CLController {
         menu=menu.concat("4) Phone number \n");
         menu=menu.concat("5) Bank account\n");
         menu=menu.concat("6) Payment\n");
-        menu=menu.concat("7) Supplier type\n");
-        menu=menu.concat("8) Delete contact name\n");
-        menu=menu.concat("9) Add contact name\n");
-        menu=menu.concat("10) Return\n");
-        menu=menu.concat("11) Exit");
+        menu=menu.concat("7) Delete contact name\n");
+        menu=menu.concat("8) Add contact name\n");
+        menu=menu.concat("9) Return\n");
+        menu=menu.concat("10) Exit");
         while(true) {
             System.out.println(menu);
             Integer option = getNextInt(sc);
@@ -302,17 +301,14 @@ public class CLController {
                     printEditPayment();
                     break;
                 case 7:
-                    printEditSupplierType();
-                    break;
-                case 8:
                     printDeleteContactName();
                     break;
-                case 9:
+                case 8:
                     printAddContactName();
                     break;
-                case 10:
+                case 9:
                     return;
-                case 11:
+                case 10:
                     Exit();
                 default:
                     System.out.println("Option not valid, please retype");
@@ -2632,7 +2628,7 @@ public class CLController {
 
         //Create supplier niceToMeat
         branchController.createSupplierCard("niceToMeat" , "mesada 37 beer-sheva" , "niceToMeat@gmail.com" , "087594456" ,
-                supplierID, "09754432", "CreditCard" , contact2, "self delivery");
+                supplierID, "09754432", "CreditCard" , contact2, "fix days" , 5);
 
         //create contract
         branchController.addContract(supplierID, categories2);
