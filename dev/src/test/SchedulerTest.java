@@ -1,4 +1,5 @@
 import bussines_layer.employees_module.*;
+import data_access_layer.Mapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,9 @@ class SchedulerTest {
     private Scheduler scheduler;
     private Roster roster;
     private Integer branch_id;
+
+    public SchedulerTest() {}
+
     @BeforeEach
     private void init()
     {
@@ -32,7 +36,24 @@ class SchedulerTest {
         roster.getWorkers(branch_id).add(worker2);
         scheduler.addAvailableWorker(dateOfShift,morning,"1",branch_id);
     }
-
+    @AfterEach
+    private void tearDown() {
+        roster.removeExistingWorkers();
+        for (Date date:scheduler.getAvailableWorkers().keySet()){
+            Pair<LazyList<Worker>, LazyList<Worker>> pair= scheduler.getAvailableWorkers().get(date) ;{
+                for (Worker w :pair.getMorning())
+                {
+                    scheduler.removeAvailableWorker(date,morning,w.getId(),branch_id);
+                }
+                for (Worker w :pair.getNight())
+                {
+                    scheduler.removeAvailableWorker(date,night,w.getId(),branch_id);
+                }
+            }
+        }
+        scheduler.clearAllSchedule(branch_id);
+        Mapper.getInstance().clearDatabase();
+    }
     @Test
     public void addAvailableWorker(){
 
@@ -64,25 +85,6 @@ class SchedulerTest {
         String out=scheduler.submitShift(branch_id);
         assertFalse(scheduler.findShift(dateOfShift,morning,branch_id)==null);
     }
-    @AfterEach
-    private void tearDown() {
-        roster.removeExistingWorkers();
-        for (Date date:scheduler.getAvailableWorkers().keySet()){
-            Pair<LazyList<Worker>, LazyList<Worker>> pair= scheduler.getAvailableWorkers().get(date) ;{
-                for (Worker w :pair.getMorning())
-                {
-                    scheduler.removeAvailableWorker(date,morning,w.getId(),branch_id);
-                }
-                for (Worker w :pair.getNight())
-                {
-                    scheduler.removeAvailableWorker(date,night,w.getId(),branch_id);
-                }
-            }
-        }
-        scheduler.clearAllSchedule(branch_id);
-    }
-
-
 
     private static Date parseDate(String dateStr) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
