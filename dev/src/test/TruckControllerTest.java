@@ -1,4 +1,5 @@
 import bussines_layer.BranchController;
+import com.j256.ormlite.logger.LocalLog;
 import data_access_layer.Mapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -12,6 +13,7 @@ public class TruckControllerTest {
 
     @BeforeAll
     static void setUp(){
+        System.setProperty(LocalLog.LOCAL_LOG_LEVEL_PROPERTY, "ERROR");
         initialize();
         branchController = new BranchController(true);
         branchController.switchBranch(1);

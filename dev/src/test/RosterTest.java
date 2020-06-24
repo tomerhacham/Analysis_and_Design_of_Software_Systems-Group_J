@@ -1,5 +1,9 @@
 import bussines_layer.employees_module.Roster;
 import bussines_layer.employees_module.Worker;
+import com.j256.ormlite.logger.LocalLog;
+import data_access_layer.Mapper;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
@@ -16,13 +20,17 @@ class RosterTest {
     private Date startDate= parseDate("01/06/2020");
     private Integer branch_id=-1;
 
-    private void init_employees_Roster_test()
-    {
-
+    @BeforeEach
+    public void setUp(){
+        System.setProperty(LocalLog.LOCAL_LOG_LEVEL_PROPERTY, "ERROR");
     }
+    @AfterEach
+    public void tearDown(){
+        Mapper.getInstance().clearDatabase();
+    }
+
     @Test
     public void testFailureAddingWorker()//this test assert failure when adding a worker with negative salary
-
     {
         positions.add("manger");
         positions.add("cashier");
@@ -71,10 +79,5 @@ class RosterTest {
 
         }
         return date;
-    }
-
-    private void workers_tear_down()
-    {
-        roster.removeExistingWorkers();
     }
 }

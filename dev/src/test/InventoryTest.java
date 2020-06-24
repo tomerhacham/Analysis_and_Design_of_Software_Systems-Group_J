@@ -1,14 +1,12 @@
 import bussines_layer.*;
 import bussines_layer.inventory_module.*;
+import com.j256.ormlite.logger.LocalLog;
 import javafx.util.Pair;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import presentation_layer.CLController;
-
-
 import java.util.LinkedList;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class InventoryTest {
@@ -16,6 +14,7 @@ class InventoryTest {
 
     @BeforeAll
     static void setUp(){
+        System.setProperty(LocalLog.LOCAL_LOG_LEVEL_PROPERTY, "ERROR");
         initialize();
         branchController = new BranchController(true);
         branchController.switchBranch(1);

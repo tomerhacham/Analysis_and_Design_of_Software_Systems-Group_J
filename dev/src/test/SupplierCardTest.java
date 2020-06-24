@@ -2,6 +2,7 @@ import bussines_layer.BranchController;
 import bussines_layer.SupplierCard;
 import bussines_layer.inventory_module.CatalogProduct;
 import bussines_layer.supplier_module.Contract;
+import com.j256.ormlite.logger.LocalLog;
 import data_access_layer.Mapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +20,7 @@ public class SupplierCardTest {
 
     @BeforeEach
     public void setUp(){
+        System.setProperty(LocalLog.LOCAL_LOG_LEVEL_PROPERTY, "ERROR");
         CLController.initialize();
         branchController = new BranchController(true);
         branchController.switchBranch(1);

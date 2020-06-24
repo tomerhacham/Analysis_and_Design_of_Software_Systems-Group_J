@@ -1,5 +1,6 @@
 import bussines_layer.employees_module.Shift;
 import bussines_layer.employees_module.Worker;
+import com.j256.ormlite.logger.LocalLog;
 import data_access_layer.Mapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +26,7 @@ class ShiftTest {
     List<Worker> availables=new ArrayList<>();
     @BeforeEach
     public void init() {
+        System.setProperty(LocalLog.LOCAL_LOG_LEVEL_PROPERTY, "ERROR");
         branch_id=-1;
         worker1=new Worker("Gil","1",branch_id,startDate,16);
         worker2=new Worker("Sharon","2",branch_id,startDate,15);
