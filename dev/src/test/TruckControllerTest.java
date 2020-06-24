@@ -1,41 +1,40 @@
-import bussines_layer.transport_module.TruckController;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import bussines_layer.BranchController;
+import data_access_layer.Mapper;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static presentation_layer.CLController.initialize;
 
 public class TruckControllerTest {
 
-    TruckController truckController;
-    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+    BranchController branchController ;
+    public TruckControllerTest( ){ }
 
-    public TruckControllerTest(TruckController t_c){
-        truckController = t_c;
+    @BeforeEach
+    public void init(){
+        initialize();
+        branchController.switchBranch(1);
+    }
+    @AfterEach
+    public void clear(){
+        Mapper.getInstance().clearDatabase();
     }
 
     @Test
     public void createTruck() {
         // max weight smaller than net weight
-        assertFalse(truckController.CreateTruck("WE-1234-FD", "RNO51", 3000, 2500, "A"));
+         assertFalse(branchController.createTruck("WE-1234-FD","RNO51", 3000, 2500, "A"));
+        //assertFalse(truckController.CreateTruck("WE-1234-FD", "RNO51", 3000, 2500, "A"));
 
         // max weight equal net weight
-        assertFalse(truckController.CreateTruck("WE-1234-FD", "RNO51", 3000, 3000, "A"));
+        assertFalse(branchController.createTruck("WE-1234-FD", "RNO51", 3000, 3000, "A"));
+       // assertFalse(truckController.CreateTruck("WE-1234-FD", "RNO51", 3000, 3000, "A"));
     }
 
     @Test
     public void deleteTruck() {
-        assertTrue(truckController.DeleteTruck(1));
-    }
-
-    @Test
-    public void checkIfTrucksAvailableByDate() {
-        Date d1;
-        try {
-            d1 = formatter.parse("07/07/2020");
-            assertTrue(truckController.checkIfTrucksAvailableByDate(d1, false));
-        } catch (Exception e) {
-            System.out.println("Test - checkIfTrucksAvailableByDate - Failed.");
-        }
+        assertTrue(branchController.deleteTruck(1));
     }
 }
