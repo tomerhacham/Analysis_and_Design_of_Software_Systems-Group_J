@@ -168,21 +168,21 @@ public class OrdersController {
     public Result<LinkedList<String>> getAllwaitingOrders(){
         Integer day = system_curr_date.getDay();
         LinkedList<String> toReturn = new LinkedList<>();
-        for(Order order:orders){
-                if (order.getType().equals(OrderType.OutOfStockOrder)){
-                    if(order.getSupplier().getType().equals(supplierType.fix_days) && order.getSupplier().getFix_day().equals(day) ){
+        for(Order order:orders) {
+            if (!order.getStatus().equals(OrderStatus.received)) {
+                if (order.getType().equals(OrderType.OutOfStockOrder)) {
+                    if (order.getSupplier().getType().equals(supplierType.fix_days) && order.getSupplier().getFix_day().equals(day)) {
                         toReturn.add(String.format("Order ID:%d waiting to be accepted in branch ID:%d", order.getOrderID(), branch_id));
-                    }
-                    else if (order.getSupplier().getType().equals(byOrder) && (order.getIssuedDate().getDay() + 1 == day)){
+                    } else if (order.getSupplier().getType().equals(byOrder) && (order.getIssuedDate().getDay() + 1 == day)) {
                         toReturn.add(String.format("Order ID:%d waiting to be accepted in branch ID:%d", order.getOrderID(), branch_id));
-                    }
-                    else if (order.getSupplier().getType().equals(supplierType.selfDelivery) &&( order.getStatus().equals(OrderStatus.sent))&&(order.getIssuedDate().getDay() == day)){
+                    } else if (order.getSupplier().getType().equals(supplierType.selfDelivery) && (order.getStatus().equals(OrderStatus.sent)) && (order.getIssuedDate().getDay() == day)) {
                         toReturn.add(String.format("Order ID:%d waiting to be accepted in branch ID:%d", order.getOrderID(), branch_id));
                     }
                 }
                 if (order.getType().equals(OrderType.PeriodicOrder) && order.getStatus().equals(OrderStatus.sent) && order.getDayToDeliver().getData().equals(day)) {
                     toReturn.add(String.format("Periodic order ID:%d waiting to be accepted in branch ID:%d", order.getOrderID(), branch_id));
                 }
+            }
         }
         return new Result<>(true, toReturn,"all orders");
     }

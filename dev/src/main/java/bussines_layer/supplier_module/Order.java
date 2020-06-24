@@ -113,7 +113,8 @@ public class Order {
 
     public  HashMap<CatalogProduct, Float> getProductsAndPrice() {return productsAndPrice;}
 
-    public  HashMap<CatalogProduct, Integer> getProductsAndQuantity() {return productsAndQuantity;}
+    public  HashMap<CatalogProduct, Integer> getProductsAndQuantity()
+    {return productsAndQuantity;}
 
     public Result updateDayToDeliver(Integer dayToDeliver) {
         if(this.type != OrderType.PeriodicOrder){

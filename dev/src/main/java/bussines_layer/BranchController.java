@@ -392,6 +392,130 @@ public class BranchController {
 
     //endregion
 
+    //region Transport Module
+    public String getAllTransportsDetails() {
+        return currBranch.getAllTransportsDetails();
+    }
+
+    public String getAllTrucksDetails() {
+        return currBranch.getAllTrucksDetails();
+    }
+
+    public boolean deleteTruck(int truckToDelete) {
+        return currBranch.deleteTruck(truckToDelete);
+    }
+
+    public boolean createTruck(String license_plate, String model, float netWeight, float maxWeight, String drivers_license) {
+        return currBranch.createTruck(license_plate, model, netWeight, maxWeight, drivers_license);
+    }
+
+    public String getPendingOrdersDetails() {
+        return currBranch.getPendingOrdersDetails();
+    }
+
+    public boolean isOrderIdInPendingOrders(int orderID) {
+        return currBranch.isOrderIdInPendingOrders(orderID);
+    }
+
+    public String BookTransportForPendingOrders(int orderID) {
+        return currBranch.BookTransportForPendingOrders(orderID);
+    }
+    //endregion
+
+    //region Employee Module
+    public String removeShift(Date date,boolean timeOfDay){
+        return currBranch.removeShift(date,timeOfDay);
+    }
+    public String createShift(Date date, boolean timeOfDay)
+    {
+        return currBranch.createShift(date,timeOfDay);
+    }
+    public String editShift(Date date, boolean timeOfDay)
+    {
+        return currBranch.editShift(date, timeOfDay);
+    }
+    public ModelShift getCurrentEditedModelShift()
+    {
+        return currBranch.getCurrentEditedModelShift();
+    }
+    public void cancelShift(){currBranch.cancelShift();}
+    public String submitShift(){
+        return currBranch.submitShift();
+    }
+    public String removePositionFromShift(String pos){
+        return currBranch.removePositionFromShift(pos);
+    }
+    public String addPositionToShift(String pos,int quantity)    {
+        return currBranch.addPositionToShift(pos, quantity);
+
+    }
+    public String addWorkerToPositionInShift(String pos,String id){
+        return currBranch.addWorkerToPositionInShift(pos, id);
+    }
+    public String removeWorkerToPositionInShift(String pos,String id)    {
+        return currBranch.removeWorkerToPositionInShift(pos, id);
+    }
+    public String addAvailableWorker(Date date, boolean partOfDay, String id){
+        return currBranch.addAvailableWorker(date, partOfDay, id);
+    }
+    public String removeAvailableWorker(Date date,boolean partOfDay,String id) {
+
+        return currBranch.removeAvailableWorker(date, partOfDay, id);
+    }
+    public List<ModelShift> getWeeklyShifts(Date date)
+    {
+        return currBranch.getWeeklyShifts(date);
+    }
+    public String removeWorkerFromRoster(String id){
+        return currBranch.removeWorkerFromRoster(id);
+
+    }
+    public List<ModelWorker> displayWorkers()
+    {
+        return currBranch.displayWorkers();
+    }
+    public ModelWorker displaySingleWorker(String id)
+    {
+        return currBranch.displaySingleWorker(id);
+    }
+    public String editName(String newName,String id)
+    {
+        return currBranch.editName(newName,id);
+    }
+    public String editSalary(double newSalary,String id)
+    {
+        return currBranch.editSalary(newSalary,id);
+    }
+    public String addPosition(String pos,String id)
+    {
+        return currBranch.addPosition(pos,id);
+    }
+    public String removePosition(String pos,String id)
+    {
+        return currBranch.removePosition(pos,id);
+    }
+    public String addWorker(String name, double salary, Date startDate,List<String>positions)    {
+        return currBranch.addWorker(name,salary,startDate,positions);
+    }
+    public String initAddWorker(String id, String name, double salary, Date startDate,List<String>positions)    {
+        return currBranch.initAddWorker(id, name, salary, startDate, positions);
+    }
+    public String addDriver(String name, double salary, Date startDate,String license)    {
+        return currBranch.addDriver(name,salary,startDate,license);
+    }
+    public String initAddDriver(String id, String name, double salary, Date startDate,String license)    {
+        return currBranch.initAddDriver(id,name,salary,startDate,license);
+    }
+    public Scheduler testScheduler()
+    {
+        return currBranch.testScheduler();
+    }
+    public Roster testRoster()
+    {
+        return currBranch.testRoster();
+    }
+    //endregion
+
     //region Getters & Setters
     public HashMap<Integer, String> getBranches() {
         return branches;
@@ -477,178 +601,4 @@ public class BranchController {
     }
 
     //endregion
-
-    //region Transport Module
-    public String getAllTransportsDetails() {
-        return currBranch.getAllTransportsDetails();
-    }
-
-    public String getAllTrucksDetails() {
-        return currBranch.getAllTrucksDetails();
-    }
-
-    public boolean deleteTruck(int truckToDelete) {
-        return currBranch.deleteTruck(truckToDelete);
-    }
-
-    public boolean createTruck(String license_plate, String model, float netWeight, float maxWeight, String drivers_license) {
-        return currBranch.createTruck(license_plate, model, netWeight, maxWeight, drivers_license);
-    }
-
-    public String getPendingOrdersDetails() {
-        return currBranch.getPendingOrdersDetails();
-    }
-
-    public boolean isOrderIdInPendingOrders(int orderID) {
-        return currBranch.isOrderIdInPendingOrders(orderID);
-    }
-
-    public String BookTransportForPendingOrders(int orderID) {
-        return currBranch.BookTransportForPendingOrders(orderID);
-    }
-    //endregion
-
-    //region Employee Module
-    private static final boolean morning=true;
-    private static final boolean night=false;
-
-    public void setTransportModule(TransportModule transportModule) {
-        currBranch.setTransportModule(transportModule);
-    }
-
-    public String chooseDriverForTransport(Date date, boolean shift, String drivers_license) {
-        return currBranch.chooseDriverForTransport(date,shift,drivers_license);
-    }
-
-    public String getDriverName(String driverId) {
-        return currBranch.getDriverName(driverId);
-    }
-
-    public boolean StorageManInShift(Date d, boolean b) {
-        return currBranch.StorageManInShift(d,b);
-    }
-
-    public boolean DriversAvailability(Date date, boolean shift) {
-        return currBranch.DriversAvailability(date,shift);
-    }
-
-    public void removeDriverFromTransport(Date d, boolean shift, String driverId) {
-        currBranch.removeDriverFromTransport(d,shift,driverId);
-    }
-
-
-
-    public String removeShift(Date date,boolean timeOfDay){
-        return currBranch.removeShift(date,timeOfDay);
-    }
-    public String createShift(Date date, boolean timeOfDay)
-    {
-        return currBranch.createShift(date,timeOfDay);
-    }
-    public String editShift(Date date, boolean timeOfDay)
-    {
-        return currBranch.editShift(date, timeOfDay);
-    }
-    public ModelShift getCurrentEditedModelShift()
-    {
-        return currBranch.getCurrentEditedModelShift();
-    }
-    public void cancelShift(){currBranch.cancelShift();}
-    public String submitShift(){
-        return currBranch.submitShift();
-    }
-    public String removePositionFromShift(String pos){
-        return currBranch.removePositionFromShift(pos);
-    }
-    public String addPositionToShift(String pos,int quantity)
-    {
-        return currBranch.addPositionToShift(pos, quantity);
-
-    }
-    public String addWorkerToPositionInShift(String pos,String id){
-        return currBranch.addWorkerToPositionInShift(pos, id);
-    }
-    public String removeWorkerToPositionInShift(String pos,String id)
-    {
-        return currBranch.removeWorkerToPositionInShift(pos, id);
-    }
-    public String addAvailableWorker(Date date, boolean partOfDay, String id){
-        return currBranch.addAvailableWorker(date, partOfDay, id);
-    }
-    public String removeAvailableWorker(Date date,boolean partOfDay,String id) {
-
-        return currBranch.removeAvailableWorker(date, partOfDay, id);
-    }
-    public List<ModelShift> getWeeklyShifts(Date date)
-    {
-        return currBranch.getWeeklyShifts(date);
-    }
-    public String removeWorkerFromRoster(String id){
-        return currBranch.removeWorkerFromRoster(id);
-
-    }
-    public List<ModelWorker> displayWorkers()
-    {
-        return currBranch.displayWorkers();
-    }
-
-    public ModelWorker displaySingleWorker(String id)
-    {
-        return currBranch.displaySingleWorker(id);
-    }
-
-    public String editName(String newName,String id)
-    {
-        return currBranch.editName(newName,id);
-    }
-    public String editSalary(double newSalary,String id)
-    {
-        return currBranch.editSalary(newSalary,id);
-    }
-    public String addPosition(String pos,String id)
-    {
-        return currBranch.addPosition(pos,id);
-    }
-    public String removePosition(String pos,String id)
-    {
-        return currBranch.removePosition(pos,id);
-    }
-    public String addWorker(String name, double salary, Date startDate,List<String>positions)
-    {
-        return currBranch.addWorker(name,salary,startDate,positions);
-    }
-    public String initAddWorker(String id, String name, double salary, Date startDate,List<String>positions)
-    {
-        return currBranch.initAddWorker(id, name, salary, startDate, positions);
-    }
-    public String addDriver(String name, double salary, Date startDate,String license)
-    {
-        return currBranch.addDriver(name,salary,startDate,license);
-    }
-    public String initAddDriver(String id, String name, double salary, Date startDate,String license)
-    {
-        return currBranch.initAddDriver(id,name,salary,startDate,license);
-    }
-    public String removeWorker(String id)
-    {
-        return currBranch.removeWorker(id);
-    }
-//
-//    public void removeExistingWorkers() {
-//        currBranch.removeExistingWorkers();
-//    }
-
-    public Scheduler testScheduler()
-    {
-        return currBranch.testScheduler();
-    }
-
-    public Roster testRoster()
-    {
-        return currBranch.testRoster();
-    }
-
-
-    //endregion
-
 }

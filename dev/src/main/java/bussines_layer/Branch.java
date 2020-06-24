@@ -222,6 +222,9 @@ public class Branch {
             if (!productsResult.isOK()) {
                 return productsResult;
             }
+            if(supplierModule.getOrderById(orderID).getData().getType().equals(OrderType.PeriodicOrder))
+            {
+                supplierModule.getOrderById(orderID).getData().setStatus(OrderStatus.inProcess);}
             HashMap<CatalogProduct, Integer> products = productsResult.getData();
             return inventory.updateInventory(products);
         }
@@ -317,7 +320,7 @@ public class Branch {
         if(!resultOrdersToIssue.isOK()) {
             LinkedList<String> toreturn = new LinkedList<>();
             toreturn.add(resultOrdersToIssue.getMessage());
-            return new Result<>(false ,  toreturn, "There are no periodic orders to issue");
+            return new Result<>(false ,  toreturn, String.format("There are no periodic orders to issue in branch %d", branch_id));
         }
 
         for (Order order:resultOrdersToIssue.getData()) {
