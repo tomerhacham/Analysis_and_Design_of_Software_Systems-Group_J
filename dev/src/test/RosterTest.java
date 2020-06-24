@@ -40,8 +40,10 @@ class RosterTest {
     public void testAddWorker(){//this test checks the existence of a worker after adding him
         positions.add("manger");
         positions.add("cashier");
-        String output=roster.addWorker("Dor",16,startDate,branch_id,positions);
+        String output=roster.addWorker("Dor",-16,startDate,branch_id,positions);
+
         assertTrue("Illegal salary".equals(output));
+        roster.addWorker("Gil",16,startDate,branch_id,positions);
         boolean found=false;
         for(Worker w:roster.getWorkers(branch_id))
         {

@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 //TODO: merge both of the controllers (Roaster and Scheduler)
 
 public class EmployeesModule {
@@ -291,4 +292,19 @@ public class EmployeesModule {
     }
 
 
+//    public void removeExistingWorkers() {
+//        roster.removeExistingWorkers();
+//    }
+//
+//    public Map<Date, Pair<LazyList<Worker>, LazyList<Worker>>> getAvailableWorkers() {
+//        return scheduler.getAvailableWorkers();
+//    }
+
+    public Scheduler testScheduler() {
+        return scheduler;
+    }
+
+    public Roster testRoster() {
+        return roster;
+    }
 }

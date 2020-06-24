@@ -1,5 +1,9 @@
 package bussines_layer;
 
+import bussines_layer.employees_module.LazyList;
+import bussines_layer.employees_module.Roster;
+import bussines_layer.employees_module.Scheduler;
+import bussines_layer.employees_module.Worker;
 import bussines_layer.employees_module.models.ModelShift;
 import bussines_layer.employees_module.models.ModelWorker;
 import bussines_layer.inventory_module.CatalogProduct;
@@ -628,6 +632,20 @@ public class BranchController {
     public String removeWorker(String id)
     {
         return currBranch.removeWorker(id);
+    }
+//
+//    public void removeExistingWorkers() {
+//        currBranch.removeExistingWorkers();
+//    }
+
+    public Scheduler testScheduler()
+    {
+        return currBranch.testScheduler();
+    }
+
+    public Roster testRoster()
+    {
+        return currBranch.testRoster();
     }
 
 

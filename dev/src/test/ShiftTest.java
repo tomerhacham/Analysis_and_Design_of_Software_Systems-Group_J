@@ -1,5 +1,7 @@
 import bussines_layer.employees_module.Shift;
 import bussines_layer.employees_module.Worker;
+import data_access_layer.Mapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,11 +22,10 @@ class ShiftTest {
     private static final boolean morning=true;
     private static final boolean night=false;
     private Shift shift;
-    List<Worker> availables;
+    List<Worker> availables=new ArrayList<>();
     @BeforeEach
-    private void init() {
+    public void init() {
         branch_id=-1;
-        List<Worker> availables=new ArrayList<>();
         worker1=new Worker("Gil","1",branch_id,startDate,16);
         worker2=new Worker("Sharon","2",branch_id,startDate,15);
         worker1.addPosition("manager");
@@ -33,7 +34,10 @@ class ShiftTest {
         shift=new Shift(dateOfShift,morning,"0000-0000-0001",branch_id);
     }
 
-
+    @AfterEach
+    public void tearDown() {
+        Mapper.getInstance().clearDatabase();
+    }
     @Test
     void addPosition() {
         String output=shift.addPosition("",1);

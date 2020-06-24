@@ -1,6 +1,6 @@
 package bussines_layer;
 
-import bussines_layer.employees_module.EmployeesModule;
+import bussines_layer.employees_module.*;
 import bussines_layer.employees_module.models.ModelShift;
 import bussines_layer.employees_module.models.ModelWorker;
 import bussines_layer.enums.OrderStatus;
@@ -14,10 +14,7 @@ import bussines_layer.transport_module.TransportModule;
 import data_access_layer.DTO.BranchDTO;
 import javafx.util.Pair;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static bussines_layer.BranchController.system_curr_date;
 
@@ -515,6 +512,23 @@ public class Branch {
         return  employeesModule.initAddDriver(id, name, salary, startDate, license);
     }
 
+//
+//    public void removeExistingWorkers() {
+//        employeesModule.removeExistingWorkers();
+//    }
+
+    public Scheduler testScheduler()
+    {
+        return employeesModule.testScheduler();
+    }
+
+    public Roster testRoster()
+    {
+        return employeesModule.testRoster();
+    }
+
+
+
     //endregion
 
     //region Getters & setters
@@ -578,6 +592,7 @@ public class Branch {
     private boolean isOrderExist(Integer order_id){
         return supplierModule.getOrderById(order_id).isOK();
     }
+
 }
 
 
