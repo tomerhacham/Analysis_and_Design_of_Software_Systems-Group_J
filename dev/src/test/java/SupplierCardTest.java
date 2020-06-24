@@ -9,6 +9,7 @@ import bussines_layer.inventory_module.GeneralProduct;
 import bussines_layer.inventory_module.ProductController;
 import bussines_layer.supplier_module.Contract;
 import data_access_layer.Mapper;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,32 +21,35 @@ import static org.junit.Assert.assertNotEquals;
 
 
 public class SupplierCardTest {
-    BranchController branchController = new BranchController(true);
-    Mapper mapper = Mapper.getInstance();
-    SupplierCard halavi_Lee = mapper.find_Supplier(1);
-    Contract contract = mapper.find_Contract(1 ,1);
+    BranchController branchController;
+    Mapper mapper;
+    SupplierCard halavi_Lee;
+    Contract contract ;
 
     @BeforeEach
     public void setUp(){
         CLController.initialize();
+        branchController = new BranchController(true);
+        mapper = Mapper.getInstance();
+        halavi_Lee = mapper.find_Supplier(1);
+        contract = mapper.find_Contract(1 ,1);
         branchController.switchBranch(1);
     }
 
     @AfterEach
     public void tearDown(){
-        branch.removeContract(supplierCard);
+        mapper.clearDatabase();
     }
 
     @Test
     public void testName(){
         try{
-            halavi_Lee.setSupplierName("zoe");
+            halavi_Lee.setSupplierName("Zoe");
+            assertEquals(halavi_Lee.getSupplierName(),"Zoe");
+            assertNotEquals(halavi_Lee.getSupplierName(), "halavi-Lee");
         }catch (Exception e){
             fail("Exception "+ e);
         }
-
-        assertEquals(halavi_Lee.getSupplierName(),"Zoe");
-        assertNotEquals(halavi_Lee.getSupplierName(), "halavi-Lee");
     }
 
     @Test

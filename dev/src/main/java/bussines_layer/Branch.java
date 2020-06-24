@@ -4,6 +4,7 @@ import bussines_layer.employees_module.EmployeesModule;
 import bussines_layer.employees_module.models.ModelShift;
 import bussines_layer.employees_module.models.ModelWorker;
 import bussines_layer.enums.OrderStatus;
+import bussines_layer.enums.OrderType;
 import bussines_layer.enums.supplierType;
 import bussines_layer.inventory_module.*;
 import bussines_layer.supplier_module.Order;
@@ -213,12 +214,37 @@ public class Branch {
     //region Orders
 
     public Result acceptOrder (Integer orderID){
-        Result<HashMap<CatalogProduct, Integer>> productsResult = supplierModule.getProductsToAcceptOrder(orderID);
-        if (!productsResult.isOK()) {
-            return productsResult;
+        if(!isOrderExist(orderID)){
+            return new Result(false,false, String.format("There is not order with ID:%d", orderID));
         }
-        HashMap<CatalogProduct, Integer> products = productsResult.getData();
-        return inventory.updateInventory(products);
+        else if(isOrderAccepted(orderID)){
+            return new Result(false,false, String.format("Order %d has been already accepted", orderID));
+        }
+        else if(validAcceptOrdervalidAcceptOrder(orderID)) {
+            Result<HashMap<CatalogProduct, Integer>> productsResult = supplierModule.getProductsToAcceptOrder(orderID);
+            if (!productsResult.isOK()) {
+                return productsResult;
+            }
+            HashMap<CatalogProduct, Integer> products = productsResult.getData();
+            return inventory.updateInventory(products);
+        }
+        else {
+            return new Result(false, false, String.format("Order %d has not been arrived yet, be patient...", orderID));
+        }
+    }
+
+    private boolean isOrderAccepted(Integer orderID) {
+        Result<Order> orderResult = supplierModule.getOrderById(orderID);
+        boolean toReturn=false;
+        if (orderResult.isOK()){
+            if(orderResult.getData().getStatus().equals(OrderStatus.received)){
+                toReturn=true;
+            }
+            else{
+                toReturn=false;
+            }
+        }
+        return toReturn;
     }
 
     public Result<String> bookTransportOrder (Order order){
@@ -527,7 +553,31 @@ public class Branch {
                 "Name:'" + name +
                 ", ID:" + branch_id;
     }
-
+    private boolean validAcceptOrdervalidAcceptOrder(Integer order_id){
+        Result<Order> orderResult = supplierModule.getOrderById(order_id);
+        boolean toReturn=false;
+        if (orderResult.isOK() && orderResult.getData().getStatus().equals(OrderStatus.sent)){
+            SupplierCard supplier = orderResult.getData().getSupplier();
+            if(orderResult.getData().getType().equals(OrderType.OutOfStockOrder)) {
+                if (supplier.getType().equals(supplierType.fix_days)) {
+                    if (supplier.getFix_day().equals(system_curr_date.getDay())) {
+                        toReturn = true; }
+                    else {toReturn = false;}
+                }
+                else { toReturn = true;}
+            }
+            else {
+                if(orderResult.getData().getDayToDeliver().getData().equals(system_curr_date.getDay())){
+                    toReturn=true;}
+                    else{toReturn=false;
+                    }
+                }
+            }
+        return toReturn;
+    }
+    private boolean isOrderExist(Integer order_id){
+        return supplierModule.getOrderById(order_id).isOK();
+    }
 }
 
 
