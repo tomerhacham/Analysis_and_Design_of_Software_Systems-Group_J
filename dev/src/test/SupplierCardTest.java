@@ -1,21 +1,13 @@
-import bussines_layer.Branch;
 import bussines_layer.BranchController;
 import bussines_layer.SupplierCard;
-import bussines_layer.SupplierController;
-import bussines_layer.enums.supplierType;
 import bussines_layer.inventory_module.CatalogProduct;
-import bussines_layer.inventory_module.Category;
-import bussines_layer.inventory_module.GeneralProduct;
-import bussines_layer.inventory_module.ProductController;
 import bussines_layer.supplier_module.Contract;
 import data_access_layer.Mapper;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import presentation_layer.CLController;
 
-import java.util.LinkedList;
 import static junit.framework.TestCase.*;
 import static org.junit.Assert.assertNotEquals;
 

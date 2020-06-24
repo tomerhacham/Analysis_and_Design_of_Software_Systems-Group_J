@@ -1,5 +1,3 @@
-package test;
-
 import bussines_layer.*;
 import bussines_layer.inventory_module.*;
 import javafx.util.Pair;

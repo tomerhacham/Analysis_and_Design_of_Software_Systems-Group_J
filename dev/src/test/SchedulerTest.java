@@ -1,5 +1,3 @@
-package employees_module_test;
-
 import bussines_layer.employees_module.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

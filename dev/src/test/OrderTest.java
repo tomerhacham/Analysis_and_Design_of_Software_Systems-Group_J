@@ -16,7 +16,6 @@ import static junit.framework.TestCase.fail;
 public class OrderTest {
     BranchController branchController;
     Mapper mapper;
-    OrdersController ordersController;
     Order order1;
     CatalogProduct p;
 

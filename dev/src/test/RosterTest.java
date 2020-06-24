@@ -1,6 +1,3 @@
-package employees_module_test;
-
-
 import bussines_layer.employees_module.Roster;
 import bussines_layer.employees_module.Worker;
 import org.junit.jupiter.api.Test;
