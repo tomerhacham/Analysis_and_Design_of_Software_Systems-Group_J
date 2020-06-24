@@ -1,10 +1,9 @@
 import bussines_layer.transport_module.TruckController;
-import org.junit.Test;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TruckControllerTest {
 
