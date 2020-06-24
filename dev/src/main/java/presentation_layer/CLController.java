@@ -2432,7 +2432,7 @@ public class CLController {
                 .filter(e -> !e.equals("")).toArray(String[]::new);
     }
 
-    static public Date convertStringToDate(String sdate){
+    public static Date convertStringToDate(String sdate){
         try {
             Date date=new SimpleDateFormat("dd/MM/yyyy").parse(sdate);
             return date;
@@ -2499,7 +2499,7 @@ public class CLController {
     //endregion
 
     //region initialize
-    public static void initialize() {
+    private static void initialize() {
         System.err.println("Warning: all of the data in the DB will be erase\n");
         BranchController.clearDB();
         branchController=new BranchController(true);
