@@ -184,11 +184,11 @@ public class Contract {
         // first check if the supplier can supply this category (check if the category is in the category list)
         boolean categoryInList = isCategoryExist(catalogProduct.getSupplierCategory());
         if (categoryInList){
-            if (products.containsKey(catalogProduct.getGpID())){
+            if (products.containsKey(catalogProduct.getCatalogID())){
                 result=new Result<>(false, null, String.format("Catalog product already under contract ID:%d", contractID));
             }
             else{
-                products.put(catalogProduct.getGpID() , catalogProduct);
+                products.put(catalogProduct.getCatalogID() , catalogProduct);
                 result=new Result<>(true,catalogProduct, String.format("%s has been added to contract ID:%d", catalogProduct,contractID));
             }
         }
@@ -205,11 +205,11 @@ public class Contract {
      */
     public Result removeProduct(CatalogProduct catalogProduct){
         Result result;
-        if (!products.containsKey(catalogProduct.getGpID())){
+        if (!products.containsKey(catalogProduct.getCatalogID())){
             result=new Result<>(false,catalogProduct, String.format("Could not find %s under contract ID:%d", catalogProduct,contractID));
         }
         else {
-            products.remove(catalogProduct.getGpID()); // remove product
+            products.remove(catalogProduct.getCatalogID()); // remove product
             result=new Result<>(true, catalogProduct, String.format("%s has been remove from contract ID:%d", catalogProduct,contractID));
         }
         return result;
@@ -222,7 +222,7 @@ public class Contract {
      */
     public Result<CatalogProduct> isProductExist(CatalogProduct product){
         Result result;
-        if (products.containsKey(product.getGpID()))
+        if (products.containsKey(product.getCatalogID()))
             result=new Result<>(true, product, String.format("Found %s", product));
         else
             result=new Result<>(false,product, String.format("Could not find %s under contract ID:%d", product,contractID));

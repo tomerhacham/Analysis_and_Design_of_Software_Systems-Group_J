@@ -15,17 +15,15 @@ import static org.junit.Assert.assertNotEquals;
 public class SupplierCardTest {
     BranchController branchController;
     Mapper mapper;
-    SupplierCard halavi_Lee;
     Contract contract ;
 
     @BeforeEach
     public void setUp(){
         CLController.initialize();
         branchController = new BranchController(true);
-        mapper = Mapper.getInstance();
-        halavi_Lee = mapper.find_Supplier(1);
-        contract = mapper.find_Contract(1 ,1);
         branchController.switchBranch(1);
+        mapper = Mapper.getInstance();
+
     }
 
     @AfterEach
@@ -34,58 +32,40 @@ public class SupplierCardTest {
     }
 
     @Test
-    public void testName(){
-        try{
-            halavi_Lee.setSupplierName("Zoe");
-            assertEquals(halavi_Lee.getSupplierName(),"Zoe");
-            assertNotEquals(halavi_Lee.getSupplierName(), "halavi-Lee");
-        }catch (Exception e){
-            fail("Exception "+ e);
-        }
-    }
-
-    @Test
-    public void testAddress(){
-        try{
-            halavi_Lee.setAddress("TelAviv");
-        }catch (Exception e){
-            fail("Exception "+ e);
-        }
-        assertEquals(halavi_Lee.getAddress(),"TelAviv");
-        assertNotEquals(halavi_Lee.getAddress(), "ringelbloom 97, beer-sheva");
-    }
-
-    @Test
     public void testAddCategory(){
         try{
+            mapper = Mapper.getInstance();
+            contract = mapper.find_Contract(1 ,1);
             contract.addCategory("Meat");
+            assertTrue(contract.getCategory().contains("Meat"));
         }catch (Exception e){
             fail("Exception "+ e);
         }
-        assertTrue(contract.getCategory().contains("Meat"));
     }
 
     @Test
     public void testDeleteCategory(){
         try{
+            mapper = Mapper.getInstance();
+            contract = mapper.find_Contract(1 ,1);
             contract.removeCategory("Dairy");
+            assertFalse(contract.getCategory().contains("Dairy"));
         }catch (Exception e){
             fail("Exception "+ e);
         }
-        assertFalse(contract.getCategory().contains("Dairy"));
     }
 
     @Test
     public void testDeleteProductFromContract(){
-
-        assertFalse(contract.getProducts().getData().isEmpty());
-        CatalogProduct cp = mapper.find_CatalogProduct(10 , 1);
         try{
+            contract = mapper.find_Contract(1 ,1);
+            assertFalse(contract.getProducts().getData().isEmpty());
+            CatalogProduct cp = mapper.find_CatalogProduct(10 , 1);
             contract.removeProduct(cp);
+            assertFalse(contract.getProducts().getData().contains(cp));
         }catch (Exception e){
             fail("Exception "+ e);
         }
-        assertFalse(contract.getProducts().getData().contains(cp));
     }
 
 
