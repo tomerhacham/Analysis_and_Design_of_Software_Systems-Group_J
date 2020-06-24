@@ -211,7 +211,7 @@ public class ContractDAO {
                 for (catalog_product_in_contractDTO dto : catalog_product_in_contractDTOS) {
                     CatalogProduct catalogProduct = Mapper.getInstance().find_CatalogProduct(dto.getCatalog_id(),branch_id);
                     if (catalogProduct!=null) {
-                        catalogProducts.put(catalogProduct.getCatalogID(),catalogProduct);
+                        catalogProducts.put(catalogProduct.getGpID(),catalogProduct);
                     }
                 }
             }
