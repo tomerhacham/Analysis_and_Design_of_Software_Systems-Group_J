@@ -17,6 +17,7 @@ class InventoryTest {
     @BeforeAll
     static void setUp(){
         initialize();
+        branchController = new BranchController(true);
         branchController.switchBranch(1);
     }
 

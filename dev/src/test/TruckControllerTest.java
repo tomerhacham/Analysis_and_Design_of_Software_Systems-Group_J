@@ -1,22 +1,22 @@
 import bussines_layer.BranchController;
 import data_access_layer.Mapper;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static presentation_layer.CLController.initialize;
 
 public class TruckControllerTest {
+    static private BranchController branchController;
 
-    BranchController branchController ;
-    public TruckControllerTest( ){ }
-
-    @BeforeEach
-    public void init(){
+    @BeforeAll
+    static void setUp(){
         initialize();
+        branchController = new BranchController(true);
         branchController.switchBranch(1);
     }
+
     @AfterEach
     public void clear(){
         Mapper.getInstance().clearDatabase();
