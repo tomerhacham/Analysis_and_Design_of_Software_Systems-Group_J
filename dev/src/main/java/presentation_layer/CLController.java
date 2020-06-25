@@ -148,11 +148,13 @@ public class CLController {
             if (input.equals(branchController.getBranches().keySet().size()+1)){
                 Exit();
             }
-            Result res = branchController.switchBranch((Integer)branchController.getBranches().keySet().toArray()[input-1]);
-            System.out.println(res.getMessage());
-            if (res.isOK()) {
-                //printMainBranchMenu();
-                return;
+            else if(input <= branchController.getBranches().keySet().toArray().length) {
+                Result res = branchController.switchBranch((Integer) branchController.getBranches().keySet().toArray()[input - 1]);
+                System.out.println(res.getMessage());
+                if (res.isOK()) {
+                    //printMainBranchMenu();
+                    return;
+                }
             }
         }
     }
