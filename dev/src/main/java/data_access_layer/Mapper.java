@@ -48,8 +48,8 @@ public class Mapper {
 
     //Constructor
     private Mapper() {
-        String databaseUrl = "jdbc:sqlite:src/main/java/data_access_layer/SuperLi.db";
-        //String databaseUrl = "jdbc:sqlite:SuperLi.db";
+        //String databaseUrl = "jdbc:sqlite:src/main/java/data_access_layer/SuperLi.db";
+        String databaseUrl = "jdbc:sqlite:SuperLi.db";
         try (ConnectionSource conn = new JdbcConnectionSource(databaseUrl)) {
             this.conn = conn;
             this.branch_dao = new BranchDAO(conn);
